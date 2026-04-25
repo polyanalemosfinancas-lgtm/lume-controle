@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lume Finanças — Conciliação Rede</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap');
+:root{--navy:#0d1b3e;--navy2:#142247;--navy3:#1b2f5e;--gold:#c9a84c;--gold2:#debb6a;--gold-pale:#f5edd8;--white:#f7f4ee;--muted:#7a90b8;--border:rgba(255,255,255,.07);--ok:#27ae60;--ok-bg:rgba(39,174,96,.1);--warn:#e67e22;--warn-bg:rgba(230,126,34,.1);--alert:#e74c3c;--alert-bg:rgba(231,76,60,.1);--info:#2980b9;--info-bg:rgba(41,128,185,.12);--future:#8e44ad;--future-bg:rgba(142,68,173,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;font-size:14px}
+header{background:linear-gradient(135deg,#0a1630,var(--navy2));border-bottom:1px solid var(--gold);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:34px;height:34px;background:var(--gold);border-radius:8px;display:grid;place-items:center;font-size:15px}
+.brand-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold)}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:.8px}
+#periodo-hdr{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px 12px;border-radius:20px}
+.steps-nav{display:flex;background:var(--navy2);border-bottom:1px solid var(--border)}
+.step-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:12px 16px;cursor:pointer;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--muted);background:transparent;border:none;border-bottom:2px solid transparent;transition:all .2s}
+.step-btn:hover{color:var(--white);background:rgba(255,255,255,.03)}
+.step-btn.active{color:var(--gold);border-bottom-color:var(--gold)}
+.step-num{width:22px;height:22px;border-radius:50%;background:var(--navy3);display:grid;place-items:center;font-size:11px;font-weight:700;flex-shrink:0}
+.step-btn.active .step-num{background:var(--gold);color:var(--navy)}
+.step-btn.done .step-num{background:var(--ok)}
+.step-lock{opacity:.4;pointer-events:none}
+#upload-screen{padding:40px 32px;display:flex;flex-direction:column;align-items:center;gap:32px;min-height:calc(100vh - 112px)}
+.upload-hero{text-align:center}
+.upload-hero h1{font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:var(--gold);margin-bottom:8px}
+.upload-hero p{color:var(--muted);font-size:14px;max-width:500px}
+.upload-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:680px;width:100%}
+.upload-card{background:var(--navy2);border:2px dashed rgba(201,168,76,.2);border-radius:14px;padding:22px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.upload-card:hover{border-color:var(--gold);background:var(--navy3);transform:translateY(-2px)}
+.upload-card.loaded{border-color:var(--ok);border-style:solid}
+.upload-card.loaded::after{content:'✓';position:absolute;top:8px;right:12px;color:var(--ok);font-size:16px;font-weight:700}
+.upload-card input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.card-icon{font-size:26px;margin-bottom:8px}
+.card-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--white);margin-bottom:4px}
+.card-tag{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;margin-bottom:6px;font-family:'Syne',sans-serif;font-weight:700}
+.tag-m{background:rgba(201,168,76,.15);color:var(--gold)}
+.tag-f{background:rgba(41,128,185,.15);color:#74b9ff}
+.tag-r{background:rgba(39,174,96,.12);color:var(--ok)}
+.card-desc{font-size:11px;color:var(--muted);line-height:1.5}
+.card-fn{margin-top:8px;font-size:10px;font-family:'DM Mono',monospace;color:var(--ok);word-break:break-all;min-height:14px}
+.btn-proc{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;background:var(--gold);color:var(--navy);border:none;border-radius:12px;padding:14px 44px;cursor:pointer;transition:all .2s;opacity:.35;pointer-events:none}
+.btn-proc.on{opacity:1;pointer-events:auto}
+.btn-proc.on:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,.3)}
+#main-content{display:none;padding:22px 32px}
+.etapa-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+.etapa-title{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:var(--gold)}
+.etapa-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.btn-s{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;border-radius:8px;padding:7px 14px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--muted)}
+.btn-s:hover{color:var(--white);background:rgba(255,255,255,.1)}
+.btn-gold{background:var(--gold);color:var(--navy);border-color:var(--gold)}
+.btn-gold:hover{background:var(--gold2)}
+.btn-ok{background:var(--ok-bg);color:var(--ok);border-color:rgba(39,174,96,.3)}
+.tabs{display:flex;gap:3px;border-bottom:1px solid var(--border);margin-bottom:16px;flex-wrap:wrap}
+.tab{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--muted);background:transparent;border:1px solid transparent;border-bottom:none;border-radius:7px 7px 0 0;padding:7px 14px;cursor:pointer;transition:all .15s;position:relative;top:1px}
+.tab:hover{color:var(--white);background:rgba(255,255,255,.04)}
+.tab.active{color:var(--gold);background:var(--navy2);border-color:var(--border)}
+.pane{display:none}.pane.active{display:block}
+.cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px;margin-bottom:18px}
+.card{background:var(--navy2);border:1px solid var(--border);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.card.ok::before{background:var(--ok)}.card.warn::before{background:var(--warn)}.card.alert::before{background:var(--alert)}.card.info::before{background:var(--info)}
+.card-lbl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:5px;font-family:'Syne',sans-serif}
+.card-val{font-family:'DM Mono',monospace;font-size:17px;color:var(--white)}
+.card-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.box{border-radius:10px;padding:12px 16px;margin-bottom:14px;font-size:13px;line-height:1.6;border:1px solid}
+.box-gold{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.2);color:var(--gold-pale)}
+.box-ok{background:var(--ok-bg);border-color:rgba(39,174,96,.3)}.box-ok strong{color:var(--ok)}
+.box-warn{background:var(--warn-bg);border-color:rgba(230,126,34,.3)}.box-warn strong{color:var(--warn)}
+.box-alert{background:var(--alert-bg);border-color:rgba(231,76,60,.3)}.box-alert strong{color:var(--alert)}
+.sec-title{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--gold);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:18px}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--navy3);padding:8px 11px;text-align:left;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+tbody tr:last-child{border-bottom:none}
+td{padding:8px 11px;font-size:13px;white-space:nowrap;vertical-align:middle}
+.mono{font-family:'DM Mono',monospace;font-size:12px}
+.val{font-family:'DM Mono',monospace;color:var(--gold2)}
+.val-neg{font-family:'DM Mono',monospace;color:var(--alert)}
+.val-pos{font-family:'DM Mono',monospace;color:var(--ok)}
+.muted{color:var(--muted);font-size:12px}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10px;font-family:'Syne',sans-serif;font-weight:700}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor}
+.c-ok{background:var(--ok-bg);color:var(--ok);border:1px solid rgba(39,174,96,.3)}
+.c-warn{background:var(--warn-bg);color:var(--warn);border:1px solid rgba(230,126,34,.3)}
+.c-alert{background:var(--alert-bg);color:var(--alert);border:1px solid rgba(231,76,60,.3)}
+.c-info{background:var(--info-bg);color:#74b9ff;border:1px solid rgba(41,128,185,.3)}
+.c-future{background:var(--future-bg);color:#c39bd3;border:1px solid rgba(142,68,173,.3)}
+.c-m{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.2)}
+.c-f{background:rgba(41,128,185,.12);color:#74b9ff;border:1px solid rgba(41,128,185,.2)}
+.band{display:inline-block;padding:2px 7px;border-radius:5px;font-size:11px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.05)}
+.visa{background:rgba(26,90,213,.2);color:#7ac4ff}.mastercard{background:rgba(235,0,27,.15);color:#f98989}.elo{background:rgba(255,199,0,.15);color:#ffe080}.amex{background:rgba(0,115,207,.2);color:#74b9ff}
+#loading{display:none;position:fixed;inset:0;background:rgba(13,27,62,.88);backdrop-filter:blur(4px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:16px}
+.spinner{width:44px;height:44px;border:3px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-family:'Syne',sans-serif;font-size:13px;color:var(--muted)}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="brand-icon">💰</div>
+    <div><div class="brand-name">Lume Finanças</div><div class="brand-sub">Conciliação Rede — Matriz &amp; Filial</div></div>
+  </div>
+  <div id="periodo-hdr">Aguardando arquivos</div>
+</header>
+
+<nav class="steps-nav">
+  <button class="step-btn active" id="sBtn1" onclick="goStep(1)"><span class="step-num">1</span> Conciliação de Vendas</button>
+  <button class="step-btn step-lock" id="sBtn2" onclick="goStep(2)"><span class="step-num">2</span> Confronto Recebimentos</button>
+  <button class="step-btn step-lock" id="sBtn3" onclick="goStep(3)"><span class="step-num">3</span> Relatório Conta Azul</button>
+</nav>
+
+<div id="loading"><div class="spinner"></div><p>Processando arquivos...</p></div>
+
+<div id="upload-screen">
+  <div class="upload-hero">
+    <h1>Conciliação Semanal — Rede</h1>
+    <p>Carregue os 4 arquivos. Tudo é processado no navegador — nenhum dado sai do computador.</p>
+  </div>
+  <div class="upload-grid">
+    <div class="upload-card" id="uc-pm"><input type="file" id="f-pm" accept=".xls,.xlsx"><div class="card-icon">🗂️</div><div class="card-tag tag-m">MATRIZ</div><div class="card-title">Vendas Pacto — Matriz</div><div class="card-desc">Gestão de Recebíveis da Matriz</div><div class="card-fn" id="fn-pm">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-pf"><input type="file" id="f-pf" accept=".xls,.xlsx"><div class="card-icon">🗂️</div><div class="card-tag tag-f">FILIAL</div><div class="card-title">Vendas Pacto — Filial</div><div class="card-desc">Gestão de Recebíveis da Filial</div><div class="card-fn" id="fn-pf">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-rv"><input type="file" id="f-rv" accept=".xls,.xlsx"><div class="card-icon">💳</div><div class="card-tag tag-r">REDE</div><div class="card-title">Relatório de Vendas — Rede</div><div class="card-desc">Vendas aprovadas das duas unidades</div><div class="card-fn" id="fn-rv">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-rr"><input type="file" id="f-rr" accept=".xls,.xlsx"><div class="card-icon">🏦</div><div class="card-tag tag-r">REDE</div><div class="card-title">Relatório de Recebimentos — Rede</div><div class="card-desc">Parcelas recebidas e futuras</div><div class="card-fn" id="fn-rr">Clique ou arraste</div></div>
+  </div>
+  <button class="btn-proc" id="btn-proc" onclick="processar()">⚡ Iniciar Conciliação</button>
+</div>
+
+<div id="main-content">
+  <!-- ETAPA 1 -->
+  <div id="step1">
+    <div class="etapa-header">
+      <div><div class="etapa-title">Etapa 1 — Conciliação de Vendas</div><div class="etapa-sub">Pacto (Matriz + Filial) × Relatório de Vendas Rede pelo número de autorização</div></div>
+      <div class="btn-row">
+        <button class="btn-s" onclick="novaAnalise()">← Nova análise</button>
+        <button class="btn-ok btn-s" id="btn-av2" style="display:none" onclick="goStep(2)">Prosseguir para Etapa 2 →</button>
+      </div>
+    </div>
+    <div class="cards-row" id="cards1"></div>
+    <div id="box1"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('t1a',this)">Conciliados ✅ <span id="b1a"></span></button>
+      <button class="tab" onclick="showTab('t1b',this)">Divergências ⚠️ <span id="b1b"></span></button>
+      <button class="tab" onclick="showTab('t1c',this)">Só na Rede <span id="b1c"></span></button>
+      <button class="tab" onclick="showTab('t1d',this)">PIX / Outros <span id="b1d"></span></button>
+      <button class="tab" onclick="showTab('t1e',this)">Por Bandeira</button>
+    </div>
+    <div class="pane active" id="t1a"><div class="sec-title">Vendas Conciliadas — Pacto × Rede</div><div class="tw"><table id="tab-conc"><thead><tr><th>Unidade</th><th>Autorização</th><th>Cliente</th><th>Operadora</th><th>Parc.</th><th>Valor Pacto</th><th>Valor Rede</th><th>Bandeira</th><th>Data Venda</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t1b"><div class="box box-alert"><strong>⚠️ Divergências encontradas.</strong> Verifique cada item no Pacto e na Rede antes de prosseguir.</div><div class="sec-title">Itens com Divergência de Valor</div><div class="tw"><table id="tab-div"><thead><tr><th>Unidade</th><th>Autorização</th><th>Cliente</th><th>Valor Pacto</th><th>Valor Rede</th><th>Diferença</th><th>Ação</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t1c"><div class="box box-warn"><strong>Vendas aprovadas na Rede sem correspondência no Pacto.</strong> Podem ser de uma das unidades ou lançamentos pendentes.</div><div class="sec-title">Vendas Rede sem par no Pacto</div><div class="tw"><table id="tab-sr"><thead><tr><th>NSU</th><th>Autorização</th><th>Data</th><th>Valor Bruto</th><th>Valor Líquido</th><th>Bandeira</th><th>Modalidade</th><th>Parcelas</th><th>Estabelecimento</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t1d"><div class="box box-gold">Recebimentos via PIX e outros meios não passam pela Rede.</div><div class="sec-title">PIX e Outros — Pacto (Matriz + Filial)</div><div class="tw"><table id="tab-pix"><thead><tr><th>Unidade</th><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Compensação</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t1e"><div class="sec-title">Vendas por Bandeira — Rede (aprovadas)</div><div class="tw"><table id="tab-band"><thead><tr><th>Bandeira</th><th>Qtd</th><th>Total Bruto</th><th>Total Líquido</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+
+  <!-- ETAPA 2 -->
+  <div id="step2" style="display:none">
+    <div class="etapa-header">
+      <div><div class="etapa-title">Etapa 2 — Confronto Vendas × Recebimentos</div><div class="etapa-sub">Cada parcela — recebida ou futura — cruzada com os dados da venda</div></div>
+      <div class="btn-row"><button class="btn-s" onclick="goStep(1)">← Etapa 1</button><button class="btn-ok btn-s" onclick="goStep(3)">Prosseguir para Etapa 3 →</button></div>
+    </div>
+    <div class="cards-row" id="cards2"></div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('t2a',this)">Todas as Parcelas <span id="b2a"></span></button>
+      <button class="tab" onclick="showTab('t2b',this)">Recebidas ✅ <span id="b2b"></span></button>
+      <button class="tab" onclick="showTab('t2c',this)">A Receber 🕐 <span id="b2c"></span></button>
+      <button class="tab" onclick="showTab('t2d',this)">Sem Recebimento ⚠️ <span id="b2d"></span></button>
+    </div>
+    <div class="pane active" id="t2a"><div class="sec-title">Todas as Parcelas</div><div class="tw"><table id="tab-pa"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Data Venda</th><th>Parcela</th><th>Dt Recebimento</th><th>Valor Bruto</th><th>Taxa</th><th>Valor Líquido</th><th>Bandeira</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t2b"><div class="box box-ok"><strong>✅ Parcelas já depositadas.</strong></div><div class="sec-title">Parcelas Recebidas</div><div class="tw"><table id="tab-pr"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Data Venda</th><th>Parcela</th><th>Dt Recebimento</th><th>Valor Bruto</th><th>Taxa</th><th>Valor Líquido</th><th>Bandeira</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t2c"><div class="box" style="background:var(--future-bg);border-color:rgba(142,68,173,.3);color:#e8d5f0"><strong style="color:#c39bd3">🕐 Parcelas futuras</strong> — ainda não depositadas. Serão lançadas como contas a receber no Conta Azul.</div><div class="sec-title">Parcelas a Receber (Futuras)</div><div class="tw"><table id="tab-pf"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Data Venda</th><th>Parcela</th><th>Dt Prevista</th><th>Valor Bruto</th><th>Taxa</th><th>Valor Líquido</th><th>Bandeira</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t2d"><div class="box box-warn"><strong>⚠️ Vendas conciliadas sem parcela no relatório de recebimentos.</strong> Verifique no portal da Rede.</div><div class="sec-title">Vendas sem Recebimento</div><div class="tw"><table id="tab-sr2"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Data Venda</th><th>Valor</th><th>Bandeira</th><th>Ação</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div id="step3" style="display:none">
+    <div class="etapa-header">
+      <div><div class="etapa-title">Etapa 3 — Relatório para Conta Azul</div><div class="etapa-sub">Uma linha por parcela · Valor bruto (a receber +) · Taxa (a pagar −) · Competência = data da venda</div></div>
+      <div class="btn-row">
+        <button class="btn-s" onclick="goStep(2)">← Etapa 2</button>
+        <button class="btn-s" onclick="novaAnalise()">Nova análise</button>
+        <button class="btn-gold btn-s" onclick="exportarExcel()">⬇ Exportar Excel</button>
+      </div>
+    </div>
+    <div class="cards-row" id="cards3"></div>
+    <div class="box box-gold">💡 <strong>Como importar no Conta Azul:</strong> Cada venda gera 2 lançamentos — <strong>Conta a Receber</strong> (valor bruto, positivo) e <strong>Conta a Pagar / Taxa</strong> (negativo). Data de competência = data da venda; vencimento = data de recebimento.</div>
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('t3a',this)">Todos <span id="b3a"></span></button>
+      <button class="tab" onclick="showTab('t3b',this)">Matriz <span id="b3b"></span></button>
+      <button class="tab" onclick="showTab('t3c',this)">Filial <span id="b3c"></span></button>
+    </div>
+    <div class="pane active" id="t3a"><div class="sec-title">Todos os Lançamentos</div><div class="tw"><table id="tab3a"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t3b"><div class="sec-title">Lançamentos — Matriz</div><div class="tw"><table id="tab3b"><thead><tr><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t3c"><div class="sec-title">Lançamentos — Filial</div><div class="tw"><table id="tab3c"><thead><tr><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+  </div>
+</div>
+
+<script>
+var G={pm:null,pf:null,rv:null,rr:null,loaded:0,matches:[],divs:[],soRede:[],pix:[],parcelas:[],lancamentos:[]};
+
+function fmt(n){if(isNaN(n)||n==null)return 'R$ 0,00';var s='R$ '+Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2});return n<0?'-'+s:s;}
+
+function normAuth(a){
+  var s=String(a==null?'':a).trim();
+  if(!s||s==='nan'||s==='None'||s==='NaN'||s==='0')return '';
+  s=s.toUpperCase();
+  // Remove .0 do final se tiver
+  if(s.match(/^\d+\.0$/))s=s.replace('.0','');
+  // Puramente numérico: remove zeros à esquerda
+  if(s.match(/^\d+$/)){try{return String(parseInt(s));}catch(e){}}
+  return s;
+}
+
+function parseValorStr(v){
+  var s=String(v==null?'0':v).replace(/R\$|\s/g,'').trim();
+  // Remove separador de milhar (ponto) e troca vírgula por ponto decimal
+  s=s.replace(/\./g,'').replace(',','.');
+  var n=parseFloat(s);
+  return isNaN(n)?0:n;
+}
+
+function fmtDate(v){
+  if(!v||v===null||String(v).trim()===''||String(v).toLowerCase()==='nat')return '';
+  if(typeof v==='number'){var d=new Date(Math.round((v-25569)*86400*1000));return d.toLocaleDateString('pt-BR');}
+  var s=String(v);
+  if(s.match(/^\d{4}-\d{2}-\d{2}/)){var p=s.substring(0,10).split('-');return p[2]+'/'+p[1]+'/'+p[0];}
+  return s.substring(0,10);
+}
+
+function bandTag(b){var bl=String(b||'').toLowerCase();var c=bl.includes('visa')?'visa':bl.includes('master')?'mastercard':bl.includes('elo')?'elo':bl.includes('amex')||bl.includes('american')?'amex':'';return '<span class="band '+c+'">'+(b||'—')+'</span>';}
+function unitChip(u){return u==='Matriz'?'<span class="chip c-m"><span class="dot"></span>Matriz</span>':'<span class="chip c-f"><span class="dot"></span>Filial</span>';}
+function bdg(n,bg){return '<span style="display:inline-block;background:'+(bg||'rgba(255,255,255,.07)')+';color:'+(bg?'var(--navy)':'var(--muted)')+';font-family:DM Mono,monospace;font-size:10px;padding:1px 7px;border-radius:10px;margin-left:4px">'+n+'</span>';}
+
+// FILE SETUP
+function readXL(file,cb){var r=new FileReader();r.onload=function(e){var wb=XLSX.read(e.target.result,{type:'array',cellDates:false});cb(wb);};r.readAsArrayBuffer(file);}
+
+function setupFile(fid,ucid,fnid,key){
+  document.getElementById(fid).addEventListener('change',function(e){
+    var file=e.target.files[0];if(!file)return;
+    document.getElementById(fnid).textContent=file.name;
+    readXL(file,function(wb){G[key]=wb;document.getElementById(ucid).classList.add('loaded');G.loaded++;if(G.loaded>=4)document.getElementById('btn-proc').classList.add('on');});
+  });
+}
+setupFile('f-pm','uc-pm','fn-pm','pm');
+setupFile('f-pf','uc-pf','fn-pf','pf');
+setupFile('f-rv','uc-rv','fn-rv','rv');
+setupFile('f-rr','uc-rr','fn-rr','rr');
+
+// PARSE PACTO - colunas exatas do sistema
+function parsePacto(wb,unidade){
+  var ws=wb.Sheets[wb.SheetNames[0]];
+  var rows=XLSX.utils.sheet_to_json(ws,{defval:''});
+  var result=[];
+  rows.forEach(function(r){
+    var nome=String(r['Nome do pagador']||'').trim();
+    var valor=parseValorStr(r['Valor']);
+    var auth=normAuth(r['Autorização']);
+    var nsu=String(r['NSU']||'').trim();
+    var op=String(r['Operadora']||'').trim();
+    var comp=fmtDate(r['Compensação']);
+    var tipo=String(r['Tipo do Recebível']||'').trim();
+    var opl=op.toLowerCase();
+    var isCart=op!==''&&!opl.includes('pix')&&!opl.includes('dinheiro')&&!opl.includes('boleto');
+    if(!nome&&!valor)return;
+    result.push({nome,valor,auth,nsu,op,comp,tipo,isCart,unidade});
+  });
+  return result;
+}
+
+// PARSE REDE VENDAS - aba 'vendas', header linha 1
+function parseRedeVendas(wb){
+  var sn=wb.SheetNames.find(function(s){return s.toLowerCase().includes('venda');})||wb.SheetNames[0];
+  var ws=wb.Sheets[sn];
+  var rows=XLSX.utils.sheet_to_json(ws,{defval:'',range:1});
+  var result=[];
+  rows.forEach(function(r){
+    var status=String(r['status da venda']||'').toLowerCase();
+    if(status&&!status.includes('aprov'))return;
+    var auth=normAuth(r['número da autorização (Auto)']);
+    var nsu=String(r['NSU/CV']||'').trim();
+    var valor=parseFloat(r['valor da venda original'])||0;
+    var valorLiq=parseFloat(r['valor líquido'])||0;
+    var data=fmtDate(r['data da venda']);
+    var band=String(r['bandeira']||'').trim();
+    var mod=String(r['modalidade']||'').trim();
+    var parc=String(r['número de parcelas']||'1').trim();
+    var estab=String(r['nome do estabelecimento']||'').trim();
+    if(!auth&&!nsu&&!valor)return;
+    result.push({auth,nsu,valor,valorLiq,data,band,mod,parc,estab});
+  });
+  return result;
+}
+
+// PARSE RECEBIMENTOS - abas 'pagamentos' e 'pagamentos futuros'
+function parseRedeReceb(wb){
+  var pags=[];
+  var abas=wb.SheetNames;
+  abas.forEach(function(sn){
+    var snl=sn.toLowerCase();
+    if(!snl.includes('pagamento')&&!snl.includes('futuro'))return;
+    var isFut=snl.includes('futuro');
+    var ws=wb.Sheets[sn];
+    var rows=XLSX.utils.sheet_to_json(ws,{defval:'',range:1});
+    if(!rows.length)return;
+    rows.forEach(function(r){
+      // Coluna de autorização tem nome diferente em cada aba
+      var auth=normAuth(r['número da autorização']||r['número de autorização']||'');
+      if(!auth)return;
+      var bruto=parseFloat(r['valor bruto da parcela original'])||0;
+      var liq=parseFloat(r['valor líquido da parcela'])||0;
+      var mdr=parseFloat(r['valor MDR descontado'])||0;
+      var taxa=Math.round((bruto-liq)*100)/100;
+      var dtCol=isFut?'data prevista do recebimento':'data do recebimento';
+      var dtRec=fmtDate(r[dtCol]);
+      var dtVenda=fmtDate(r['data original da venda']);
+      var band=String(r['bandeira']||'').trim();
+      var status=String(r['status']||'paga').trim().toLowerCase();
+      var parc=String(r['parcela']||'1').trim();
+      var numParc=String(r['número de parcelas']||'1').trim();
+      var isPago=!isFut&&(status.includes('paga')||status.includes('pago'));
+      if(!bruto)return;
+      pags.push({auth,bruto,taxa,liq,dtRec,dtVenda,band,status,parc,numParc,isPago,isFuturo:isFut});
+    });
+  });
+
+  // Recebidos (depósitos)
+  var recs=[];
+  if(wb.Sheets['recebidos']){
+    var rows2=XLSX.utils.sheet_to_json(wb.Sheets['recebidos'],{defval:'',range:1});
+    rows2.forEach(function(r){
+      var val=parseFloat(r['valor depositado'])||0;
+      if(!val)return;
+      recs.push({data:fmtDate(r['data']),band:String(r['bandeira']||'').trim(),mod:String(r['modalidade']||'').trim(),estab:String(r['nome do estabelecimento']||'').trim(),valor:val,status:String(r['status']||'PAGO').trim()});
+    });
+  }
+  return {pagamentos:pags,recebidos:recs};
+}
+
+// PROCESSAR
+function processar(){
+  document.getElementById('loading').style.display='flex';
+  setTimeout(function(){try{_processar();}catch(e){document.getElementById('loading').style.display='none';alert('Erro: '+e.message);console.error(e);}},120);
+}
+
+function _processar(){
+  var pactoM=parsePacto(G.pm,'Matriz');
+  var pactoF=parsePacto(G.pf,'Filial');
+  var pactoAll=pactoM.concat(pactoF);
+  var redeV=parseRedeVendas(G.rv);
+  var redeR=parseRedeReceb(G.rr);
+
+  // Período
+  var datas=redeV.map(function(r){return r.data;}).filter(Boolean).sort();
+  if(datas.length)document.getElementById('periodo-hdr').textContent=datas[0]+' → '+datas[datas.length-1];
+
+  // CRUZAMENTO
+  var pactoMap={};
+  pactoAll.forEach(function(p){
+    if(!p.isCart||!p.auth)return;
+    if(!pactoMap[p.auth])pactoMap[p.auth]={valor:0,registros:[],nome:p.nome,op:p.op,unidade:p.unidade};
+    pactoMap[p.auth].valor+=p.valor;
+    pactoMap[p.auth].registros.push(p);
+    if(p.nome)pactoMap[p.auth].nome=p.nome;
+  });
+
+  var redeMap={};
+  redeV.forEach(function(r){
+    if(!r.auth)return;
+    if(!redeMap[r.auth])redeMap[r.auth]={valor:0,valorLiq:0,registros:[]};
+    redeMap[r.auth].valor+=r.valor;
+    redeMap[r.auth].valorLiq+=r.valorLiq;
+    redeMap[r.auth].registros.push(r);
+  });
+
+  var allKeys={};
+  Object.keys(pactoMap).forEach(function(k){allKeys[k]=true;});
+  Object.keys(redeMap).forEach(function(k){allKeys[k]=true;});
+
+  G.matches=[];G.divs=[];G.soRede=[];G.pix=[];
+  Object.keys(allKeys).forEach(function(k){
+    var p=pactoMap[k],r=redeMap[k];
+    if(p&&r){
+      var diff=Math.abs(p.valor-r.valor);
+      var item={auth:k,nome:p.nome,op:p.op,unidade:p.unidade,numPacto:p.registros.length,vPacto:p.valor,vRede:r.valor,vRedeLiq:r.valorLiq,data:r.registros[0].data,band:r.registros[0].band,diff:diff,ok:diff<0.05};
+      if(item.ok)G.matches.push(item);else G.divs.push(item);
+    }else if(r){r.registros.forEach(function(reg){G.soRede.push(reg);});}
+  });
+  pactoAll.forEach(function(p){if(!p.isCart)G.pix.push(p);});
+
+  // ETAPA 2 - parcelas
+  var recMap={};
+  redeR.pagamentos.forEach(function(pg){
+    if(!recMap[pg.auth])recMap[pg.auth]=[];
+    recMap[pg.auth].push(pg);
+  });
+
+  G.parcelas=[];
+  var authConc={};
+  G.matches.forEach(function(m){authConc[m.auth]=m;});
+  G.divs.forEach(function(m){authConc[m.auth]=m;});
+
+  Object.keys(authConc).forEach(function(k){
+    var m=authConc[k];
+    var parcs=recMap[k]||[];
+    if(!parcs.length){
+      G.parcelas.push({unidade:m.unidade,nome:m.nome,auth:k,dataVenda:m.data,parc:'1/1',dtRec:'',bruto:m.vRede,taxa:0,liq:m.vRede,band:m.band,isPago:false,isFuturo:false,semRec:true});
+    }else{
+      parcs.forEach(function(pg){
+        G.parcelas.push({unidade:m.unidade,nome:m.nome,auth:k,dataVenda:m.data,parc:pg.parc+'/'+pg.numParc,dtRec:pg.dtRec,bruto:pg.bruto,taxa:pg.taxa,liq:pg.liq,band:pg.band||m.band,isPago:pg.isPago,isFuturo:pg.isFuturo,semRec:false});
+      });
+    }
+  });
+
+  // ETAPA 3 - lançamentos
+  G.lancamentos=[];
+  G.parcelas.filter(function(p){return !p.semRec;}).forEach(function(p){
+    var st=p.isPago?'Recebido':'A receber';
+    G.lancamentos.push({unidade:p.unidade,nome:p.nome,auth:p.auth,band:p.band,dtComp:p.dataVenda,dtVenc:p.dtRec||'',parc:p.parc,tipo:'A Receber',valor:p.bruto,status:st});
+    if(p.taxa>0){
+      G.lancamentos.push({unidade:p.unidade,nome:p.nome,auth:p.auth,band:p.band,dtComp:p.dataVenda,dtVenc:p.dtRec||'',parc:p.parc,tipo:'Taxa (Pagar)',valor:-p.taxa,status:p.isPago?'Pago':'A pagar'});
+    }
+  });
+
+  renderE1();renderE2();renderE3();
+
+  document.getElementById('loading').style.display='none';
+  document.getElementById('upload-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+  document.getElementById('sBtn2').classList.remove('step-lock');
+  document.getElementById('sBtn3').classList.remove('step-lock');
+  if(G.divs.length===0)document.getElementById('btn-av2').style.display='inline-block';
+}
+
+function renderE1(){
+  var tPactoCart=G.matches.reduce(function(s,m){return s+m.vPacto;},0)+G.divs.reduce(function(s,m){return s+m.vPacto;},0);
+  var tPix=G.pix.reduce(function(s,p){return s+p.valor;},0);
+  var c=document.getElementById('cards1');c.innerHTML='';
+  [{lbl:'✅ Conciliados',val:G.matches.length,sub:'autorizações OK',cls:'ok'},{lbl:'⚠️ Divergências',val:G.divs.length,sub:G.divs.length?'Verificar antes de prosseguir':'Nenhuma',cls:G.divs.length?'warn':'ok'},{lbl:'💳 Total Pacto Cartão',val:fmt(tPactoCart),sub:'Matriz + Filial',cls:''},{lbl:'🔵 Só na Rede',val:G.soRede.length,sub:'sem par no Pacto',cls:G.soRede.length?'info':''},{lbl:'📱 PIX / Outros',val:fmt(tPix),sub:G.pix.length+' recebimentos',cls:''}].forEach(function(x){c.innerHTML+='<div class="card '+x.cls+'"><div class="card-lbl">'+x.lbl+'</div><div class="card-val">'+x.val+'</div><div class="card-sub">'+x.sub+'</div></div>';});
+
+  document.getElementById('b1a').innerHTML=bdg(G.matches.length,'var(--ok)');
+  document.getElementById('b1b').innerHTML=bdg(G.divs.length,G.divs.length?'var(--warn)':'');
+  document.getElementById('b1c').innerHTML=bdg(G.soRede.length);
+  document.getElementById('b1d').innerHTML=bdg(G.pix.length);
+
+  document.getElementById('box1').innerHTML=G.divs.length===0?'<div class="box box-ok"><strong>✅ Nenhuma divergência!</strong> Todas as autorizações batem. Pode prosseguir para a Etapa 2.</div>':'<div class="box box-alert"><strong>⚠️ '+G.divs.length+' divergência(s).</strong> Corrija antes de prosseguir.</div>';
+
+  var tb=document.querySelector('#tab-conc tbody');tb.innerHTML='';
+  G.matches.forEach(function(m){tb.innerHTML+='<tr><td>'+unitChip(m.unidade)+'</td><td class="mono">'+m.auth+'</td><td>'+(m.nome||'—')+'</td><td class="muted">'+(m.op||'—')+'</td><td style="text-align:center">'+(m.numPacto>1?'<span class="chip c-info"><span class="dot"></span>'+m.numPacto+'×</span>':'1×')+'</td><td class="val">'+fmt(m.vPacto)+'</td><td class="val">'+fmt(m.vRede)+'</td><td>'+bandTag(m.band)+'</td><td class="muted mono">'+m.data+'</td><td><span class="chip c-ok"><span class="dot"></span>OK</span></td></tr>';});
+
+  var td=document.querySelector('#tab-div tbody');td.innerHTML='';
+  G.divs.forEach(function(m){td.innerHTML+='<tr><td>'+unitChip(m.unidade)+'</td><td class="mono">'+m.auth+'</td><td>'+(m.nome||'—')+'</td><td class="val">'+fmt(m.vPacto)+'</td><td class="val">'+fmt(m.vRede)+'</td><td class="val-neg">'+fmt(m.diff)+'</td><td><span class="chip c-alert"><span class="dot"></span>Verificar</span></td></tr>';});
+
+  var tsr=document.querySelector('#tab-sr tbody');tsr.innerHTML='';
+  G.soRede.forEach(function(r){tsr.innerHTML+='<tr><td class="mono muted">'+(r.nsu||'—')+'</td><td class="mono">'+(r.auth||'—')+'</td><td class="muted mono">'+r.data+'</td><td class="val">'+fmt(r.valor)+'</td><td class="val">'+(r.valorLiq?fmt(r.valorLiq):'<span class="muted">—</span>')+'</td><td>'+bandTag(r.band)+'</td><td class="muted">'+(r.mod||'—')+'</td><td style="text-align:center">'+(r.parc||'1')+'×</td><td class="muted">'+(r.estab||'—')+'</td></tr>';});
+
+  var tpx=document.querySelector('#tab-pix tbody');tpx.innerHTML='';
+  G.pix.forEach(function(p){tpx.innerHTML+='<tr><td>'+unitChip(p.unidade)+'</td><td>'+(p.nome||'—')+'</td><td><span class="chip c-info"><span class="dot"></span>'+(p.op||p.tipo||'PIX')+'</span></td><td class="val">'+fmt(p.valor)+'</td><td class="muted mono">'+(p.comp||'—')+'</td></tr>';});
+
+  var bm={};G.matches.concat(G.divs).forEach(function(m){var b=m.band||'Outros';if(!bm[b])bm[b]={qtd:0,bruto:0,liq:0};bm[b].qtd++;bm[b].bruto+=m.vRede;bm[b].liq+=m.vRedeLiq;});
+  var tbn=document.querySelector('#tab-band tbody');tbn.innerHTML='';
+  Object.entries(bm).sort(function(a,b){return b[1].bruto-a[1].bruto;}).forEach(function(e){tbn.innerHTML+='<tr><td>'+bandTag(e[0])+'</td><td style="text-align:center">'+e[1].qtd+'</td><td class="val">'+fmt(e[1].bruto)+'</td><td class="val">'+(e[1].liq?fmt(e[1].liq):'<span class="muted">—</span>')+'</td></tr>';});
+}
+
+function renderE2(){
+  var rec=G.parcelas.filter(function(p){return p.isPago;});
+  var fut=G.parcelas.filter(function(p){return p.isFuturo;});
+  var sem=G.parcelas.filter(function(p){return p.semRec;});
+  document.getElementById('b2a').innerHTML=bdg(G.parcelas.length);
+  document.getElementById('b2b').innerHTML=bdg(rec.length,'var(--ok)');
+  document.getElementById('b2c').innerHTML=bdg(fut.length,'var(--future)');
+  document.getElementById('b2d').innerHTML=bdg(sem.length,sem.length?'var(--warn)':'');
+
+  var c=document.getElementById('cards2');c.innerHTML='';
+  var tBruto=G.parcelas.reduce(function(s,p){return s+p.bruto;},0);
+  var tTaxa=G.parcelas.reduce(function(s,p){return s+p.taxa;},0);
+  [{lbl:'Total Parcelas',val:G.parcelas.length,sub:'recebidas + futuras',cls:''},{lbl:'✅ Já Recebidas',val:rec.length,sub:fmt(rec.reduce(function(s,p){return s+p.liq;},0)),cls:'ok'},{lbl:'🕐 A Receber',val:fut.length,sub:fmt(fut.reduce(function(s,p){return s+p.bruto;},0)),cls:'info'},{lbl:'Total Bruto',val:fmt(tBruto),sub:'valor bruto total',cls:''},{lbl:'Total Taxa',val:fmt(tTaxa),sub:'a pagar para a Rede',cls:'warn'}].forEach(function(x){c.innerHTML+='<div class="card '+x.cls+'"><div class="card-lbl">'+x.lbl+'</div><div class="card-val">'+x.val+'</div><div class="card-sub">'+x.sub+'</div></div>';});
+
+  function rowP(p,showStatus){
+    var sc=p.semRec?'<span class="chip c-warn"><span class="dot"></span>Sem receb.</span>':p.isPago?'<span class="chip c-ok"><span class="dot"></span>Recebida</span>':'<span class="chip c-future"><span class="dot"></span>A receber</span>';
+    var dtLabel=p.dtRec||'<span style="color:var(--future)">pendente</span>';
+    var base='<td>'+unitChip(p.unidade)+'</td><td>'+(p.nome||'—')+'</td><td class="mono">'+p.auth+'</td><td class="muted mono">'+p.dataVenda+'</td><td style="text-align:center">'+p.parc+'</td><td class="muted mono">'+dtLabel+'</td><td class="val">'+fmt(p.bruto)+'</td><td class="val-neg">'+(p.taxa>0?'-'+fmt(p.taxa):'<span class="muted">—</span>')+'</td><td class="val-pos">'+fmt(p.liq)+'</td><td>'+bandTag(p.band)+'</td>';
+    return '<tr>'+base+(showStatus?'<td>'+sc+'</td>':'')+'</tr>';
+  }
+
+  document.querySelector('#tab-pa tbody').innerHTML=G.parcelas.map(function(p){return rowP(p,true);}).join('');
+  document.querySelector('#tab-pr tbody').innerHTML=rec.map(function(p){return rowP(p,false);}).join('');
+  document.querySelector('#tab-pf tbody').innerHTML=fut.map(function(p){return rowP(p,false);}).join('');
+
+  var ts=document.querySelector('#tab-sr2 tbody');ts.innerHTML='';
+  sem.forEach(function(p){ts.innerHTML+='<tr><td>'+unitChip(p.unidade)+'</td><td>'+(p.nome||'—')+'</td><td class="mono">'+p.auth+'</td><td class="muted mono">'+p.dataVenda+'</td><td class="val">'+fmt(p.bruto)+'</td><td>'+bandTag(p.band)+'</td><td><span class="chip c-warn"><span class="dot"></span>Verificar</span></td></tr>';});
+}
+
+function renderE3(){
+  var mtz=G.lancamentos.filter(function(l){return l.unidade==='Matriz';});
+  var fil=G.lancamentos.filter(function(l){return l.unidade==='Filial';});
+  document.getElementById('b3a').innerHTML=bdg(G.lancamentos.length);
+  document.getElementById('b3b').innerHTML=bdg(mtz.length,'var(--gold)');
+  document.getElementById('b3c').innerHTML=bdg(fil.length,'#74b9ff');
+
+  var tRec=G.lancamentos.filter(function(l){return l.valor>0;}).reduce(function(s,l){return s+l.valor;},0);
+  var tPag=G.lancamentos.filter(function(l){return l.valor<0;}).reduce(function(s,l){return s+Math.abs(l.valor);},0);
+  var c=document.getElementById('cards3');c.innerHTML='';
+  [{lbl:'Total Lançamentos',val:G.lancamentos.length,sub:'linhas no relatório',cls:''},{lbl:'↑ A Receber (bruto)',val:fmt(tRec),sub:'valor total positivo',cls:'ok'},{lbl:'↓ Taxas (a pagar)',val:fmt(tPag),sub:'valor total negativo',cls:'warn'},{lbl:'Matriz',val:mtz.length,sub:'lançamentos',cls:''},{lbl:'Filial',val:fil.length,sub:'lançamentos',cls:'info'}].forEach(function(x){c.innerHTML+='<div class="card '+x.cls+'"><div class="card-lbl">'+x.lbl+'</div><div class="card-val">'+x.val+'</div><div class="card-sub">'+x.sub+'</div></div>';});
+
+  function rowL(l,comUnit){
+    var isTaxa=l.valor<0;
+    var tChip=isTaxa?'<span class="chip c-alert"><span class="dot"></span>Taxa (Pagar)</span>':'<span class="chip c-ok"><span class="dot"></span>A Receber</span>';
+    var st=l.status.includes('Receb')||l.status.includes('Pago')?'<span class="chip c-ok"><span class="dot"></span>'+l.status+'</span>':'<span class="chip c-future"><span class="dot"></span>'+l.status+'</span>';
+    var base=(comUnit?'<td>'+unitChip(l.unidade)+'</td>':'')+'<td>'+(l.nome||'—')+'</td><td class="mono">'+l.auth+'</td><td>'+bandTag(l.band)+'</td><td class="muted mono">'+l.dtComp+'</td><td class="muted mono">'+(l.dtVenc||'—')+'</td><td style="text-align:center">'+l.parc+'</td><td>'+tChip+'</td><td class="'+(isTaxa?'val-neg':'val-pos')+'">'+fmt(l.valor)+'</td><td>'+st+'</td>';
+    return '<tr>'+base+'</tr>';
+  }
+  document.querySelector('#tab3a tbody').innerHTML=G.lancamentos.map(function(l){return rowL(l,true);}).join('');
+  document.querySelector('#tab3b tbody').innerHTML=mtz.map(function(l){return rowL(l,false);}).join('');
+  document.querySelector('#tab3c tbody').innerHTML=fil.map(function(l){return rowL(l,false);}).join('');
+}
+
+function exportarExcel(){
+  var wb=XLSX.utils.book_new();
+  var h1=['Unidade','Cliente','Autorização','Bandeira','Dt Competência','Dt Vencimento','Parcela','Tipo','Valor','Status'];
+  var rows=[h1].concat(G.lancamentos.map(function(l){return[l.unidade,l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}));
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Todos');
+
+  var h2=['Cliente','Autorização','Bandeira','Dt Competência','Dt Vencimento','Parcela','Tipo','Valor','Status'];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h2].concat(G.lancamentos.filter(function(l){return l.unidade==='Matriz';}).map(function(l){return[l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}))),'Matriz');
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h2].concat(G.lancamentos.filter(function(l){return l.unidade==='Filial';}).map(function(l){return[l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}))),'Filial');
+
+  var h3=['Unidade','Cliente','Autorização','Data Venda','Parcela','Dt Recebimento','Valor Bruto','Taxa','Valor Líquido','Bandeira','Status'];
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h3].concat(G.parcelas.map(function(p){return[p.unidade,p.nome||'',p.auth,p.dataVenda,p.parc,p.dtRec||'',p.bruto,p.taxa,p.liq,p.band,p.isPago?'Recebida':p.semRec?'Sem recebimento':'A receber'];}))),'Parcelas');
+
+  XLSX.writeFile(wb,'Lume_ContaAzul_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+}
+
+function goStep(n){
+  if(document.getElementById('sBtn'+n).classList.contains('step-lock'))return;
+  document.querySelectorAll('.step-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('sBtn'+n).classList.add('active');
+  ['step1','step2','step3'].forEach(function(id,i){document.getElementById(id).style.display=i+1===n?'block':'none';});
+}
+
+function showTab(id,btn){
+  var pane=document.getElementById(id);
+  pane.parentElement.querySelectorAll('.pane').forEach(function(p){p.classList.remove('active');});
+  btn.closest('.tabs').querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  pane.classList.add('active');
+  btn.classList.add('active');
+}
+
+function novaAnalise(){location.reload();}
+</script>
+</body>
+</html>
