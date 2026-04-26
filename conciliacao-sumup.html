@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lume Finanças · Conciliação SumUp</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--navy:#0D2137;--navy-mid:#1a3450;--gold:#C9A84C;--gold-pale:#fdf8ee;--white:#fff;--gray:#f4f5f7;--muted:#6b7c93;--ok:#1a5c35;--ok-bg:#d7f5e3;--err:#8B0000;--err-bg:#FFD7D7;--warn:#7B5E00;--warn-bg:#FFF3CD;--div:#7B3F00;--div-bg:#FFE4B5}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gray);color:#1a2535;min-height:100vh}
+header{background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:32px 48px 28px;border-bottom:2px solid var(--gold);position:relative;overflow:hidden}
+header::after{content:'LUME';position:absolute;right:40px;top:50%;transform:translateY(-50%);font-family:'Playfair Display',serif;font-size:110px;font-weight:900;color:rgba(201,168,76,.06);pointer-events:none}
+.logo{display:flex;align-items:center;gap:14px}
+.logo-mark{width:46px;height:46px;background:var(--gold);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:22px;font-weight:900;color:var(--navy)}
+.logo-text h1{font-family:'Playfair Display',serif;font-size:21px;font-weight:700;color:#fff}
+.logo-text span{font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.header-sub{margin-top:14px;font-size:12px;color:rgba(255,255,255,.5)}
+.header-sub strong{color:var(--gold);font-weight:500}
+main{padding:36px 48px;max-width:1400px;margin:0 auto}
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.upload-card{background:#fff;border-radius:14px;padding:26px;border:2px dashed #d1d9e6;cursor:pointer;transition:all .2s}
+.upload-card:hover{border-color:var(--gold);background:var(--gold-pale)}
+.upload-card.loaded{border-color:var(--ok);border-style:solid;background:#f0fdf5}
+.upload-card input[type=file]{display:none}
+.tag{display:inline-block;background:var(--navy);color:var(--gold);font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:12px}
+.upload-icon{font-size:28px;margin-bottom:10px}
+.upload-label{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.upload-hint{font-size:12px;color:var(--muted);line-height:1.5}
+.upload-status{margin-top:10px;font-size:12px;font-weight:500;color:var(--ok);display:none}
+.upload-card.loaded .upload-status{display:block}
+.btn-row{display:flex;gap:10px;margin-bottom:24px}
+.btn{padding:12px 28px;border-radius:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .2s}
+.btn-primary{background:var(--gold);color:var(--navy)}
+.btn-primary:hover{background:#b8952f;transform:translateY(-1px)}
+.btn-primary:disabled{background:#d4c9a8;color:#888;cursor:not-allowed;transform:none}
+.btn-secondary{background:#fff;color:var(--navy);border:1.5px solid #d1d9e6}
+.btn-secondary:hover:not(:disabled){border-color:var(--navy)}
+.btn-secondary:disabled{opacity:.4;cursor:not-allowed}
+.resumo-grid{display:none;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px}
+.resumo-card{background:#fff;border-radius:12px;padding:18px 20px;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.resumo-card.ok{border-color:var(--ok)}.resumo-card.err{border-color:var(--err)}
+.resumo-card.warn{border-color:#e6c300}.resumo-card.div2{border-color:#e07b00}
+.resumo-num{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;line-height:1;margin-bottom:4px}
+.resumo-card.ok .resumo-num{color:var(--ok)}.resumo-card.err .resumo-num{color:var(--err)}
+.resumo-card.warn .resumo-num{color:#a08500}.resumo-card.div2 .resumo-num{color:var(--div)}
+.resumo-label{font-size:11px;color:var(--muted);font-weight:500}
+.period-bar{display:none;background:#fff;border-radius:10px;padding:14px 20px;margin-bottom:20px;flex-wrap:wrap;gap:20px;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.pitem{font-size:11px;color:var(--muted)}.pitem strong{display:block;font-size:13px;color:var(--navy);font-weight:600;margin-top:1px}
+.pdiv{width:1px;height:30px;background:#e0e5ee}
+.tabs-area{display:none}
+.tab-list{display:flex;gap:3px;background:#fff;border-radius:12px 12px 0 0;padding:5px 5px 0;border-bottom:2px solid var(--navy)}
+.tab-btn{padding:9px 18px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:500;color:var(--muted);cursor:pointer;border-radius:8px 8px 0 0;transition:all .15s}
+.tab-btn.active{background:var(--navy);color:var(--gold);font-weight:600}
+.tab-btn:not(.active):hover{background:var(--gray);color:var(--navy)}
+.tab-pane{display:none}.tab-pane.active{display:block}
+.tbl-wrap{background:#fff;border-radius:0 0 12px 12px;overflow:auto;max-height:500px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--navy);color:#fff;font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:11px 13px;text-align:left;position:sticky;top:0;z-index:2;white-space:nowrap}
+tbody tr{border-bottom:1px solid #edf0f5}
+tbody tr:hover{background:var(--gold-pale)!important}
+tbody td{padding:9px 13px;vertical-align:middle}
+tbody tr:nth-child(even){background:#f9fafb}
+.mono{font-family:monospace;font-size:11px;color:#666}
+.money{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap}
+.money-neg{color:var(--err)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:600;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)}.b-err{background:var(--err-bg);color:var(--err)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}.b-div{background:var(--div-bg);color:var(--div)}
+.acao{background:#fff8e8;border:1px solid #e8d5a3;border-radius:7px;padding:7px 11px;font-size:11px;color:#5c4400;line-height:1.4;max-width:280px}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty-icon{font-size:36px;margin-bottom:10px}.empty-txt{font-size:13px}
+.overlay{display:none;position:fixed;inset:0;background:rgba(13,33,55,.75);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.overlay.show{display:flex}
+.spinner{width:42px;height:42px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay-txt{color:#fff;font-size:13px;font-weight:500}
+footer{background:var(--navy);text-align:center;padding:16px;font-size:11px;color:rgba(255,255,255,.3)}
+footer span{color:var(--gold)}
+@media(max-width:768px){header{padding:20px 18px}main{padding:20px 16px}.upload-grid{grid-template-columns:1fr}.resumo-grid{grid-template-columns:1fr 1fr}header::after{display:none}}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-txt">Processando arquivos...</div></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">L</div>
+    <div class="logo-text"><h1>Lume Finanças</h1><span>BPO Financeiro</span></div>
+  </div>
+  <div class="header-sub">Módulo de <strong>Conciliação SumUp × Sistema da Clínica</strong> &nbsp;·&nbsp; Geração automática para Conta Azul</div>
+</header>
+
+<main>
+  <div class="upload-grid">
+    <label class="upload-card" id="cardSis">
+      <input type="file" id="fileSis" accept=".xlsx,.xls" onchange="carregarSistema(this)">
+      <div class="tag">Sistema da Clínica</div>
+      <div class="upload-icon">🏥</div>
+      <div class="upload-label">Relatório do Sistema Próprio</div>
+      <div class="upload-hint">Arquivo Excel (.xlsx) com as movimentações por período.</div>
+      <div class="upload-status" id="stSis">✓ Arquivo carregado</div>
+    </label>
+    <label class="upload-card" id="cardSu">
+      <input type="file" id="fileSu" accept=".csv" onchange="carregarSumup(this)">
+      <div class="tag">SumUp</div>
+      <div class="upload-icon">💳</div>
+      <div class="upload-label">Relatório de Transações SumUp</div>
+      <div class="upload-hint">Arquivo CSV exportado da plataforma SumUp.</div>
+      <div class="upload-status" id="stSu">✓ Arquivo carregado</div>
+    </label>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" id="btnAnalisar" disabled onclick="analisar()">⚡ Analisar e Confrontar</button>
+    <button class="btn btn-secondary" id="btnExportar" disabled onclick="exportar()">⬇ Exportar Excel</button>
+    <button class="btn btn-secondary" onclick="resetar()">↺ Novo Período</button>
+  </div>
+
+  <div class="period-bar" id="periodBar">
+    <div class="pitem">📅 Período SumUp<strong id="pSu">—</strong></div>
+    <div class="pdiv"></div>
+    <div class="pitem">💰 Total Bruto Sistema<strong id="pTotSis">—</strong></div>
+    <div class="pdiv"></div>
+    <div class="pitem">💰 Total Bruto SumUp<strong id="pTotSu">—</strong></div>
+    <div class="pdiv"></div>
+    <div class="pitem">🧾 Total Taxas SumUp<strong id="pTotTx">—</strong></div>
+    <div class="pdiv"></div>
+    <div class="pitem">📋 Lançamentos p/ Conta Azul<strong id="pLanc">—</strong></div>
+  </div>
+
+  <div class="resumo-grid" id="resumoGrid">
+    <div class="resumo-card ok"><div class="resumo-num" id="rOk">0</div><div class="resumo-label">✅ Transações OK</div></div>
+    <div class="resumo-card err"><div class="resumo-num" id="rErr">0</div><div class="resumo-label">🔴 No sistema, não na SumUp</div></div>
+    <div class="resumo-card warn"><div class="resumo-num" id="rWarn">0</div><div class="resumo-label">🟡 Na SumUp, não no sistema</div></div>
+    <div class="resumo-card div2"><div class="resumo-num" id="rDiv">0</div><div class="resumo-label">🟠 Divergência de valor</div></div>
+  </div>
+
+  <div class="tabs-area" id="tabsArea">
+    <div class="tab-list">
+      <button class="tab-btn active" onclick="aba('confronto',this)">🔍 Confronto Completo</button>
+      <button class="tab-btn" onclick="aba('pendencias',this)">⚠️ Pendências</button>
+      <button class="tab-btn" onclick="aba('cr',this)">📥 Conta Azul — C/Receber</button>
+      <button class="tab-btn" onclick="aba('cp',this)">📤 Conta Azul — C/Pagar Taxas</button>
+    </div>
+    <div class="tab-pane active" id="pane-confronto">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Código SumUp</th><th>Paciente(s)</th><th>Data</th><th>Forma Pagto</th><th>Valor Sistema</th><th>Valor SumUp</th><th>Taxa</th><th>Qtd</th><th>Status</th></tr></thead>
+        <tbody id="bConfronto"></tbody>
+      </table></div>
+    </div>
+    <div class="tab-pane" id="pane-pendencias">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Código SumUp</th><th>Paciente(s)</th><th>Valor Sistema</th><th>Valor SumUp</th><th>Status</th><th>Ação Necessária</th></tr></thead>
+        <tbody id="bPend"></tbody>
+      </table></div>
+    </div>
+    <div class="tab-pane" id="pane-cr">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Competência</th><th>Vencimento</th><th>Valor Bruto</th><th>Categoria / Procedimento</th><th>Descrição</th><th>Cliente</th><th>Observações</th></tr></thead>
+        <tbody id="bCR"></tbody>
+      </table></div>
+    </div>
+    <div class="tab-pane" id="pane-cp">
+      <div class="tbl-wrap"><table>
+        <thead><tr><th>Competência</th><th>Vencimento</th><th>Valor Taxa</th><th>Categoria</th><th>Descrição</th><th>Fornecedor</th><th>Observações</th></tr></thead>
+        <tbody id="bCP"></tbody>
+      </table></div>
+    </div>
+  </div>
+</main>
+
+<footer><span>Lume Finanças</span> · BPO Financeiro · Módulo de Conciliação SumUp · uso interno</footer>
+
+<script>
+var dadosSis = null, dadosSu = null, resultado = null;
+
+// ─── Ler CSV como texto UTF-8 e parsear manualmente ───────────────────────────
+// O XLSX.js lê CSV como Latin-1 corrompendo acentos. Usamos FileReader.readAsText com UTF-8.
+function parseCSV(texto) {
+  var linhas = texto.split('\n');
+  var headers = splitCSVLinha(linhas[0]);
+  var rows = [];
+  for (var i = 1; i < linhas.length; i++) {
+    var linha = linhas[i].trim();
+    if (!linha) continue;
+    var vals = splitCSVLinha(linha);
+    var obj = {};
+    for (var j = 0; j < headers.length; j++) {
+      obj[headers[j]] = j < vals.length ? vals[j] : '';
+    }
+    rows.push(obj);
+  }
+  return rows;
+}
+
+function splitCSVLinha(linha) {
+  var result = [], cur = '', inQ = false;
+  for (var i = 0; i < linha.length; i++) {
+    var c = linha[i];
+    if (c === '"') { inQ = !inQ; }
+    else if (c === ',' && !inQ) { result.push(cur.trim()); cur = ''; }
+    else { cur += c; }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+// ─── Ler Excel com XLSX.js (Excel não tem problema de encoding) ───────────────
+function carregarSistema(input) {
+  var file = input.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
+      dadosSis = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
+      document.getElementById('cardSis').classList.add('loaded');
+      document.getElementById('stSis').textContent = '✓ ' + file.name + ' · ' + dadosSis.length + ' registros';
+      document.getElementById('btnAnalisar').disabled = !(dadosSis && dadosSu);
+    } catch(e) { alert('Erro ao ler Excel:\n' + e.message); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ─── Ler CSV forçando UTF-8 ───────────────────────────────────────────────────
+function carregarSumup(input) {
+  var file = input.files[0]; if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      dadosSu = parseCSV(e.target.result);
+      document.getElementById('cardSu').classList.add('loaded');
+      document.getElementById('stSu').textContent = '✓ ' + file.name + ' · ' + dadosSu.length + ' registros';
+      document.getElementById('btnAnalisar').disabled = !(dadosSis && dadosSu);
+    } catch(e) { alert('Erro ao ler CSV:\n' + e.message); }
+  };
+  reader.readAsText(file, 'UTF-8'); // força UTF-8!
+}
+
+// ─── Utilitários ──────────────────────────────────────────────────────────────
+function moeda(v) {
+  var n = Number(String(v).replace(',','.'));
+  if (isNaN(n) || v === '' || v === null || v === undefined) return '—';
+  return 'R$ ' + n.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function num(v) { return Number(String(v).replace(',','.')) || 0; }
+function fmtData(v) {
+  if (!v) return '';
+  if (v instanceof Date) return v.toLocaleDateString('pt-BR');
+  var m = String(v).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[3]+'/'+m[2]+'/'+m[1] : String(v).substring(0,10);
+}
+function calcVenc(dataFmt, forma, tipoPag) {
+  if (!dataFmt) return '';
+  try {
+    var p = dataFmt.split('/');
+    var dt = new Date(p[2]+'-'+p[1]+'-'+p[0]);
+    var f = (forma||'').toLowerCase(), t = (tipoPag||'').toLowerCase();
+    if (f.indexOf('b') >= 0 && f.indexOf('ito') >= 0) dt.setDate(dt.getDate()+1); // débito
+    else if (t.indexOf('parcelado') >= 0) dt.setMonth(dt.getMonth()+1);
+    else dt.setDate(dt.getDate()+30);
+    return dt.toLocaleDateString('pt-BR');
+  } catch(e) { return ''; }
+}
+function limpaDoc(v) { return String(v||'').replace(/#/g,'').trim(); }
+function mktr(html) { var r = document.createElement('tr'); r.innerHTML = html; return r; }
+
+// ─── ANALISAR ─────────────────────────────────────────────────────────────────
+function analisar() {
+  document.getElementById('overlay').classList.add('show');
+  setTimeout(function(){
+    try { _analisar(); } catch(e) { alert('Erro:\n'+e.message+'\n\n'+e.stack); }
+    document.getElementById('overlay').classList.remove('show');
+  }, 80);
+}
+
+function _analisar() {
+  // ── Agora com CSV lido como UTF-8, as chaves são os nomes reais das colunas
+  // Chaves exatas confirmadas pelo diagnóstico:
+  // SumUp: 'Nº da venda', 'Tipo de transação', 'Valor total', 'Taxa', 'Data', 'Tipo de Pagamento', 'Parcelas'
+  // Sistema: 'Forma de pagamento', 'Doc. (AUT/AIC)', 'Paciente', 'Procedimentos', 'Profissional', 'Valor'
+
+  // ── PASSO 1: Filtrar cartão no sistema ───────────────────────────────────────
+  var cartao = [];
+  for (var i = 0; i < dadosSis.length; i++) {
+    var r = dadosSis[i];
+    var forma = String(r['Forma de pagamento'] || '').toLowerCase();
+    if (forma.indexOf('cart') >= 0 || forma.indexOf('cr') >= 0 || forma.indexOf('db') >= 0 ||
+        forma.indexOf('cred') >= 0 || forma.indexOf('debi') >= 0) {
+      var c = {}; for (var k in r) c[k] = r[k];
+      c.__doc = limpaDoc(r['Doc. (AUT/AIC)']);
+      cartao.push(c);
+    }
+  }
+
+  // ── PASSO 2: Filtrar vendas SumUp ─────────────────────────────────────────── 
+  // Com UTF-8 correto, 'Tipo de transação' é a chave exata
+  var vendas = [];
+  for (var i = 0; i < dadosSu.length; i++) {
+    var r = dadosSu[i];
+    // Buscar a coluna de tipo de transação (pode ter variações de nome)
+    var tipo = r['Tipo de transação'] || r['Tipo de transacao'] || '';
+    if (String(tipo).trim() === 'Venda') vendas.push(r);
+  }
+
+  // ── PASSO 3: Agrupar sistema por código ──────────────────────────────────────
+  var grupSis = {};
+  for (var i = 0; i < cartao.length; i++) {
+    var r = cartao[i], cod = r.__doc;
+    if (!cod) continue;
+    if (!grupSis[cod]) grupSis[cod] = {val:0, qtd:0, pacs:[], forma:r['Forma de pagamento']||''};
+    grupSis[cod].val += num(r['Valor']);
+    grupSis[cod].qtd++;
+    var pac = r['Paciente'] || '';
+    if (pac && grupSis[cod].pacs.indexOf(pac) < 0) grupSis[cod].pacs.push(pac);
+  }
+
+  // ── PASSO 4: Indexar SumUp por código da venda ───────────────────────────────
+  // Com UTF-8 correto, a chave é 'Nº da venda'
+  var idxSu = {};
+  for (var i = 0; i < vendas.length; i++) {
+    var r = vendas[i];
+    var cod = String(r['Nº da venda'] || r['No da venda'] || '').trim();
+    if (cod) idxSu[cod] = r;
+  }
+
+  // ── PASSO 5: Confronto ───────────────────────────────────────────────────────
+  var todosCods = {}, confronto = [];
+  for (var c in grupSis) todosCods[c] = true;
+  for (var c in idxSu)   todosCods[c] = true;
+
+  for (var cod in todosCods) {
+    var sis = grupSis[cod], su = idxSu[cod];
+    var status;
+    if (sis && !su)  status = 'err';
+    else if (!sis && su) status = 'warn';
+    else if (Math.abs(sis.val - num(su['Valor total'])) > 0.02) status = 'div';
+    else status = 'ok';
+    confronto.push({
+      cod:    cod,
+      pacs:   sis ? sis.pacs.join(' | ') : '—',
+      forma:  sis ? sis.forma : '—',
+      valSis: sis ? sis.val   : null,
+      qtd:    sis ? sis.qtd   : null,
+      data:   su  ? fmtData(su['Data']) : '',
+      valSu:  su  ? num(su['Valor total']) : null,
+      taxa:   su  ? num(su['Taxa'])        : null,
+      tipoPag:su  ? (su['Tipo de Pagamento']||'') : '',
+      status: status
+    });
+  }
+
+  // ── PASSO 6: Linhas OK — 1 por procedimento ──────────────────────────────────
+  var okCods = {};
+  for (var i = 0; i < confronto.length; i++) {
+    if (confronto[i].status === 'ok') okCods[confronto[i].cod] = true;
+  }
+
+  var lok = [];
+  for (var i = 0; i < cartao.length; i++) {
+    var r = cartao[i], cod = r.__doc;
+    if (!okCods[cod]) continue;
+    var su = idxSu[cod] || {};
+    var totCod   = grupSis[cod] ? grupSis[cod].val : 1;
+    var taxaSu   = num(su['Taxa']);
+    var valLinha = num(r['Valor']);
+    var taxaProp = Math.round(valLinha / totCod * taxaSu * 100) / 100;
+    var dataFmt  = fmtData(su['Data']);
+    lok.push({
+      pac:   String(r['Paciente']      || ''),
+      proc:  String(r['Procedimentos'] || ''),
+      prof:  String(r['Profissional']  || ''),
+      valor: valLinha,
+      taxa:  taxaProp,
+      data:  dataFmt,
+      venc:  calcVenc(dataFmt, r['Forma de pagamento']||'', su['Tipo de Pagamento']||''),
+      parc:  su['Parcelas'] || '',
+      cod:   cod
+    });
+  }
+
+  resultado = {confronto:confronto, lok:lok};
+  renderizar(confronto, lok);
+}
+
+// ─── RENDERIZAR ───────────────────────────────────────────────────────────────
+var BADGE = {
+  ok:   ['b-ok',  '✅ OK'],
+  err:  ['b-err', '🔴 No sistema – não está na SumUp'],
+  warn: ['b-warn','🟡 Na SumUp – não está no sistema'],
+  div:  ['b-div', '🟠 Divergência de valor']
+};
+var ACAO = {
+  err:  'Verificar se a transação foi processada na SumUp. Pode ser pagamento fora do período exportado.',
+  warn: 'Verificar com a clínica: transação de teste, cancelada ou venda não lançada no sistema.',
+  div:  'Revisar lançamento no sistema. Possível código duplicado ou valor incorreto.'
+};
+
+function renderizar(confronto, lok) {
+  var cnt = {ok:0,err:0,warn:0,div:0};
+  for (var i = 0; i < confronto.length; i++) cnt[confronto[i].status]++;
+  document.getElementById('rOk').textContent   = cnt.ok;
+  document.getElementById('rErr').textContent  = cnt.err;
+  document.getElementById('rWarn').textContent = cnt.warn;
+  document.getElementById('rDiv').textContent  = cnt.div;
+  document.getElementById('resumoGrid').style.display = 'grid';
+
+  var datas=[], totSis=0, totSu=0, totTx=0;
+  for (var i = 0; i < confronto.length; i++) {
+    var r = confronto[i];
+    if (r.data) datas.push(r.data);
+    if (r.valSis !== null) totSis += r.valSis;
+    if (r.valSu  !== null) totSu  += r.valSu;
+    if (r.taxa   !== null) totTx  += r.taxa;
+  }
+  // Ordenar datas (dd/mm/yyyy) para pegar min e max corretamente
+  datas.sort(function(a, b) {
+    var pa = a.split('/'), pb = b.split('/');
+    return new Date(pa[2]+'-'+pa[1]+'-'+pa[0]) - new Date(pb[2]+'-'+pb[1]+'-'+pb[0]);
+  });
+  document.getElementById('pSu').textContent     = datas.length ? datas[0]+' a '+datas[datas.length-1] : '—';
+  document.getElementById('pTotSis').textContent = moeda(totSis);
+  document.getElementById('pTotSu').textContent  = moeda(totSu);
+  document.getElementById('pTotTx').textContent  = moeda(totTx);
+  document.getElementById('pLanc').textContent   = lok.length + ' linhas';
+  document.getElementById('periodBar').style.display = 'flex';
+
+  // Confronto
+  var b = document.getElementById('bConfronto'); b.innerHTML = '';
+  for (var i = 0; i < confronto.length; i++) {
+    var r = confronto[i], bd = BADGE[r.status];
+    b.appendChild(mktr(
+      '<td class="mono">'+r.cod+'</td>'+
+      '<td style="max-width:180px;font-size:11px">'+r.pacs+'</td>'+
+      '<td>'+r.data+'</td>'+
+      '<td style="font-size:11px">'+r.forma+'</td>'+
+      '<td class="money">'+(r.valSis!==null?moeda(r.valSis):'—')+'</td>'+
+      '<td class="money">'+(r.valSu!==null?moeda(r.valSu):'—')+'</td>'+
+      '<td class="money">'+(r.taxa!==null?moeda(r.taxa):'—')+'</td>'+
+      '<td style="text-align:center">'+(r.qtd!==null?r.qtd:'—')+'</td>'+
+      '<td><span class="badge '+bd[0]+'">'+bd[1]+'</span></td>'
+    ));
+  }
+
+  // Pendências
+  var b = document.getElementById('bPend'); b.innerHTML = '';
+  var pend = [];
+  for (var i = 0; i < confronto.length; i++) if (confronto[i].status !== 'ok') pend.push(confronto[i]);
+  if (!pend.length) {
+    b.innerHTML = '<tr><td colspan="6"><div class="empty"><div class="empty-icon">🎉</div><div class="empty-txt">Nenhuma pendência! Todas as transações estão OK.</div></div></td></tr>';
+  } else {
+    for (var i = 0; i < pend.length; i++) {
+      var r = pend[i], bd = BADGE[r.status];
+      b.appendChild(mktr(
+        '<td class="mono">'+r.cod+'</td>'+
+        '<td style="max-width:180px;font-size:11px">'+r.pacs+'</td>'+
+        '<td class="money">'+(r.valSis!==null?moeda(r.valSis):'—')+'</td>'+
+        '<td class="money">'+(r.valSu!==null?moeda(r.valSu):'—')+'</td>'+
+        '<td><span class="badge '+bd[0]+'">'+bd[1]+'</span></td>'+
+        '<td><div class="acao">'+ACAO[r.status]+'</div></td>'
+      ));
+    }
+  }
+
+  // C/R
+  var b = document.getElementById('bCR'); b.innerHTML = '';
+  if (!lok.length) {
+    b.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">Nenhum lançamento OK para gerar.</div></div></td></tr>';
+  } else {
+    for (var i = 0; i < lok.length; i++) {
+      var r = lok[i];
+      var parc = r.parc ? r.parc+'x' : '';
+      var obs  = 'Médico(a): '+(r.prof||'—')+(parc?' | '+parc:'')+' | Cód: '+r.cod;
+      b.appendChild(mktr(
+        '<td>'+r.data+'</td>'+
+        '<td>'+r.venc+'</td>'+
+        '<td class="money">'+moeda(r.valor)+'</td>'+
+        '<td style="font-size:11px">'+(r.proc||'—')+'</td>'+
+        '<td style="font-size:11px">Receb. Cartão – '+r.pac+'</td>'+
+        '<td style="font-size:11px">'+r.pac+'</td>'+
+        '<td style="font-size:10px;color:#666;max-width:200px">'+obs+'</td>'
+      ));
+    }
+  }
+
+  // C/P
+  var b = document.getElementById('bCP'); b.innerHTML = '';
+  if (!lok.length) {
+    b.innerHTML = '<tr><td colspan="7"><div class="empty"><div class="empty-icon">💸</div><div class="empty-txt">Nenhuma taxa para lançar.</div></div></td></tr>';
+  } else {
+    for (var i = 0; i < lok.length; i++) {
+      var r = lok[i];
+      var obs = 'Taxa SumUp – '+r.pac+' | '+(r.proc||'')+' | Cód: '+r.cod;
+      b.appendChild(mktr(
+        '<td>'+r.data+'</td>'+
+        '<td>'+r.venc+'</td>'+
+        '<td class="money money-neg">'+moeda(-r.taxa)+'</td>'+
+        '<td style="font-size:11px">Taxas e Tarifas Financeiras</td>'+
+        '<td style="font-size:11px">Taxa SumUp – '+r.pac+'</td>'+
+        '<td>SumUp</td>'+
+        '<td style="font-size:10px;color:#666;max-width:200px">'+obs+'</td>'
+      ));
+    }
+  }
+
+  document.getElementById('tabsArea').style.display = 'block';
+  document.getElementById('btnExportar').disabled = false;
+}
+
+// ─── TABS ─────────────────────────────────────────────────────────────────────
+function aba(id, btn) {
+  var ps = document.querySelectorAll('.tab-pane'), bs = document.querySelectorAll('.tab-btn');
+  for (var i=0;i<ps.length;i++) ps[i].classList.remove('active');
+  for (var i=0;i<bs.length;i++) bs[i].classList.remove('active');
+  document.getElementById('pane-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ─── EXPORTAR ─────────────────────────────────────────────────────────────────
+function exportar() {
+  if (!resultado) return;
+  var confronto = resultado.confronto, lok = resultado.lok;
+  var LBL = {ok:'✅ OK',err:'🔴 No sistema – não na SumUp',warn:'🟡 Na SumUp – não no sistema',div:'🟠 Divergência'};
+  var wb = XLSX.utils.book_new();
+
+  var dC = [['Código SumUp','Paciente(s)','Data','Forma Pagto','Valor Sistema','Valor SumUp','Taxa','Qtd','Status']];
+  for (var i=0;i<confronto.length;i++) { var r=confronto[i]; dC.push([r.cod,r.pacs,r.data,r.forma,r.valSis,r.valSu,r.taxa,r.qtd,LBL[r.status]]); }
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dC), 'Confronto');
+
+  var dP = [['Código','Paciente(s)','Valor Sistema','Valor SumUp','Status','Ação']];
+  for (var i=0;i<confronto.length;i++) { var r=confronto[i]; if (r.status!=='ok') dP.push([r.cod,r.pacs,r.valSis,r.valSu,LBL[r.status],ACAO[r.status]]); }
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dP), 'Pendencias');
+
+  var dCR = [['Data de Competência','Data de Vencimento','Data de Pagamento','Valor','Categoria','Descrição','Cliente/Fornecedor','CNPJ/CPF','Centro de Custo','Observações']];
+  for (var i=0;i<lok.length;i++) {
+    var r=lok[i], parc=r.parc?r.parc+'x':'';
+    var obs='Médico(a): '+(r.prof||'—')+(parc?' | '+parc:'')+' | Cód: '+r.cod;
+    dCR.push([r.data,r.venc,'',r.valor,r.proc,'Receb. Cartão – '+r.pac,r.pac,'','',obs]);
+  }
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dCR), 'ContaAzul-CR');
+
+  var dCP = [['Data de Competência','Data de Vencimento','Data de Pagamento','Valor','Categoria','Descrição','Cliente/Fornecedor','CNPJ/CPF','Centro de Custo','Observações']];
+  for (var i=0;i<lok.length;i++) {
+    var r=lok[i], obs='Taxa SumUp – '+r.pac+' | '+(r.proc||'')+' | Cód: '+r.cod;
+    dCP.push([r.data,r.venc,'',-r.taxa,'Taxas e Tarifas Financeiras','Taxa SumUp – '+r.pac,'SumUp','','',obs]);
+  }
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dCP), 'ContaAzul-CP-Taxas');
+
+  XLSX.writeFile(wb, 'Lume_Conciliacao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+}
+
+// ─── RESETAR ──────────────────────────────────────────────────────────────────
+function resetar() {
+  dadosSis=dadosSu=resultado=null;
+  document.getElementById('cardSis').classList.remove('loaded');
+  document.getElementById('cardSu').classList.remove('loaded');
+  document.getElementById('fileSis').value='';
+  document.getElementById('fileSu').value='';
+  document.getElementById('stSis').textContent='✓ Arquivo carregado';
+  document.getElementById('stSu').textContent='✓ Arquivo carregado';
+  document.getElementById('btnAnalisar').disabled=true;
+  document.getElementById('btnExportar').disabled=true;
+  document.getElementById('resumoGrid').style.display='none';
+  document.getElementById('periodBar').style.display='none';
+  document.getElementById('tabsArea').style.display='none';
+}
+</script>
+</body>
+</html>
