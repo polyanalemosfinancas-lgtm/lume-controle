@@ -196,9 +196,9 @@ td{padding:8px 11px;font-size:13px;white-space:nowrap;vertical-align:middle}
       <button class="tab" onclick="showTab('t3b',this)">Matriz <span id="b3b"></span></button>
       <button class="tab" onclick="showTab('t3c',this)">Filial <span id="b3c"></span></button>
     </div>
-    <div class="pane active" id="t3a"><div class="sec-title">Todos os Lançamentos</div><div class="tw"><table id="tab3a"><thead><tr><th>Unid.</th><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
-    <div class="pane" id="t3b"><div class="sec-title">Lançamentos — Matriz</div><div class="tw"><table id="tab3b"><thead><tr><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
-    <div class="pane" id="t3c"><div class="sec-title">Lançamentos — Filial</div><div class="tw"><table id="tab3c"><thead><tr><th>Cliente</th><th>Autorização</th><th>Bandeira</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Parcela</th><th>Tipo</th><th>Valor</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane active" id="t3a"><div class="sec-title">Todos os Lançamentos</div><div class="tw"><table id="tab3a"><thead><tr><th>Unid.</th><th>Cliente/Fornecedor</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Dt Pagamento</th><th>Valor</th><th>Categoria</th><th>Parcela</th><th>Obs (Autorização)</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t3b"><div class="sec-title">Lançamentos — Matriz</div><div class="tw"><table id="tab3b"><thead><tr><th>Cliente/Fornecedor</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Dt Pagamento</th><th>Valor</th><th>Categoria</th><th>Parcela</th><th>Obs (Autorização)</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t3c"><div class="sec-title">Lançamentos — Filial</div><div class="tw"><table id="tab3c"><thead><tr><th>Cliente/Fornecedor</th><th>Dt Competência</th><th>Dt Vencimento</th><th>Dt Pagamento</th><th>Valor</th><th>Categoria</th><th>Parcela</th><th>Obs (Autorização)</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
   </div>
 </div>
 
@@ -267,11 +267,22 @@ function parsePacto(wb,unidade){
     var comp=fmtDate(r['Compensação']);
     var tipo=String(r['Tipo do Recebível']||'').trim();
     var opl=op.toLowerCase();
-    var isCart=op!==''&&!opl.includes('pix')&&!opl.includes('dinheiro')&&!opl.includes('boleto');
+    var isCart=op!==''&&op!=='nan'&&!opl.includes('pix')&&!opl.includes('dinheiro')&&!opl.includes('boleto')&&!opl.includes('nan');
     if(!nome&&!valor)return;
     result.push({nome,valor,auth,nsu,op,comp,tipo,isCart,unidade});
   });
   return result;
+}
+
+function findCol(row,patterns){
+  var keys=Object.keys(row);
+  for(var i=0;i<keys.length;i++){
+    var kl=keys[i].toLowerCase().replace(/[^a-z0-9 ]/g,'');
+    for(var j=0;j<patterns.length;j++){
+      if(kl.includes(patterns[j]))return row[keys[i]];
+    }
+  }
+  return '';
 }
 
 // PARSE REDE VENDAS - aba 'vendas', header linha 1
@@ -281,19 +292,19 @@ function parseRedeVendas(wb){
   var rows=XLSX.utils.sheet_to_json(ws,{defval:'',range:1});
   var result=[];
   rows.forEach(function(r){
-    var status=String(r['status da venda']||'').toLowerCase();
+    var status=String(findCol(r,['status da venda','status'])||'').toLowerCase();
     if(status&&!status.includes('aprov'))return;
-    var auth=normAuth(r['número da autorização (Auto)']);
-    var nsu=String(r['NSU/CV']||'').trim();
-    var valor=parseFloat(r['valor da venda original'])||0;
-    var valorLiq=parseFloat(r['valor líquido'])||0;
-    var data=fmtDate(r['data da venda']);
-    var band=String(r['bandeira']||'').trim();
-    var mod=String(r['modalidade']||'').trim();
-    var parc=String(r['número de parcelas']||'1').trim();
-    var estab=String(r['nome do estabelecimento']||'').trim();
+    var auth=normAuth(findCol(r,['autorizao auto','da autorizao']));
+    var nsu=String(findCol(r,['nsucv','nsu'])||'').trim();
+    var valor=parseFloat(findCol(r,['valor da venda original','valor original']))||0;
+    var valorLiq=parseFloat(findCol(r,['valor lquido']))||0;
+    var data=fmtDate(findCol(r,['data da venda']));
+    var band=String(findCol(r,['bandeira'])||'').trim();
+    var mod=String(findCol(r,['modalidade'])||'').trim();
+    var parc=String(findCol(r,['de parcelas'])||'1').trim();
+    var estab=String(findCol(r,['nome do estabelecimento'])||'').trim();
     if(!auth&&!nsu&&!valor)return;
-    result.push({auth,nsu,valor,valorLiq,data,band,mod,parc,estab});
+    result.push({auth:auth,nsu:nsu,valor:valor,valorLiq:valorLiq,data:data,band:band,mod:mod,parc:parc,estab:estab});
   });
   return result;
 }
@@ -303,41 +314,45 @@ function parseRedeReceb(wb){
   var pags=[];
   var abas=wb.SheetNames;
   abas.forEach(function(sn){
-    var snl=sn.toLowerCase();
+    var snl=sn.toLowerCase().replace(/[^a-z0-9 ]/g,'');
     if(!snl.includes('pagamento')&&!snl.includes('futuro'))return;
     var isFut=snl.includes('futuro');
     var ws=wb.Sheets[sn];
     var rows=XLSX.utils.sheet_to_json(ws,{defval:'',range:1});
     if(!rows.length)return;
     rows.forEach(function(r){
-      // Coluna de autorização tem nome diferente em cada aba
-      var auth=normAuth(r['número da autorização']||r['número de autorização']||'');
+      var auth=normAuth(findCol(r,['da autorizao','autorizao']));
       if(!auth)return;
-      var bruto=parseFloat(r['valor bruto da parcela original'])||0;
-      var liq=parseFloat(r['valor líquido da parcela'])||0;
-      var mdr=parseFloat(r['valor MDR descontado'])||0;
+      var bruto=parseFloat(findCol(r,['valor bruto da parcela original']))||0;
+      var liq=parseFloat(findCol(r,['valor lquido da parcela']))||0;
       var taxa=Math.round((bruto-liq)*100)/100;
-      var dtCol=isFut?'data prevista do recebimento':'data do recebimento';
-      var dtRec=fmtDate(r[dtCol]);
-      var dtVenda=fmtDate(r['data original da venda']);
-      var band=String(r['bandeira']||'').trim();
-      var status=String(r['status']||'paga').trim().toLowerCase();
-      var parc=String(r['parcela']||'1').trim();
-      var numParc=String(r['número de parcelas']||'1').trim();
-      var isPago=!isFut&&(status.includes('paga')||status.includes('pago'));
+      var dtRec=isFut?fmtDate(findCol(r,['data prevista','prevista do recebimento'])):fmtDate(findCol(r,['data do recebimento']));
+      var dtVenda=fmtDate(findCol(r,['data original da venda']));
+      var band=String(findCol(r,['bandeira'])||'').trim();
+      var status=String(findCol(r,['status'])||'paga').trim().toLowerCase();
+      var parc=String(findCol(r,['parcela'])||'1').trim();
+      var numParc='1';
+      var keys=Object.keys(r);
+      for(var i=0;i<keys.length;i++){
+        var kl=keys[i].toLowerCase().replace(/[^a-z0-9 ]/g,'');
+        if(kl.includes('de parcelas')){numParc=String(r[keys[i]]||'1');break;}
+      }
+      var isPago=!isFut;
       if(!bruto)return;
-      pags.push({auth,bruto,taxa,liq,dtRec,dtVenda,band,status,parc,numParc,isPago,isFuturo:isFut});
+      pags.push({auth:auth,bruto:bruto,taxa:taxa,liq:liq,dtRec:dtRec,dtVenda:dtVenda,band:band,status:status,parc:parc,numParc:numParc,isPago:isPago,isFuturo:isFut});
     });
   });
 
-  // Recebidos (depósitos)
+  // Recebidos (depositos) - busca a aba case-insensitive
   var recs=[];
-  if(wb.Sheets['recebidos']){
-    var rows2=XLSX.utils.sheet_to_json(wb.Sheets['recebidos'],{defval:'',range:1});
+  var recAba=null;
+  wb.SheetNames.forEach(function(sn){if(sn.toLowerCase().includes('recebido'))recAba=sn;});
+  if(recAba){
+    var rows2=XLSX.utils.sheet_to_json(wb.Sheets[recAba],{defval:'',range:1});
     rows2.forEach(function(r){
-      var val=parseFloat(r['valor depositado'])||0;
+      var val=parseFloat(findCol(r,['valor depositado','depositado']))||0;
       if(!val)return;
-      recs.push({data:fmtDate(r['data']),band:String(r['bandeira']||'').trim(),mod:String(r['modalidade']||'').trim(),estab:String(r['nome do estabelecimento']||'').trim(),valor:val,status:String(r['status']||'PAGO').trim()});
+      recs.push({data:fmtDate(findCol(r,['data'])),band:String(findCol(r,['bandeira'])||'').trim(),mod:String(findCol(r,['modalidade'])||'').trim(),estab:String(findCol(r,['nome do estabelecimento','estabelecimento'])||'').trim(),valor:val,status:String(findCol(r,['status'])||'PAGO').trim()});
     });
   }
   return {pagamentos:pags,recebidos:recs};
@@ -511,9 +526,10 @@ function renderE3(){
 
   function rowL(l,comUnit){
     var isTaxa=l.valor<0;
-    var tChip=isTaxa?'<span class="chip c-alert"><span class="dot"></span>Taxa (Pagar)</span>':'<span class="chip c-ok"><span class="dot"></span>A Receber</span>';
+    var cat=isTaxa?'<span class="chip c-alert"><span class="dot"></span>Taxa de Cartão</span>':'<span class="chip c-ok"><span class="dot"></span>Planos</span>';
+    var dtPag=l.status==='Recebido'||l.status==='Pago'?'<span class="muted mono">'+l.dtVenc+'</span>':'<span class="muted">—</span>';
     var st=l.status.includes('Receb')||l.status.includes('Pago')?'<span class="chip c-ok"><span class="dot"></span>'+l.status+'</span>':'<span class="chip c-future"><span class="dot"></span>'+l.status+'</span>';
-    var base=(comUnit?'<td>'+unitChip(l.unidade)+'</td>':'')+'<td>'+(l.nome||'—')+'</td><td class="mono">'+l.auth+'</td><td>'+bandTag(l.band)+'</td><td class="muted mono">'+l.dtComp+'</td><td class="muted mono">'+(l.dtVenc||'—')+'</td><td style="text-align:center">'+l.parc+'</td><td>'+tChip+'</td><td class="'+(isTaxa?'val-neg':'val-pos')+'">'+fmt(l.valor)+'</td><td>'+st+'</td>';
+    var base=(comUnit?'<td>'+unitChip(l.unidade)+'</td>':'')+'<td>'+(l.nome||'—')+'</td><td class="muted mono">'+l.dtComp+'</td><td class="muted mono">'+(l.dtVenc||'—')+'</td><td>'+dtPag+'</td><td class="'+(isTaxa?'val-neg':'val-pos')+'">'+fmt(l.valor)+'</td><td>'+cat+'</td><td style="text-align:center">'+l.parc+'</td><td class="mono muted">'+l.auth+'</td><td>'+st+'</td>';
     return '<tr>'+base+'</tr>';
   }
   document.querySelector('#tab3a tbody').innerHTML=G.lancamentos.map(function(l){return rowL(l,true);}).join('');
@@ -523,16 +539,49 @@ function renderE3(){
 
 function exportarExcel(){
   var wb=XLSX.utils.book_new();
-  var h1=['Unidade','Cliente','Autorização','Bandeira','Dt Competência','Dt Vencimento','Parcela','Tipo','Valor','Status'];
-  var rows=[h1].concat(G.lancamentos.map(function(l){return[l.unidade,l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}));
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rows),'Todos');
 
-  var h2=['Cliente','Autorização','Bandeira','Dt Competência','Dt Vencimento','Parcela','Tipo','Valor','Status'];
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h2].concat(G.lancamentos.filter(function(l){return l.unidade==='Matriz';}).map(function(l){return[l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}))),'Matriz');
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h2].concat(G.lancamentos.filter(function(l){return l.unidade==='Filial';}).map(function(l){return[l.nome||'',l.auth,l.band,l.dtComp,l.dtVenc,l.parc,l.tipo,l.valor,l.status];}))),'Filial');
+  // Header padrão Conta Azul
+  var hCA=['Data de Competência','Data de Vencimento','Data de Pagamento','Valor','Categoria','Descrição','Cliente/Fornecedor','CNPJ/CPF Cliente/Fornecedor','Centro de Custo','Observações'];
 
-  var h3=['Unidade','Cliente','Autorização','Data Venda','Parcela','Dt Recebimento','Valor Bruto','Taxa','Valor Líquido','Bandeira','Status'];
-  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet([h3].concat(G.parcelas.map(function(p){return[p.unidade,p.nome||'',p.auth,p.dataVenda,p.parc,p.dtRec||'',p.bruto,p.taxa,p.liq,p.band,p.isPago?'Recebida':p.semRec?'Sem recebimento':'A receber'];}))),'Parcelas');
+  function buildCA(lancamentos){
+    var rows=[hCA];
+    lancamentos.forEach(function(l){
+      var isTaxa=l.valor<0;
+      var dtPag=l.status==='Recebido'||l.status==='Pago'?l.dtVenc:'';
+      rows.push([
+        l.dtComp,
+        l.dtVenc||'',
+        dtPag,
+        l.valor,
+        isTaxa?'Taxa de Cartão':'Planos',
+        l.nome||'',
+        l.nome||'',
+        '',
+        '',
+        l.auth
+      ]);
+    });
+    return rows;
+  }
+
+  // Aba Conta Azul - Todos
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(buildCA(G.lancamentos)),'Conta Azul - Todos');
+
+  // Aba Conta Azul - Matriz
+  var mtz=G.lancamentos.filter(function(l){return l.unidade==='Matriz';});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(buildCA(mtz)),'Conta Azul - Matriz');
+
+  // Aba Conta Azul - Filial
+  var fil=G.lancamentos.filter(function(l){return l.unidade==='Filial';});
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(buildCA(fil)),'Conta Azul - Filial');
+
+  // Aba auxiliar - Parcelas detalhadas
+  var hP=['Unidade','Cliente','Autorização','Bandeira','Data Venda','Parcela','Dt Recebimento','Valor Bruto','Taxa','Valor Líquido','Status'];
+  var rowsP=[hP];
+  G.parcelas.forEach(function(p){
+    rowsP.push([p.unidade,p.nome||'',p.auth,p.band,p.dataVenda,p.parc,p.dtRec||'',p.bruto,p.taxa,p.liq,p.isPago?'Recebida':p.semRec?'Sem recebimento':'A receber']);
+  });
+  XLSX.utils.book_append_sheet(wb,XLSX.utils.aoa_to_sheet(rowsP),'Parcelas Detalhadas');
 
   XLSX.writeFile(wb,'Lume_ContaAzul_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
 }
