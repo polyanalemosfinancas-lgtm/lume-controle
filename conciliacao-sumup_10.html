@@ -447,7 +447,17 @@ function carregarMemoria() {
 
 function salvarMemoriaGitHub() {
   var repo = document.getElementById('ghRepo').value;
-  if (!repo || !memoriaShaN) { alert('Configure o GitHub antes de salvar.'); return; }
+  var token = document.getElementById('ghToken').value;
+
+  // Se não tem token, pedir agora
+  if (!token) {
+    token = prompt('Cole o Token do GitHub para salvar:\n(será guardado no navegador)');
+    if (!token) return;
+    localStorage.setItem('lume_gh_token', token.trim());
+    document.getElementById('ghToken').value = token.trim();
+  }
+
+  if (!repo) { alert('Repositório não configurado.'); return; }
 
   var res = resultados['cartao'];
   if (!res) { alert('Nenhuma análise para salvar.'); return; }
@@ -488,26 +498,55 @@ function salvarMemoriaGitHub() {
   if (idx >= 0) { historico[idx] = registro; }
   else          { historico.push(registro); }
 
-  var payload = {
-    message: (idx >= 0 ? 'Atualizar' : 'Adicionar') + ' conciliação ' + periodo,
-    content: btoa(unescape(encodeURIComponent(JSON.stringify({historico: historico})))),
-    sha:     memoriaShaN
-  };
-
   mostrarOverlay('Salvando no GitHub...');
-  fetch('https://api.github.com/repos/' + document.getElementById('ghRepo').value + '/contents/memoria.json', {
-    method:  'PUT',
-    headers: ghHeaders(),
-    body:    JSON.stringify(payload)
-  })
-  .then(function(r){ return r.json(); })
-  .then(function(d){
-    esconderOverlay();
-    memoriaShaN = d.content.sha;
-    renderizarMemoria();
-    alert('✓ Conciliação salva! Período: ' + periodo);
-  })
-  .catch(function(e){ esconderOverlay(); alert('Erro ao salvar: ' + e.message); });
+
+  // Buscar SHA atual do arquivo antes de salvar (garante que sempre teremos o SHA correto)
+  fetch('https://api.github.com/repos/' + repo + '/contents/memoria.json', {headers: ghHeaders()})
+    .then(function(r){ return r.json(); })
+    .then(function(fileData){
+      memoriaShaN = fileData.sha;
+
+      // Mesclar com histórico existente no servidor
+      try {
+        var existente = JSON.parse(atob(fileData.content.split('\n').join('')));
+        // Atualizar ou adicionar o registro atual
+        var found = false;
+        for (var i=0; i<existente.historico.length; i++) {
+          if (existente.historico[i].chave === chave) {
+            existente.historico[i] = registro;
+            found = true; break;
+          }
+        }
+        if (!found) existente.historico.push(registro);
+        historico = existente.historico;
+      } catch(e) {
+        historico = [registro];
+      }
+
+      var payload = {
+        message: (idx >= 0 ? 'Atualizar' : 'Adicionar') + ' conciliacao ' + periodo,
+        content: btoa(unescape(encodeURIComponent(JSON.stringify({historico: historico})))),
+        sha:     memoriaShaN
+      };
+
+      return fetch('https://api.github.com/repos/' + repo + '/contents/memoria.json', {
+        method:  'PUT',
+        headers: ghHeaders(),
+        body:    JSON.stringify(payload)
+      });
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      esconderOverlay();
+      if (d.content && d.content.sha) {
+        memoriaShaN = d.content.sha;
+        renderizarMemoria();
+        alert('✓ Conciliação salva! Período: ' + periodo);
+      } else {
+        alert('Erro ao salvar: ' + JSON.stringify(d));
+      }
+    })
+    .catch(function(e){ esconderOverlay(); alert('Erro ao salvar: ' + e.message); });
 }
 
 function renderizarMemoria() {
