@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d1b35">
+<title>Pendências — Lume Finanças</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --navy:#0d1b35;--navy2:#162040;
+  --gold:#c9963a;--gold2:#e8b84b;--gold3:#f5d080;--gold4:#fae9b8;
+  --white:#fff;--offwhite:#f7f4ee;--muted:#8a99b8;
+  --green:#2e7d52;--greenl:#d4f0e2;
+  --red:#a82525;--redl:#fde0e0;
+  --yellow:#8a5500;--yellowl:#fef3dc;
+  --safe:env(safe-area-inset-bottom,0px);
+}
+html,body{height:100%;overflow-x:hidden}
+body{font-family:'DM Sans',sans-serif;background:var(--offwhite)}
+
+/* LOADING */
+#loading{position:fixed;inset:0;background:var(--navy);z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+#loading.gone{display:none}
+.spin{width:38px;height:38px;border:3px solid rgba(201,150,58,.2);border-top-color:var(--gold2);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.load-logo{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);font-weight:600}
+.load-txt{font-size:12px;color:var(--muted)}
+
+/* HEADER */
+.hdr{background:var(--navy);padding:11px 16px;position:sticky;top:0;z-index:50;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.hdr-in{display:flex;align-items:center;gap:10px;max-width:800px;margin:0 auto}
+.logo{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:14px;font-weight:600;color:var(--navy);flex-shrink:0}
+.htxt{flex:1;min-width:0}
+.htxt h1{font-family:'Playfair Display',serif;font-size:15px;color:var(--white);font-weight:500;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.htxt h1:hover{color:var(--gold3)}
+.htxt p{font-size:10px;color:var(--muted);margin-top:1px}
+.hdate{font-size:11px;color:var(--gold3);background:rgba(201,150,58,.15);padding:5px 10px;border-radius:14px;border:1px solid rgba(201,150,58,.3);white-space:nowrap;flex-shrink:0}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0}
+.sync-dot.syncing{background:var(--gold2);animation:pulse .8s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* MAIN */
+.main{padding:14px;max-width:800px;margin:0 auto;padding-bottom:calc(80px + var(--safe))}
+
+/* STATS */
+.stats3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.stat{background:var(--white);border-radius:10px;padding:11px 12px;border:.5px solid #ddd;text-align:center}
+.stat-v{font-family:'Playfair Display',serif;font-size:20px;color:var(--navy);font-weight:600}
+.stat-l{font-size:10px;color:var(--muted);margin-top:1px}
+
+/* FILTERS */
+.filters-card{background:var(--white);border-radius:12px;padding:14px;margin-bottom:12px;border:.5px solid #ddd}
+.filters-title{font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:10px}
+.status-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.sfil{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;border:1.5px solid #ddd;background:var(--offwhite);cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--navy);white-space:nowrap;-webkit-appearance:none;transition:all .15s}
+.sfil.active{background:var(--navy);color:var(--gold2);border-color:var(--gold)}
+.sfil.ab{border-color:var(--red);color:var(--red)}
+.sfil.ab.active{background:var(--red);color:var(--white);border-color:var(--red)}
+.sfil.ve{border-color:var(--yellow);color:var(--yellow)}
+.sfil.ve.active{background:var(--yellow);color:var(--white);border-color:var(--yellow)}
+.sfil.re{border-color:var(--green);color:var(--green)}
+.sfil.re.active{background:var(--green);color:var(--white);border-color:var(--green)}
+
+.period-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.pf-field{display:flex;flex-direction:column;gap:4px}
+.pf-field label{font-size:10px;color:var(--muted);font-weight:500}
+.pf-field input{padding:9px 11px;border-radius:8px;border:1px solid #ddd;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--offwhite);color:var(--navy);outline:none;-webkit-appearance:none;width:100%}
+.pf-field input:focus{border-color:var(--gold)}
+.filter-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-clear{padding:8px 16px;border-radius:8px;border:1px solid #ddd;background:none;font-size:12px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--muted)}
+.btn-export{padding:8px 18px;border-radius:8px;border:none;background:var(--green);color:var(--white);font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:6px}
+.btn-export:active{opacity:.85}
+.result-count{font-size:11px;color:var(--muted);padding:4px 0;margin-left:auto;display:flex;align-items:center}
+
+/* ADD FORM */
+.add-form{background:var(--white);border-radius:12px;padding:16px;margin-bottom:12px;border:1px dashed var(--gold);display:none}
+.add-form.show{display:block}
+.form-title{font-family:'Playfair Display',serif;font-size:15px;color:var(--navy);margin-bottom:14px;font-weight:500}
+.apf-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.apf-field{display:flex;flex-direction:column;gap:4px}
+.apf-field label{font-size:11px;color:var(--muted);font-weight:500}
+.apf-field input,.apf-field select,.apf-field textarea{padding:10px 11px;border-radius:8px;border:1px solid #ddd;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--offwhite);outline:none;-webkit-appearance:none;color:var(--navy);width:100%}
+.apf-field input:focus,.apf-field select:focus,.apf-field textarea:focus{border-color:var(--gold);background:var(--white)}
+.apf-field textarea{resize:vertical;min-height:70px}
+.apf-full{grid-column:1/-1}
+.apf-btns{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+.btn-c{background:none;border:1px solid #ddd;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--navy)}
+.btn-s{background:var(--navy);color:var(--gold2);border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* PEND CARDS */
+.pend-list{display:flex;flex-direction:column;gap:10px}
+.pcard{background:var(--white);border-radius:12px;border:.5px solid #ddd;overflow:hidden;transition:box-shadow .15s}
+.pcard:hover{box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.pcard.aberto{border-left:4px solid var(--red)}
+.pcard.verificando{border-left:4px solid var(--yellow)}
+.pcard.resolvido{border-left:4px solid var(--green)}
+.pcard-hdr{padding:13px 14px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.pstag{display:inline-block;font-size:10px;font-weight:600;padding:3px 9px;border-radius:10px;white-space:nowrap;flex-shrink:0;margin-top:2px}
+.pstag.aberto{background:var(--redl);color:var(--red)}
+.pstag.verificando{background:var(--yellowl);color:var(--yellow)}
+.pstag.resolvido{background:var(--greenl);color:var(--green)}
+.pmain{flex:1;min-width:0}
+.pdesc{font-size:13px;font-weight:500;color:var(--navy);line-height:1.4}
+.pmeta{display:flex;gap:10px;margin-top:5px;flex-wrap:wrap}
+.pm{font-size:11px;color:var(--muted)}
+.pm.val{color:var(--navy);font-weight:500}
+.pm.resp{color:var(--green);font-weight:500}
+.pcard-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.pchev{color:var(--muted);font-size:10px;transition:transform .2s}
+.pcard.open .pchev{transform:rotate(180deg)}
+.pdel{width:26px;height:26px;border:none;background:none;cursor:pointer;color:#ddd;font-size:15px;display:flex;align-items:center;justify-content:center}
+.pdel:active{color:var(--red)}
+
+.pcard-body{padding:14px;background:var(--offwhite);border-top:.5px solid #eee;display:flex;flex-direction:column;gap:12px}
+.pb-field{display:flex;flex-direction:column;gap:5px}
+.pb-label{font-size:10px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.5px}
+.pb-val{font-size:13px;color:var(--navy);line-height:1.6;background:var(--white);padding:10px 12px;border-radius:8px;border:.5px solid #ddd;white-space:pre-wrap;word-break:break-word}
+.pb-edit{width:100%;padding:10px 12px;border-radius:8px;border:1px solid #ddd;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--white);outline:none;-webkit-appearance:none;color:var(--navy);resize:vertical;min-height:80px}
+.pb-edit:focus{border-color:var(--gold)}
+.pb-inp{width:100%;padding:9px 12px;border-radius:8px;border:1px solid #ddd;font-size:13px;font-family:'DM Sans',sans-serif;background:var(--white);outline:none;-webkit-appearance:none;color:var(--navy)}
+.pb-inp:focus{border-color:var(--gold)}
+.save-btn{align-self:flex-start;padding:8px 18px;border-radius:8px;background:var(--navy);color:var(--gold2);border:none;font-size:12px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif}
+.status-btns{display:flex;gap:7px;flex-wrap:wrap}
+.stbtn{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;border:2px solid transparent;cursor:pointer;font-family:'DM Sans',sans-serif;-webkit-appearance:none;transition:all .15s}
+.stbtn.aberto{border-color:var(--red);color:var(--red);background:none}
+.stbtn.aberto.sel{background:var(--red);color:var(--white)}
+.stbtn.verificando{border-color:var(--yellow);color:var(--yellow);background:none}
+.stbtn.verificando.sel{background:var(--yellow);color:var(--white)}
+.stbtn.resolvido{border-color:var(--green);color:var(--green);background:none}
+.stbtn.resolvido.sel{background:var(--green);color:var(--white)}
+
+/* FAB */
+.fab{position:fixed;right:16px;bottom:calc(20px + var(--safe));width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--navy);font-weight:700;box-shadow:0 4px 18px rgba(201,150,58,.45);z-index:90}
+.fab:active{transform:scale(.92)}
+
+/* TOAST */
+#toast{position:fixed;bottom:calc(80px + var(--safe));left:50%;transform:translateX(-50%) translateY(10px);background:var(--navy);color:var(--gold2);font-size:12px;font-weight:500;padding:7px 16px;border-radius:20px;border:1px solid rgba(201,150,58,.3);z-index:500;opacity:0;transition:all .3s;pointer-events:none;white-space:nowrap}
+
+/* MODAL NAME */
+.modal-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;align-items:flex-end;justify-content:center}
+.modal-ov.show{display:flex}
+.modal{background:var(--white);border-radius:20px 20px 0 0;padding:20px 18px;width:100%;max-width:500px;padding-bottom:calc(20px + var(--safe))}
+.modal-handle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:0 auto 14px}
+.modal-title{font-family:'Playfair Display',serif;font-size:17px;color:var(--navy);margin-bottom:12px;font-weight:500}
+.modal-inp{width:100%;padding:12px 14px;border-radius:10px;border:1.5px solid #ddd;font-size:15px;font-family:'DM Sans',sans-serif;outline:none;color:var(--navy);margin-bottom:12px;-webkit-appearance:none}
+.modal-inp:focus{border-color:var(--gold)}
+.modal-btns{display:flex;gap:8px}
+.modal-btns .btn-c{flex:1}.modal-btns .btn-s{flex:2}
+
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--muted)}
+.empty-icon{font-size:40px;margin-bottom:10px;opacity:.5}
+.empty-txt{font-size:14px}
+
+@media(min-width:600px){
+  .stats3{grid-template-columns:repeat(4,1fr)}
+  .apf-grid{grid-template-columns:1fr 1fr 1fr}
+  .modal-ov{align-items:center}
+  .modal{border-radius:16px;padding-bottom:20px}
+  .modal-handle{display:none}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="load-logo">LF</div>
+  <div class="spin"></div>
+  <div class="load-txt">Conectando...</div>
+</div>
+
+<div class="hdr">
+  <div class="hdr-in">
+    <div class="logo">LF</div>
+    <div class="htxt">
+      <h1 id="clientName" onclick="openModal()">Nome do Cliente ✏️</h1>
+      <p>Controle de Pendências · Lume Finanças</p>
+    </div>
+    <div class="hdate" id="hdate"></div>
+    <div class="sync-dot" id="syncDot"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div style="height:4px"></div>
+
+  <!-- STATS -->
+  <div class="stats3" id="stats"></div>
+
+  <!-- FILTERS -->
+  <div class="filters-card">
+    <div class="filters-title">Filtros</div>
+    <div class="status-row">
+      <button class="sfil active" onclick="setFilter('todos',this)">Todos</button>
+      <button class="sfil ab" onclick="setFilter('aberto',this)">🔴 Em Aberto</button>
+      <button class="sfil ve" onclick="setFilter('verificando',this)">🟡 Verificando</button>
+      <button class="sfil re" onclick="setFilter('resolvido',this)">🟢 Resolvido</button>
+    </div>
+    <div class="period-row">
+      <div class="pf-field">
+        <label>Data início</label>
+        <input type="date" id="dateFrom" onchange="renderPends()">
+      </div>
+      <div class="pf-field">
+        <label>Data fim</label>
+        <input type="date" id="dateTo" onchange="renderPends()">
+      </div>
+    </div>
+    <div class="filter-actions">
+      <button class="btn-clear" onclick="clearFilters()">Limpar filtros</button>
+      <button class="btn-export" onclick="exportExcel()">
+        📊 Exportar Excel
+      </button>
+      <span class="result-count" id="resultCount"></span>
+    </div>
+  </div>
+
+  <!-- ADD FORM -->
+  <div class="add-form" id="addForm">
+    <div class="form-title">Nova Pendência</div>
+    <div class="apf-grid">
+      <div class="apf-field">
+        <label>Data</label>
+        <input type="date" id="pDate">
+      </div>
+      <div class="apf-field">
+        <label>Valor (opcional)</label>
+        <input type="text" id="pVal" placeholder="R$ 0,00">
+      </div>
+      <div class="apf-field apf-full">
+        <label>Descrição da Pendência *</label>
+        <input type="text" id="pDesc" placeholder="O que é esta pendência?">
+      </div>
+      <div class="apf-field apf-full">
+        <label>Detalhes</label>
+        <textarea id="pDet" placeholder="Descreva com mais detalhes..."></textarea>
+      </div>
+      <div class="apf-field">
+        <label>Responsável</label>
+        <input type="text" id="pResp" placeholder="Nome do responsável">
+      </div>
+      <div class="apf-field">
+        <label>Status</label>
+        <select id="pStatus">
+          <option value="aberto">🔴 Em Aberto</option>
+          <option value="verificando">🟡 Verificando</option>
+          <option value="resolvido">🟢 Resolvido</option>
+        </select>
+      </div>
+    </div>
+    <div class="apf-btns">
+      <button class="btn-c" onclick="toggleForm()">Cancelar</button>
+      <button class="btn-s" onclick="savePend()">Salvar Pendência</button>
+    </div>
+  </div>
+
+  <!-- LIST -->
+  <div class="pend-list" id="pendList"></div>
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="toggleForm()">+</button>
+
+<!-- MODAL NAME -->
+<div class="modal-ov" id="modalOv" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">Nome do Cliente</div>
+    <input class="modal-inp" id="modalInp" placeholder="Ex: Studio Fit 360" onkeydown="if(event.key==='Enter')saveName()">
+    <div class="modal-btns">
+      <button class="btn-c" onclick="closeModal()">Cancelar</button>
+      <button class="btn-s" onclick="saveName()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+
+<!-- SheetJS para exportar Excel -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────
+// Mude CLIENT_ID para o nome do cliente (sem espaços/acentos)
+var CLIENT_ID = "cliente_pendencias";
+
+var db = null, statusFilter = 'todos', openCards = {}, saveTimer = null;
+
+// ── FIREBASE ──────────────────────────────────────────────────────────────
+firebase.initializeApp({
+  apiKey:"AIzaSyCe2qbfvzf_7RCSSt7RXnyFvjOKnr2XZqw",
+  authDomain:"lume-financas.firebaseapp.com",
+  projectId:"lume-financas",
+  storageBucket:"lume-financas.firebasestorage.app",
+  messagingSenderId:"582149426025",
+  appId:"1:582149426025:web:1b44fd2f492acaf2edcbf8"
+});
+db = firebase.firestore();
+
+function pendsCol(){ return db.collection('pendencias_'+CLIENT_ID); }
+function metaDoc(){ return db.collection('meta_pend').doc(CLIENT_ID); }
+
+var pends = {};
+var clientName = 'Nome do Cliente';
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+firebase.auth().signInAnonymously().then(function(){
+  // Load client name
+  return metaDoc().get();
+}).then(function(snap){
+  if(snap.exists && snap.data().name){
+    clientName = snap.data().name;
+    document.getElementById('clientName').textContent = clientName + ' ✏️';
+    document.title = clientName + ' — Pendências';
+  }
+  // Listen realtime
+  pendsCol().orderBy('createdAt','desc').onSnapshot(function(snap){
+    pends = {};
+    snap.forEach(function(d){ pends[d.id] = d.data(); });
+    renderStats();
+    renderPends();
+    setSyncing(false);
+  });
+  document.getElementById('loading').classList.add('gone');
+  document.getElementById('hdate').textContent =
+    new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'short'}).replace('.','');
+}).catch(function(e){
+  console.error(e);
+  document.getElementById('loading').classList.add('gone');
+  showToast('⚠️ Erro de conexão');
+});
+
+function setSyncing(on){
+  document.getElementById('syncDot').className = 'sync-dot' + (on?' syncing':'');
+}
+
+// ── CLIENT NAME ───────────────────────────────────────────────────────────
+function openModal(){
+  document.getElementById('modalInp').value = clientName === 'Nome do Cliente' ? '' : clientName;
+  document.getElementById('modalOv').classList.add('show');
+  setTimeout(function(){ document.getElementById('modalInp').focus(); }, 200);
+}
+function closeModal(){ document.getElementById('modalOv').classList.remove('show'); }
+function saveName(){
+  var v = document.getElementById('modalInp').value.trim();
+  if(!v) return;
+  clientName = v;
+  document.getElementById('clientName').textContent = v + ' ✏️';
+  document.title = v + ' — Pendências';
+  metaDoc().set({name:v},{merge:true});
+  closeModal();
+  showToast('✓ Nome salvo');
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────
+function setFilter(f, el){
+  statusFilter = f;
+  document.querySelectorAll('.sfil').forEach(function(b){ b.classList.remove('active'); });
+  el.classList.add('active');
+  renderPends();
+}
+function clearFilters(){
+  statusFilter = 'todos';
+  document.querySelectorAll('.sfil').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelector('.sfil').classList.add('active');
+  document.getElementById('dateFrom').value = '';
+  document.getElementById('dateTo').value = '';
+  renderPends();
+}
+
+function inPeriod(pend){
+  var from = document.getElementById('dateFrom').value;
+  var to   = document.getElementById('dateTo').value;
+  if(!from && !to) return true;
+  var d = pend.date || '';
+  if(!d) return true;
+  if(from && d < from) return false;
+  if(to   && d > to)   return false;
+  return true;
+}
+
+// ── STATS ─────────────────────────────────────────────────────────────────
+function renderStats(){
+  var all = Object.values(pends);
+  var ab = all.filter(function(p){ return p.status==='aberto'; }).length;
+  var ve = all.filter(function(p){ return p.status==='verificando'; }).length;
+  var re = all.filter(function(p){ return p.status==='resolvido'; }).length;
+  document.getElementById('stats').innerHTML =
+    '<div class="stat"><div class="stat-v">'+all.length+'</div><div class="stat-l">Total</div></div>'+
+    '<div class="stat"><div class="stat-v" style="color:var(--red)">'+ab+'</div><div class="stat-l">Em Aberto</div></div>'+
+    '<div class="stat"><div class="stat-v" style="color:var(--yellow)">'+ve+'</div><div class="stat-l">Verificando</div></div>'+
+    '<div class="stat"><div class="stat-v" style="color:var(--green)">'+re+'</div><div class="stat-l">Resolvidos</div></div>';
+}
+
+// ── RENDER PENDS ──────────────────────────────────────────────────────────
+var STATUS_LBL = {aberto:'🔴 Em Aberto', verificando:'🟡 Verificando', resolvido:'🟢 Resolvido'};
+
+function H(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderPends(){
+  var items = Object.entries(pends).sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
+
+  // Apply filters
+  items = items.filter(function(entry){
+    var p = entry[1];
+    if(statusFilter !== 'todos' && p.status !== statusFilter) return false;
+    if(!inPeriod(p)) return false;
+    return true;
+  });
+
+  document.getElementById('resultCount').textContent = items.length + ' pendência' + (items.length!==1?'s':'');
+
+  if(!items.length){
+    document.getElementById('pendList').innerHTML =
+      '<div class="empty"><div class="empty-icon">🔔</div><div class="empty-txt">Nenhuma pendência encontrada.</div></div>';
+    return;
+  }
+
+  document.getElementById('pendList').innerHTML = items.map(function(entry){
+    var id = entry[0], p = entry[1];
+    var st = p.status || 'aberto';
+    var isOpen = openCards[id];
+    return '<div class="pcard '+st+(isOpen?' open':'')+'">'+
+      '<div class="pcard-hdr" onclick="toggleCard(\''+id+'\')" >'+
+        '<span class="pstag '+st+'">'+STATUS_LBL[st]+'</span>'+
+        '<div class="pmain">'+
+          '<div class="pdesc">'+H(p.desc)+'</div>'+
+          '<div class="pmeta">'+
+            (p.date?'<span class="pm">📅 '+H(p.date)+'</span>':'')+
+            (p.valor?'<span class="pm val">💰 '+H(p.valor)+'</span>':'')+
+            (p.responsavel?'<span class="pm">👤 '+H(p.responsavel)+'</span>':'')+
+            (p.resposta?'<span class="pm resp">✓ Respondida</span>':'')+
+          '</div>'+
+        '</div>'+
+        '<div class="pcard-right">'+
+          '<span class="pchev">▼</span>'+
+          '<button class="pdel" onclick="event.stopPropagation();deletePend(\''+id+'\')" title="Excluir">🗑</button>'+
+        '</div>'+
+      '</div>'+
+      (isOpen?
+        '<div class="pcard-body">'+
+          (p.detalhes?'<div class="pb-field"><div class="pb-label">Detalhes</div><div class="pb-val">'+H(p.detalhes)+'</div></div>':'')+
+          '<div class="pb-field">'+
+            '<div class="pb-label">Editar Descrição</div>'+
+            '<input class="pb-inp" id="ed-desc-'+id+'" value="'+H(p.desc||'')+'" placeholder="Descrição...">'+
+          '</div>'+
+          '<div class="pb-field" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
+            '<div><div class="pb-label">Data</div><input class="pb-inp" type="date" id="ed-date-'+id+'" value="'+H(p.date||'')+'"></div>'+
+            '<div><div class="pb-label">Valor</div><input class="pb-inp" id="ed-val-'+id+'" value="'+H(p.valor||'')+'" placeholder="R$ 0,00"></div>'+
+          '</div>'+
+          '<div class="pb-field">'+
+            '<div class="pb-label">Responsável</div>'+
+            '<input class="pb-inp" id="ed-resp-'+id+'" value="'+H(p.responsavel||'')+'" placeholder="Nome do responsável">'+
+          '</div>'+
+          '<div class="pb-field">'+
+            '<div class="pb-label">Detalhes / Tratativas</div>'+
+            '<textarea class="pb-edit" id="ed-det-'+id+'" placeholder="Descreva os detalhes...">'+H(p.detalhes||'')+'</textarea>'+
+          '</div>'+
+          '<div class="pb-field">'+
+            '<div class="pb-label">Resposta / Resolução</div>'+
+            '<textarea class="pb-edit" id="ed-ans-'+id+'" placeholder="Registre aqui a resposta ou resolução...">'+H(p.resposta||'')+'</textarea>'+
+          '</div>'+
+          '<button class="save-btn" onclick="saveEdits(\''+id+'\')">💾 Salvar alterações</button>'+
+          '<div class="pb-field">'+
+            '<div class="pb-label">Status</div>'+
+            '<div class="status-btns">'+
+              '<button class="stbtn aberto'+(st==='aberto'?' sel':'')+'" onclick="setStatus(\''+id+'\',\'aberto\')">🔴 Em Aberto</button>'+
+              '<button class="stbtn verificando'+(st==='verificando'?' sel':'')+'" onclick="setStatus(\''+id+'\',\'verificando\')">🟡 Verificando</button>'+
+              '<button class="stbtn resolvido'+(st==='resolvido'?' sel':'')+'" onclick="setStatus(\''+id+'\',\'resolvido\')">🟢 Resolvido</button>'+
+            '</div>'+
+          '</div>'+
+        '</div>':'')+
+    '</div>';
+  }).join('');
+}
+
+function toggleCard(id){ openCards[id]=!openCards[id]; renderPends(); }
+
+function setStatus(id, status){
+  setSyncing(true);
+  pendsCol().doc(id).update({status:status}).then(function(){ showToast('✓ Status atualizado'); });
+}
+
+function saveEdits(id){
+  var desc  = document.getElementById('ed-desc-'+id).value.trim();
+  var date  = document.getElementById('ed-date-'+id).value;
+  var val   = document.getElementById('ed-val-'+id).value.trim();
+  var resp  = document.getElementById('ed-resp-'+id).value.trim();
+  var det   = document.getElementById('ed-det-'+id).value.trim();
+  var ans   = document.getElementById('ed-ans-'+id).value.trim();
+  if(!desc){ alert('Descrição obrigatória'); return; }
+  setSyncing(true);
+  pendsCol().doc(id).update({
+    desc:desc, date:date, valor:val,
+    responsavel:resp, detalhes:det, resposta:ans,
+    updatedAt:Date.now()
+  }).then(function(){ showToast('✓ Alterações salvas'); });
+}
+
+function deletePend(id){
+  if(!confirm('Excluir esta pendência?')) return;
+  setSyncing(true);
+  pendsCol().doc(id).delete().then(function(){ showToast('Pendência excluída'); });
+}
+
+// ── ADD FORM ──────────────────────────────────────────────────────────────
+function toggleForm(){
+  var f = document.getElementById('addForm');
+  f.classList.toggle('show');
+  if(f.classList.contains('show')){
+    document.getElementById('pDate').value = new Date().toISOString().slice(0,10);
+    document.getElementById('pDesc').value = '';
+    document.getElementById('pVal').value  = '';
+    document.getElementById('pDet').value  = '';
+    document.getElementById('pResp').value = '';
+    document.getElementById('pStatus').value = 'aberto';
+    setTimeout(function(){ document.getElementById('pDesc').focus(); },100);
+    f.scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+function savePend(){
+  var desc = document.getElementById('pDesc').value.trim();
+  if(!desc){ alert('Preencha a descrição'); return; }
+  setSyncing(true);
+  pendsCol().add({
+    desc:  desc,
+    date:  document.getElementById('pDate').value,
+    valor: document.getElementById('pVal').value.trim(),
+    detalhes: document.getElementById('pDet').value.trim(),
+    responsavel: document.getElementById('pResp').value.trim(),
+    status: document.getElementById('pStatus').value,
+    resposta: '',
+    createdAt: Date.now()
+  }).then(function(){
+    document.getElementById('addForm').classList.remove('show');
+    showToast('✓ Pendência adicionada');
+  });
+}
+
+// ── EXPORT EXCEL ──────────────────────────────────────────────────────────
+function exportExcel(){
+  var items = Object.entries(pends).sort(function(a,b){ return (b[1].createdAt||0)-(a[1].createdAt||0); });
+
+  // Apply same filters as current view
+  items = items.filter(function(entry){
+    var p = entry[1];
+    if(statusFilter !== 'todos' && p.status !== statusFilter) return false;
+    if(!inPeriod(p)) return false;
+    return true;
+  });
+
+  if(!items.length){ alert('Nenhuma pendência para exportar com os filtros atuais.'); return; }
+
+  var STATUS_PT = {aberto:'Em Aberto', verificando:'Verificando', resolvido:'Resolvido'};
+
+  // Build data
+  var rows = [['Data','Descrição','Valor','Responsável','Status','Detalhes / Tratativas','Resposta / Resolução','Criado em']];
+  items.forEach(function(entry){
+    var p = entry[1];
+    rows.push([
+      p.date || '',
+      p.desc || '',
+      p.valor || '',
+      p.responsavel || '',
+      STATUS_PT[p.status] || p.status || '',
+      p.detalhes || '',
+      p.resposta || '',
+      p.createdAt ? new Date(p.createdAt).toLocaleDateString('pt-BR') : ''
+    ]);
+  });
+
+  var wb = XLSX.utils.book_new();
+  var ws = XLSX.utils.aoa_to_sheet(rows);
+
+  // Column widths
+  ws['!cols'] = [{wch:12},{wch:40},{wch:14},{wch:20},{wch:14},{wch:40},{wch:40},{wch:14}];
+
+  // Style header row (row 0)
+  var range = XLSX.utils.decode_range(ws['!ref']);
+  for(var C=range.s.c; C<=range.e.c; C++){
+    var addr = XLSX.utils.encode_cell({r:0,c:C});
+    if(!ws[addr]) continue;
+    ws[addr].s = {
+      font:{bold:true, color:{rgb:'E8B84B'}},
+      fill:{fgColor:{rgb:'0D1B35'}},
+      alignment:{horizontal:'center',vertical:'center',wrapText:true}
+    };
+  }
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Pendências');
+
+  var filename = (clientName !== 'Nome do Cliente' ? clientName : 'Lume') +
+    '_Pendencias_' + new Date().toLocaleDateString('pt-BR').replace(/\//g,'-') + '.xlsx';
+
+  XLSX.writeFile(wb, filename);
+  showToast('✓ Excel exportado!');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+function showToast(msg){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)'; },2200);
+}
+</script>
+</body>
+</html>
