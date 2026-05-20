@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conciliação Marketplace — Divina Embalagens v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root {
+  --navy:#0D2137; --navy2:#122844; --navy3:#1a3a5c;
+  --gold:#C9A84C; --gold2:#e2c270; --gold3:#f5e9c8;
+  --white:#FAFAF8; --gray:#8a9bb0; --gray2:#e8edf3;
+  --green:#27ae60; --red:#e74c3c; --orange:#e67e22; --blue:#2980b9;
+  --ml:#FFE600; --shopee:#EE4D2D;
+  --ok:#27ae60; --warn:#f39c12; --pend:#2980b9;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--navy);color:var(--white);font-family:'DM Sans',sans-serif;min-height:100vh;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse at 15% 25%,rgba(201,168,76,.07) 0%,transparent 55%),radial-gradient(ellipse at 85% 75%,rgba(201,168,76,.05) 0%,transparent 55%);pointer-events:none;z-index:0;}
+.wrap{position:relative;z-index:1;max-width:1340px;margin:0 auto;padding:0 24px;}
+
+/* HEADER */
+header{border-bottom:1px solid rgba(201,168,76,.2);padding:16px 0;background:rgba(13,33,55,.97);position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);}
+.hdr{display:flex;align-items:center;justify-content:space-between;}
+.brand{display:flex;align-items:center;gap:12px;}
+.logo{width:38px;height:38px;background:linear-gradient(135deg,var(--gold),var(--gold2));border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:800;font-size:17px;color:var(--navy);}
+.brand-name{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--gold);}
+.brand-sub{font-size:11px;color:var(--gray);}
+.client-tag{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.25);border-radius:20px;padding:5px 14px;font-size:12px;color:var(--gold2);font-weight:500;}
+
+/* MAIN NAV TABS */
+.main-nav{display:flex;gap:0;border-bottom:2px solid rgba(255,255,255,.07);margin-top:0;background:rgba(13,33,55,.6);}
+.nav-tab{padding:16px 28px;border:none;background:transparent;color:var(--gray);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;border-bottom:2px solid transparent;margin-bottom:-2px;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+.nav-tab:hover{color:var(--white);}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);}
+.nav-tab .tab-badge{background:var(--gold);color:var(--navy);border-radius:10px;padding:1px 7px;font-size:10px;font-weight:800;}
+
+/* PAGES */
+.page{display:none;padding:28px 0 40px;}
+.page.active{display:block;}
+
+/* UPLOAD CARDS */
+.upload-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:24px;}
+.upload-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:20px;transition:border-color .2s;}
+.upload-card:hover{border-color:rgba(201,168,76,.3);}
+.uc-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.uc-num{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);font-family:'Syne',sans-serif;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.uc-title{font-family:'Syne',sans-serif;font-weight:700;font-size:13px;}
+.uc-sub{font-size:11px;color:var(--gray);margin-top:1px;}
+.plat-tag{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:10px;font-size:11px;font-weight:600;margin-bottom:10px;}
+.tag-ml{background:rgba(255,230,0,.12);color:var(--ml);border:1px solid rgba(255,230,0,.2);}
+.tag-shopee{background:rgba(238,77,45,.12);color:var(--shopee);border:1px solid rgba(238,77,45,.2);}
+.tag-olist{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.2);}
+.tag-bank{background:rgba(39,174,96,.12);color:var(--green);border:1px solid rgba(39,174,96,.2);}
+.drop-zone{border:1.5px dashed rgba(201,168,76,.3);border-radius:10px;padding:18px 14px;text-align:center;cursor:pointer;transition:all .2s;position:relative;}
+.drop-zone:hover{border-color:var(--gold);background:rgba(201,168,76,.03);}
+.drop-zone.loaded{border-color:var(--green);border-style:solid;background:rgba(39,174,96,.04);}
+.drop-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.dz-icon{font-size:24px;margin-bottom:6px;}
+.dz-label{font-size:12px;color:var(--gray);}
+.dz-label strong{color:var(--white);display:block;font-size:13px;margin-bottom:2px;}
+.dz-status{font-size:11px;color:var(--green);margin-top:5px;font-weight:500;display:none;}
+.prog-bar{height:3px;background:rgba(255,255,255,.07);border-radius:2px;margin-top:10px;overflow:hidden;display:none;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;transition:width .3s;width:0%;}
+
+/* PROCESS BTN */
+.proc-wrap{text-align:center;margin:20px 0;}
+.btn-proc{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--navy);border:none;padding:13px 38px;border-radius:50px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:all .2s;box-shadow:0 4px 20px rgba(201,168,76,.25);}
+.btn-proc:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,168,76,.35);}
+.btn-proc:disabled{opacity:.4;cursor:not-allowed;transform:none;}
+.proc-hint{font-size:12px;color:var(--gray);margin-top:8px;}
+
+/* KPI CARDS */
+.kpi-row{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:24px 0;}
+.kpi{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:13px;padding:16px 18px;}
+.kpi-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.8px;margin-bottom:7px;}
+.kpi-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;}
+.kpi-val.green{color:var(--green);}
+.kpi-val.gold{color:var(--gold);}
+.kpi-val.red{color:var(--red);}
+.kpi-val.blue{color:var(--blue);}
+.kpi-val.orange{color:var(--orange);}
+.kpi-sub{font-size:11px;color:var(--gray);margin-top:3px;}
+
+/* SECTION */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin:28px 0 14px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,.07);}
+.sec-hdr h2{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;}
+.sec-hdr .sec-ct{font-size:12px;color:var(--gray);}
+.btn-exp{padding:7px 16px;border-radius:18px;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:5px;}
+.btn-exp:hover{background:var(--gold);color:var(--navy);}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:11px;border:1px solid rgba(255,255,255,.07);}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+thead tr{background:rgba(201,168,76,.08);}
+thead th{padding:10px 13px;text-align:left;font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.6px;white-space:nowrap;}
+tbody tr{border-top:1px solid rgba(255,255,255,.04);transition:background .15s;}
+tbody tr:hover{background:rgba(255,255,255,.03);}
+tbody td{padding:9px 13px;white-space:nowrap;}
+td.muted{color:var(--gray);}
+td.green{color:var(--green);}
+td.red{color:var(--red);}
+td.gold{color:var(--gold);}
+td.orange{color:var(--orange);}
+td.blue{color:var(--blue);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:2px 9px;border-radius:9px;font-size:11px;font-weight:600;}
+.b-ok{background:rgba(39,174,96,.15);color:var(--ok);}
+.b-warn{background:rgba(243,156,18,.15);color:var(--warn);}
+.b-err{background:rgba(231,76,60,.15);color:var(--red);}
+.b-pend{background:rgba(41,128,185,.15);color:var(--pend);}
+.b-ml{background:rgba(255,230,0,.12);color:var(--ml);}
+.b-shopee{background:rgba(238,77,45,.12);color:var(--shopee);}
+.b-tax{background:rgba(230,126,34,.15);color:var(--orange);}
+.b-dev{background:rgba(231,76,60,.15);color:var(--red);}
+
+/* RESUMO CONTABIL */
+.resumo-box{background:rgba(255,255,255,.03);border:1px solid rgba(201,168,76,.15);border-radius:14px;padding:24px;margin-bottom:20px;}
+.resumo-box h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:16px;}
+.resumo-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.resumo-grid{grid-template-columns:1fr;}}
+.resumo-item{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,.03);border-radius:9px;}
+.resumo-item .ri-label{font-size:12px;color:var(--gray);}
+.resumo-item .ri-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--white);}
+.resumo-item .ri-val.green{color:var(--green);}
+.resumo-item .ri-val.red{color:var(--red);}
+.resumo-item .ri-val.gold{color:var(--gold);}
+
+/* FINANCIAL TIMELINE */
+.timeline{display:flex;flex-direction:column;gap:10px;margin-top:16px;}
+.tl-item{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px 20px;transition:border-color .2s;}
+.tl-item:hover{border-color:rgba(201,168,76,.2);}
+.tl-item.tl-ok{border-left:3px solid var(--green);}
+.tl-item.tl-diff{border-left:3px solid var(--warn);}
+.tl-item.tl-pend{border-left:3px solid var(--blue);}
+.tl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+.tl-date{font-family:'Syne',sans-serif;font-weight:700;font-size:14px;}
+.tl-plat{display:flex;gap:6px;align-items:center;}
+.tl-body{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
+.tl-field{background:rgba(255,255,255,.04);border-radius:8px;padding:9px 12px;}
+.tl-field .tf-label{font-size:10px;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+.tl-field .tf-val{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;}
+.tl-field .tf-val.green{color:var(--green);}
+.tl-field .tf-val.gold{color:var(--gold);}
+.tl-field .tf-val.red{color:var(--red);}
+.tl-field .tf-val.blue{color:var(--blue);}
+.tl-field .tf-val.orange{color:var(--orange);}
+.tl-pedidos{margin-top:10px;font-size:11px;color:var(--gray);}
+.tl-toggle{background:none;border:none;color:var(--gold);font-size:11px;cursor:pointer;padding:4px 0;font-family:'DM Sans',sans-serif;}
+.tl-detail{display:none;margin-top:10px;}
+.tl-detail.open{display:block;}
+
+/* PENDING BOX */
+.pend-box{background:rgba(41,128,185,.06);border:1px solid rgba(41,128,185,.2);border-radius:12px;padding:16px 20px;margin-top:16px;}
+.pend-box h4{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--blue);margin-bottom:10px;}
+
+/* GITHUB */
+.gh-box{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;margin-top:28px;}
+.gh-box h3{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;color:var(--gold);margin-bottom:14px;}
+.gh-row{display:flex;gap:10px;flex-wrap:wrap;}
+.gh-inp{flex:1;min-width:180px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:9px;padding:9px 13px;color:var(--white);font-size:13px;outline:none;transition:border-color .2s;}
+.gh-inp:focus{border-color:var(--gold);}
+.gh-inp::placeholder{color:var(--gray);}
+.btn-gh{padding:9px 18px;border-radius:9px;border:1.5px solid var(--gold);background:transparent;color:var(--gold);font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;white-space:nowrap;}
+.btn-gh:hover{background:var(--gold);color:var(--navy);}
+
+/* EMPTY */
+.empty{text-align:center;padding:50px 20px;color:var(--gray);}
+.empty .ei{font-size:42px;margin-bottom:14px;opacity:.4;}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--navy2);border:1px solid rgba(201,168,76,.3);border-radius:11px;padding:13px 18px;font-size:13px;color:var(--white);z-index:9999;transform:translateY(60px);opacity:0;transition:all .3s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.ok{border-color:rgba(39,174,96,.4);}
+.toast.err{border-color:rgba(231,76,60,.4);}
+
+footer{padding:28px 0 18px;border-top:1px solid rgba(255,255,255,.05);margin-top:48px;text-align:center;}
+footer p{font-size:11px;color:var(--gray);}
+footer span{color:var(--gold);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="hdr">
+      <div class="brand">
+        <div class="logo">L</div>
+        <div><div class="brand-name">LUME FINANÇAS</div><div class="brand-sub">BPO Financeiro</div></div>
+      </div>
+      <div class="client-tag">📦 Divina Embalagens</div>
+    </div>
+  </div>
+  <div class="wrap" style="margin-top:0">
+    <div class="main-nav">
+      <button class="nav-tab active" onclick="goPage('upload')">⚙️ Importar Arquivos</button>
+      <button class="nav-tab" onclick="goPage('contabil')" id="tab-contabil">📋 Relatório Contabilidade</button>
+      <button class="nav-tab" onclick="goPage('financeiro')" id="tab-financeiro">💰 Análise Financeira</button>
+      <button class="nav-tab" onclick="goPage('futura')" id="tab-futura">🗓️ Conciliação Futura</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 1 — UPLOAD
+════════════════════════════════════════════════════ -->
+<div class="page active" id="page-upload">
+  <div style="padding-top:28px">
+    <h1 style="font-family:'Syne',sans-serif;font-size:clamp(22px,3.5vw,32px);font-weight:800;line-height:1.2">
+      Conciliação <span style="color:var(--gold)">Marketplace</span><br>
+      <span style="font-size:.65em;color:var(--gray);font-weight:600">ML + Shopee × Olist × Nubank</span>
+    </h1>
+    <p style="color:var(--gray);font-size:13px;margin-top:8px">Carregue os arquivos abaixo para gerar o relatório da contabilidade e a análise financeira.</p>
+  </div>
+
+  <div class="upload-grid" style="margin-top:24px">
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">1</div><div><div class="uc-title">ML Settlement</div><div class="uc-sub">settlement_v2-...csv</div></div></div>
+      <div class="plat-tag tag-ml">🛒 Mercado Livre</div>
+      <div class="drop-zone" id="dz-ml" onclick="document.getElementById('inp-ml').click()">
+        <input type="file" id="inp-ml" accept=".csv" onchange="loadML(this)">
+        <div class="dz-icon">📄</div>
+        <div class="dz-label"><strong>Settlement CSV</strong>Clique para carregar</div>
+        <div class="dz-status" id="st-ml"></div>
+      </div>
+    </div>
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">2</div><div><div class="uc-title">Shopee — Receita</div><div class="uc-sub">Income_lançado_...xlsx</div></div></div>
+      <div class="plat-tag tag-shopee">🛍️ Shopee</div>
+      <div class="drop-zone" id="dz-si" onclick="document.getElementById('inp-si').click()">
+        <input type="file" id="inp-si" accept=".xlsx,.xls" onchange="loadShopeeIncome(this)">
+        <div class="dz-icon">📊</div>
+        <div class="dz-label"><strong>Income XLSX</strong>Clique para carregar</div>
+        <div class="dz-status" id="st-si"></div>
+      </div>
+    </div>
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">3</div><div><div class="uc-title">Shopee — Pedidos</div><div class="uc-sub">Order_all_order_...xlsx</div></div></div>
+      <div class="plat-tag tag-shopee">🛍️ Shopee</div>
+      <div class="drop-zone" id="dz-so" onclick="document.getElementById('inp-so').click()">
+        <input type="file" id="inp-so" accept=".xlsx,.xls" onchange="loadShopeeOrders(this)">
+        <div class="dz-icon">📋</div>
+        <div class="dz-label"><strong>Orders XLSX</strong>Clique para carregar</div>
+        <div class="dz-status" id="st-so"></div>
+      </div>
+    </div>
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">4</div><div><div class="uc-title">Olist/Tiny — Pedidos</div><div class="uc-sub">planilha_vendas_...zip</div></div></div>
+      <div class="plat-tag tag-olist">⚙️ Olist / Tiny</div>
+      <div class="drop-zone" id="dz-ol" onclick="document.getElementById('inp-ol').click()">
+        <input type="file" id="inp-ol" accept=".zip" multiple onchange="loadOlist(this)">
+        <div class="dz-icon">🗜️</div>
+        <div class="dz-label"><strong>ZIP(s) dos pedidos</strong>Pode selecionar vários ZIPs</div>
+        <div class="dz-status" id="st-ol"></div>
+      </div>
+      <div class="prog-bar" id="pb-ol"><div class="prog-fill" id="pf-ol"></div></div>
+    </div>
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">5</div><div><div class="uc-title">Notas Fiscais (Olist)</div><div class="uc-sub">itens_notas_fiscais_...xls</div></div></div>
+      <div class="plat-tag tag-olist">📄 Notas Fiscais</div>
+      <div class="drop-zone" id="dz-nf" onclick="document.getElementById('inp-nf').click()">
+        <input type="file" id="inp-nf" accept=".xls,.xlsx" onchange="loadNF(this)">
+        <div class="dz-icon">🧾</div>
+        <div class="dz-label"><strong>Relatório de NFs</strong>Clique para carregar</div>
+        <div class="dz-status" id="st-nf"></div>
+      </div>
+    </div>
+
+    <div class="upload-card">
+      <div class="uc-head"><div class="uc-num">6</div><div><div class="uc-title">Extrato Nubank</div><div class="uc-sub">NU_...ofx</div></div></div>
+      <div class="plat-tag tag-bank">🏦 Nubank</div>
+      <div class="drop-zone" id="dz-ofx" onclick="document.getElementById('inp-ofx').click()">
+        <input type="file" id="inp-ofx" accept=".ofx,.OFX" onchange="loadOFX(this)">
+        <div class="dz-icon">🏦</div>
+        <div class="dz-label"><strong>Extrato OFX</strong>Clique para carregar</div>
+        <div class="dz-status" id="st-ofx"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="proc-wrap">
+    <button class="btn-proc" id="btnProc" onclick="processar()" disabled>⚡ Processar Conciliação</button>
+    <p class="proc-hint" id="procHint">Carregue todos os arquivos para processar</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 2 — CONTABILIDADE
+════════════════════════════════════════════════════ -->
+<div class="page" id="page-contabil">
+  <div id="contabil-empty" class="empty"><div class="ei">📋</div><p>Processe os arquivos primeiro</p></div>
+  <div id="contabil-content" style="display:none">
+
+    <!-- resumo executivo -->
+    <div id="resumo-exec"></div>
+
+    <!-- detalhe pedido a pedido -->
+    <div class="sec-hdr">
+      <div><h2>Detalhe por Pedido</h2><span class="sec-ct" id="det-ct"></span></div>
+      <div class="btn-row" style="flex-wrap:wrap;gap:8px">
+        <input type="date" id="filtro-de" onchange="renderContabil()" title="Data início" style="background:rgba(255,255,255,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:9px;padding:7px 12px;color:var(--white);font-size:12px;outline:none;cursor:pointer;">
+        <input type="date" id="filtro-ate" onchange="renderContabil()" title="Data fim" style="background:rgba(255,255,255,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:9px;padding:7px 12px;color:var(--white);font-size:12px;outline:none;cursor:pointer;">
+        <select id="filtro-plat" onchange="renderContabil()" style="background:rgba(255,255,255,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:9px;padding:8px 14px;color:var(--white);font-size:12px;outline:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;">
+          <option value="all" style="background:#0D2137">🌐 Todas plataformas</option>
+          <option value="ML" style="background:#0D2137">🛒 Mercado Livre</option>
+          <option value="Shopee" style="background:#0D2137">🛍️ Shopee</option>
+        </select>
+        <select id="filtro-status" onchange="renderContabil()" style="background:rgba(255,255,255,.06);border:1.5px solid rgba(201,168,76,.3);border-radius:9px;padding:8px 14px;color:var(--white);font-size:12px;outline:none;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;">
+          <option value="all" style="background:#0D2137">📋 Todos os status</option>
+          <option value="OK" style="background:#0D2137">✅ Com NF</option>
+          <option value="SEM NF" style="background:#0D2137">❌ Sem NF</option>
+        </select>
+        <button class="btn-exp" onclick="limparFiltros()" style="border-color:var(--gray);color:var(--gray)">✖ Limpar</button>
+        <button class="btn-exp" onclick="exportContabil()">⬇️ Exportar Excel</button>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr>
+          <th>Status NF</th><th>Plataforma</th><th>Nº Pedido</th><th>Data Venda</th>
+          <th>Produto</th><th>Valor Bruto</th><th>Nº NF</th><th>Data NF</th>
+        </tr></thead>
+        <tbody id="tbody-contabil"></tbody>
+      </table>
+    </div>
+    <div style="margin-top:10px;padding:10px 14px;background:rgba(41,128,185,.06);border:1px solid rgba(41,128,185,.2);border-radius:9px;font-size:11px;color:var(--gray)">
+      * <strong style="color:var(--blue)">NF Emitida*</strong> = NF emitida nesse dia mas sem correspondência exata de valor. Para obter o nº da NF por pedido com 100% de precisão, exporte do Olist: <strong style="color:var(--white)">Relatórios → Notas Fiscais</strong> (inclui o nº do pedido vinculado) e carregue na ferramenta.
+    </div>
+
+    <div class="gh-box">
+      <h3>💾 Salvar Relatório no GitHub</h3>
+      <div class="gh-row">
+        <input type="password" class="gh-inp" id="ghToken" placeholder="Token GitHub" oninput="saveToken()">
+        <input type="text" class="gh-inp" id="ghRepo" placeholder="usuário/repositório" value="polyanalemosfinancas-lgtm/lume-controle">
+        <input type="text" class="gh-inp" id="ghPeriodo" placeholder="Período (ex: 2026-04)">
+        <button class="btn-gh" onclick="salvarGitHub()">💾 Salvar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 3 — FINANCEIRO
+════════════════════════════════════════════════════ -->
+<div class="page" id="page-financeiro">
+  <div id="fin-empty" class="empty"><div class="ei">💰</div><p>Processe os arquivos primeiro</p></div>
+  <div id="fin-content" style="display:none">
+
+    <div id="fin-kpis"></div>
+
+    <!-- repasses recebidos -->
+    <div class="sec-hdr">
+      <div><h2>Repasses Confirmados no Banco</h2><span class="sec-ct">Banco × Marketplace — por data de entrada</span></div>
+      <div class="btn-row">
+        <button class="btn-exp" onclick="exportContaAzul('ML')" style="border-color:var(--ml);color:var(--ml)">⬇️ Conta Azul ML</button>
+        <button class="btn-exp" onclick="exportContaAzul('Shopee')" style="border-color:var(--shopee);color:var(--shopee)">⬇️ Conta Azul Shopee</button>
+        <button class="btn-exp" onclick="exportFinanceiro()">⬇️ Análise Completa</button>
+      </div>
+    </div>
+    <div class="timeline" id="timeline"></div>
+
+    <!-- saídas identificadas -->
+    <div class="sec-hdr" style="margin-top:28px">
+      <div><h2>Saídas Identificadas (Taxas / Devoluções)</h2><span class="sec-ct" id="saidas-ct"></span></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Data</th><th>Tipo</th><th>Plataforma</th><th>Valor</th><th>Descrição</th></tr></thead>
+        <tbody id="tbody-saidas"></tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     PAGE 4 — CONCILIAÇÃO FUTURA
+════════════════════════════════════════════════════ -->
+<div class="page" id="page-futura">
+  <div id="fut-empty" class="empty"><div class="ei">🗓️</div><p>Processe os arquivos primeiro</p></div>
+  <div id="fut-content" style="display:none">
+
+    <div style="padding-top:8px;margin-bottom:20px">
+      <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:800">🗓️ Conciliação Futura</h2>
+      <p style="color:var(--gray);font-size:13px;margin-top:6px">Pedidos com repasse previsto para o próximo mês. Salve aqui e carregue no mês seguinte para confirmar que entraram.</p>
+    </div>
+
+    <div id="fut-kpis"></div>
+
+    <!-- pendentes detalhados -->
+    <div class="sec-hdr">
+      <div><h2>Pendentes por Data de Repasse</h2><span class="sec-ct" id="fut-ct"></span></div>
+      <div class="btn-row">
+        <button class="btn-exp" onclick="exportFutura()">⬇️ Exportar Excel</button>
+        <button class="btn-exp" onclick="salvarFuturaGitHub()" style="border-color:var(--green);color:var(--green)">💾 Salvar no GitHub</button>
+      </div>
+    </div>
+
+    <!-- agrupado por data -->
+    <div id="fut-timeline"></div>
+
+    <!-- carregar conciliação futura do mês anterior -->
+    <div class="pend-box" style="margin-top:28px">
+      <h4>📂 Carregar Pendentes do Mês Anterior</h4>
+      <p style="font-size:12px;color:var(--gray);margin:8px 0 14px">Carregue o arquivo salvo no mês passado para conferir se todos os repasses entraram.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <div class="drop-zone" id="dz-fut" onclick="document.getElementById('inp-fut').click()" style="width:220px;padding:14px">
+          <input type="file" id="inp-fut" accept=".json,.xlsx" onchange="loadFutura(this)">
+          <div class="dz-icon" style="font-size:20px;margin-bottom:4px">📂</div>
+          <div class="dz-label"><strong style="font-size:12px">JSON ou Excel</strong></div>
+        </div>
+        <div id="fut-prev-result" style="flex:1;min-width:200px"></div>
+      </div>
+    </div>
+
+    <div class="gh-box">
+      <h3>💾 Salvar Pendentes no GitHub</h3>
+      <div class="gh-row">
+        <input type="password" class="gh-inp" id="ghToken2" placeholder="Token GitHub" oninput="saveToken2()">
+        <input type="text" class="gh-inp" id="ghRepo2" placeholder="usuário/repositório" value="polyanalemosfinancas-lgtm/lume-controle">
+        <input type="text" class="gh-inp" id="ghPeriodoFut" placeholder="Período (ex: 2026-04)">
+        <button class="btn-gh" onclick="salvarFuturaGitHub()">💾 Salvar Pendentes</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+</main>
+
+<footer><div class="wrap"><p>Desenvolvido por <span>Lume Finanças</span> · BPO Financeiro · Divina Embalagens</p></div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════ STATE ═══════════════════
+const S = {
+  ml: null, shopeeIncome: null, shopeeOrders: null,
+  olist: null, nf: null, ofx: null,
+  contabilRows: [], finRepasses: [], finPendentes: [], finSaidas: [],
+  futuraDetalhes: [], // pedidos detalhados dos pendentes
+  loaded: {ml:false, si:false, so:false, ol:false, nf:false, ofx:false},
+  periodoRef: '' // ex: 2026-04
+};
+
+// ═══════════════════ NAV ═══════════════════
+function goPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// ═══════════════════ TOKEN ═══════════════════
+window.onload = () => {
+  const t = localStorage.getItem('gh_divina_token');
+  const r = localStorage.getItem('gh_divina_repo');
+  if (t){ document.getElementById('ghToken').value=t; document.getElementById('ghToken2').value=t; }
+  if (r){ document.getElementById('ghRepo').value=r; document.getElementById('ghRepo2').value=r; }
+};
+function saveToken() {
+  localStorage.setItem('gh_divina_token', document.getElementById('ghToken').value);
+  localStorage.setItem('gh_divina_repo', document.getElementById('ghRepo').value);
+}
+
+// ═══════════════════ LOADERS ═══════════════════
+function markLoaded(dzId, stId, msg, key) {
+  document.getElementById(dzId).classList.add('loaded');
+  const s = document.getElementById(stId);
+  s.style.display = 'block'; s.textContent = msg;
+  S.loaded[key] = true;
+  checkReady();
+}
+
+function checkReady() {
+  const all = Object.values(S.loaded).every(v => v);
+  document.getElementById('btnProc').disabled = !all;
+  if (all) document.getElementById('procHint').textContent = '✅ Todos os arquivos carregados!';
+  else {
+    const missing = Object.entries(S.loaded).filter(([,v])=>!v).map(([k])=>k).join(', ');
+    document.getElementById('procHint').textContent = `Aguardando: ${missing}`;
+  }
+}
+
+function loadML(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const lines = e.target.result.split('\n').filter(l=>l.trim());
+      const hdrs = lines[0].split(';').map(h=>h.replace(/"/g,'').trim());
+      const rows = [];
+      for (let i=1;i<lines.length;i++) {
+        const cols = splitCSV(lines[i]);
+        if (cols.length < 5) continue;
+        const o = {}; hdrs.forEach((h,idx)=>o[h]=(cols[idx]||'').replace(/"/g,'').trim());
+        rows.push(o);
+      }
+      S.ml = rows;
+      markLoaded('dz-ml','st-ml',`✅ ${rows.filter(r=>r.TRANSACTION_TYPE==='SETTLEMENT').length} liquidações`,'ml');
+    } catch(e){toast('Erro ML: '+e.message,'err');}
+  };
+  r.readAsText(f,'UTF-8');
+}
+
+function splitCSV(line) {
+  const res=[]; let cur='',inQ=false;
+  for (const c of line) {
+    if (c==='"') inQ=!inQ;
+    else if (c===';'&&!inQ){res.push(cur);cur='';}
+    else cur+=c;
+  }
+  res.push(cur); return res;
+}
+
+function loadShopeeIncome(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result,{type:'array'});
+      const ws = wb.Sheets['Renda'];
+      if (!ws){toast('Aba Renda não encontrada','err');return;}
+      const raw = XLSX.utils.sheet_to_json(ws,{header:1});
+      let hdr=-1;
+      for(let i=0;i<raw.length;i++){if(raw[i]&&raw[i].includes('ID do pedido')){hdr=i;break;}}
+      if(hdr<0){toast('Cabeçalho não encontrado','err');return;}
+      const hdrs=raw[hdr], rows=[];
+      for(let i=hdr+1;i<raw.length;i++){
+        const row=raw[i];
+        if(!row||row[1]!=='Order') continue;
+        const o={}; hdrs.forEach((h,idx)=>o[h]=row[idx]!==undefined?row[idx]:'');
+        rows.push(o);
+      }
+      S.shopeeIncome=rows;
+      markLoaded('dz-si','st-si',`✅ ${rows.length} pedidos`,'si');
+    } catch(e){toast('Erro Shopee Income: '+e.message,'err');}
+  };
+  r.readAsArrayBuffer(f);
+}
+
+function loadShopeeOrders(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result,{type:'array'});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+      S.shopeeOrders=rows;
+      markLoaded('dz-so','st-so',`✅ ${rows.length} pedidos`,'so');
+    } catch(e){toast('Erro Shopee Orders: '+e.message,'err');}
+  };
+  r.readAsArrayBuffer(f);
+}
+
+async function loadOlist(inp) {
+  const files = Array.from(inp.files); if (!files.length) return;
+  const pb = document.getElementById('pb-ol');
+  const pf = document.getElementById('pf-ol');
+  pb.style.display='block'; pf.style.width='5%';
+  try {
+    const allRows=[];
+    let done=0;
+    for (const zipFile of files) {
+      const zip = await JSZip.loadAsync(zipFile);
+      const xlsFiles = Object.keys(zip.files).filter(n=>n.endsWith('.xls')||n.endsWith('.xlsx'));
+      for (const fname of xlsFiles) {
+        const buf = await zip.files[fname].async('arraybuffer');
+        try {
+          const wb = XLSX.read(buf,{type:'array'});
+          const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+          allRows.push(...rows);
+        } catch(e){console.warn('Erro lendo',fname);}
+        done++;
+        pf.style.width = `${5+done*85/files.length}%`;
+      }
+    }
+    // dedup por ID
+    const seen=new Set(); const uniq=[];
+    for(const r of allRows){const id=r['ID'];if(!seen.has(id)){seen.add(id);uniq.push(r);}}
+    S.olist=uniq;
+    pf.style.width='100%';
+    markLoaded('dz-ol','st-ol',`✅ ${uniq.length} pedidos únicos`,'ol');
+    setTimeout(()=>pb.style.display='none',800);
+  } catch(e){toast('Erro ZIP: '+e.message,'err');}
+}
+
+function loadNF(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result,{type:'array'});
+      const rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {defval:''});
+      S.nf=rows;
+      const nNFs = new Set(rows.map(r=>String(r['Nº nota']))).size;
+      markLoaded('dz-nf','st-nf',`✅ ${nNFs} notas fiscais`,'nf');
+    } catch(e){toast('Erro NF: '+e.message,'err');}
+  };
+  r.readAsArrayBuffer(f);
+}
+
+function loadOFX(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = e => {
+    try {
+      const txt = e.target.result;
+      const matches = txt.matchAll(/<STMTTRN>([\s\S]*?)<\/STMTTRN>/g);
+      const rows=[];
+      for (const m of matches) {
+        const t=m[1];
+        const get = tag => { const x=t.match(new RegExp(`<${tag}>(.*?)(?:<|$)`)); return x?x[1].trim():''; };
+        rows.push({tipo:get('TRNTYPE'),data:get('DTPOSTED').substring(0,8),valor:parseFloat(get('TRNAMT')),memo:get('MEMO'),id:get('FITID')});
+      }
+      S.ofx=rows;
+      markLoaded('dz-ofx','st-ofx',`✅ ${rows.length} lançamentos`,'ofx');
+    } catch(e){toast('Erro OFX: '+e.message,'err');}
+  };
+  r.readAsText(f,'UTF-8');
+}
+
+// ═══════════════════ UTILS ═══════════════════
+const pm = v => { const n=parseFloat(String(v).replace(',','.')); return isNaN(n)?0:n; };
+const fmtR = v => 'R$ '+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmtD = d => { if(!d) return ''; if(typeof d==='number'){const dt=new Date(Math.round((d-25569)*86400*1000));return dt.toLocaleDateString('pt-BR');} const s=String(d); if(s.includes('T'))return s.substring(0,10).split('-').reverse().join('/'); if(s.includes('/'))return s.substring(0,10); if(s.match(/^\d{8}$/))return `${s.substring(6,8)}/${s.substring(4,6)}/${s.substring(0,4)}`; if(s.match(/^\d{4}-\d{2}-\d{2}/))return s.substring(0,10).split('-').reverse().join('/'); return s.substring(0,10); };
+
+function platFromId(n) {
+  const s=String(n||'').trim();
+  return (s.startsWith('200001')||s.startsWith('200002')||/^\d{16,}$/.test(s))?'ML':'Shopee';
+}
+
+// ═══════════════════ PROCESS ═══════════════════
+function processar() {
+  try {
+    // Build Olist map by ordem_compra (Número da ordem de compra)
+    // Para ML: esse campo = PACK_ID do settlement (não o ORDER_ID)
+    const olistMap={};
+    for(const r of S.olist){
+      const oc=String(r['Número da ordem de compra']||'').trim();
+      if(oc) olistMap[oc]=r;
+    }
+
+    // ── Build NF maps ──
+    // O relatório de NF não tem o nº do pedido diretamente.
+    // Estratégia: match por Data + Valor Unitário (74% de acerto)
+    // Fallback: se a data tem NF emitida, marca como "NF Emitida (sem nº)"
+    // Para 100% de acerto: exportar do Olist o Relatório de NFs (que tem nº pedido vinculado)
+
+    const nfByValorData = {}; // data|valor → nº nota
+    const nfByData = new Set(); // datas com NF
+    const totalNFs = new Set(S.nf.map(r=>String(r['Nº nota']))).size;
+
+    for(const r of S.nf){
+      const dt = fmtD(r['Data']);
+      nfByData.add(dt);
+      const val = String(parseFloat(String(r['Valor unitário']||'0').replace(',','.')) || 0);
+      const key = dt + '|' + val;
+      if(!nfByValorData[key]) nfByValorData[key] = String(r['Nº nota']||'').trim();
+    }
+
+    // ── CONTABIL ──
+    S.contabilRows=[];
+
+    // Palavras-chave de cobranças do ML (não são vendas — vão para Saídas)
+    const ML_COBRANCAS = /fatura|tarifa|assinatura|meli\+|meli plus|proteção|cashback/i;
+
+    // ML — apenas SETTLEMENT com ORDER_ID (vendas reais)
+    const mlSettle = S.ml.filter(r=>{
+      if(r.TRANSACTION_TYPE!=='SETTLEMENT') return false;
+      const oid = String(r.ORDER_ID||'').replace('.0','').trim();
+      const detail = String(r.SALE_DETAIL||'').replace(/"/g,'');
+      // Excluir cobranças sem pedido (Faturas, Assinatura, etc.)
+      if(!oid && ML_COBRANCAS.test(detail)) return false;
+      return true;
+    });
+    const mlIds = new Set(mlSettle.map(r=>String(r.ORDER_ID||'').replace('.0','').trim()));
+    const olistMLIds = new Set(Object.keys(olistMap).filter(k=>platFromId(k)==='ML'));
+
+    // Capturar cobranças ML para exibir nas Saídas
+    const mlCobrancas = S.ml.filter(r=>{
+      if(r.TRANSACTION_TYPE!=='SETTLEMENT') return false;
+      const oid = String(r.ORDER_ID||'').replace('.0','').trim();
+      const detail = String(r.SALE_DETAIL||'').replace(/"/g,'');
+      return !oid && ML_COBRANCAS.test(detail);
+    });
+
+    for(const r of mlSettle){
+      const oid = String(r.ORDER_ID||'').replace('.0','').trim();
+      const packId = String(r.PACK_ID||'').replace('.0','').trim();
+      const data = fmtD(r.TRANSACTION_DATE?.substring(0,10));
+      const valor = pm(r.TRANSACTION_AMOUNT);
+      const produto = (r.SALE_DETAIL||'').replace(/"/g,'').trim().substring(0,70);
+
+      // ML: Olist usa PACK_ID como "Número da ordem de compra", não o ORDER_ID financeiro
+      const oRow = (packId && olistMap[packId]) ? olistMap[packId] : (olistMap[oid] || null);
+      const chaveOlist = (packId && olistMap[packId]) ? packId : oid;
+      const hasOlist = !!oRow;
+
+      let nfNum='—', nfData='—', temNF=false;
+      if(hasOlist){
+        const valorUnit = String(parseFloat(String(oRow['Valor unitário']||'0').replace(',','.')) || 0);
+        const key = data + '|' + valorUnit;
+        if(nfByValorData[key]){ nfNum=nfByValorData[key]; nfData=data; temNF=true; }
+        else if(nfByData.has(data)){ temNF=true; nfNum='NF Emitida*'; nfData=data; }
+      }
+
+      S.contabilRows.push({plat:'ML',pedido:oid,packId:chaveOlist,data,valor,produto,hasOlist,temNF,nfNum,nfData,status:temNF?'OK':'SEM NF'});
+    }
+
+    // Shopee
+    for(const r of S.shopeeIncome){
+      const oid = String(r['ID do pedido']||'').trim();
+      const data = fmtD(r['Data de criação do pedido']);
+      const valor = pm(r['Preço do produto']);
+      const oRow = olistMap[oid];
+      const hasOlist = !!oRow;
+
+      let nfNum='—', nfData='—', temNF=false;
+      if(hasOlist){
+        const valorUnit = String(parseFloat(String(oRow['Valor unitário']||'0').replace(',','.')) || 0);
+        const key = data + '|' + valorUnit;
+        if(nfByValorData[key]){ nfNum=nfByValorData[key]; nfData=data; temNF=true; }
+        else if(nfByData.has(data)){ temNF=true; nfNum='NF Emitida*'; nfData=data; }
+      }
+      let produto='';
+      if(S.shopeeOrders){const or=S.shopeeOrders.find(o=>String(o['ID do pedido'])===oid);if(or)produto=String(or['Nome do Produto']||'').substring(0,70);}
+      S.contabilRows.push({plat:'Shopee',pedido:oid,data,valor,produto,hasOlist,temNF,nfNum,nfData,status:temNF?'OK':'SEM NF'});
+    }
+
+    // ── FINANCEIRO ──
+    // Filtros OFX corrigidos:
+    // ML  = MERCADO PAGO IP LTDA (conta 1509119113)
+    // Shopee = MAREE IP LTDA (conta 490671602002) OU SHOPEE/SHPP
+    const ofxML = S.ofx.filter(r=>r.valor>0 && /MERCADO PAGO/i.test(r.memo) && !/MAREE/i.test(r.memo));
+    const ofxShopee = S.ofx.filter(r=>r.valor>0 && (/SHOPEE|SHPP|MAREE IP/i.test(r.memo)));
+    const ofxSaidasML = S.ofx.filter(r=>r.valor<0 && /MERCADO PAGO|PIX Marketplace/i.test(r.memo) && !/MAREE/i.test(r.memo));
+    const ofxSaidasShopee = S.ofx.filter(r=>r.valor<0 && (/SHOPEE|SHPP|MAREE IP/i.test(r.memo)));
+
+    // ML: group settlement by release date — YYYY-MM-DD keys
+    const mlByRelease={};
+    for(const r of mlSettle){
+      const rd = (r.MONEY_RELEASE_DATE||'').substring(0,10); // keep as YYYY-MM-DD
+      if(!rd||rd.length<10||!rd.includes('-')) continue;
+      if(!mlByRelease[rd]) mlByRelease[rd]={liq:0,bruto:0,taxa:0,count:0,pedidos:[]};
+      const liq=pm(r.SETTLEMENT_NET_AMOUNT), bruto=pm(r.TRANSACTION_AMOUNT), taxa=Math.abs(pm(r.FEE_AMOUNT));
+      mlByRelease[rd].liq+=liq; mlByRelease[rd].bruto+=bruto; mlByRelease[rd].taxa+=taxa; mlByRelease[rd].count++;
+      mlByRelease[rd].pedidos.push({id:String(r.ORDER_ID||'').replace('.0',''),packId:String(r.PACK_ID||'').replace('.0','').trim(),bruto,liq,taxa,produto:(r.SALE_DETAIL||'').replace(/"/g,'').substring(0,50)});
+    }
+
+    // Shopee: group by release date — normalize to YYYY-MM-DD
+    const shByRelease={};
+    for(const r of S.shopeeIncome){
+      let rdRaw = r['Data de conclusão do pagamento'];
+      let rd = '';
+      if(typeof rdRaw === 'number'){
+        const dt=new Date(Math.round((rdRaw-25569)*86400*1000));
+        rd=dt.toISOString().substring(0,10);
+      } else {
+        const s=String(rdRaw||'').trim();
+        if(s.includes('/')){const p=s.split('/');if(p.length===3)rd=`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`;}
+        else if(s.includes('-')&&s.length>=10){rd=s.substring(0,10);}
+      }
+      if(!rd||rd.length<10||!rd.includes('-')) continue;
+      if(!shByRelease[rd]) shByRelease[rd]={liq:0,bruto:0,taxa:0,count:0,pedidos:[]};
+      const liq=pm(r['Quantia total lançada (R$)']), bruto=pm(r['Preço do produto']);
+      const taxa=Math.abs(pm(r['Taxa de comissão líquida']))+Math.abs(pm(r['Taxa de serviço líquida']));
+      shByRelease[rd].liq+=liq; shByRelease[rd].bruto+=bruto; shByRelease[rd].taxa+=taxa; shByRelease[rd].count++;
+      shByRelease[rd].pedidos.push({id:String(r['ID do pedido']||''),bruto,liq,taxa});
+    }
+
+    // Get OFX period
+    const ofxDates = S.ofx.map(r=>{
+      const y=r.data.substring(0,4),m=r.data.substring(4,6),d=r.data.substring(6,8);
+      return new Date(parseInt(y),parseInt(m)-1,parseInt(d));
+    });
+    const ofxStart = new Date(Math.min(...ofxDates));
+    const ofxEnd = new Date(Math.max(...ofxDates));
+
+    // Build repasse timeline
+    // Release dates from ML/Shopee are YYYY-MM-DD; OFX dates are YYYYMMDD
+    // ML: difference between bank and previsto is EXPECTED because 1109 orders have no Olist record
+    // but the ML still paid them. We show this transparently.
+    S.finRepasses=[];
+
+    function rdToDate(rd){ // YYYY-MM-DD → Date
+      if(!rd||rd==='nan'||rd==='undefined'||rd==='Invalid Date') return null;
+      const p=rd.split('-'); if(p.length<3) return null;
+      return new Date(parseInt(p[0]),parseInt(p[1])-1,parseInt(p[2]));
+    }
+    function ofxToDate(s){ return new Date(parseInt(s.substring(0,4)),parseInt(s.substring(4,6))-1,parseInt(s.substring(6,8))); }
+    function rdToBR(rd){ if(!rd||rd.length<10) return rd; const p=rd.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:rd; }
+
+    // ML repasses — release dates are YYYY-MM-DD
+    const mlAssigned=new Set();
+    for(const ofxR of ofxML.sort((a,b)=>a.data.localeCompare(b.data))){
+      const bankDate=`${ofxR.data.substring(6,8)}/${ofxR.data.substring(4,6)}/${ofxR.data.substring(0,4)}`;
+      const bankVal=ofxR.valor;
+      const bD=ofxToDate(ofxR.data);
+      let expectedSum=0, pedidosGrupo=[], datesGrupo=[];
+      for(const rd of Object.keys(mlByRelease).sort()){
+        const d=rdToDate(rd);
+        if(d && d<=bD && !mlAssigned.has(rd)){
+          expectedSum+=mlByRelease[rd].liq;
+          pedidosGrupo.push(...mlByRelease[rd].pedidos);
+          datesGrupo.push(rdToBR(rd));
+          mlAssigned.add(rd);
+        }
+      }
+      const diff=bankVal-expectedSum;
+      // ML diff is expected: bank includes orders not in Olist
+      // Status: OK if diff is positive (bank > previsto = normal for ML with missing orders)
+      // Flag only if diff is negative (bank received LESS than expected)
+      const status = diff >= -0.10 ? 'OK' : 'VERIFICAR';
+      const notaML = diff > 0.10 ? `+${fmtR(diff)} incluem pedidos sem Olist` : '';
+      S.finRepasses.push({
+        plat:'ML', dataEntrada:bankDate, valorBanco:bankVal,
+        valorPrevisto:expectedSum, diff, datesCobertas:datesGrupo,
+        pedidos:pedidosGrupo, count:pedidosGrupo.length,
+        status, nota:notaML
+      });
+    }
+
+    // Shopee repasses — release dates são YYYY-MM-DD
+    const shAssigned=new Set();
+    for(const ofxR of ofxShopee.sort((a,b)=>a.data.localeCompare(b.data))){
+      const bankDate=`${ofxR.data.substring(6,8)}/${ofxR.data.substring(4,6)}/${ofxR.data.substring(0,4)}`;
+      const bankVal=ofxR.valor;
+      const bD=ofxToDate(ofxR.data);
+      let expectedSum=0, pedidosGrupo=[], datesGrupo=[];
+      for(const rd of Object.keys(shByRelease).sort()){
+        if(!rd||rd==='nan'||rd==='NaT'||rd==='undefined') continue;
+        const d=rdToDate(rd);
+        if(d && d<=bD && !shAssigned.has(rd)){
+          expectedSum+=shByRelease[rd].liq;
+          pedidosGrupo.push(...shByRelease[rd].pedidos);
+          datesGrupo.push(rdToBR(rd));
+          shAssigned.add(rd);
+        }
+      }
+      const diff=bankVal-expectedSum;
+      const status=Math.abs(diff)<1?'OK':diff<0?'VERIFICAR':'OK';
+      const nota = diff<-0.10?`Shopee reteve ${fmtR(Math.abs(diff))} — verifique no Painel Shopee → Finanças → Saldo Retido (proteção ao comprador ou período de contestação)`:diff>0.10?`Banco recebeu ${fmtR(diff)} a mais — provável liberação de retenção retida no ciclo anterior`:'';
+      S.finRepasses.push({
+        plat:'Shopee', dataEntrada:bankDate, valorBanco:bankVal,
+        valorPrevisto:expectedSum, diff, datesCobertas:datesGrupo,
+        pedidos:pedidosGrupo, count:pedidosGrupo.length,
+        status, nota
+      });
+    }
+    S.finRepasses.sort((a,b)=>a.dataEntrada.split('/').reverse().join('').localeCompare(b.dataEntrada.split('/').reverse().join('')));
+
+    // Pendentes: release dates não assinalados
+    S.finPendentes=[];
+    for(const [rd,data] of Object.entries(mlByRelease)){
+      if(!mlAssigned.has(rd) && rd && rd!=='undefined' && rd!=='nan'){
+        const d=rdToDate(rd);
+        const obs = d && d>ofxEnd ? 'Repasse previsto para próximo mês (aguardar)' : 'Dentro do período sem entrada bancária — verificar';
+        S.finPendentes.push({plat:'ML',data:rdToBR(rd),liq:data.liq,count:data.count,obs});
+      }
+    }
+    for(const [rd,data] of Object.entries(shByRelease)){
+      if(!shAssigned.has(rd) && rd && rd!=='undefined' && rd!=='nan' && rd!=='NaT'){
+        const d=rdToDate(rd);
+        const obs = d && d>ofxEnd ? 'Repasse previsto para próximo mês (aguardar)' : 'Dentro do período sem entrada bancária — verificar';
+        S.finPendentes.push({plat:'Shopee',data:rdToBR(rd),liq:data.liq,count:data.count,obs});
+      }
+    }
+    S.finPendentes.sort((a,b)=>a.data.split('/').reverse().join('').localeCompare(b.data.split('/').reverse().join('')));
+
+    // Saídas
+    S.finSaidas=[];
+    // Cobranças internas do ML (Faturas, Assinatura Meli+) — sem ORDER_ID no settlement
+    for(const r of mlCobrancas){
+      const dt = fmtD(r.TRANSACTION_DATE?.substring(0,10));
+      const detalhe = String(r.SALE_DETAIL||'').replace(/"/g,'').trim();
+      const valor = pm(r.TRANSACTION_AMOUNT); // negativo
+      const tipo = /assinatura|meli\+/i.test(detalhe) ? 'Assinatura ML' : 'Fatura/Tarifa ML';
+      S.finSaidas.push({data:dt, tipo, plat:'ML', valor, memo:detalhe});
+    }
+    for(const r of ofxSaidasML){
+      const dt=`${r.data.substring(6,8)}/${r.data.substring(4,6)}/${r.data.substring(0,4)}`;
+      const tipo = r.memo.includes('PIX Marketplace')?'Devolução/Estorno':'Cobrança Avulsa';
+      S.finSaidas.push({data:dt,tipo,plat:'ML',valor:r.valor,memo:r.memo.substring(0,80)});
+    }
+    for(const r of ofxSaidasShopee){
+      const dt=`${r.data.substring(6,8)}/${r.data.substring(4,6)}/${r.data.substring(0,4)}`;
+      S.finSaidas.push({data:dt,tipo:'Cobrança Shopee',plat:'Shopee',valor:r.valor,memo:r.memo.substring(0,80)});
+    }
+    S.finSaidas.sort((a,b)=>a.data.split('/').reverse().join('').localeCompare(b.data.split('/').reverse().join('')));
+
+    // ── FUTURA: detalhe dos pedidos pendentes ──
+    S.futuraDetalhes = [];
+    // ML pendentes detalhados
+    for(const [rd, data] of Object.entries(mlByRelease)){
+      if(!mlAssigned.has(rd) && rd && rd!=='undefined' && rd!=='nan'){
+        for(const p of data.pedidos){
+          S.futuraDetalhes.push({plat:'ML', dataRelease:rdToBR(rd), pedido:p.id, bruto:p.bruto, taxa:p.taxa, liq:p.liq, produto:p.produto||''});
+        }
+      }
+    }
+    // Shopee pendentes detalhados
+    for(const [rd, data] of Object.entries(shByRelease)){
+      if(!shAssigned.has(rd) && rd && rd!=='undefined' && rd!=='nan' && rd!=='NaT'){
+        for(const p of data.pedidos){
+          S.futuraDetalhes.push({plat:'Shopee', dataRelease:rdToBR(rd), pedido:p.id, bruto:p.bruto, taxa:p.taxa, liq:p.liq, produto:''});
+        }
+      }
+    }
+    S.futuraDetalhes.sort((a,b)=>a.dataRelease.split('/').reverse().join('').localeCompare(b.dataRelease.split('/').reverse().join('')));
+
+    // Try to detect period from OFX filename or data
+    const ofxMonthStr = `${ofxStart.getFullYear()}-${String(ofxStart.getMonth()+1).padStart(2,'0')}`;
+    S.periodoRef = ofxMonthStr;
+    const pEl = document.getElementById('ghPeriodo');
+    const pEl2 = document.getElementById('ghPeriodoFut');
+    if(pEl && !pEl.value) pEl.value = ofxMonthStr;
+    if(pEl2 && !pEl2.value) pEl2.value = ofxMonthStr;
+
+    renderContabil();
+    renderFinanceiro();
+    renderFutura();
+
+    document.getElementById('contabil-empty').style.display='none';
+    document.getElementById('contabil-content').style.display='block';
+    document.getElementById('fin-empty').style.display='none';
+    document.getElementById('fin-content').style.display='block';
+    document.getElementById('fut-empty').style.display='none';
+    document.getElementById('fut-content').style.display='block';
+
+    toast(`✅ Processado! ${S.contabilRows.length} pedidos · ${S.finRepasses.length} repasses · ${S.futuraDetalhes.length} pendentes`,'ok');
+  } catch(e){
+    toast('Erro ao processar: '+e.message,'err');
+    console.error(e);
+  }
+}
+
+// ═══════════════════ RENDER CONTABIL ═══════════════════
+function limparFiltros(){
+  document.getElementById('filtro-de').value='';
+  document.getElementById('filtro-ate').value='';
+  document.getElementById('filtro-plat').value='all';
+  document.getElementById('filtro-status').value='all';
+  renderContabil();
+}
+
+function filterContabilRows(){
+  const plat = document.getElementById('filtro-plat').value;
+  const status = document.getElementById('filtro-status').value;
+  const de = document.getElementById('filtro-de').value; // YYYY-MM-DD
+  const ate = document.getElementById('filtro-ate').value;
+  let rows = S.contabilRows;
+  if(plat!=='all') rows=rows.filter(r=>r.plat===plat);
+  if(status!=='all') rows=rows.filter(r=>r.status===status);
+  if(de||ate){
+    rows=rows.filter(r=>{
+      // r.data is DD/MM/YYYY — convert to YYYY-MM-DD for comparison
+      const parts=r.data.split('/');
+      if(parts.length<3) return true;
+      const iso=`${parts[2]}-${parts[1]}-${parts[0]}`;
+      if(de && iso<de) return false;
+      if(ate && iso>ate) return false;
+      return true;
+    });
+  }
+  return rows;
+}
+
+function renderContabil() {
+  const rows = filterContabilRows();
+
+  const totalVendas = S.contabilRows.reduce((s,r)=>s+r.valor,0);
+  const comNF = S.contabilRows.filter(r=>r.temNF).length;
+  const semNF = S.contabilRows.filter(r=>!r.temNF).length;
+  const semOlist = S.contabilRows.filter(r=>!r.hasOlist).length;
+  const valorSemNF = S.contabilRows.filter(r=>!r.temNF).reduce((s,r)=>s+r.valor,0);
+  const totalNFs = new Set(S.nf.map(r=>String(r['Nº nota']))).size;
+  const mlTotal = S.contabilRows.filter(r=>r.plat==='ML').reduce((s,r)=>s+r.valor,0);
+  const shTotal = S.contabilRows.filter(r=>r.plat==='Shopee').reduce((s,r)=>s+r.valor,0);
+
+  // Filtrado
+  const filtTot = rows.reduce((s,r)=>s+r.valor,0);
+  const filtComNF = rows.filter(r=>r.temNF).length;
+  const filtSemNF = rows.filter(r=>!r.temNF).length;
+  const de = document.getElementById('filtro-de').value;
+  const ate = document.getElementById('filtro-ate').value;
+  const periodoLabel = (de||ate) ? `Período: ${de?de.split('-').reverse().join('/'):'início'} → ${ate?ate.split('-').reverse().join('/'):'fim'}` : 'Período completo';
+
+  document.getElementById('resumo-exec').innerHTML = `
+    <div class="resumo-box">
+      <h3>📋 Resumo Executivo — Contabilidade <span style="font-size:11px;color:var(--gray);font-weight:400;margin-left:8px">${periodoLabel}</span></h3>
+      <div class="resumo-grid">
+        <div class="resumo-item"><span class="ri-label">Total Vendas (Bruto)</span><span class="ri-val gold">${fmtR(totalVendas)}</span></div>
+        <div class="resumo-item"><span class="ri-label">Vendas ML</span><span class="ri-val">${fmtR(mlTotal)}</span></div>
+        <div class="resumo-item"><span class="ri-label">Vendas Shopee</span><span class="ri-val">${fmtR(shTotal)}</span></div>
+        <div class="resumo-item"><span class="ri-label">Total Pedidos</span><span class="ri-val">${S.contabilRows.length.toLocaleString('pt-BR')}</span></div>
+        <div class="resumo-item"><span class="ri-label">Notas Fiscais Emitidas</span><span class="ri-val green">${totalNFs.toLocaleString('pt-BR')}</span></div>
+        <div class="resumo-item"><span class="ri-label">Pedidos com NF</span><span class="ri-val green">${comNF.toLocaleString('pt-BR')}</span></div>
+        <div class="resumo-item"><span class="ri-label">⚠️ Pedidos SEM NF</span><span class="ri-val red">${semNF.toLocaleString('pt-BR')} — ${fmtR(valorSemNF)}</span></div>
+        <div class="resumo-item"><span class="ri-label">⚠️ Pedidos fora do Olist</span><span class="ri-val red">${semOlist.toLocaleString('pt-BR')}</span></div>
+      </div>
+      ${(de||ate)?`<div style="margin-top:12px;padding:8px 14px;background:rgba(201,168,76,.08);border-radius:8px;font-size:12px;color:var(--gold)">🔍 Filtro ativo: ${rows.length} pedidos · ${fmtR(filtTot)} · ✅ ${filtComNF} com NF · ❌ ${filtSemNF} sem NF</div>`:''}
+    </div>`;
+
+  document.getElementById('det-ct').textContent = `${rows.length} registros`;
+  document.getElementById('tbody-contabil').innerHTML = rows.map(r=>`
+    <tr>
+      <td><span class="badge ${r.status==='OK'?'b-ok':'b-err'}">${r.status==='OK'?'✅ Com NF':'❌ Sem NF'}</span></td>
+      <td><span class="badge ${r.plat==='ML'?'b-ml':'b-shopee'}">${r.plat==='ML'?'🛒 ML':'🛍️ Shopee'}</span></td>
+      <td class="muted" style="font-size:11px">${r.pedido}</td>
+      <td class="muted">${r.data}</td>
+      <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis">${r.produto||'—'}</td>
+      <td class="gold">${fmtR(r.valor)}</td>
+      <td class="${r.nfNum==='—'?'muted':'green'}">${r.nfNum}</td>
+      <td class="muted">${r.nfData}</td>
+    </tr>`).join('');
+}
+
+// ═══════════════════ RENDER FINANCEIRO ═══════════════════
+function renderFinanceiro() {
+  const totalEntradas = S.finRepasses.reduce((s,r)=>s+r.valorBanco,0);
+  const totalPrevisto = S.finRepasses.reduce((s,r)=>s+r.valorPrevisto,0);
+  const totalDiff = S.finRepasses.reduce((s,r)=>s+r.diff,0);
+  const totalPend = S.finPendentes.reduce((s,r)=>s+r.liq,0);
+  const totalSaidas = S.finSaidas.reduce((s,r)=>s+r.valor,0);
+  const okCount = S.finRepasses.filter(r=>r.status==='OK').length;
+  const periodoRef = S.periodoRef ? S.periodoRef.split('-') : ['',''];
+  const mesRef = periodoRef.length===2 ? parseInt(periodoRef[1]) : 0;
+  const anoRef = periodoRef.length===2 ? parseInt(periodoRef[0]) : 0;
+
+  document.getElementById('fin-kpis').innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Entradas no Banco</div><div class="kpi-val green">${fmtR(totalEntradas)}</div><div class="kpi-sub">${S.finRepasses.length} repasses recebidos</div></div>
+      <div class="kpi"><div class="kpi-label">Previsto (Olist)</div><div class="kpi-val gold">${fmtR(totalPrevisto)}</div><div class="kpi-sub">Pedidos registrados no ERP</div></div>
+      <div class="kpi"><div class="kpi-label">Diferença</div><div class="kpi-val ${Math.abs(totalDiff)<1?'green':'orange'}">${totalDiff>=0?'+':''}${fmtR(totalDiff)}</div><div class="kpi-sub">Banco − Previsto Olist</div></div>
+      <div class="kpi"><div class="kpi-label">Aguardando (próx. mês)</div><div class="kpi-val blue">${fmtR(totalPend)}</div><div class="kpi-sub">${S.finPendentes.length} datas · ver aba Futura</div></div>
+      <div class="kpi"><div class="kpi-label">Saídas (Taxas/Dev.)</div><div class="kpi-val red">${fmtR(Math.abs(totalSaidas))}</div><div class="kpi-sub">${S.finSaidas.length} lançamentos</div></div>
+      <div class="kpi"><div class="kpi-label">Repasses OK</div><div class="kpi-val green">${okCount} / ${S.finRepasses.length}</div><div class="kpi-sub">Sem divergência negativa</div></div>
+    </div>`;
+
+  // Timeline com detalhe analítico completo
+  document.getElementById('timeline').innerHTML = S.finRepasses.map((r,i)=>{
+    const stCls = r.status==='OK'?'tl-ok':'tl-diff';
+    const diffCls = r.diff >= -0.10 ? (r.diff > 0.10 ? 'orange' : 'green') : 'red';
+    const platBadge = r.plat==='ML'?'<span class="badge b-ml">🛒 ML</span>':'<span class="badge b-shopee">🛍️ Shopee</span>';
+    const stBadge = r.status==='OK'?'<span class="badge b-ok">✅ Conferido</span>':'<span class="badge b-warn">⚠️ Verificar</span>';
+    const datesStr = r.datesCobertas.length ? `Cobre: ${r.datesCobertas.slice(0,3).join(', ')}${r.datesCobertas.length>3?' +'+(r.datesCobertas.length-3)+' datas':''}` : '';
+    const notaHtml = r.nota ? `<div style="margin-top:8px;padding:7px 12px;background:rgba(230,126,34,.1);border-radius:7px;font-size:11px;color:var(--orange)">ℹ️ ${r.nota}</div>` : '';
+
+    // Detalhe analítico — todos os pedidos com badge "Venda anterior" se for de mês anterior
+    const somaB = r.pedidos.reduce((s,p)=>s+p.bruto,0);
+    const somaT = r.pedidos.reduce((s,p)=>s+p.taxa,0);
+    const somaL = r.pedidos.reduce((s,p)=>s+p.liq,0);
+
+    const pedRows = r.pedidos.map(p=>{
+      // Detectar se é venda de mês anterior
+      let isAnterior = false;
+      if(r.plat==='ML' && p.id){
+        const settle = S.ml.find(x=>String(x.ORDER_ID||'').replace('.0','').trim()===p.id && x.TRANSACTION_TYPE==='SETTLEMENT');
+        if(settle && settle.TRANSACTION_DATE){
+          const txDate = settle.TRANSACTION_DATE.substring(0,7); // YYYY-MM
+          const releaseDate = (r.datesCobertas[0]||'').split('/');
+          const relYM = releaseDate.length===3 ? `${releaseDate[2]}-${releaseDate[1]}` : '';
+          // Detectar se data da venda é de mês anterior ao período
+          if(txDate && anoRef && mesRef){
+            const txY=parseInt(txDate.split('-')[0]), txM=parseInt(txDate.split('-')[1]);
+            isAnterior = txY < anoRef || (txY === anoRef && txM < mesRef);
+          }
+        }
+      }
+      const anteriorBadge = isAnterior ? '<span class="badge" style="background:rgba(41,128,185,.15);color:var(--blue);font-size:10px;margin-left:4px">Venda anterior</span>' : '';
+      return `<tr>
+        <td style="font-size:11px;color:var(--gray)">${p.packId||p.id}${anteriorBadge}<br><span style="font-size:10px;color:var(--gray);opacity:.6">${p.packId?'Pack: '+p.id:''}</span></td>
+        <td style="font-size:11px;max-width:200px;overflow:hidden;text-overflow:ellipsis;color:var(--white)">${p.produto||'—'}</td>
+        <td class="gold" style="text-align:right">${fmtR(p.bruto)}</td>
+        <td class="red" style="text-align:right">-${fmtR(p.taxa)}</td>
+        <td class="green" style="text-align:right">${fmtR(p.liq)}</td>
+      </tr>`;
+    }).join('');
+
+    const totalRow = `<tr style="background:rgba(201,168,76,.08);font-weight:700">
+      <td colspan="2" style="font-family:'Syne',sans-serif;font-size:11px;color:var(--gold)">SUBTOTAL — ${r.pedidos.length} pedidos no Olist</td>
+      <td class="gold" style="text-align:right">${fmtR(somaB)}</td>
+      <td class="red" style="text-align:right">-${fmtR(somaT)}</td>
+      <td class="green" style="text-align:right">${fmtR(somaL)}</td>
+    </tr>`;
+
+    return `
+    <div class="tl-item ${stCls}">
+      <div class="tl-header">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span class="tl-date">${r.dataEntrada}</span>
+          <span class="muted" style="font-size:12px">${r.count} pedidos no Olist · ${datesStr}</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">${platBadge}${stBadge}</div>
+      </div>
+      <div class="tl-body">
+        <div class="tl-field"><div class="tf-label">Entrada no Banco</div><div class="tf-val green">${fmtR(r.valorBanco)}</div></div>
+        <div class="tl-field"><div class="tf-label">Previsto (Olist)</div><div class="tf-val gold">${fmtR(r.valorPrevisto)}</div></div>
+        <div class="tl-field"><div class="tf-label">Diferença</div><div class="tf-val ${diffCls}">${r.diff>=0?'+':''}${fmtR(r.diff)}</div></div>
+        <div class="tl-field"><div class="tf-label">Pedidos no Olist</div><div class="tf-val">${r.count}</div></div>
+      </div>
+      ${notaHtml}
+      ${r.pedidos.length ? `
+      <button class="tl-toggle" onclick="toggleDetail(${i})" id="tgl-${i}">▼ Ver detalhe analítico (${r.pedidos.length} pedidos)</button>
+      <div class="tl-detail" id="td-${i}">
+        <div class="tbl-wrap" style="margin-top:10px">
+          <table>
+            <thead><tr>
+              <th>Nº Pedido</th><th>Produto</th>
+              <th style="text-align:right">Bruto</th>
+              <th style="text-align:right">Taxa</th>
+              <th style="text-align:right">Líquido</th>
+            </tr></thead>
+            <tbody>${pedRows}${totalRow}</tbody>
+          </table>
+        </div>
+      </div>` : ''}
+    </div>`;
+  }).join('');
+
+  // Saídas
+  document.getElementById('saidas-ct').textContent = `${S.finSaidas.length} lançamentos`;
+  document.getElementById('tbody-saidas').innerHTML = S.finSaidas.map(r=>`
+    <tr>
+      <td class="muted">${r.data}</td>
+      <td><span class="badge ${r.tipo.includes('Devolução')?'b-dev':r.tipo.includes('Fatura')||r.tipo.includes('Assinatura')?'b-warn':'b-tax'}">${r.tipo}</span></td>
+      <td><span class="badge ${r.plat==='ML'?'b-ml':'b-shopee'}">${r.plat}</span></td>
+      <td class="red">${fmtR(Math.abs(r.valor))}</td>
+      <td class="muted" style="font-size:11px;max-width:300px;white-space:normal">${r.memo}</td>
+    </tr>`).join('');
+}
+
+// ═══════════════════ RENDER FUTURA ═══════════════════
+function renderFutura() {
+  const totalLiq = S.finPendentes.reduce((s,r)=>s+r.liq,0);
+  const totalCount = S.futuraDetalhes.length;
+  const mlPend = S.finPendentes.filter(r=>r.plat==='ML');
+  const shPend = S.finPendentes.filter(r=>r.plat==='Shopee');
+
+  document.getElementById('fut-kpis').innerHTML = `
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-label">Total a Receber</div><div class="kpi-val blue">${fmtR(totalLiq)}</div><div class="kpi-sub">${S.finPendentes.length} datas de repasse</div></div>
+      <div class="kpi"><div class="kpi-label">Pedidos Pendentes</div><div class="kpi-val">${totalCount}</div><div class="kpi-sub">Todos os marketplaces</div></div>
+      <div class="kpi"><div class="kpi-label">ML Pendente</div><div class="kpi-val gold">${fmtR(mlPend.reduce((s,r)=>s+r.liq,0))}</div><div class="kpi-sub">${mlPend.length} datas</div></div>
+      <div class="kpi"><div class="kpi-label">Shopee Pendente</div><div class="kpi-val orange">${fmtR(shPend.reduce((s,r)=>s+r.liq,0))}</div><div class="kpi-sub">${shPend.length} datas</div></div>
+    </div>`;
+
+  document.getElementById('fut-ct').textContent = `${S.finPendentes.length} datas · ${totalCount} pedidos`;
+
+  // Agrupar por data e mostrar detalhes
+  const byDate = {};
+  for(const p of S.futuraDetalhes){
+    if(!byDate[p.dataRelease]) byDate[p.dataRelease]={plat:p.plat,pedidos:[],liq:0,bruto:0,taxa:0};
+    byDate[p.dataRelease].pedidos.push(p);
+    byDate[p.dataRelease].liq+=p.liq;
+    byDate[p.dataRelease].bruto+=p.bruto;
+    byDate[p.dataRelease].taxa+=p.taxa;
+  }
+
+  document.getElementById('fut-timeline').innerHTML = Object.entries(byDate)
+    .sort(([a],[b])=>a.split('/').reverse().join('').localeCompare(b.split('/').reverse().join('')))
+    .map(([dt, data], i)=>{
+      const platBadge = data.plat==='ML'?'<span class="badge b-ml">🛒 ML</span>':'<span class="badge b-shopee">🛍️ Shopee</span>';
+      const rows = data.pedidos.map(p=>`<tr>
+        <td style="font-size:11px;color:var(--gray)">${p.pedido}</td>
+        <td style="font-size:11px;color:var(--white)">${p.produto||'—'}</td>
+        <td class="gold" style="text-align:right">${fmtR(p.bruto)}</td>
+        <td class="red" style="text-align:right">-${fmtR(p.taxa)}</td>
+        <td class="blue" style="text-align:right">${fmtR(p.liq)}</td>
+      </tr>`).join('');
+      const totRow = `<tr style="background:rgba(41,128,185,.1);font-weight:700">
+        <td colspan="2" style="font-family:'Syne',sans-serif;font-size:11px;color:var(--blue)">SUBTOTAL — ${data.pedidos.length} pedidos</td>
+        <td class="gold" style="text-align:right">${fmtR(data.bruto)}</td>
+        <td class="red" style="text-align:right">-${fmtR(data.taxa)}</td>
+        <td class="blue" style="text-align:right">${fmtR(data.liq)}</td>
+      </tr>`;
+      return `
+      <div class="tl-item tl-pend" style="border-left:3px solid var(--blue)">
+        <div class="tl-header">
+          <div style="display:flex;align-items:center;gap:12px">
+            <span class="tl-date">${dt}</span>
+            <span class="muted" style="font-size:12px">${data.pedidos.length} pedidos · Líquido previsto: <strong style="color:var(--blue)">${fmtR(data.liq)}</strong></span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">${platBadge}<span class="badge b-pend">🕐 Aguardando</span></div>
+        </div>
+        <button class="tl-toggle" onclick="toggleFut(${i})" id="ftgl-${i}">▼ Ver pedidos</button>
+        <div class="tl-detail" id="ftd-${i}">
+          <div class="tbl-wrap" style="margin-top:10px">
+            <table>
+              <thead><tr><th>Nº Pedido</th><th>Produto</th><th style="text-align:right">Bruto</th><th style="text-align:right">Taxa</th><th style="text-align:right">Líquido</th></tr></thead>
+              <tbody>${rows}${totRow}</tbody>
+            </table>
+          </div>
+        </div>
+      </div>`;
+    }).join('');
+}
+
+function toggleDetail(i){
+  const el=document.getElementById('td-'+i);
+  el.classList.toggle('open');
+  const btn=document.getElementById('tgl-'+i);
+  if(btn) btn.textContent = el.classList.contains('open') ? '▲ Fechar detalhe' : `▼ Ver detalhe analítico (${el.querySelectorAll('tbody tr').length-1} pedidos)`;
+}
+
+function toggleFut(i){
+  const el=document.getElementById('ftd-'+i);
+  el.classList.toggle('open');
+  const btn=document.getElementById('ftgl-'+i);
+  if(btn) btn.textContent = el.classList.contains('open') ? '▲ Fechar' : '▼ Ver pedidos';
+}
+
+// ═══════════════════ EXPORTS ═══════════════════
+function exportContabil(){
+  const rows = filterContabilRows();
+  const wb=XLSX.utils.book_new();
+  // Resumo
+  const totalVendas=S.contabilRows.reduce((s,r)=>s+r.valor,0);
+  const comNF=S.contabilRows.filter(r=>r.temNF).length;
+  const semNF=S.contabilRows.filter(r=>!r.temNF).length;
+  const valorSemNF=S.contabilRows.filter(r=>!r.temNF).reduce((s,r)=>s+r.valor,0);
+  const totalNFs=new Set(S.nf.map(r=>String(r['Nº nota']))).size;
+  const de=document.getElementById('filtro-de').value;
+  const ate=document.getElementById('filtro-ate').value;
+  const sumAoa=[
+    ['RELATÓRIO DE VENDAS — DIVINA EMBALAGENS'],
+    ['Período filtrado', de&&ate?`${de} a ${ate}`:de?`a partir de ${de}`:ate?`até ${ate}`:'Completo'],[''],
+    ['Total Vendas Bruto',totalVendas],
+    ['Vendas ML',S.contabilRows.filter(r=>r.plat==='ML').reduce((s,r)=>s+r.valor,0)],
+    ['Vendas Shopee',S.contabilRows.filter(r=>r.plat==='Shopee').reduce((s,r)=>s+r.valor,0)],
+    ['Total Pedidos',S.contabilRows.length],
+    ['NFs Emitidas',totalNFs],['Pedidos com NF',comNF],
+    ['Pedidos SEM NF',semNF],['Valor SEM NF',valorSemNF],[''],
+    ['--- FILTRADO ---'],
+    ['Pedidos filtrados',rows.length],
+    ['Valor filtrado',rows.reduce((s,r)=>s+r.valor,0)],
+  ];
+  const wsSum=XLSX.utils.aoa_to_sheet(sumAoa);
+  XLSX.utils.book_append_sheet(wb,wsSum,'Resumo');
+  const hdrs=['Status NF','Plataforma','Nº Pedido','Data Venda','Produto','Valor Bruto','Nº NF','Data NF'];
+  const data=rows.map(r=>[r.status,r.plat,r.pedido,r.data,r.produto,r.valor,r.nfNum,r.nfData]);
+  const wsDet=XLSX.utils.aoa_to_sheet([hdrs,...data]);
+  wsDet['!cols']=[{wch:10},{wch:10},{wch:22},{wch:12},{wch:55},{wch:14},{wch:12},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,wsDet,'Detalhe Pedidos');
+  XLSX.writeFile(wb,'Relatorio_Contabilidade_DivinaEmbalagens.xlsx');
+  toast('✅ Relatório exportado!','ok');
+}
+
+// ── Conta Azul por plataforma ──────────────────────────────────────────────
+function exportContaAzul(plat){
+  // Formatar data DD/MM/YYYY → YYYY-MM-DD para ordenação, volta para DD/MM/YYYY no Excel
+  const repasses = S.finRepasses.filter(r=>r.plat===plat);
+  if(!repasses.length){toast(`Nenhum repasse de ${plat} encontrado`,'err');return;}
+
+  const CA_HDRS = ['Data de Competência','Data de Vencimento','Data de Pagamento','Valor','Categoria','Descrição','Cliente/Fornecedor','CNPJ/CPF','Centro de Custo','Observações'];
+  const fornec = plat==='ML' ? 'Mercado Livre' : 'Shopee';
+  const cnpj   = plat==='ML' ? '33.070.064/0001-06' : '20.590.820/0001-06';
+  const cat_cr  = plat==='ML' ? 'Vendas Marketplace - ML' : 'Vendas Marketplace - Shopee';
+  const cat_taxa = plat==='ML' ? 'Taxas Marketplace - ML' : 'Comissão Marketplace - Shopee';
+  const cat_frete = 'Frete Marketplace - ML';
+  const cat_serv  = 'Taxa de Serviço - Shopee';
+
+  const ca_rows = []; // Conta Azul resumo diário
+  const det_cr  = []; // detalhe vendas
+  const det_cp  = []; // detalhe taxas
+
+  // Adicionar cobranças ML (Faturas, Assinatura) como C/Pagar no Conta Azul ML
+  if(plat==='ML'){
+    const cobrancasML = S.finSaidas.filter(r=>r.plat==='ML' && (r.tipo==='Fatura/Tarifa ML'||r.tipo==='Assinatura ML'));
+    for(const c of cobrancasML){
+      const catCob = c.tipo==='Assinatura ML' ? 'Assinatura Mercado Livre' : 'Tarifas Mercado Livre';
+      ca_rows.push([c.data,c.data,c.data, c.valor, catCob,
+        c.memo, fornec, cnpj, 'Marketplace ML', 'Cobrança interna ML']);
+      det_cp.push([c.data,c.data,c.data, c.valor, catCob,
+        c.memo, fornec, cnpj, 'Marketplace ML', '']);
+    }
+  }
+
+  for(const rep of repasses){
+    const dt = rep.dataEntrada; // DD/MM/YYYY
+
+    // Calcular totais do repasse
+    const totalBruto = rep.pedidos.reduce((s,p)=>s+p.bruto,0);
+    const totalTaxa  = rep.pedidos.reduce((s,p)=>s+p.taxa,0);
+    const totalLiq   = rep.pedidos.reduce((s,p)=>s+p.liq,0);
+
+    if(plat==='ML'){
+      // Frete separado
+      const totalFrete = rep.pedidos.reduce((s,p)=>s+(p.frete||0),0);
+      const totalComis = totalTaxa - totalFrete;
+
+      // C/Receber bruto
+      ca_rows.push([dt,dt,dt, totalBruto, cat_cr,
+        `Vendas ML — repasse ${dt} (${rep.pedidos.length} pedidos)`,
+        fornec, cnpj, 'Marketplace ML', `Banco: R$ ${rep.valorBanco.toLocaleString('pt-BR',{minimumFractionDigits:2})}`]);
+      // C/Pagar taxa ML
+      if(totalComis>0.01) ca_rows.push([dt,dt,dt, -totalComis, cat_taxa,
+        `Taxa ML — repasse ${dt}`, fornec, cnpj, 'Marketplace ML', '']);
+      // C/Pagar frete ML
+      if(totalFrete>0.01) ca_rows.push([dt,dt,dt, -totalFrete, cat_frete,
+        `Frete ML — repasse ${dt}`, fornec, cnpj, 'Marketplace ML', '']);
+    } else {
+      // Shopee: comissão + taxa serviço dentro do taxa total (já somados)
+      // C/Receber bruto
+      ca_rows.push([dt,dt,dt, totalBruto, cat_cr,
+        `Vendas Shopee — repasse ${dt} (${rep.pedidos.length} pedidos)`,
+        fornec, cnpj, 'Marketplace Shopee', `Banco: R$ ${rep.valorBanco.toLocaleString('pt-BR',{minimumFractionDigits:2})}`]);
+      // C/Pagar taxas
+      if(totalTaxa>0.01) ca_rows.push([dt,dt,dt, -totalTaxa, cat_taxa,
+        `Taxas Shopee — repasse ${dt}`, fornec, cnpj, 'Marketplace Shopee', '']);
+    }
+
+    // Detalhe vendas (C/R por pedido)
+    for(const p of rep.pedidos){
+      det_cr.push([dt,dt,dt, p.bruto, cat_cr,
+        `${plat==='ML'?'Venda ML':'Venda Shopee'} — ${p.packId||p.id}`,
+        fornec, cnpj, `Marketplace ${plat}`, p.produto||'']);
+      // Detalhe taxas (C/P por pedido)
+      if(p.taxa>0.01) det_cp.push([dt,dt,dt, -p.taxa, cat_taxa,
+        `Taxa ${plat} — ${p.packId||p.id}`,
+        fornec, cnpj, `Marketplace ${plat}`, p.produto||'']);
+    }
+  }
+
+  const wb = XLSX.utils.book_new();
+
+  // Aba 1: Conta Azul resumo diário (para importar)
+  const ws1 = XLSX.utils.aoa_to_sheet([CA_HDRS, ...ca_rows]);
+  ws1['!cols'] = [14,14,14,12,28,55,20,18,18,35].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws1, 'ContaAzul_Importar');
+
+  // Aba 2: Detalhe vendas
+  const ws2 = XLSX.utils.aoa_to_sheet([CA_HDRS, ...det_cr]);
+  ws2['!cols'] = [14,14,14,12,28,55,20,18,18,50].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws2, 'Detalhe_Vendas');
+
+  // Aba 3: Detalhe taxas
+  const ws3 = XLSX.utils.aoa_to_sheet([CA_HDRS, ...det_cp]);
+  ws3['!cols'] = [14,14,14,12,28,55,20,18,18,50].map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb, ws3, 'Detalhe_Taxas');
+
+  XLSX.writeFile(wb, `ContaAzul_${plat}_DivinaEmbalagens.xlsx`);
+  toast(`✅ Conta Azul ${plat} exportado!`, 'ok');
+}
+
+function exportFinanceiro(){
+  const wb=XLSX.utils.book_new();
+
+  // Aba resumo dos repasses
+  const hdrs=['Data Entrada Banco','Plataforma','Valor Banco','Valor Previsto (Olist)','Diferença','Pedidos Olist','Status','Nota'];
+  const data=S.finRepasses.map(r=>[r.dataEntrada,r.plat,r.valorBanco,r.valorPrevisto,r.diff,r.count,r.status,r.nota||'']);
+  const ws=XLSX.utils.aoa_to_sheet([hdrs,...data]);
+  ws['!cols']=[{wch:14},{wch:14},{wch:16},{wch:20},{wch:14},{wch:12},{wch:12},{wch:45}];
+  XLSX.utils.book_append_sheet(wb,ws,'Resumo Repasses');
+
+  // Aba analítica — todos os pedidos por repasse
+  const hdrs2=['Data Repasse','Plataforma','Nº Pedido','Produto','Valor Bruto','Taxa','Valor Líquido'];
+  const data2=[];
+  for(const r of S.finRepasses){
+    for(const p of r.pedidos){
+      data2.push([r.dataEntrada,r.plat,p.id,p.produto||'',p.bruto,p.taxa,p.liq]);
+    }
+    data2.push(['','','SUBTOTAL','',r.pedidos.reduce((s,p)=>s+p.bruto,0),r.pedidos.reduce((s,p)=>s+p.taxa,0),r.pedidos.reduce((s,p)=>s+p.liq,0)]);
+    data2.push(['','','','','','','']);
+  }
+  const ws2=XLSX.utils.aoa_to_sheet([hdrs2,...data2]);
+  ws2['!cols']=[{wch:14},{wch:14},{wch:22},{wch:50},{wch:14},{wch:12},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Detalhe Analítico');
+
+  // Saídas
+  const hdrs3=['Data','Tipo','Plataforma','Valor','Descrição'];
+  const data3=S.finSaidas.map(r=>[r.data,r.tipo,r.plat,r.valor,r.memo]);
+  const ws3=XLSX.utils.aoa_to_sheet([hdrs3,...data3]);
+  XLSX.utils.book_append_sheet(wb,ws3,'Saídas');
+
+  XLSX.writeFile(wb,'Analise_Financeira_DivinaEmbalagens.xlsx');
+  toast('✅ Análise exportada!','ok');
+}
+
+function exportFutura(){
+  const wb=XLSX.utils.book_new();
+  // Resumo por data
+  const hdrs=['Data Repasse Prevista','Plataforma','Valor Líquido','Pedidos','Observação'];
+  const data=S.finPendentes.map(r=>[r.data,r.plat,r.liq,r.count,r.obs]);
+  const ws=XLSX.utils.aoa_to_sheet([hdrs,...data]);
+  XLSX.utils.book_append_sheet(wb,ws,'Resumo Pendentes');
+  // Detalhe pedido a pedido
+  const hdrs2=['Data Repasse Prevista','Plataforma','Nº Pedido','Produto','Valor Bruto','Taxa','Valor Líquido'];
+  const data2=S.futuraDetalhes.map(r=>[r.dataRelease,r.plat,r.pedido,r.produto,r.bruto,r.taxa,r.liq]);
+  const ws2=XLSX.utils.aoa_to_sheet([hdrs2,...data2]);
+  ws2['!cols']=[{wch:16},{wch:12},{wch:22},{wch:50},{wch:14},{wch:12},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Detalhe Pedidos');
+  XLSX.writeFile(wb,`Conciliacao_Futura_DivinaEmbalagens_${S.periodoRef||'periodo'}.xlsx`);
+  toast('✅ Conciliação futura exportada!','ok');
+}
+
+function saveToken2(){
+  localStorage.setItem('gh_divina_token', document.getElementById('ghToken2').value);
+  localStorage.setItem('gh_divina_repo', document.getElementById('ghRepo2').value);
+}
+
+async function salvarFuturaGitHub(){
+  const token=(document.getElementById('ghToken2').value||document.getElementById('ghToken').value).trim();
+  const repo=(document.getElementById('ghRepo2').value||document.getElementById('ghRepo').value).trim();
+  const periodo=(document.getElementById('ghPeriodoFut').value||S.periodoRef||'').trim();
+  if(!token||!repo||!periodo){toast('Preencha token, repositório e período','err');return;}
+
+  const payload={
+    tipo:'conciliacao_futura',
+    periodo_origem:periodo,
+    gerado_em:new Date().toISOString(),
+    total_liq:S.finPendentes.reduce((s,r)=>s+r.liq,0),
+    total_pedidos:S.futuraDetalhes.length,
+    resumo:S.finPendentes,
+    detalhe:S.futuraDetalhes
+  };
+  const fileName=`futura_divina_${periodo}.json`;
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+  const url=`https://api.github.com/repos/${repo}/contents/${fileName}`;
+  try{
+    let sha=null;
+    try{const r=await fetch(url,{headers:{Authorization:`token ${token}`}});if(r.ok){const j=await r.json();sha=j.sha;}}catch(e){}
+    const body={message:`Conciliação Futura Divina ${periodo}`,content};
+    if(sha) body.sha=sha;
+    const resp=await fetch(url,{method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(resp.ok) toast('✅ Pendentes salvos no GitHub!','ok');
+    else{const e=await resp.json();toast('Erro: '+(e.message||resp.status),'err');}
+  }catch(e){toast('Erro de conexão','err');}
+}
+
+function loadFutura(inp){
+  const f=inp.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const payload=JSON.parse(e.target.result);
+      const div=document.getElementById('fut-prev-result');
+      const total=payload.total_liq||0;
+      const pedidos=payload.total_pedidos||0;
+      const periodo=payload.periodo_origem||'?';
+      // Verificar quais já entraram (cruzar com OFX atual)
+      if(!S.ofx){div.innerHTML=`<div class="resumo-box"><h3>📂 Pendentes de ${periodo}</h3><p style="color:var(--gray);font-size:13px">Carregue o extrato OFX para verificar quais já entraram.</p></div>`;return;}
+      const ofxML=S.ofx.filter(r=>r.valor>0&&/MERCADO PAGO/i.test(r.memo)&&!/MAREE/i.test(r.memo));
+      const ofxSH=S.ofx.filter(r=>r.valor>0&&(/SHOPEE|SHPP|MAREE IP/i.test(r.memo)));
+      const totalEntrouML=ofxML.reduce((s,r)=>s+r.valor,0);
+      const totalEntrouSH=ofxSH.reduce((s,r)=>s+r.valor,0);
+      const prevML=(payload.resumo||[]).filter(r=>r.plat==='ML').reduce((s,r)=>s+r.liq,0);
+      const prevSH=(payload.resumo||[]).filter(r=>r.plat==='Shopee').reduce((s,r)=>s+r.liq,0);
+      div.innerHTML=`
+        <div class="resumo-box">
+          <h3>📂 Verificação — Pendentes de ${periodo}</h3>
+          <div class="resumo-grid" style="margin-top:12px">
+            <div class="resumo-item"><span class="ri-label">Previsto ML (período anterior)</span><span class="ri-val gold">${fmtR(prevML)}</span></div>
+            <div class="resumo-item"><span class="ri-label">Entrou ML (este extrato)</span><span class="ri-val green">${fmtR(totalEntrouML)}</span></div>
+            <div class="resumo-item"><span class="ri-label">Previsto Shopee (período anterior)</span><span class="ri-val gold">${fmtR(prevSH)}</span></div>
+            <div class="resumo-item"><span class="ri-label">Entrou Shopee (este extrato)</span><span class="ri-val green">${fmtR(totalEntrouSH)}</span></div>
+          </div>
+          <p style="font-size:11px;color:var(--gray);margin-top:10px">⚠️ Os valores acima são do extrato completo do mês. Para conferência exata, compare com o detalhe da aba Análise Financeira.</p>
+        </div>`;
+      toast('✅ Arquivo de pendentes carregado!','ok');
+    }catch(e){toast('Erro ao ler arquivo: '+e.message,'err');}
+  };
+  r.readAsText(f,'UTF-8');
+}
+
+// ═══════════════════ GITHUB ═══════════════════
+async function salvarGitHub(){
+  const token=document.getElementById('ghToken').value.trim();
+  const repo=document.getElementById('ghRepo').value.trim();
+  const periodo=document.getElementById('ghPeriodo').value.trim();
+  if(!token||!repo||!periodo){toast('Preencha token, repositório e período','err');return;}
+  const payload={periodo,gerado_em:new Date().toISOString(),
+    resumo_contabil:{total:S.contabilRows.length,comNF:S.contabilRows.filter(r=>r.temNF).length,semNF:S.contabilRows.filter(r=>!r.temNF).length},
+    resumo_financeiro:{repasses:S.finRepasses.length,pendentes:S.finPendentes.length,saidas:S.finSaidas.length}
+  };
+  const content=btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2))));
+  const url=`https://api.github.com/repos/${repo}/contents/divina_${periodo}.json`;
+  try {
+    let sha=null;
+    try{const r=await fetch(url,{headers:{Authorization:`token ${token}`}});if(r.ok){const j=await r.json();sha=j.sha;}}catch(e){}
+    const body={message:`Conciliação Divina ${periodo}`,content};
+    if(sha) body.sha=sha;
+    const resp=await fetch(url,{method:'PUT',headers:{Authorization:`token ${token}`,'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(resp.ok) toast('✅ Salvo no GitHub!','ok');
+    else{const e=await resp.json();toast('Erro: '+(e.message||resp.status),'err');}
+  }catch(e){toast('Erro de conexão','err');}
+}
+
+// ═══════════════════ TOAST ═══════════════════
+function toast(msg,type='ok'){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.className=`toast show ${type}`;
+  setTimeout(()=>t.classList.remove('show'),3500);
+}
+</script>
+</body>
+</html>
