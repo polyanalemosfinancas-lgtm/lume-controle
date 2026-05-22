@@ -1,0 +1,6638 @@
+{
+  "tipo": "conciliacao_futura",
+  "periodo_origem": "2026-04",
+  "gerado_em": "2026-05-22T01:15:43.540Z",
+  "total_liq": 37138.490000000005,
+  "total_pedidos": 720,
+  "resumo": [
+    {
+      "plat": "ML",
+      "data": "01/05/2026",
+      "liq": 4423.490000000001,
+      "count": 86,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "02/05/2026",
+      "liq": 4240.779999999999,
+      "count": 71,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "03/05/2026",
+      "liq": 3455.3200000000006,
+      "count": 61,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "04/05/2026",
+      "liq": 910.5,
+      "count": 26,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "05/05/2026",
+      "liq": 2849.4400000000005,
+      "count": 60,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "06/05/2026",
+      "liq": 3732.909999999999,
+      "count": 70,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "07/05/2026",
+      "liq": 3425.2200000000007,
+      "count": 75,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "08/05/2026",
+      "liq": 4396.510000000002,
+      "count": 70,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "09/05/2026",
+      "liq": 2937.2899999999995,
+      "count": 61,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "10/05/2026",
+      "liq": 1798.1800000000005,
+      "count": 41,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "11/05/2026",
+      "liq": 210.68,
+      "count": 7,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "12/05/2026",
+      "liq": 1257.4100000000003,
+      "count": 24,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "13/05/2026",
+      "liq": 948.8199999999999,
+      "count": 23,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "14/05/2026",
+      "liq": 498.31999999999994,
+      "count": 10,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "15/05/2026",
+      "liq": 374.65,
+      "count": 7,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "16/05/2026",
+      "liq": 276.1,
+      "count": 8,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "17/05/2026",
+      "liq": 200.60000000000002,
+      "count": 5,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "18/05/2026",
+      "liq": 823.69,
+      "count": 5,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "19/05/2026",
+      "liq": 155.08,
+      "count": 5,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "20/05/2026",
+      "liq": 186.81,
+      "count": 4,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    },
+    {
+      "plat": "ML",
+      "data": "28/05/2026",
+      "liq": 36.69,
+      "count": 1,
+      "obs": "Repasse previsto para próximo mês (aguardar)"
+    }
+  ],
+  "detalhe": [
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016106553504",
+      "bruto": 62.89,
+      "taxa": 30.51,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016103083236",
+      "bruto": 29.9,
+      "taxa": 11.48,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016102666542",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016102666138",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016102576232",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016102367830",
+      "bruto": 50.86,
+      "taxa": 28.57,
+      "liq": 22.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016100484004",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016097940002",
+      "bruto": 56.89,
+      "taxa": 24.51,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016096260534",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016096174798",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016096137138",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016096142362",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016096135694",
+      "bruto": 46.9,
+      "taxa": 27.62,
+      "liq": 19.28,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016095485632",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016092830164",
+      "bruto": 147.6,
+      "taxa": 42.81,
+      "liq": 104.79,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016092731786",
+      "bruto": 57.62,
+      "taxa": 30.03,
+      "liq": 27.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016092233664",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016092019960",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016091675428",
+      "bruto": 44.99,
+      "taxa": 10.1,
+      "liq": 34.89,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016091259396",
+      "bruto": 95.59,
+      "taxa": 28.4,
+      "liq": 67.19,
+      "produto": "500 Embalagens Higienicas Geladinho Sacole 7x19 La"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016090616432",
+      "bruto": 38.26,
+      "taxa": 17.7,
+      "liq": 20.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016090269510",
+      "bruto": 144.9,
+      "taxa": 58.14,
+      "liq": 86.76,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016089448118",
+      "bruto": 180.9,
+      "taxa": 39.99,
+      "liq": 140.91,
+      "produto": "960 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016088099566",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016087565308",
+      "bruto": 180.9,
+      "taxa": 49.99,
+      "liq": 130.91,
+      "produto": "960 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016086045366",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016085300826",
+      "bruto": 44.99,
+      "taxa": 28.09,
+      "liq": 16.9,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016081317438",
+      "bruto": 159.98,
+      "taxa": 46.96,
+      "liq": 113.02,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016080758104",
+      "bruto": 101.62,
+      "taxa": 30.9,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016079332074",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016078856844",
+      "bruto": 126.4,
+      "taxa": 41.2,
+      "liq": 85.2,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016078312016",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016077844808",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016077850436",
+      "bruto": 48.3,
+      "taxa": 21.38,
+      "liq": 26.92,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016074461540",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016073502844",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016072958060",
+      "bruto": 48.3,
+      "taxa": 10.39,
+      "liq": 37.91,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016070509966",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016068696562",
+      "bruto": 54.51,
+      "taxa": 24.34,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016068689310",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016068690164",
+      "bruto": 49.4,
+      "taxa": 33.59,
+      "liq": 15.81,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016067858252",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016067854880",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016067796054",
+      "bruto": 77.89,
+      "taxa": 37.02,
+      "liq": 40.87,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Esco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016061866556",
+      "bruto": 96.6,
+      "taxa": 38.76,
+      "liq": 57.84,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016059345360",
+      "bruto": 147.07,
+      "taxa": 42.31,
+      "liq": 104.76,
+      "produto": "Embalagem Higiênica Geladinho 7x19 Arte Pudim 1000"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016054758772",
+      "bruto": 82.75,
+      "taxa": 28.35,
+      "liq": 54.4,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016053857330",
+      "bruto": 34.12,
+      "taxa": 27.07,
+      "liq": 7.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016053496782",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 7x19 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016053088448",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016053084972",
+      "bruto": 49.4,
+      "taxa": 27.3,
+      "liq": 22.1,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016052907428",
+      "bruto": 237,
+      "taxa": 67.31,
+      "liq": 169.69,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016052498324",
+      "bruto": 39.9,
+      "taxa": 9.18,
+      "liq": 30.72,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016051175642",
+      "bruto": 346.22,
+      "taxa": 77.59,
+      "liq": 268.63,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016050759368",
+      "bruto": 140.96,
+      "taxa": 37.17,
+      "liq": 103.79,
+      "produto": "960 Embalagem Higiênica 7x21cm Geladinho Sacole Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016050531006",
+      "bruto": 96.6,
+      "taxa": 38.76,
+      "liq": 57.84,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016044877886",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016043366198",
+      "bruto": 173.11,
+      "taxa": 39.97,
+      "liq": 133.14,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016038376260",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016038095050",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016026754008",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016025941626",
+      "bruto": 50.04,
+      "taxa": 19.88,
+      "liq": 30.16,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016025760364",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016025564652",
+      "bruto": 50.04,
+      "taxa": 19.88,
+      "liq": 30.16,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016019412040",
+      "bruto": 82.84,
+      "taxa": 40.35,
+      "liq": 42.49,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016019412038",
+      "bruto": 82.75,
+      "taxa": 14.2,
+      "liq": 68.55,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016017163818",
+      "bruto": 59.99,
+      "taxa": 23.56,
+      "liq": 36.43,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016016222308",
+      "bruto": 140.96,
+      "taxa": 37.17,
+      "liq": 103.79,
+      "produto": "960 Embalagem Higiênica 7x21cm Geladinho Sacole Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016012916024",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016012477808",
+      "bruto": 66.14,
+      "taxa": 17.49,
+      "liq": 48.65,
+      "produto": "Kit 02 Pacotes Embalagem Higiênica Bopp Geladinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016012434428",
+      "bruto": 115.22,
+      "taxa": 32.68,
+      "liq": 82.54,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016010628544",
+      "bruto": 89.8,
+      "taxa": 30.31,
+      "liq": 59.49,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016010368790",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000016010357452",
+      "bruto": 180.9,
+      "taxa": 38.27,
+      "liq": 142.63,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015992028234",
+      "bruto": 33.87,
+      "taxa": 11.8,
+      "liq": 22.07,
+      "produto": "Saquinho Geladinho Geladao 9mm 4x24cm Abplastic Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015988020540",
+      "bruto": 89.8,
+      "taxa": 30.31,
+      "liq": 59.49,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015979870422",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015970363740",
+      "bruto": 165.68,
+      "taxa": 52.4,
+      "liq": 113.28,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015963905452",
+      "bruto": 37,
+      "taxa": 21.24,
+      "liq": 15.76,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015963905452",
+      "bruto": 12.4,
+      "taxa": 0,
+      "liq": 12.4,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015940681458",
+      "bruto": 85.39,
+      "taxa": 56.74,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015927694704",
+      "bruto": 42.65,
+      "taxa": 13.59,
+      "liq": 29.06,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015921720786",
+      "bruto": 44.54,
+      "taxa": 20.37,
+      "liq": 24.17,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015833691164",
+      "bruto": 45.8,
+      "taxa": 19.18,
+      "liq": 26.62,
+      "produto": "Jarra Água Plástico Reforçada 4l Com Tampa Tritec"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015833645520",
+      "bruto": 22.9,
+      "taxa": 9.59,
+      "liq": 13.31,
+      "produto": "Jarra Água Plástico Reforçada 4l Com Tampa Tritec"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "01/05/2026",
+      "pedido": "2000015831143216",
+      "bruto": 22.9,
+      "taxa": 9.59,
+      "liq": 13.31,
+      "produto": "Jarra Água Plástico Reforçada 4l Com Tampa Tritec"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016218540444",
+      "bruto": 228.16,
+      "taxa": 54.31,
+      "liq": 173.85,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 800 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016200372758",
+      "bruto": 536.3,
+      "taxa": 185.85,
+      "liq": 350.45,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016200374508",
+      "bruto": 158.13,
+      "taxa": 19.23,
+      "liq": 138.9,
+      "produto": "Saquinho Geladinho Sacole 6mm 6x24cm Ransparente 4"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016124778114",
+      "bruto": 48.12,
+      "taxa": 15.74,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016119443064",
+      "bruto": 34.12,
+      "taxa": 7.08,
+      "liq": 27.04,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016117386332",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016117382506",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016114576770",
+      "bruto": 38.26,
+      "taxa": 25.7,
+      "liq": 12.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016113471142",
+      "bruto": 34.12,
+      "taxa": 23.07,
+      "liq": 11.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016112969160",
+      "bruto": 38.26,
+      "taxa": 24.7,
+      "liq": 13.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016111537540",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016110402878",
+      "bruto": 44.99,
+      "taxa": 30.09,
+      "liq": 14.9,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016110402864",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016110249260",
+      "bruto": 74.89,
+      "taxa": 34.92,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016109994710",
+      "bruto": 64.9,
+      "taxa": 24.93,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016109631442",
+      "bruto": 376.4,
+      "taxa": 54.06,
+      "liq": 322.34,
+      "produto": "Embalagem Higienica Geladinho Gourmet Picole Cor R"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016109418768",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016109185040",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016109159548",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016107683838",
+      "bruto": 139.48,
+      "taxa": 45.79,
+      "liq": 93.69,
+      "produto": "4 Pacote Embalagem Higienica Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016107220882",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016106745850",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016106329396",
+      "bruto": 180.9,
+      "taxa": 25.92,
+      "liq": 154.98,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016106266566",
+      "bruto": 48.3,
+      "taxa": 27.02,
+      "liq": 21.28,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016104359988",
+      "bruto": 139.65,
+      "taxa": 44.3,
+      "liq": 95.35,
+      "produto": "Embalagem Higienica Geladinho Gourmet 6,5x19cm Kit"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016104279354",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016103835874",
+      "bruto": 57.62,
+      "taxa": 33.03,
+      "liq": 24.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016101192972",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016097371208",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016097261732",
+      "bruto": 59.99,
+      "taxa": 10.31,
+      "liq": 49.68,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016097268450",
+      "bruto": 64.9,
+      "taxa": 36.38,
+      "liq": 28.52,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016096144140",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016096142330",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016096117204",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016095828534",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016095575478",
+      "bruto": 173.11,
+      "taxa": 73.29,
+      "liq": 99.82,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016093421534",
+      "bruto": 79.98,
+      "taxa": 23.98,
+      "liq": 56,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016089976460",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016089948454",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016088817222",
+      "bruto": 50.86,
+      "taxa": 37.57,
+      "liq": 13.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016088696124",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016084362040",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016083645102",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016079730496",
+      "bruto": 76.89,
+      "taxa": 36.02,
+      "liq": 40.87,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016078152054",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016077671854",
+      "bruto": 107.26,
+      "taxa": 44.49,
+      "liq": 62.77,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016077671852",
+      "bruto": 82.84,
+      "taxa": 12.35,
+      "liq": 70.49,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016072958078",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016072939014",
+      "bruto": 237.7,
+      "taxa": 55.55,
+      "liq": 182.15,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 800 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016068160536",
+      "bruto": 48.02,
+      "taxa": 15.64,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016068162590",
+      "bruto": 48.03,
+      "taxa": 15.65,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016067875816",
+      "bruto": 107.26,
+      "taxa": 32.14,
+      "liq": 75.12,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016062441910",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016056928148",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016056210656",
+      "bruto": 107.26,
+      "taxa": 32.14,
+      "liq": 75.12,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016054658908",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016054550512",
+      "bruto": 112.83,
+      "taxa": 56.19,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016053237800",
+      "bruto": 180.9,
+      "taxa": 77.91,
+      "liq": 102.99,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016052549502",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016051178252",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016046939726",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016038600618",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016027722570",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016015945842",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016015037558",
+      "bruto": 50.04,
+      "taxa": 19.88,
+      "liq": 30.16,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016013474532",
+      "bruto": 173.11,
+      "taxa": 41.45,
+      "liq": 131.66,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000016011253974",
+      "bruto": 239.96,
+      "taxa": 90.64,
+      "liq": 149.32,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000015995317620",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000015981699566",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000015978794866",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "02/05/2026",
+      "pedido": "2000015812314032",
+      "bruto": 45.8,
+      "taxa": 19.18,
+      "liq": 26.62,
+      "produto": "Jarra Água Plástico Reforçada 4l Com Tampa Tritec"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016135490750",
+      "bruto": 50.86,
+      "taxa": 20.57,
+      "liq": 30.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016126923256",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016125977664",
+      "bruto": 55.51,
+      "taxa": 30.02,
+      "liq": 25.49,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016125949226",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016125101750",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016124576372",
+      "bruto": 50.86,
+      "taxa": 24.57,
+      "liq": 26.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016124055358",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016123146084",
+      "bruto": 67.71,
+      "taxa": 24.25,
+      "liq": 43.46,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016122482984",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016121319116",
+      "bruto": 50.86,
+      "taxa": 24.57,
+      "liq": 26.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016121151412",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016120153272",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016119754292",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016119584042",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016119470564",
+      "bruto": 101.72,
+      "taxa": 45.15,
+      "liq": 56.57,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016118367922",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016115999854",
+      "bruto": 39.9,
+      "taxa": 7.18,
+      "liq": 32.72,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016115999856",
+      "bruto": 48.3,
+      "taxa": 21.38,
+      "liq": 26.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016115602066",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016115328232",
+      "bruto": 50.86,
+      "taxa": 24.57,
+      "liq": 26.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016114236322",
+      "bruto": 34.12,
+      "taxa": 23.07,
+      "liq": 11.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016112810726",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016112118248",
+      "bruto": 64.9,
+      "taxa": 37.28,
+      "liq": 27.62,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016112112972",
+      "bruto": 64.9,
+      "taxa": 11.68,
+      "liq": 53.22,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016110964482",
+      "bruto": 67.6,
+      "taxa": 26.33,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016110281178",
+      "bruto": 30.38,
+      "taxa": 11.96,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016109830322",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016109235226",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016109116746",
+      "bruto": 454.8,
+      "taxa": 92.02,
+      "liq": 362.78,
+      "produto": "3000 Embalagens Higienicas Geladinho Sacole 7x19cm"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016107627716",
+      "bruto": 232.96,
+      "taxa": 67.04,
+      "liq": 165.92,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 400 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016106554866",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016103555850",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016099961246",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016097806856",
+      "bruto": 70.98,
+      "taxa": 33.65,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016096257296",
+      "bruto": 229.2,
+      "taxa": 83.7,
+      "liq": 145.5,
+      "produto": "800 Saquinhos Geladinho Sacole 6x24 9mm Abplastic "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016095833982",
+      "bruto": 64.9,
+      "taxa": 38.92,
+      "liq": 25.98,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016095809538",
+      "bruto": 107.26,
+      "taxa": 32.14,
+      "liq": 75.12,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016095700190",
+      "bruto": 66.16,
+      "taxa": 23.36,
+      "liq": 42.8,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016095178934",
+      "bruto": 46.51,
+      "taxa": 13.82,
+      "liq": 32.69,
+      "produto": "Embalagem Bopp Perolado Gelo Saborizado 01 Pcte - "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016094312124",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016093737550",
+      "bruto": 214.52,
+      "taxa": 64.28,
+      "liq": 150.24,
+      "produto": "Embalagem Higienica Geladinho Gourmet Picole Cor R"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016093425128",
+      "bruto": 79.98,
+      "taxa": 23.97,
+      "liq": 56.01,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016089996586",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016088735514",
+      "bruto": 98.8,
+      "taxa": 42.48,
+      "liq": 56.32,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 7x19 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016080853544",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016080855502",
+      "bruto": 139.48,
+      "taxa": 39.65,
+      "liq": 99.83,
+      "produto": "4 Pacote Embalagem Higienica Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016065372682",
+      "bruto": 106.59,
+      "taxa": 58.79,
+      "liq": 47.8,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016065376490",
+      "bruto": 45.52,
+      "taxa": 6.78,
+      "liq": 38.74,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016065368752",
+      "bruto": 89.04,
+      "taxa": 15.2,
+      "liq": 73.84,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016064234208",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016058248278",
+      "bruto": 49.4,
+      "taxa": 22.14,
+      "liq": 27.26,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016051196728",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016040040470",
+      "bruto": 49.89,
+      "taxa": 18.95,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016031762510",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016029764438",
+      "bruto": 59.99,
+      "taxa": 23.56,
+      "liq": 36.43,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016024356522",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016021716526",
+      "bruto": 106.59,
+      "taxa": 32.04,
+      "liq": 74.55,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000016007128260",
+      "bruto": 406.88,
+      "taxa": 134.63,
+      "liq": 272.25,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000015998291728",
+      "bruto": 184.38,
+      "taxa": 40.14,
+      "liq": 144.24,
+      "produto": "5 Pct Saco Sortido 9x21 Embalagem Higienica Gelo S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000015995199214",
+      "bruto": 48.3,
+      "taxa": 18.9,
+      "liq": 29.4,
+      "produto": "Embalagem Geladinho Picole 7x19cm Verde Pistache 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "03/05/2026",
+      "pedido": "2000015967735764",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016146026222",
+      "bruto": 59.39,
+      "taxa": 30.74,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016141972328",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016141005028",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016140988868",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016140944012",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016140207008",
+      "bruto": 79.8,
+      "taxa": 36.35,
+      "liq": 43.45,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016137058264",
+      "bruto": 57.62,
+      "taxa": 31.03,
+      "liq": 26.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016136826078",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016136775980",
+      "bruto": 44.99,
+      "taxa": 23.1,
+      "liq": 21.89,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016136775978",
+      "bruto": 39.9,
+      "taxa": 7.18,
+      "liq": 32.72,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016134849812",
+      "bruto": 48.3,
+      "taxa": 36.02,
+      "liq": 12.28,
+      "produto": "Embalagem Higienica Geladinho Sacole Picole Colori"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016134572142",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016124808600",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016114595616",
+      "bruto": 52.78,
+      "taxa": 27.11,
+      "liq": 25.67,
+      "produto": "250 Embalagens Higienicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016111742862",
+      "bruto": 29.9,
+      "taxa": 11.48,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016110135148",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016108530762",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 7x19 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016105091738",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016102429376",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016093977578",
+      "bruto": 123.61,
+      "taxa": 52.89,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016089986398",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016085295984",
+      "bruto": 44.52,
+      "taxa": 14.35,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016070090638",
+      "bruto": 29.9,
+      "taxa": 11.58,
+      "liq": 18.32,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000016062954422",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000015989133686",
+      "bruto": 44.52,
+      "taxa": 14.35,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "04/05/2026",
+      "pedido": "2000015977118480",
+      "bruto": 89.98,
+      "taxa": 33.47,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016163677944",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016159759742",
+      "bruto": 34.12,
+      "taxa": 24.07,
+      "liq": 10.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016157304134",
+      "bruto": 50.86,
+      "taxa": 20.57,
+      "liq": 30.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016157087478",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016156559272",
+      "bruto": 48.3,
+      "taxa": 26.02,
+      "liq": 22.28,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016154110972",
+      "bruto": 150,
+      "taxa": 24.41,
+      "liq": 125.59,
+      "produto": "Kit 04 Pacotes Embalagem Higiênica Bopp Geladinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016153807856",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016153816382",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016153807868",
+      "bruto": 46.9,
+      "taxa": 27.82,
+      "liq": 19.08,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016153814800",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016153814802",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016151715556",
+      "bruto": 73.8,
+      "taxa": 36.83,
+      "liq": 36.97,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016151719076",
+      "bruto": 73.8,
+      "taxa": 12.18,
+      "liq": 61.62,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016151719078",
+      "bruto": 73.8,
+      "taxa": 12.18,
+      "liq": 61.62,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016148327148",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016148219100",
+      "bruto": 89.8,
+      "taxa": 35.14,
+      "liq": 54.66,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016148001930",
+      "bruto": 180.9,
+      "taxa": 25.92,
+      "liq": 154.98,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016146728970",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016146727080",
+      "bruto": 46.9,
+      "taxa": 34.26,
+      "liq": 12.64,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016145319042",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016144166860",
+      "bruto": 93.8,
+      "taxa": 29.04,
+      "liq": 64.76,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016143839058",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016143160200",
+      "bruto": 44.99,
+      "taxa": 14.2,
+      "liq": 30.79,
+      "produto": "250 Embalagens Higienica Bolo Gelado Brownie Doces"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016142808828",
+      "bruto": 34.12,
+      "taxa": 34.07,
+      "liq": 0.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016141590326",
+      "bruto": 62.95,
+      "taxa": 22.51,
+      "liq": 40.44,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016141140554",
+      "bruto": 48.3,
+      "taxa": 12.03,
+      "liq": 36.27,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016139583310",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016139481818",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016139487386",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016129053700",
+      "bruto": 50.86,
+      "taxa": 38.57,
+      "liq": 12.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016129051904",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016129053702",
+      "bruto": 38.26,
+      "taxa": 5.71,
+      "liq": 32.55,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016127115588",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016126292030",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016125225752",
+      "bruto": 64.9,
+      "taxa": 19.43,
+      "liq": 45.47,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016123035844",
+      "bruto": 40.39,
+      "taxa": 22.56,
+      "liq": 17.83,
+      "produto": "01 Pacote 175 Embalagens Gelo Saborizado 9,5x21 Li"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016108845320",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016107763484",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016104646374",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016102768558",
+      "bruto": 82.84,
+      "taxa": 32.45,
+      "liq": 50.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016102763358",
+      "bruto": 57.61,
+      "taxa": 8.59,
+      "liq": 49.02,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016100012566",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016088525916",
+      "bruto": 119.7,
+      "taxa": 77.53,
+      "liq": 42.17,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016077056984",
+      "bruto": 48.3,
+      "taxa": 7.03,
+      "liq": 41.27,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016077058914",
+      "bruto": 64.9,
+      "taxa": 37.28,
+      "liq": 27.62,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016068371832",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016065535764",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016058013368",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016058014708",
+      "bruto": 106.59,
+      "taxa": 32.04,
+      "liq": 74.55,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046579994",
+      "bruto": 140.7,
+      "taxa": 129.34,
+      "liq": 11.36,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046579998",
+      "bruto": 140.7,
+      "taxa": 23.91,
+      "liq": 116.79,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046581596",
+      "bruto": 140.7,
+      "taxa": 23.91,
+      "liq": 116.79,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046583056",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046583054",
+      "bruto": 140.7,
+      "taxa": 23.91,
+      "liq": 116.79,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016046579996",
+      "bruto": 140.7,
+      "taxa": 23.91,
+      "liq": 116.79,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016025682916",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016012421164",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000016005496234",
+      "bruto": 180.9,
+      "taxa": 40.17,
+      "liq": 140.73,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000015950143830",
+      "bruto": 59.99,
+      "taxa": 23.56,
+      "liq": 36.43,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "05/05/2026",
+      "pedido": "2000015949352894",
+      "bruto": 34.82,
+      "taxa": 10.73,
+      "liq": 24.09,
+      "produto": "490 Saquinhos Geladinho Sacole Geladao 5x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016213316428",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016184579618",
+      "bruto": 99.99,
+      "taxa": 46.3,
+      "liq": 53.69,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016184579620",
+      "bruto": 98.65,
+      "taxa": 11.85,
+      "liq": 86.8,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016179096114",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016173799436",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016173804640",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016172554700",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016172023828",
+      "bruto": 38.26,
+      "taxa": 23.7,
+      "liq": 14.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016170744438",
+      "bruto": 57.62,
+      "taxa": 39.03,
+      "liq": 18.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016170742864",
+      "bruto": 38.26,
+      "taxa": 5.71,
+      "liq": 32.55,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016166590572",
+      "bruto": 48.3,
+      "taxa": 27.02,
+      "liq": 21.28,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016163299584",
+      "bruto": 54.89,
+      "taxa": 23.95,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016162327464",
+      "bruto": 229.2,
+      "taxa": 83.7,
+      "liq": 145.5,
+      "produto": "800 Saquinhos Geladinho Sacole 6x24 9mm Abplastic "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016161814452",
+      "bruto": 101.72,
+      "taxa": 35.15,
+      "liq": 66.57,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016161521250",
+      "bruto": 43.07,
+      "taxa": 21.67,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016160368994",
+      "bruto": 34.12,
+      "taxa": 21.07,
+      "liq": 13.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016160172872",
+      "bruto": 59.8,
+      "taxa": 33.1,
+      "liq": 26.7,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016159664386",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016158055922",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016157204466",
+      "bruto": 151.62,
+      "taxa": 46.93,
+      "liq": 104.69,
+      "produto": "Embalagem Higiênica Picole Geladao Ituzinho 8,5x20"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016156033128",
+      "bruto": 54.51,
+      "taxa": 28.12,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016154576106",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016154572624",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016154290400",
+      "bruto": 346.22,
+      "taxa": 46.6,
+      "liq": 299.62,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016153455006",
+      "bruto": 143.6,
+      "taxa": 46.9,
+      "liq": 96.7,
+      "produto": "1960 Sacos Geladinho Sacole 5x24cm 9mm Abplastic 4"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016151827800",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016149964490",
+      "bruto": 64.9,
+      "taxa": 34.67,
+      "liq": 30.23,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Esco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016149206962",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016149001592",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016149004812",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016148213974",
+      "bruto": 139.65,
+      "taxa": 40.31,
+      "liq": 99.34,
+      "produto": "Embalagem Higienica Geladinho Gourmet 6,5x19cm Kit"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016146341516",
+      "bruto": 43.07,
+      "taxa": 21.67,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016145190844",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016144198842",
+      "bruto": 67.6,
+      "taxa": 26.33,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016143673218",
+      "bruto": 46.9,
+      "taxa": 14.72,
+      "liq": 32.18,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016143676126",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016143656104",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016143609940",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016141292818",
+      "bruto": 67.71,
+      "taxa": 35.24,
+      "liq": 32.47,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016140369258",
+      "bruto": 57.62,
+      "taxa": 37.03,
+      "liq": 20.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016139468850",
+      "bruto": 89.9,
+      "taxa": 28.53,
+      "liq": 61.37,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016138531470",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016137568832",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016136913424",
+      "bruto": 127.8,
+      "taxa": 41.45,
+      "liq": 86.35,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016130573706",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016130277920",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016130255682",
+      "bruto": 158,
+      "taxa": 49.59,
+      "liq": 108.41,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016129029608",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016128293316",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016128294090",
+      "bruto": 82.84,
+      "taxa": 12.35,
+      "liq": 70.49,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016128282000",
+      "bruto": 107.26,
+      "taxa": 45.99,
+      "liq": 61.27,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016124754100",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016119876068",
+      "bruto": 474.39,
+      "taxa": 128.64,
+      "liq": 345.75,
+      "produto": "Saquinho Geladinho Sacole 6mm 6x24cm Ransparente 4"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016113444748",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016113197398",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "250 Saquinhos Geladinho Gourmet Embalagem Externa "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016112443126",
+      "bruto": 129.8,
+      "taxa": 61.31,
+      "liq": 68.49,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016112445166",
+      "bruto": 64.9,
+      "taxa": 11.68,
+      "liq": 53.22,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016111930218",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016111930216",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016111919936",
+      "bruto": 44.9,
+      "taxa": 27.06,
+      "liq": 17.84,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016086367776",
+      "bruto": 95.59,
+      "taxa": 28.4,
+      "liq": 67.19,
+      "produto": "500 Embalagens Higienicas Geladinho Sacole 7x19 La"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016073226846",
+      "bruto": 103.81,
+      "taxa": 31.63,
+      "liq": 72.18,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016065156052",
+      "bruto": 64.9,
+      "taxa": 24.93,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016043001674",
+      "bruto": 57.49,
+      "taxa": 20.92,
+      "liq": 36.57,
+      "produto": "250 Embalagem Higienica Geladinho Picole Sacole 7x"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016028661800",
+      "bruto": 82.84,
+      "taxa": 34.15,
+      "liq": 48.69,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000016028674078",
+      "bruto": 76.81,
+      "taxa": 11.45,
+      "liq": 65.36,
+      "produto": "480 Embalagem Higienica 7x21cm Geladinho Sacole Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000015968241102",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000015942533158",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000015942533156",
+      "bruto": 39.53,
+      "taxa": 6.39,
+      "liq": 33.14,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "06/05/2026",
+      "pedido": "2000015942540870",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016193338462",
+      "bruto": 152.58,
+      "taxa": 31.74,
+      "liq": 120.84,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016193251550",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016191084434",
+      "bruto": 44.99,
+      "taxa": 10.1,
+      "liq": 34.89,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016188465358",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016187357146",
+      "bruto": 44.9,
+      "taxa": 27.07,
+      "liq": 17.83,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016187357148",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016187357150",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016186027282",
+      "bruto": 48.3,
+      "taxa": 9.03,
+      "liq": 39.27,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016185910044",
+      "bruto": 48.3,
+      "taxa": 19.02,
+      "liq": 29.28,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016183215000",
+      "bruto": 62.95,
+      "taxa": 22.51,
+      "liq": 40.44,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016182385776",
+      "bruto": 170.6,
+      "taxa": 53.39,
+      "liq": 117.21,
+      "produto": "580 Saquinhos Geladinho Sacole 4x24cm 9mm Abplasti"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016181784990",
+      "bruto": 187.06,
+      "taxa": 50.16,
+      "liq": 136.9,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016181091942",
+      "bruto": 59.39,
+      "taxa": 30.74,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016180134056",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016179926384",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016179308600",
+      "bruto": 46.9,
+      "taxa": 21.51,
+      "liq": 25.39,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016178500976",
+      "bruto": 44.99,
+      "taxa": 27.09,
+      "liq": 17.9,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016177867470",
+      "bruto": 49.89,
+      "taxa": 23.32,
+      "liq": 26.57,
+      "produto": "490 Saquinhos Geladinho Sacole Geladao 5x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016177758016",
+      "bruto": 59.39,
+      "taxa": 31.23,
+      "liq": 28.16,
+      "produto": "250 Saquinhos Geladinho Gourmet Embalagem Externa "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016177143734",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016176824306",
+      "bruto": 40.15,
+      "taxa": 23.98,
+      "liq": 16.17,
+      "produto": "Saquinho Bopp P/ Ituzinho Picole Gelo 9,5x21cm Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016172937454",
+      "bruto": 50.86,
+      "taxa": 24.57,
+      "liq": 26.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016172417372",
+      "bruto": 34.12,
+      "taxa": 7.08,
+      "liq": 27.04,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016171822318",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016171647846",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016171055028",
+      "bruto": 82.75,
+      "taxa": 29.05,
+      "liq": 53.7,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016170603644",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016168563570",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016168563532",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016168567156",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016168440498",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016167495948",
+      "bruto": 44.99,
+      "taxa": 14.2,
+      "liq": 30.79,
+      "produto": "250 Embalagens Higienica Bolo Gelado Brownie Doces"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016165094870",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016164911636",
+      "bruto": 38.26,
+      "taxa": 27.7,
+      "liq": 10.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016164339908",
+      "bruto": 49.4,
+      "taxa": 27.99,
+      "liq": 21.41,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 7x19 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016164337922",
+      "bruto": 33.08,
+      "taxa": 4.93,
+      "liq": 28.15,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016164233664",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016164068506",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016163299332",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016161610544",
+      "bruto": 130.64,
+      "taxa": 58.29,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016161604042",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016160439194",
+      "bruto": 101.62,
+      "taxa": 30.9,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016160251494",
+      "bruto": 106.59,
+      "taxa": 32.04,
+      "liq": 74.55,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016160139916",
+      "bruto": 44.99,
+      "taxa": 14.2,
+      "liq": 30.79,
+      "produto": "250 Embalagens Higienica Bolo Gelado Brownie Doces"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016155843136",
+      "bruto": 76.89,
+      "taxa": 36.92,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016155109780",
+      "bruto": 82.84,
+      "taxa": 24.7,
+      "liq": 58.14,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016153129180",
+      "bruto": 78.89,
+      "taxa": 33.42,
+      "liq": 45.47,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016151972950",
+      "bruto": 46.9,
+      "taxa": 27.82,
+      "liq": 19.08,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016151966002",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016151972948",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016150732814",
+      "bruto": 29.9,
+      "taxa": 11.48,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016150279502",
+      "bruto": 97.7,
+      "taxa": 54.24,
+      "liq": 43.46,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016148136990",
+      "bruto": 29.9,
+      "taxa": 11.48,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016148132696",
+      "bruto": 173.11,
+      "taxa": 54.29,
+      "liq": 118.82,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016147787246",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016146907836",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016145204164",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016142006268",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016138496018",
+      "bruto": 213.18,
+      "taxa": 64.08,
+      "liq": 149.1,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016132766434",
+      "bruto": 60.78,
+      "taxa": 24.17,
+      "liq": 36.61,
+      "produto": "Embalagem Higienica Geladinho Gourmet Picole Cor R"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016130022584",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016129988418",
+      "bruto": 68.24,
+      "taxa": 66.15,
+      "liq": 2.09,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016129644218",
+      "bruto": 107.26,
+      "taxa": 46.29,
+      "liq": 60.97,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016129629522",
+      "bruto": 67.71,
+      "taxa": 10.1,
+      "liq": 57.61,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016128311826",
+      "bruto": 101.62,
+      "taxa": 30.9,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016128306086",
+      "bruto": 160.6,
+      "taxa": 56.95,
+      "liq": 103.65,
+      "produto": "Saquinho Bopp P/ Ituzinho Picole Gelo 9,5x21cm Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016125495514",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016113205342",
+      "bruto": 29.9,
+      "taxa": 11.58,
+      "liq": 18.32,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016107924998",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016093071226",
+      "bruto": 44.52,
+      "taxa": 14.35,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016087910094",
+      "bruto": 85.4,
+      "taxa": 28.37,
+      "liq": 57.03,
+      "produto": "Embalagem Higiênica Picole Geladao Ituzinho 8,5x20"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016064640562",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016057123400",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016037487786",
+      "bruto": 95.59,
+      "taxa": 28.4,
+      "liq": 67.19,
+      "produto": "500 Embalagens Higienicas Geladinho Sacole 7x19 La"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "07/05/2026",
+      "pedido": "2000016036618022",
+      "bruto": 50.04,
+      "taxa": 19.88,
+      "liq": 30.16,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016208811166",
+      "bruto": 87.8,
+      "taxa": 30.48,
+      "liq": 57.32,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016204932360",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016203315492",
+      "bruto": 34.12,
+      "taxa": 17.07,
+      "liq": 17.05,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016202677314",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016201689026",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016198953328",
+      "bruto": 98.8,
+      "taxa": 41.5,
+      "liq": 57.3,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016197742976",
+      "bruto": 36.9,
+      "taxa": 6.09,
+      "liq": 30.81,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016197742978",
+      "bruto": 36.9,
+      "taxa": 24.54,
+      "liq": 12.36,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016197741162",
+      "bruto": 36.9,
+      "taxa": 6.09,
+      "liq": 30.81,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016197741160",
+      "bruto": 36.9,
+      "taxa": 6.09,
+      "liq": 30.81,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016196751210",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016196644172",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016196552154",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016196115328",
+      "bruto": 82.75,
+      "taxa": 29.05,
+      "liq": 53.7,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016195885004",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016194949562",
+      "bruto": 69.8,
+      "taxa": 27.42,
+      "liq": 42.38,
+      "produto": "Jarra Suco Agua Preparos Geladinho Picole 4lt Refo"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016194879552",
+      "bruto": 125.9,
+      "taxa": 47.36,
+      "liq": 78.54,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016194768808",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016194614232",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016194139656",
+      "bruto": 101.62,
+      "taxa": 30.9,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016192504198",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016192389526",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016191167056",
+      "bruto": 54.39,
+      "taxa": 24.07,
+      "liq": 30.32,
+      "produto": "Forma P/ Gelo Saborizado Kit 10 Und Simples Pet Re"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016191139382",
+      "bruto": 111.8,
+      "taxa": 42.83,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016190904396",
+      "bruto": 106.59,
+      "taxa": 32.04,
+      "liq": 74.55,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016188719520",
+      "bruto": 43.79,
+      "taxa": 18.12,
+      "liq": 25.67,
+      "produto": "250 Embalagens Higienicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016188256714",
+      "bruto": 213.18,
+      "taxa": 64.08,
+      "liq": 149.1,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Preto 50"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016187424652",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016187124830",
+      "bruto": 44.07,
+      "taxa": 22.67,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016186916132",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016185096524",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016184637202",
+      "bruto": 33.08,
+      "taxa": 18.67,
+      "liq": 14.41,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016184154158",
+      "bruto": 99.99,
+      "taxa": 31.85,
+      "liq": 68.14,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016183647136",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016183647138",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016180593002",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016179754198",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016178934558",
+      "bruto": 57.49,
+      "taxa": 20.92,
+      "liq": 36.57,
+      "produto": "250 Embalagem Higienica Geladinho Picole Sacole 7x"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016177827780",
+      "bruto": 225.32,
+      "taxa": 60.44,
+      "liq": 164.88,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Mega 800"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016177825934",
+      "bruto": 173.11,
+      "taxa": 16.8,
+      "liq": 156.31,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016177776976",
+      "bruto": 158.13,
+      "taxa": 42.88,
+      "liq": 115.25,
+      "produto": "Saquinho Geladinho Sacole 6mm 6x24cm Ransparente 4"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016172299326",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016171902990",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016169209208",
+      "bruto": 1164,
+      "taxa": 371,
+      "liq": 793,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016166994340",
+      "bruto": 101.72,
+      "taxa": 21.16,
+      "liq": 80.56,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016165164902",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016164880298",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016161646216",
+      "bruto": 50.86,
+      "taxa": 30.57,
+      "liq": 20.29,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016161173164",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016158071168",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016155408118",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016152368538",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016144139836",
+      "bruto": 316,
+      "taxa": 83.13,
+      "liq": 232.87,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016140174614",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016139896774",
+      "bruto": 165.68,
+      "taxa": 52.4,
+      "liq": 113.28,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016138756424",
+      "bruto": 46.9,
+      "taxa": 14.72,
+      "liq": 32.18,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016132432982",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016131460914",
+      "bruto": 64.9,
+      "taxa": 24.93,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016129814406",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016105967038",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016099007210",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016087906590",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016072632216",
+      "bruto": 49.4,
+      "taxa": 22.14,
+      "liq": 27.26,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016064637684",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016055424668",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016039497254",
+      "bruto": 44.52,
+      "taxa": 14.35,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016034675484",
+      "bruto": 64.9,
+      "taxa": 11.68,
+      "liq": 53.22,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016034678264",
+      "bruto": 85.4,
+      "taxa": 14.52,
+      "liq": 70.88,
+      "produto": "Embalagem Higiênica Picole Geladao Ituzinho 8,5x20"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000016034678266",
+      "bruto": 120.08,
+      "taxa": 59.86,
+      "liq": 60.22,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Mega 400"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "08/05/2026",
+      "pedido": "2000015997350106",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016217307250",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016214054970",
+      "bruto": 38.26,
+      "taxa": 23.7,
+      "liq": 14.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016213158294",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016211662060",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016211087588",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016210436404",
+      "bruto": 33.08,
+      "taxa": 22.67,
+      "liq": 10.41,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016210392578",
+      "bruto": 48.3,
+      "taxa": 33.02,
+      "liq": 15.28,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Color"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016209840664",
+      "bruto": 48.3,
+      "taxa": 21.38,
+      "liq": 26.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016209840662",
+      "bruto": 34.12,
+      "taxa": 5.08,
+      "liq": 29.04,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016209672646",
+      "bruto": 188.85,
+      "taxa": 67.53,
+      "liq": 121.32,
+      "produto": "Embalagem Higienica Geladinho Picole Gourmet Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016209360166",
+      "bruto": 66.16,
+      "taxa": 33.35,
+      "liq": 32.81,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016209281504",
+      "bruto": 140.96,
+      "taxa": 44.5,
+      "liq": 96.46,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole 7x19 L"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016208816844",
+      "bruto": 87.8,
+      "taxa": 30.48,
+      "liq": 57.32,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016208309852",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016208298188",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016208076372",
+      "bruto": 44.99,
+      "taxa": 24.09,
+      "liq": 20.9,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016206315382",
+      "bruto": 44.52,
+      "taxa": 14.35,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016204497956",
+      "bruto": 50.86,
+      "taxa": 10.58,
+      "liq": 40.28,
+      "produto": "Embalagem Higiênica Geladinho 7x19cm Sacolé Coraco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016200825796",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016198194260",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016198241202",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016197328334",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016196122670",
+      "bruto": 38.26,
+      "taxa": 24.7,
+      "liq": 13.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016196031332",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016196022628",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016195695984",
+      "bruto": 321.78,
+      "taxa": 97.32,
+      "liq": 224.46,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016195420030",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016195099908",
+      "bruto": 98.8,
+      "taxa": 42.48,
+      "liq": 56.32,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 7x19 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016194969198",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016194978280",
+      "bruto": 46.9,
+      "taxa": 21.07,
+      "liq": 25.83,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016193740206",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016193659430",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016192534786",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016189597846",
+      "bruto": 180.9,
+      "taxa": 56.91,
+      "liq": 123.99,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016189269622",
+      "bruto": 44.99,
+      "taxa": 41.09,
+      "liq": 3.9,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016187353848",
+      "bruto": 44.9,
+      "taxa": 7.41,
+      "liq": 37.49,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016187353846",
+      "bruto": 44.9,
+      "taxa": 20.51,
+      "liq": 24.39,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016181297626",
+      "bruto": 53.7,
+      "taxa": 25.8,
+      "liq": 27.9,
+      "produto": "100 Saquinho Adesivado Brilho Geladinho 8,5x15 Tra"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016180625092",
+      "bruto": 165.68,
+      "taxa": 52.4,
+      "liq": 113.28,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016179433096",
+      "bruto": 29.9,
+      "taxa": 11.48,
+      "liq": 18.42,
+      "produto": "Jogo Medidores Cozinha Xicara E Colher 8 Peças Cor"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016170821048",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016166260976",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016161860004",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016160225678",
+      "bruto": 67.71,
+      "taxa": 24.25,
+      "liq": 43.46,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016153366892",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016151963966",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016151972920",
+      "bruto": 46.9,
+      "taxa": 7.97,
+      "liq": 38.93,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016151972918",
+      "bruto": 46.9,
+      "taxa": 27.63,
+      "liq": 19.27,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016151668914",
+      "bruto": 51.89,
+      "taxa": 19.51,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016148724778",
+      "bruto": 180.9,
+      "taxa": 40.17,
+      "liq": 140.73,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016140569564",
+      "bruto": 44.99,
+      "taxa": 14.2,
+      "liq": 30.79,
+      "produto": "250 Embalagens Higienica Bolo Gelado Brownie Doces"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016128734352",
+      "bruto": 85.4,
+      "taxa": 28.37,
+      "liq": 57.03,
+      "produto": "Embalagem Higiênica Picole Geladao Ituzinho 8,5x20"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016123371584",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016118568478",
+      "bruto": 82.75,
+      "taxa": 29.05,
+      "liq": 53.7,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016114515520",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016100139124",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016103541080",
+      "bruto": 129.8,
+      "taxa": 48.06,
+      "liq": 81.74,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Esco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016103485040",
+      "bruto": 57.61,
+      "taxa": 22.72,
+      "liq": 34.89,
+      "produto": "Embalagem Higienica Junina Geladinho Sacole 7x19 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016083347074",
+      "bruto": 82.84,
+      "taxa": 24.7,
+      "liq": 58.14,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016081894580",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "09/05/2026",
+      "pedido": "2000016081370932",
+      "bruto": 64.9,
+      "taxa": 45.67,
+      "liq": 19.23,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Esco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016219316522",
+      "bruto": 39.9,
+      "taxa": 9.18,
+      "liq": 30.72,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016218895264",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016218510830",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016217826188",
+      "bruto": 57.62,
+      "taxa": 33.03,
+      "liq": 24.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016216725850",
+      "bruto": 56.74,
+      "taxa": 22.8,
+      "liq": 33.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016216725848",
+      "bruto": 39.9,
+      "taxa": 7.18,
+      "liq": 32.72,
+      "produto": "Saquinho Plastico Geladinho Sacole 6x24x0,9 400 Un"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016216184636",
+      "bruto": 64.9,
+      "taxa": 32.67,
+      "liq": 32.23,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Esco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016210557180",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016209567574",
+      "bruto": 86.4,
+      "taxa": 29.7,
+      "liq": 56.7,
+      "produto": "800 Saquinhos Geladinho Sacole 6x24 9mm Abplastic "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016209111916",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016208580416",
+      "bruto": 59.8,
+      "taxa": 23.11,
+      "liq": 36.69,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016207363848",
+      "bruto": 34.12,
+      "taxa": 11.08,
+      "liq": 23.04,
+      "produto": "Saco P/ Geladinho Sacole 9mm 5x24 Kit 1 Pct Pode S"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016205821164",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016205630538",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016204867118",
+      "bruto": 89.8,
+      "taxa": 36.49,
+      "liq": 53.31,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016200579764",
+      "bruto": 101.62,
+      "taxa": 14.75,
+      "liq": 86.87,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016200587180",
+      "bruto": 103.81,
+      "taxa": 18.69,
+      "liq": 85.12,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016200579762",
+      "bruto": 135.79,
+      "taxa": 69.9,
+      "liq": 65.89,
+      "produto": "750 Embalagem Higienica Geladinho Picole  7x19cm A"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016200453816",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016199304898",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016198735466",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016195232278",
+      "bruto": 129.8,
+      "taxa": 66.05,
+      "liq": 63.75,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016194885154",
+      "bruto": 29.9,
+      "taxa": 11.68,
+      "liq": 18.22,
+      "produto": "Jarra Funil Culinaria Graduada 800 Ml Plasutil Coz"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016191318374",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016191015688",
+      "bruto": 69.18,
+      "taxa": 25.6,
+      "liq": 43.58,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016191015688",
+      "bruto": 13.66,
+      "taxa": 0,
+      "liq": 13.66,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016189670612",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016189066972",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016188062254",
+      "bruto": 120.25,
+      "taxa": 45.43,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016183793620",
+      "bruto": 151.62,
+      "taxa": 46.93,
+      "liq": 104.69,
+      "produto": "Embalagem Higiênica Picole Geladao Ituzinho 8,5x20"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016183777864",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016168156974",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016141345288",
+      "bruto": 45.52,
+      "taxa": 19.13,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016139191832",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016121626826",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016110237670",
+      "bruto": 43.79,
+      "taxa": 18.12,
+      "liq": 25.67,
+      "produto": "250 Embalagens Higienicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016108527808",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016091429942",
+      "bruto": 96.6,
+      "taxa": 38.76,
+      "liq": 57.84,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016080218264",
+      "bruto": 147.6,
+      "taxa": 42.81,
+      "liq": 104.79,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000016058911410",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "10/05/2026",
+      "pedido": "2000015951723728",
+      "bruto": 44.21,
+      "taxa": 17.61,
+      "liq": 26.6,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016215569562",
+      "bruto": 38.26,
+      "taxa": 25.7,
+      "liq": 12.56,
+      "produto": "Embalagem Higiênica Geladinho Sacole Gourmet Verme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016201816636",
+      "bruto": 33.08,
+      "taxa": 4.93,
+      "liq": 28.15,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016201816638",
+      "bruto": 44.52,
+      "taxa": 26.43,
+      "liq": 18.09,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016188647294",
+      "bruto": 82.75,
+      "taxa": 29.05,
+      "liq": 53.7,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016183346678",
+      "bruto": 44.99,
+      "taxa": 60.09,
+      "liq": -15.1,
+      "produto": "240 Saquinho Geladinho Ituzinho 7x21cm Bopp Transp"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016107929928",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "11/05/2026",
+      "pedido": "2000016102237750",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016218554568",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016216043680",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016213551560",
+      "bruto": 48.3,
+      "taxa": 19.38,
+      "liq": 28.92,
+      "produto": "240 Embalagem Higienica Geladinho 7x21 Sacole Dind"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016211849194",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016192055750",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016207289060",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016201543290",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016200827192",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016196696000",
+      "bruto": 197.6,
+      "taxa": 84.96,
+      "liq": 112.64,
+      "produto": "Emb Higiênica Vermelha P/ Geladinho Gourmet 7x19 -"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016194886786",
+      "bruto": 107.26,
+      "taxa": 32.44,
+      "liq": 74.82,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016187496994",
+      "bruto": 197.3,
+      "taxa": 76.59,
+      "liq": 120.71,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016185446476",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016185368830",
+      "bruto": 165.68,
+      "taxa": 52.4,
+      "liq": 113.28,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016179657990",
+      "bruto": 67.71,
+      "taxa": 24.25,
+      "liq": 43.46,
+      "produto": "2 Pcts (980 Saquinhos) Plastico 5x24 9mm Geladinho"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016172959664",
+      "bruto": 173.11,
+      "taxa": 48.29,
+      "liq": 124.82,
+      "produto": "1000 Embalagens Higiênicas Gourmet Sacole Geladinh"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016168561206",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016168562690",
+      "bruto": 57.61,
+      "taxa": 16.34,
+      "liq": 41.27,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016162719788",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016161310336",
+      "bruto": 92.83,
+      "taxa": 36.19,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016153512822",
+      "bruto": 33.68,
+      "taxa": 12.28,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016143740306",
+      "bruto": 59.8,
+      "taxa": 23.11,
+      "liq": 36.69,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016140235664",
+      "bruto": 45.52,
+      "taxa": 19.13,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016112172274",
+      "bruto": 64.9,
+      "taxa": 24.93,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "12/05/2026",
+      "pedido": "2000016103641600",
+      "bruto": 59.99,
+      "taxa": 22.66,
+      "liq": 37.33,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016215689458",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016214073342",
+      "bruto": 65.51,
+      "taxa": 39.12,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016213259300",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016213212292",
+      "bruto": 43.64,
+      "taxa": 20.21,
+      "liq": 23.43,
+      "produto": "250 Embalagem Higienica Geladinho 7x19 Sacole Laco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016212619034",
+      "bruto": 82.84,
+      "taxa": 25.6,
+      "liq": 57.24,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016207289066",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016207219370",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016205937014",
+      "bruto": 144.9,
+      "taxa": 56.7,
+      "liq": 88.2,
+      "produto": "Embalagem Geladinho Picole 7x19cm Verde Pistache 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016205410540",
+      "bruto": 45.52,
+      "taxa": 19.13,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016204867106",
+      "bruto": 263.4,
+      "taxa": 81.74,
+      "liq": 181.66,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016200162026",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016187789884",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016184481138",
+      "bruto": 39.9,
+      "taxa": 13.33,
+      "liq": 26.57,
+      "produto": "490 Saquinhos Geladinho Sacole Geladao 5x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016177862852",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016166433508",
+      "bruto": 49.4,
+      "taxa": 21.24,
+      "liq": 28.16,
+      "produto": "250 Embalagem Higiênica Geladinho Gourmet 6,5x19 I"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016166134896",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016161481620",
+      "bruto": 45.52,
+      "taxa": 19.13,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016152226182",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016146738708",
+      "bruto": 29.9,
+      "taxa": 11.63,
+      "liq": 18.27,
+      "produto": "Embalagem Higienica Brownie  6,5x12cm Vermelho 100"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016109433492",
+      "bruto": 57.62,
+      "taxa": 44.03,
+      "liq": 13.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016073466550",
+      "bruto": 140.76,
+      "taxa": 42.31,
+      "liq": 98.45,
+      "produto": "Embalagem Higiênica Geladinho 7x19 Arte Pudim 1000"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016073466550",
+      "bruto": 6.31,
+      "taxa": 0,
+      "liq": 6.31,
+      "produto": "Embalagem Higiênica Geladinho 7x19 Arte Pudim 1000"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "13/05/2026",
+      "pedido": "2000016072761606",
+      "bruto": 44.52,
+      "taxa": 19.68,
+      "liq": 24.84,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016212596796",
+      "bruto": 180.9,
+      "taxa": 40.57,
+      "liq": 140.33,
+      "produto": "1000 Embalagens Higienicas Geladinho Sacole Gourme"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016210521660",
+      "bruto": 129.61,
+      "taxa": 58.89,
+      "liq": 70.72,
+      "produto": "480 Embalagem Higiênica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016201927650",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016185922288",
+      "bruto": 64.9,
+      "taxa": 24.93,
+      "liq": 39.97,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016184013360",
+      "bruto": 56,
+      "taxa": 17.85,
+      "liq": 38.15,
+      "produto": "100 Embalagem Termica Delivery Geladinho Picole 22"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016184013360",
+      "bruto": 3.99,
+      "taxa": 0,
+      "liq": 3.99,
+      "produto": "100 Embalagem Termica Delivery Geladinho Picole 22"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016178206414",
+      "bruto": 89.8,
+      "taxa": 27.92,
+      "liq": 61.88,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016177798780",
+      "bruto": 98.65,
+      "taxa": 26.3,
+      "liq": 72.35,
+      "produto": "1200 Saquinhos Geladinho Sacole 6x24 Cm 9mm Abplas"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016154529140",
+      "bruto": 56.74,
+      "taxa": 20.8,
+      "liq": 35.94,
+      "produto": "250 Embalagens Higiênicas Geladinho Picole 7x19cm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "14/05/2026",
+      "pedido": "2000016132022308",
+      "bruto": 59.21,
+      "taxa": 45.62,
+      "liq": 13.59,
+      "produto": "240 Embalagem Higienica 7x21 Geladinho Sacole Gour"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016215014762",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016214652498",
+      "bruto": 64.9,
+      "taxa": 11.68,
+      "liq": 53.22,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016214654476",
+      "bruto": 64.9,
+      "taxa": 11.68,
+      "liq": 53.22,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016214649402",
+      "bruto": 99.99,
+      "taxa": 57.45,
+      "liq": 42.54,
+      "produto": "500 Embalagem Higiênica Geladinho 7x19cm Sacolé Tr"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016211227890",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016201271828",
+      "bruto": 46.9,
+      "taxa": 14.52,
+      "liq": 32.38,
+      "produto": "100 Folhas Papel Chumbo Para Bolo Picole De Pudim "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "15/05/2026",
+      "pedido": "2000016168846792",
+      "bruto": 158.13,
+      "taxa": 42.88,
+      "liq": 115.25,
+      "produto": "Saquinho Geladinho Sacole 6mm 6x24cm Ransparente 4"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016216052478",
+      "bruto": 33.08,
+      "taxa": 4.93,
+      "liq": 28.15,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016216054292",
+      "bruto": 44.52,
+      "taxa": 21.1,
+      "liq": 23.42,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016204677258",
+      "bruto": 49.51,
+      "taxa": 19.34,
+      "liq": 30.17,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016174570282",
+      "bruto": 45.52,
+      "taxa": 19.13,
+      "liq": 26.39,
+      "produto": "Embalagem Higiênica Geladinho Sacole 7x19 Arte Pud"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016164413628",
+      "bruto": 66.16,
+      "taxa": 23.36,
+      "liq": 42.8,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016158758804",
+      "bruto": 107.26,
+      "taxa": 32.14,
+      "liq": 75.12,
+      "produto": "500 Embalagens Higienicas Saquinhos Geladinho Saco"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016147788552",
+      "bruto": 49.4,
+      "taxa": 20.75,
+      "liq": 28.65,
+      "produto": "Embalagem Picole Ituzinho 8,5x20 Gelo Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "16/05/2026",
+      "pedido": "2000016131380756",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "17/05/2026",
+      "pedido": "2000016218093888",
+      "bruto": 82.75,
+      "taxa": 29.05,
+      "liq": 53.7,
+      "produto": "Saquinho Geladinho Sacole Gourmet 6mm Transparente"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "17/05/2026",
+      "pedido": "2000016217474566",
+      "bruto": 49.4,
+      "taxa": 23.34,
+      "liq": 26.06,
+      "produto": "Embalagem Higiênica Geladinho Gourmet Sacolé Azul "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "17/05/2026",
+      "pedido": "2000016214269940",
+      "bruto": 66.16,
+      "taxa": 23.36,
+      "liq": 42.8,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "17/05/2026",
+      "pedido": "2000016166606198",
+      "bruto": 38.07,
+      "taxa": 16.67,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "17/05/2026",
+      "pedido": "2000016144127572",
+      "bruto": 82.84,
+      "taxa": 26.2,
+      "liq": 56.64,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "18/05/2026",
+      "pedido": "2000016214116242",
+      "bruto": 828.4,
+      "taxa": 262,
+      "liq": 566.4,
+      "produto": "500 Embalagem Higienica Externa Geladinho Gourmet "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "18/05/2026",
+      "pedido": "2000016213290220",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "18/05/2026",
+      "pedido": "2000016211644864",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "18/05/2026",
+      "pedido": "2000016200391626",
+      "bruto": 129.8,
+      "taxa": 38.86,
+      "liq": 90.94,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 200 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "18/05/2026",
+      "pedido": "2000016192352202",
+      "bruto": 103.81,
+      "taxa": 34.84,
+      "liq": 68.97,
+      "produto": "Embalagem Higiênica Sacole Geladinho 7x19 Lacinho "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "19/05/2026",
+      "pedido": "2000016210949950",
+      "bruto": 59.8,
+      "taxa": 23.11,
+      "liq": 36.69,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "19/05/2026",
+      "pedido": "2000016204128530",
+      "bruto": 64.9,
+      "taxa": 24.03,
+      "liq": 40.87,
+      "produto": "250 Und Embalagem Higiênica 7x19cm Geladinho Sacol"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "19/05/2026",
+      "pedido": "2000016185872954",
+      "bruto": 44.52,
+      "taxa": 19.34,
+      "liq": 25.18,
+      "produto": "Saco Geladinho Sacole Gourmet 6mm Transparente 1pc"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "19/05/2026",
+      "pedido": "2000016170709434",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "19/05/2026",
+      "pedido": "2000016077684354",
+      "bruto": 44.9,
+      "taxa": 13.96,
+      "liq": 30.94,
+      "produto": "Embalagem Bolo Gelado Laminada Pao De Mel Trufas 2"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "20/05/2026",
+      "pedido": "2000016194367250",
+      "bruto": 38.07,
+      "taxa": 16.67,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "20/05/2026",
+      "pedido": "2000016189593166",
+      "bruto": 126.4,
+      "taxa": 38.9,
+      "liq": 87.5,
+      "produto": "Embalagem Higienica Picole De Pudim 8,5x20cm 400 U"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "20/05/2026",
+      "pedido": "2000016167889128",
+      "bruto": 33.08,
+      "taxa": 11.68,
+      "liq": 21.4,
+      "produto": "400 Saquinhos Geladinho Sacole Geladao 6x24cm 9mm "
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "20/05/2026",
+      "pedido": "2000016131377766",
+      "bruto": 79.99,
+      "taxa": 23.48,
+      "liq": 56.51,
+      "produto": "500 Embalagens Higiênicas Geladinho Sacole 6,5x19c"
+    },
+    {
+      "plat": "ML",
+      "dataRelease": "28/05/2026",
+      "pedido": "2000016218038122",
+      "bruto": 59.8,
+      "taxa": 23.11,
+      "liq": 36.69,
+      "produto": "Embalagem Higienica Picole Pudim 8,5x20cm Ocasioes"
+    }
+  ]
+}
