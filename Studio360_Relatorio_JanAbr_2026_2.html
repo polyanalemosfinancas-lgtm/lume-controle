@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Studio Fit 360 · Relatório Jan–Abr 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0b1929;--navy2:#132238;--gold:#c8a85a;--gold-lt:#e6cc8e;--gold-pale:#faf4e6;--cream:#f7f4ef;--white:#fff;--green:#16603e;--red:#a82828;--amber:#b06010;--muted:#6b7f96;--border:rgba(200,168,90,.16);--text:#16263a}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--cream);font-family:'DM Sans',sans-serif;color:var(--text);font-size:14px;line-height:1.5}
+.cover{min-height:100vh;background:var(--navy);display:grid;grid-template-rows:auto 1fr;padding:56px 72px;position:relative;overflow:hidden}
+.cover-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 90% 10%,rgba(200,168,90,.07) 0%,transparent 60%),radial-gradient(ellipse 50% 70% at 10% 90%,rgba(200,168,90,.05) 0%,transparent 60%)}
+.cover-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,168,90,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(200,168,90,.03) 1px,transparent 1px);background-size:72px 72px}
+.cover-top{display:flex;justify-content:space-between;position:relative}
+.brand{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);opacity:.85}
+.doc-ref{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:rgba(255,255,255,.3);text-align:right;line-height:1.8}
+.cover-body{position:relative;display:flex;flex-direction:column;justify-content:center;padding:60px 0 40px}
+.cover-eyebrow{font-family:'DM Mono',monospace;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;gap:14px}
+.cover-eyebrow::before{content:'';width:36px;height:1px;background:var(--gold);opacity:.5}
+.cover-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(54px,8vw,96px);font-weight:700;color:var(--white);line-height:.95;letter-spacing:-.025em}
+.cover-h1 em{color:var(--gold);font-style:italic}
+.cover-sub{font-size:15px;font-weight:300;color:rgba(255,255,255,.42);margin-top:24px;letter-spacing:.05em}
+.page{max-width:1080px;margin:0 auto;padding:72px 48px}
+.stitle{display:flex;align-items:baseline;gap:16px;margin-bottom:32px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.stitle-num{font-family:'Cormorant Garamond',serif;font-size:13px;color:var(--gold);font-weight:500;letter-spacing:.1em}
+.stitle-text{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;color:var(--navy)}
+.stitle-text em{color:var(--gold);font-style:italic}
+.unit-hd{border-radius:12px;padding:18px 24px;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.unit-hd.m{background:var(--navy)}.unit-hd.f{background:var(--navy2)}
+.unit-hd-name{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:700;color:var(--white)}
+.unit-hd-tag{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.2em;text-transform:uppercase;padding:4px 12px;border-radius:20px;background:rgba(200,168,90,.18);color:var(--gold-lt)}
+.mini-table{width:100%;border-collapse:collapse;background:var(--white);border-radius:14px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 16px rgba(11,25,41,.06)}
+.mini-table thead tr{background:var(--navy)}
+.mini-table th{font-family:'DM Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);padding:12px 14px;text-align:left;font-weight:400;white-space:nowrap}
+.mini-table th:not(:first-child){text-align:right}
+.mini-table td{padding:10px 14px;border-bottom:1px solid rgba(0,0,0,.04);font-size:13px}
+.mini-table td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;font-size:12px}
+.mini-table tr:last-child td{border-bottom:none}
+.mini-table .month-name{font-weight:500;color:var(--navy)}
+.mini-table .total-row td{background:rgba(11,25,41,.04);font-weight:600;font-family:'DM Mono',monospace;font-size:12px;border-top:1px solid var(--border)}
+.dre-wrap{background:var(--white);border-radius:16px;overflow:hidden;border:1px solid var(--border);box-shadow:0 2px 20px rgba(11,25,41,.06);margin-bottom:48px}
+table.dre{width:100%;border-collapse:collapse}
+table.dre thead tr{background:var(--navy)}
+table.dre th{padding:11px 14px;font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);font-weight:400;text-align:left}
+table.dre th:not(:first-child){text-align:right}
+table.dre td{padding:8px 14px;font-size:11.5px;border-bottom:1px solid rgba(0,0,0,.04)}
+table.dre td:not(:first-child){text-align:right;font-family:'DM Mono',monospace;font-size:11px}
+table.dre tr:last-child td{border-bottom:none}
+table.dre .sec td{background:rgba(11,25,41,.03);font-family:'DM Mono',monospace;font-size:8.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);padding:7px 14px;border-bottom:1px solid rgba(200,168,90,.1)}
+table.dre .subtot td{background:rgba(11,25,41,.05);font-weight:600;color:var(--navy);font-family:'DM Mono',monospace;font-size:11px}
+table.dre .res td{background:var(--navy);color:var(--white);font-weight:600;font-family:'DM Mono',monospace;font-size:11.5px;border-bottom:none}
+table.dre .saldo td{background:var(--gold-pale);color:#6a4e0e;font-family:'DM Mono',monospace;font-size:11px;font-weight:500}
+.cat-name{color:var(--text);font-size:11.5px}.zero{color:#ccc}
+.contas-bg{background:linear-gradient(135deg,#1c0a0a 0%,#2a0f0f 100%);border-radius:20px;padding:28px;margin-bottom:48px;border:1px solid rgba(168,40,40,.3)}
+.contas-bg .unit-hd.m{background:rgba(168,40,40,.25);border:1px solid rgba(168,40,40,.3)}
+.contas-bg .unit-hd.f{background:rgba(168,40,40,.2);border:1px solid rgba(168,40,40,.25)}
+.contas-bg .unit-hd-name,.contas-bg .unit-hd-tag{color:#f5c0c0}
+.contas-bg .unit-hd-tag{background:rgba(168,40,40,.3)}
+.contas-bg .mini-table{background:rgba(255,255,255,.05);border-color:rgba(168,40,40,.25)}
+.contas-bg .mini-table thead tr{background:rgba(168,40,40,.5)}
+.contas-bg .mini-table th{color:#f5c0c0}
+.contas-bg .mini-table td{color:rgba(255,255,255,.85);border-bottom-color:rgba(255,255,255,.06)}
+.contas-bg .mini-table td:not(:first-child){color:rgba(255,255,255,.85)}
+.contas-bg .mini-table .total-row td{background:rgba(168,40,40,.3);color:#fff;font-weight:700}
+.contas-bg .neg-val{color:#f5a0a0!important}
+.pos-val{color:var(--green)!important}.neg-val{color:var(--red)!important}
+.delta-dn{color:var(--red);font-size:10.5px}.delta-up{color:var(--green);font-size:10.5px}.delta-nt{color:var(--muted);font-size:10.5px}
+.stacked{margin-bottom:48px}.stacked>div{margin-bottom:20px}
+.div{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:0 0 56px}
+.page-break{page-break-before:always;break-before:page}
+footer{text-align:center;padding:40px;border-top:1px solid var(--border)}
+.footer-logo{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--navy);margin-bottom:4px}
+.footer-logo em{color:var(--gold);font-style:italic}
+.footer-info{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.1em}
+</style>
+</head>
+<body>
+<section class="cover">
+  <div class="cover-bg"></div><div class="cover-grid"></div>
+  <div class="cover-top">
+    <div class="brand">Lume Finanças · BPO Financeiro</div>
+    <div class="doc-ref">Relatório Financeiro<br>Jan–Abr · 2026 · Confidencial</div>
+  </div>
+  <div class="cover-body">
+    <div class="cover-eyebrow">Demonstrativo de Resultado</div>
+    <div class="cover-h1">Studio Fit<br><em>360°</em></div>
+    <div class="cover-sub">Janeiro · Fevereiro · Março · Abril — Matriz e Filial</div>
+  </div>
+</section>
+<main class="page">
+  <div class="stitle"><span class="stitle-num">01</span><span class="stitle-text">Faturamento Real — <em>Mensalidades</em></span></div>
+  <div class="stacked">
+    <div>
+      <div class="unit-hd m"><div class="unit-hd-name">Matriz</div><div class="unit-hd-tag">Unidade Principal</div></div>
+      <table class="mini-table"><thead><tr><th style="width:16%">Mês</th><th style="width:20%">Faturamento</th><th style="width:12%">Var.</th><th style="width:10%">Ativos</th><th style="width:11%">Pagantes</th><th style="width:9%">Bônus</th><th style="width:22%">Ticket Médio</th></tr></thead><tbody><tr><td class="month-name">Janeiro</td><td>R$ 50,088.00</td><td><span class="delta-nt">—</span></td><td>138</td><td>123</td><td>15</td><td>R$ 407.22</td></tr>
+<tr><td class="month-name">Fevereiro</td><td>R$ 32,327.00</td><td><span class="delta-dn">▼ 35,5%</span></td><td>137</td><td>122</td><td>15</td><td>R$ 264.98</td></tr>
+<tr><td class="month-name">Março</td><td>R$ 14,506.80</td><td><span class="delta-dn">▼ 55,1%</span></td><td>140</td><td>116</td><td>24</td><td>R$ 125.06</td></tr>
+<tr><td class="month-name">Abril</td><td>R$ 24,978.00</td><td><span class="delta-up">▲ 72,2%</span></td><td>134</td><td>112</td><td>22</td><td>R$ 295.33</td></tr>
+<tr class="total-row"><td>Total</td><td>R$ 121,899.80</td><td>—</td><td>—</td><td>—</td><td>—</td><td>R$ 273.15</td></tr></tbody></table>
+    </div>
+    <div>
+      <div class="unit-hd f"><div class="unit-hd-name">Filial</div><div class="unit-hd-tag">Unidade Filial</div></div>
+      <table class="mini-table"><thead><tr><th style="width:16%">Mês</th><th style="width:20%">Faturamento</th><th style="width:12%">Var.</th><th style="width:10%">Ativos</th><th style="width:11%">Pagantes</th><th style="width:9%">Bônus</th><th style="width:22%">Ticket Médio</th></tr></thead><tbody><tr><td class="month-name">Janeiro</td><td>R$ 51,851.33</td><td><span class="delta-nt">—</span></td><td>141</td><td>137</td><td>4</td><td>R$ 378.48</td></tr>
+<tr><td class="month-name">Fevereiro</td><td>R$ 40,201.38</td><td><span class="delta-dn">▼ 22,5%</span></td><td>145</td><td>139</td><td>6</td><td>R$ 289.22</td></tr>
+<tr><td class="month-name">Março</td><td>R$ 38,684.33</td><td><span class="delta-dn">▼ 3,8%</span></td><td>140</td><td>134</td><td>6</td><td>R$ 288.69</td></tr>
+<tr><td class="month-name">Abril</td><td>R$ 38,608.00</td><td><span class="delta-dn">▼ 0,2%</span></td><td>132</td><td>125</td><td>7</td><td>R$ 307.01</td></tr>
+<tr class="total-row"><td>Total</td><td>R$ 169,345.04</td><td>—</td><td>—</td><td>—</td><td>—</td><td>R$ 315.85</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="div"></div>
+  <div class="stitle"><span class="stitle-num">02</span><span class="stitle-text">Receitas e Despesas — <em>Caixa</em></span></div>
+  <div class="stacked">
+    <div>
+      <div class="unit-hd m"><div class="unit-hd-name">Matriz</div><div class="unit-hd-tag">Unidade Principal</div></div>
+      <table class="mini-table"><thead><tr><th style="width:28%">Mês</th><th style="width:28%">Receita</th><th style="width:28%">Despesa</th><th style="width:16%">Resultado</th></tr></thead><tbody><tr><td class="month-name">Janeiro</td><td>67,658.11</td><td class="neg-val">(44,763.29)</td><td><span class="neg-val">(2,088.88)</span></td></tr>
+<tr><td class="month-name">Fevereiro</td><td>57,695.00</td><td class="neg-val">(43,933.90)</td><td><span class="pos-val">1,422.17</span></td></tr>
+<tr><td class="month-name">Março</td><td>69,192.90</td><td class="neg-val">(42,430.62)</td><td><span class="neg-val">(14,678.98)</span></td></tr>
+<tr><td class="month-name">Abril</td><td>20,119.70</td><td class="neg-val">(30,401.34)</td><td><span class="neg-val">(10,738.91)</span></td></tr>
+<tr class="total-row"><td>Total</td><td>214,665.71</td><td class="neg-val">(161,529.15)</td><td><span class="neg-val">(26,084.60)</span></td></tr></tbody></table>
+    </div>
+    <div>
+      <div class="unit-hd f"><div class="unit-hd-name">Filial</div><div class="unit-hd-tag">Unidade Filial</div></div>
+      <table class="mini-table"><thead><tr><th style="width:28%">Mês</th><th style="width:28%">Receita</th><th style="width:28%">Despesa</th><th style="width:16%">Resultado</th></tr></thead><tbody><tr><td class="month-name">Janeiro</td><td>46,504.11</td><td class="neg-val">(45,434.50)</td><td><span class="neg-val">(555.87)</span></td></tr>
+<tr><td class="month-name">Fevereiro</td><td>36,804.99</td><td class="neg-val">(40,367.71)</td><td><span class="neg-val">(7,383.37)</span></td></tr>
+<tr><td class="month-name">Março</td><td>36,530.41</td><td class="neg-val">(34,589.62)</td><td><span class="pos-val">4,627.60</span></td></tr>
+<tr><td class="month-name">Abril</td><td>28,588.00</td><td class="neg-val">(19,738.75)</td><td><span class="pos-val">5,294.37</span></td></tr>
+<tr class="total-row"><td>Total</td><td>148,427.51</td><td class="neg-val">(140,130.58)</td><td><span class="pos-val">1,982.73</span></td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="div"></div>
+  <div class="stitle page-break"><span class="stitle-num">03</span><span class="stitle-text">Fluxo de Caixa — <em>Filial</em></span></div>
+  <div class="dre-wrap"><table class="dre"><thead><tr><th style="width:32%">Categoria</th><th>Janeiro</th><th>Fevereiro</th><th>Março</th><th>Abril</th><th>Total</th></tr></thead><tbody><tr class="sec"><td colspan="6">▸ Receitas</td></tr>
+<tr><td class="cat-name">Antecipação de cartão</td><td>46,504.11</td><td>36,804.99</td><td>30,446.08</td><td>28,588.00</td><td>142,343.18</td></tr>
+<tr><td class="cat-name">Receita - Pix</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td>6,084.33</td><td><span class="zero">—</span></td><td>6,084.33</td></tr>
+<tr class="subtot"><td>Total Receitas</td><td>46,504.11</td><td>36,804.99</td><td>36,530.41</td><td>28,588.00</td><td>148,427.51</td></tr>
+<tr class="sec"><td colspan="6">▸ Despesas</td></tr>
+<tr><td class="cat-name">Alimentação</td><td><span class="zero">—</span></td><td><span class="neg-val">(150.00)</span></td><td><span class="neg-val">(100.00)</span></td><td><span class="neg-val">(310.31)</span></td><td><span class="neg-val">(560.31)</span></td></tr>
+<tr><td class="cat-name">Aluguel</td><td><span class="neg-val">(6,132.93)</span></td><td><span class="neg-val">(6,168.69)</span></td><td><span class="neg-val">(6,187.61)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(18,489.23)</span></td></tr>
+<tr><td class="cat-name">BPO Financeiro</td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(2,992.59)</span></td></tr>
+<tr><td class="cat-name">Benefícios</td><td><span class="neg-val">(1,200.00)</span></td><td><span class="neg-val">(1,150.00)</span></td><td><span class="neg-val">(1,150.00)</span></td><td><span class="neg-val">(850.00)</span></td><td><span class="neg-val">(4,350.00)</span></td></tr>
+<tr><td class="cat-name">Certificado Digital</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(195.00)</span></td><td><span class="neg-val">(195.00)</span></td></tr>
+<tr><td class="cat-name">Comissão</td><td><span class="zero">—</span></td><td><span class="neg-val">(349.41)</span></td><td><span class="neg-val">(30.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(379.41)</span></td></tr>
+<tr><td class="cat-name">Condominio</td><td><span class="neg-val">(89.47)</span></td><td><span class="neg-val">(240.56)</span></td><td><span class="neg-val">(139.57)</span></td><td><span class="neg-val">(142.85)</span></td><td><span class="neg-val">(612.45)</span></td></tr>
+<tr><td class="cat-name">Conservadora</td><td><span class="neg-val">(1,314.90)</span></td><td><span class="neg-val">(1,414.16)</span></td><td><span class="neg-val">(1,408.68)</span></td><td><span class="neg-val">(1,414.16)</span></td><td><span class="neg-val">(5,551.90)</span></td></tr>
+<tr><td class="cat-name">Contabilidade</td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(3,000.00)</span></td></tr>
+<tr><td class="cat-name">Despesa com evento</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(970.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(970.00)</span></td></tr>
+<tr><td class="cat-name">Energia Elétrica</td><td><span class="neg-val">(238.62)</span></td><td><span class="neg-val">(272.24)</span></td><td><span class="neg-val">(261.70)</span></td><td><span class="neg-val">(268.73)</span></td><td><span class="neg-val">(1,041.29)</span></td></tr>
+<tr><td class="cat-name">Estoque</td><td><span class="neg-val">(1,036.79)</span></td><td><span class="neg-val">(1,036.78)</span></td><td><span class="neg-val">(1,036.78)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(3,110.35)</span></td></tr>
+<tr><td class="cat-name">Grafica</td><td><span class="neg-val">(170.00)</span></td><td><span class="neg-val">(402.90)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(572.90)</span></td></tr>
+<tr><td class="cat-name">Hospedagem</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(86.69)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(86.69)</span></td></tr>
+<tr><td class="cat-name">Impostos Parcelado</td><td><span class="neg-val">(1,006.60)</span></td><td><span class="neg-val">(729.86)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(1,736.46)</span></td></tr>
+<tr><td class="cat-name">Manutenção de equipamentos</td><td><span class="neg-val">(5,177.13)</span></td><td><span class="neg-val">(4,585.82)</span></td><td><span class="neg-val">(2,077.91)</span></td><td><span class="neg-val">(850.00)</span></td><td><span class="neg-val">(12,690.86)</span></td></tr>
+<tr><td class="cat-name">Marketing</td><td><span class="neg-val">(2,650.00)</span></td><td><span class="neg-val">(1,400.00)</span></td><td><span class="neg-val">(1,445.00)</span></td><td><span class="neg-val">(1,250.00)</span></td><td><span class="neg-val">(6,745.00)</span></td></tr>
+<tr><td class="cat-name">Plano de saúde</td><td><span class="neg-val">(159.60)</span></td><td><span class="neg-val">(159.60)</span></td><td><span class="neg-val">(159.60)</span></td><td><span class="neg-val">(159.60)</span></td><td><span class="neg-val">(638.40)</span></td></tr>
+<tr><td class="cat-name">Reforma / Melhorias</td><td><span class="neg-val">(9,121.80)</span></td><td><span class="neg-val">(5,180.00)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(14,301.80)</span></td></tr>
+<tr><td class="cat-name">Salário</td><td><span class="neg-val">(11,665.32)</span></td><td><span class="neg-val">(10,586.00)</span></td><td><span class="neg-val">(12,021.00)</span></td><td><span class="neg-val">(10,430.00)</span></td><td><span class="neg-val">(44,702.32)</span></td></tr>
+<tr><td class="cat-name">Sistemas</td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(606.93)</span></td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(2,374.74)</span></td></tr>
+<tr><td class="cat-name">Tarifa bancária</td><td><span class="neg-val">(83.42)</span></td><td><span class="neg-val">(156.27)</span></td><td><span class="neg-val">(109.28)</span></td><td><span class="neg-val">(99.48)</span></td><td><span class="neg-val">(448.45)</span></td></tr>
+<tr><td class="cat-name">Taxa de cartão</td><td><span class="neg-val">(3,298.65)</span></td><td><span class="neg-val">(4,298.62)</span></td><td><span class="neg-val">(5,301.34)</span></td><td><span class="neg-val">(1,681.82)</span></td><td><span class="neg-val">(14,580.43)</span></td></tr>
+<tr class="subtot"><td>Total Despesas</td><td><span class="neg-val">(45,434.50)</span></td><td><span class="neg-val">(40,367.71)</span></td><td><span class="neg-val">(34,589.62)</span></td><td><span class="neg-val">(19,738.75)</span></td><td><span class="neg-val">(140,130.58)</span></td></tr>
+<tr class="sec"><td colspan="6">▸ Transferências</td></tr>
+<tr><td class="cat-name">Emprestimo entre filiais</td><td>9,348.00</td><td>6,986.00</td><td>10,870.00</td><td>280.00</td><td>27,484.00</td></tr>
+<tr class="subtot"><td>Total Transferências</td><td>9,348.00</td><td>6,986.00</td><td>10,870.00</td><td>280.00</td><td>27,484.00</td></tr>
+<tr class="sec"><td colspan="6">▸ Outros</td></tr>
+<tr><td class="cat-name">Cancelamento</td><td><span class="neg-val">(3,373.43)</span></td><td><span class="neg-val">(9,306.59)</span></td><td><span class="neg-val">(2,383.14)</span></td><td><span class="neg-val">(1,634.76)</span></td><td><span class="neg-val">(16,697.92)</span></td></tr>
+<tr><td class="cat-name">Rendimento de aplicação financeira</td><td><span class="neg-val">(0.05)</span></td><td><span class="neg-val">(0.06)</span></td><td><span class="neg-val">(0.05)</span></td><td><span class="neg-val">(0.12)</span></td><td><span class="neg-val">(0.28)</span></td></tr>
+<tr><td class="cat-name">Retirada de Sócios</td><td><span class="neg-val">(7,600.00)</span></td><td><span class="neg-val">(1,500.00)</span></td><td><span class="neg-val">(5,800.00)</span></td><td><span class="neg-val">(2,200.00)</span></td><td><span class="neg-val">(17,100.00)</span></td></tr>
+<tr class="subtot"><td>Total Outros</td><td><span class="neg-val">(10,973.48)</span></td><td><span class="neg-val">(10,806.65)</span></td><td><span class="neg-val">(8,183.19)</span></td><td><span class="neg-val">(3,834.88)</span></td><td><span class="neg-val">(33,798.20)</span></td></tr>
+<tr class="res"><td>Resultado Operacional</td><td><span class="neg-val">(555.87)</span></td><td><span class="neg-val">(7,383.37)</span></td><td><span class="pos-val">4,627.60</span></td><td><span class="pos-val">5,294.37</span></td><td><span class="pos-val">1,982.73</span></td></tr>
+<tr class="saldo"><td>Saldo Inicial</td><td>567.27</td><td>11.40</td><td>(7,371.97)</td><td>(2,744.37)</td><td>—</td></tr>
+<tr class="saldo"><td><strong>Saldo Final</strong></td><td><strong>11.40</strong></td><td><strong>(7,371.97)</strong></td><td><strong>(2,744.37)</strong></td><td><strong>2,550.00</strong></td><td>—</td></tr></tbody></table></div>
+  <div class="div"></div>
+  <div class="stitle page-break"><span class="stitle-num">04</span><span class="stitle-text">Fluxo de Caixa — <em>Matriz</em></span></div>
+  <div class="dre-wrap"><table class="dre"><thead><tr><th style="width:32%">Categoria</th><th>Janeiro</th><th>Fevereiro</th><th>Março</th><th>Abril</th><th>Total</th></tr></thead><tbody><tr class="sec"><td colspan="6">▸ Receitas</td></tr>
+<tr><td class="cat-name">Antecipação de cartão</td><td>46,616.97</td><td>40,405.00</td><td>66,228.00</td><td>16,470.00</td><td>169,719.97</td></tr>
+<tr><td class="cat-name">Receita - Pix</td><td>21,041.14</td><td>17,290.00</td><td>2,964.90</td><td>3,649.70</td><td>44,945.74</td></tr>
+<tr class="subtot"><td>Total Receitas</td><td>67,658.11</td><td>57,695.00</td><td>69,192.90</td><td>20,119.70</td><td>214,665.71</td></tr>
+<tr class="sec"><td colspan="6">▸ Despesas</td></tr>
+<tr><td class="cat-name">Alimentação</td><td><span class="neg-val">(154.36)</span></td><td><span class="neg-val">(786.30)</span></td><td><span class="neg-val">(66.19)</span></td><td><span class="neg-val">(267.46)</span></td><td><span class="neg-val">(1,274.31)</span></td></tr>
+<tr><td class="cat-name">Aluguel</td><td><span class="neg-val">(6,000.00)</span></td><td><span class="neg-val">(6,000.00)</span></td><td><span class="neg-val">(6,000.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(18,000.00)</span></td></tr>
+<tr><td class="cat-name">Associação de Academia</td><td><span class="neg-val">(139.00)</span></td><td><span class="neg-val">(139.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(141.90)</span></td><td><span class="neg-val">(419.90)</span></td></tr>
+<tr><td class="cat-name">BPO Financeiro</td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(747.53)</span></td><td><span class="neg-val">(2,992.59)</span></td></tr>
+<tr><td class="cat-name">Benefícios</td><td><span class="neg-val">(950.00)</span></td><td><span class="neg-val">(1,000.00)</span></td><td><span class="neg-val">(850.00)</span></td><td><span class="neg-val">(1,000.00)</span></td><td><span class="neg-val">(3,800.00)</span></td></tr>
+<tr><td class="cat-name">Brindes</td><td><span class="neg-val">(2,311.60)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(2,311.60)</span></td></tr>
+<tr><td class="cat-name">Certificado Digital</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(195.00)</span></td><td><span class="neg-val">(195.00)</span></td></tr>
+<tr><td class="cat-name">Comissão</td><td><span class="neg-val">(300.00)</span></td><td><span class="neg-val">(125.00)</span></td><td><span class="neg-val">(150.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(575.00)</span></td></tr>
+<tr><td class="cat-name">Conservadora</td><td><span class="neg-val">(1,314.90)</span></td><td><span class="neg-val">(1,414.16)</span></td><td><span class="neg-val">(1,408.68)</span></td><td><span class="neg-val">(1,414.16)</span></td><td><span class="neg-val">(5,551.90)</span></td></tr>
+<tr><td class="cat-name">Consultoria RH</td><td><span class="zero">—</span></td><td><span class="neg-val">(500.00)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(500.00)</span></td></tr>
+<tr><td class="cat-name">Contabilidade</td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(750.00)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(750.00)</span></td><td><span class="neg-val">(2,250.00)</span></td></tr>
+<tr><td class="cat-name">Equipamentos</td><td><span class="neg-val">(3,759.36)</span></td><td><span class="neg-val">(2,506.24)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(6,265.60)</span></td></tr>
+<tr><td class="cat-name">Estoque</td><td><span class="neg-val">(500.00)</span></td><td><span class="neg-val">(500.00)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(1,000.00)</span></td></tr>
+<tr><td class="cat-name">Fisioruning</td><td><span class="neg-val">(60.00)</span></td><td><span class="neg-val">(60.00)</span></td><td><span class="neg-val">(80.00)</span></td><td><span class="neg-val">(30.00)</span></td><td><span class="neg-val">(230.00)</span></td></tr>
+<tr><td class="cat-name">Fisioterapia</td><td><span class="neg-val">(1,025.70)</span></td><td><span class="neg-val">(941.50)</span></td><td><span class="neg-val">(1,247.20)</span></td><td><span class="neg-val">(1,123.00)</span></td><td><span class="neg-val">(4,337.40)</span></td></tr>
+<tr><td class="cat-name">Grafica</td><td><span class="zero">—</span></td><td><span class="neg-val">(877.90)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(87.50)</span></td><td><span class="neg-val">(965.40)</span></td></tr>
+<tr><td class="cat-name">Hospedagem</td><td><span class="neg-val">(85.13)</span></td><td><span class="neg-val">(85.13)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(86.85)</span></td><td><span class="neg-val">(257.11)</span></td></tr>
+<tr><td class="cat-name">Impostos Parcelado</td><td><span class="neg-val">(1,006.60)</span></td><td><span class="neg-val">(729.86)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(1,707.09)</span></td><td><span class="neg-val">(3,443.55)</span></td></tr>
+<tr><td class="cat-name">Manutenção de equipamentos</td><td><span class="neg-val">(240.00)</span></td><td><span class="neg-val">(1,090.00)</span></td><td><span class="neg-val">(1,603.12)</span></td><td><span class="neg-val">(785.00)</span></td><td><span class="neg-val">(3,718.12)</span></td></tr>
+<tr><td class="cat-name">Marketing</td><td><span class="neg-val">(2,650.00)</span></td><td><span class="neg-val">(300.00)</span></td><td><span class="neg-val">(2,720.00)</span></td><td><span class="neg-val">(1,550.00)</span></td><td><span class="neg-val">(7,220.00)</span></td></tr>
+<tr><td class="cat-name">Massagem</td><td><span class="zero">—</span></td><td><span class="neg-val">(300.25)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(404.45)</span></td><td><span class="neg-val">(704.70)</span></td></tr>
+<tr><td class="cat-name">Material de Escritório</td><td><span class="neg-val">(15.00)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(15.00)</span></td></tr>
+<tr><td class="cat-name">Material de Limpeza / Copa</td><td><span class="neg-val">(505.59)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(403.05)</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(908.64)</span></td></tr>
+<tr><td class="cat-name">Plano de saúde</td><td><span class="neg-val">(199.50)</span></td><td><span class="neg-val">(199.50)</span></td><td><span class="neg-val">(199.50)</span></td><td><span class="neg-val">(199.50)</span></td><td><span class="neg-val">(798.00)</span></td></tr>
+<tr><td class="cat-name">Reforma / Melhorias</td><td><span class="neg-val">(5,600.00)</span></td><td><span class="neg-val">(4,540.00)</span></td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(10,140.00)</span></td></tr>
+<tr><td class="cat-name">Salário</td><td><span class="neg-val">(10,443.50)</span></td><td><span class="neg-val">(10,950.00)</span></td><td><span class="neg-val">(9,350.00)</span></td><td><span class="neg-val">(10,962.50)</span></td><td><span class="neg-val">(41,706.00)</span></td></tr>
+<tr><td class="cat-name">Sistemas</td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(606.93)</span></td><td><span class="neg-val">(589.27)</span></td><td><span class="neg-val">(2,374.74)</span></td></tr>
+<tr><td class="cat-name">Tarifa bancária</td><td><span class="neg-val">(137.57)</span></td><td><span class="neg-val">(141.89)</span></td><td><span class="neg-val">(117.31)</span></td><td><span class="neg-val">(108.09)</span></td><td><span class="neg-val">(504.86)</span></td></tr>
+<tr><td class="cat-name">Taxa de cartão</td><td><span class="neg-val">(5,150.17)</span></td><td><span class="neg-val">(8,536.86)</span></td><td><span class="neg-val">(16,172.60)</span></td><td><span class="neg-val">(7,543.53)</span></td><td><span class="neg-val">(37,403.16)</span></td></tr>
+<tr><td class="cat-name">Telefonia</td><td><span class="neg-val">(126.04)</span></td><td><span class="neg-val">(123.51)</span></td><td><span class="neg-val">(123.51)</span></td><td><span class="neg-val">(123.51)</span></td><td><span class="neg-val">(496.57)</span></td></tr>
+<tr><td class="cat-name">Uniforme</td><td><span class="zero">—</span></td><td><span class="zero">—</span></td><td><span class="neg-val">(585.00)</span></td><td><span class="neg-val">(585.00)</span></td><td><span class="neg-val">(1,170.00)</span></td></tr>
+<tr class="subtot"><td>Total Despesas</td><td><span class="neg-val">(44,763.29)</span></td><td><span class="neg-val">(43,933.90)</span></td><td><span class="neg-val">(42,430.62)</span></td><td><span class="neg-val">(30,401.34)</span></td><td><span class="neg-val">(161,529.15)</span></td></tr>
+<tr class="sec"><td colspan="6">▸ Transferências</td></tr>
+<tr><td class="cat-name">Emprestimo entre filiais</td><td><span class="neg-val">(10,921.27)</span></td><td><span class="neg-val">(7,700.00)</span></td><td><span class="neg-val">(34,420.00)</span></td><td>4,160.00</td><td><span class="neg-val">(48,881.27)</span></td></tr>
+<tr class="subtot"><td>Total Transferências</td><td><span class="neg-val">(10,921.27)</span></td><td><span class="neg-val">(7,700.00)</span></td><td><span class="neg-val">(34,420.00)</span></td><td>4,160.00</td><td><span class="neg-val">(48,881.27)</span></td></tr>
+<tr class="sec"><td colspan="6">▸ Outros</td></tr>
+<tr><td class="cat-name">Cancelamento</td><td><span class="neg-val">(4,312.31)</span></td><td><span class="neg-val">(2,038.88)</span></td><td><span class="neg-val">(571.20)</span></td><td><span class="neg-val">(866.70)</span></td><td><span class="neg-val">(7,789.09)</span></td></tr>
+<tr><td class="cat-name">Rendimento de aplicação financeira</td><td><span class="neg-val">(0.12)</span></td><td><span class="neg-val">(0.05)</span></td><td><span class="neg-val">(0.06)</span></td><td><span class="neg-val">(0.57)</span></td><td><span class="neg-val">(0.80)</span></td></tr>
+<tr><td class="cat-name">Retirada de Sócios</td><td><span class="neg-val">(9,750.00)</span></td><td><span class="neg-val">(2,600.00)</span></td><td><span class="neg-val">(6,450.00)</span></td><td><span class="neg-val">(3,750.00)</span></td><td><span class="neg-val">(22,550.00)</span></td></tr>
+<tr class="subtot"><td>Total Outros</td><td><span class="neg-val">(14,062.43)</span></td><td><span class="neg-val">(4,638.93)</span></td><td><span class="neg-val">(7,021.26)</span></td><td><span class="neg-val">(4,617.27)</span></td><td><span class="neg-val">(30,339.89)</span></td></tr>
+<tr class="res"><td>Resultado Operacional</td><td><span class="neg-val">(2,088.88)</span></td><td><span class="pos-val">1,422.17</span></td><td><span class="neg-val">(14,678.98)</span></td><td><span class="neg-val">(10,738.91)</span></td><td><span class="neg-val">(26,084.60)</span></td></tr>
+<tr class="saldo"><td>Saldo Inicial</td><td>569.24</td><td>(1,519.64)</td><td>(97.47)</td><td>(14,776.45)</td><td>—</td></tr>
+<tr class="saldo"><td><strong>Saldo Final</strong></td><td><strong>(1,519.64)</strong></td><td><strong>(97.47)</strong></td><td><strong>(14,776.45)</strong></td><td><strong>(25,515.36)</strong></td><td>—</td></tr></tbody></table></div>
+  <div class="div"></div>
+  <div class="stitle"><span class="stitle-num">05</span><span class="stitle-text">Contas a Pagar — <em>Em Aberto</em></span></div>
+  <div class="contas-bg stacked">
+    <div>
+      <div class="unit-hd f"><div class="unit-hd-name">Filial</div><div class="unit-hd-tag">Pendências</div></div>
+      <table class="mini-table"><thead><tr><th style="width:18%">Vencimento</th><th style="width:44%">Descrição</th><th style="width:20%">Categoria</th><th style="width:18%">Valor</th></tr></thead><tbody><tr><td class="month-name" style="color:var(--red)">10/04/2026</td><td>Contabilidade REF. ABRIL/2026</td><td>Contabilidade</td><td class="neg-val">(750.00)</td></tr>
+<tr class="total-row"><td colspan="3">Total em Aberto</td><td class="neg-val">(750.00)</td></tr></tbody></table>
+    </div>
+    <div>
+      <div class="unit-hd m"><div class="unit-hd-name">Matriz</div><div class="unit-hd-tag">Pendências</div></div>
+      <table class="mini-table"><thead><tr><th style="width:18%">Vencimento</th><th style="width:44%">Descrição</th><th style="width:20%">Categoria</th><th style="width:18%">Valor</th></tr></thead><tbody><tr><td class="month-name" style="color:var(--red)">30/03/2026</td><td>Parcelamento de Imposto REF. MARÇO/2026</td><td>Impostos</td><td class="neg-val">(853.00)</td></tr>
+<tr><td class="month-name" style="color:var(--red)">10/04/2026</td><td>Contabilidade REF. ABRIL/2026</td><td>Contabilidade</td><td class="neg-val">(750.00)</td></tr>
+<tr><td class="month-name" style="color:var(--red)">06/04/2026</td><td>Sublocação REF. ABRIL/2026</td><td>Aluguel</td><td class="neg-val">(6,000.00)</td></tr>
+<tr><td class="month-name" style="color:var(--amber)">06/05/2026</td><td>Sublocação REF. MAIO/2026</td><td>Aluguel</td><td class="neg-val">(6,000.00)</td></tr>
+<tr class="total-row"><td colspan="3">Total em Aberto</td><td class="neg-val">(13,603.00)</td></tr></tbody></table>
+    </div>
+  </div>
+</main>
+<footer>
+  <div class="footer-logo">Lume <em>Finanças</em></div>
+  <div class="footer-info">BPO Financeiro · Studio Fit 360 · Jan–Abr 2026 · Confidencial</div>
+</footer>
+</body>
+</html>
