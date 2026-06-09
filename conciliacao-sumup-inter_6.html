@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conciliação SumUp × Inter — Lume Finanças</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap');
+:root{
+  --navy:#0d1b2e;--navy2:#162438;--navy3:#1e3050;
+  --gold:#c9a84c;--gold2:#e8c96a;
+  --white:#fff;--cream:#f9f6f0;--bg:#f2efe9;
+  --green:#1a7a4a;--green2:#d4f0e2;
+  --red:#b03030;--red2:#fde8e8;
+  --amber:#c07820;--amber2:#fef3dc;
+  --muted:#7a8fa8;--border:rgba(13,27,46,0.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--navy);min-height:100vh}
+header{background:var(--navy);height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 32px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:200}
+.logo{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold)}
+.logo span{color:rgba(255,255,255,.35);font-weight:400;font-size:12px;margin-left:8px}
+.tab-bar{background:var(--navy2);display:flex;padding:0 32px;gap:2px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tab{padding:12px 20px;font-size:13px;font-weight:500;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.tab.active{color:var(--gold2);border-bottom-color:var(--gold);font-weight:600}
+.tab:hover:not(.active){color:rgba(255,255,255,.6)}
+.panel{display:none;padding:28px 32px 80px;max-width:1100px;margin:0 auto}
+.panel.active{display:block}
+
+.upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.upload-card{background:var(--white);border-radius:12px;border:1.5px solid var(--border);padding:20px;transition:border-color .2s}
+.upload-card.ready{border-color:var(--green)}
+.uc-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.uc-sub{font-size:12px;color:var(--muted);margin-bottom:14px;line-height:1.6}
+.drop-zone{display:block;border:2px dashed rgba(201,168,76,.35);border-radius:8px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(201,168,76,.02)}
+.drop-zone:hover,.drop-zone.over{border-color:var(--gold);background:rgba(201,168,76,.06)}
+.drop-zone input{display:none}
+.dz-icon{font-size:22px;margin-bottom:4px}
+.dz-text{font-size:12px;color:var(--muted)}.dz-text b{color:var(--gold)}
+.dz-hint{font-size:11px;color:var(--muted);margin-top:3px;opacity:.7}
+.file-ok{display:none;align-items:center;gap:10px;background:var(--green2);border-radius:8px;padding:10px 14px;margin-top:10px}
+.file-ok.show{display:flex}
+.fo-name{font-size:12px;font-weight:600;color:var(--green);flex:1}
+.fo-remove{color:var(--red);cursor:pointer;font-size:16px}
+.pb{height:4px;background:rgba(13,27,46,.08);border-radius:2px;margin-top:8px;overflow:hidden;display:none}
+.pb.show{display:block}
+.pb-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .3s;width:0%}
+
+.process-area{display:flex;align-items:center;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.btn{border:none;border-radius:8px;padding:11px 24px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;height:44px;display:inline-flex;align-items:center;gap:6px}
+.btn-primary{background:var(--navy);color:var(--gold)}.btn-primary:hover{background:var(--navy3)}
+.btn-primary:disabled{opacity:.35;cursor:not-allowed}
+.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border);font-family:'DM Sans',sans-serif;font-weight:500}
+.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.btn-green{background:var(--green);color:white}.btn-green:hover{background:#145e38}
+.hint{font-size:12px;color:var(--muted)}
+
+.smsg{display:none;align-items:center;gap:8px;padding:10px 16px;border-radius:8px;font-size:12px;margin-bottom:16px}
+.smsg.show{display:flex}
+.smsg.info{background:var(--amber2);color:var(--amber);border:1px solid rgba(192,120,32,.25)}
+.smsg.ok{background:var(--green2);color:var(--green);border:1px solid rgba(26,122,74,.25)}
+.smsg.err{background:var(--red2);color:var(--red);border:1px solid rgba(176,48,48,.25)}
+
+.prev-wrap{background:white;border-radius:12px;border:1.5px solid var(--border);overflow:hidden;margin-top:20px}
+.prev-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:12px;color:var(--navy)}
+
+.scard{background:var(--white);border-radius:12px;border:1.5px solid var(--border);padding:22px 24px;margin-bottom:20px}
+.scard-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;margin-bottom:4px}
+.scard-sub{font-size:12px;color:var(--muted);margin-bottom:16px;line-height:1.6}
+.srow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}
+.sg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:180px}
+.sg label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.sg input{border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:15px;font-family:'DM Mono',monospace;color:var(--navy);background:var(--cream);outline:none;transition:border-color .15s;width:100%}
+.sg input:focus{border-color:var(--gold);background:white}
+
+.mwrap{margin-bottom:18px}
+.mtop{background:var(--navy);border-radius:10px 10px 0 0;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.mtop .ml .md{font-size:11px;color:rgba(255,255,255,.4);margin-bottom:2px}
+.mtop .ml .mn{font-size:10px;color:rgba(255,255,255,.22);font-family:'DM Mono',monospace}
+.mbadge{padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:rgba(201,168,76,.2);color:var(--gold2)}
+.mval{font-family:'DM Mono',monospace;font-size:22px;color:var(--gold2);font-weight:500}
+.mbody{background:white;border:1.5px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden}
+.dh{padding:12px 20px 0;display:flex;justify-content:space-between}
+.dh-t{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
+.dmeta{display:flex;gap:20px;padding:10px 20px 12px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.dm .dl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.dm .dv{font-family:'DM Mono',monospace;font-size:13px;font-weight:500}
+.dm .dv.g{color:var(--green)}.dm .dv.r{color:var(--red)}
+.twrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--navy2);color:var(--gold2);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:9px 14px;text-align:left;white-space:nowrap}
+thead th.tr{text-align:right}
+tbody td{padding:9px 14px;border-bottom:1px solid rgba(13,27,46,.05);color:var(--navy2);vertical-align:middle}
+tbody td.tr{text-align:right;font-family:'DM Mono',monospace}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:rgba(201,168,76,.03)}
+tfoot td{background:rgba(13,27,46,.04);font-weight:600;padding:9px 14px;border-top:1px solid var(--border)}
+tfoot td.tr{text-align:right;font-family:'DM Mono',monospace}
+.tag{display:inline-block;padding:2px 8px;border-radius:100px;font-size:10px;font-weight:600}
+.tag-av{background:var(--green2);color:var(--green)}
+.tag-p{background:rgba(13,27,46,.08);color:var(--navy2)}
+.tag-combo{background:var(--amber2);color:var(--amber)}
+.tag-warn{background:var(--red2);color:var(--red)}
+
+.rfinal{background:var(--navy);border-radius:10px;padding:18px 22px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-top:4px}
+.rfi .rfl{font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px;margin-bottom:2px}
+.rfi .rfv{font-family:'DM Mono',monospace;font-size:17px;color:var(--gold2);font-weight:500}
+
+.nf{background:white;border:1.5px solid #f0d0d0;border-radius:12px;padding:32px;text-align:center}
+.nf h3{font-family:'Syne',sans-serif;font-size:15px;color:var(--red);margin-bottom:8px}
+.nf p{font-size:13px;color:var(--muted);line-height:1.7}
+.sug-item{display:flex;align-items:center;gap:10px;background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:12px;margin-bottom:6px;cursor:pointer;transition:border-color .15s;text-align:left}
+.sug-item:hover{border-color:var(--gold)}
+
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .ei{font-size:48px;margin-bottom:12px;opacity:.3}
+
+.srow2{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.sc{background:white;border-radius:10px;border:1.5px solid var(--border);padding:14px 16px}
+.sc .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px}
+.sc .sv{font-family:'DM Mono',monospace;font-size:18px;font-weight:500;color:var(--navy)}
+.sc .sv.g{color:var(--green)}.sc .sv.a{color:var(--amber)}.sc .sv.r{color:var(--red)}
+.tbl2w{background:white;border-radius:12px;border:1.5px solid var(--border);overflow:hidden}
+.p2c{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.fi{border:1.5px solid var(--border);border-radius:8px;padding:9px 13px;font-size:13px;background:white;outline:none;min-width:220px}
+.fi:focus{border-color:var(--gold)}
+.day-row td{background:var(--navy2);color:var(--gold2);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:8px 14px;letter-spacing:.3px}
+.day-row td span{color:rgba(255,255,255,.4);margin-left:8px;font-family:'DM Sans',sans-serif;font-weight:400;font-size:11px}
+
+/* Loading overlay */
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(13,27,46,.7);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px}
+.loading-overlay.show{display:flex}
+.loading-spinner{width:48px;height:48px;border:4px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:var(--gold2);font-family:'Syne',sans-serif;font-size:15px;font-weight:600}
+.loading-sub{color:rgba(255,255,255,.5);font-size:12px}
+
+@media(max-width:700px){
+  .upload-grid{grid-template-columns:1fr}
+  header,.tab-bar,.panel{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">Processando PDF...</div>
+  <div class="loading-sub" id="loadingSub">Isso pode levar alguns segundos</div>
+</div>
+
+<header>
+  <div class="logo">Lume Finanças <span>BPO Financeiro</span></div>
+  <div style="font-size:11px;color:rgba(255,255,255,.3)">Rahme Serviços Médicos</div>
+</header>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab(0)">📂 Carregar arquivos</div>
+  <div class="tab" onclick="showTab(1)">🔍 Buscar valor</div>
+  <div class="tab" onclick="showTab(2)">📋 Relatório completo</div>
+</div>
+
+<!-- ABA 0: UPLOAD -->
+<div class="panel active" id="panel0">
+  <div class="upload-grid">
+    <div class="upload-card" id="card-inter">
+      <div class="uc-title">🏦 Extrato Banco Inter</div>
+      <div class="uc-sub">Aceita <b>CSV, Excel (.xlsx)</b> ou <b>PDF</b> exportado do Inter.</div>
+      <label for="fi-inter" class="drop-zone" id="dz-inter">
+        <input type="file" id="fi-inter" accept=".csv,.xlsx,.xls,.pdf,.txt" onchange="handleFile('inter',this.files[0])" style="position:absolute;opacity:0;width:0;height:0">
+        <div class="dz-icon">🏦</div>
+        <div class="dz-text"><b>Clique para selecionar</b> ou arraste aqui</div>
+        <div class="dz-hint">CSV · Excel · PDF</div>
+      </label>
+      <div class="file-ok" id="ok-inter"><span>✅</span><span class="fo-name" id="ok-inter-name"></span><span class="fo-remove" onclick="resetFile('inter')">✕</span></div>
+      <div class="pb" id="pb-inter"><div class="pb-fill" id="pf-inter"></div></div>
+    </div>
+
+    <div class="upload-card" id="card-sumup">
+      <div class="uc-title">💳 Relatório SumUp (PDF mensal)</div>
+      <div class="uc-sub">SumUp → <b>Relatórios → Relatório de depósitos</b> → mês completo. A IA lê automaticamente.</div>
+      <label for="fi-sumup" class="drop-zone" id="dz-sumup">
+        <input type="file" id="fi-sumup" accept=".pdf" onchange="handleFile('sumup',this.files[0])" style="position:absolute;opacity:0;width:0;height:0">
+        <div class="dz-icon">💳</div>
+        <div class="dz-text"><b>Clique para selecionar</b> ou arraste o PDF aqui</div>
+        <div class="dz-hint">Apenas PDF — processado por IA</div>
+      </label>
+      <div class="file-ok" id="ok-sumup"><span>✅</span><span class="fo-name" id="ok-sumup-name"></span><span class="fo-remove" onclick="resetFile('sumup')">✕</span></div>
+      <div class="pb" id="pb-sumup"><div class="pb-fill" id="pf-sumup"></div></div>
+    </div>
+  </div>
+
+  <div class="process-area">
+    <button class="btn btn-primary" id="btn-process" onclick="processarArquivos()" disabled>⚡ Processar e cruzar dados</button>
+    <span class="hint" id="ph">Carregue os dois arquivos para continuar</span>
+  </div>
+
+  <div class="smsg" id="smsg"><span id="sicon">⏳</span><span id="stxt">Processando...</span></div>
+
+  <div id="previa-inter" style="display:none">
+    <div class="prev-title">Lançamentos SumUp no extrato Inter</div>
+    <div class="prev-wrap">
+      <table>
+        <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th class="tr">Valor (R$)</th></tr></thead>
+        <tbody id="tbody-inter"></tbody>
+        <tfoot><tr><td colspan="3"><b>Total</b></td><td class="tr"><b id="total-inter">—</b></td></tr></tfoot>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ABA 1: BUSCA -->
+<div class="panel" id="panel1">
+  <div class="scard">
+    <div class="scard-title">Buscar entrada do Inter</div>
+    <div class="scard-sub">Digite o valor exato do extrato. A ferramenta mostra as vendas com <b>data de competência, código e parcela</b> — pronto para baixar no Meu Dinheiro.</div>
+    <div class="srow">
+      <div class="sg"><label>Valor (R$)</label><input id="inp" type="text" placeholder="ex: 4.512,53" onkeydown="if(event.key==='Enter')buscar()"></div>
+      <button class="btn btn-primary" onclick="buscar()">Buscar</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('inp').value='';renderEmpty()">Limpar</button>
+    </div>
+  </div>
+  <div id="resultado"><div class="empty"><div class="ei">🔎</div><p>Carregue os arquivos e pesquise um valor do extrato.</p></div></div>
+</div>
+
+<!-- ABA 2: RELATÓRIO -->
+<div class="panel" id="panel2">
+  <div class="srow2" id="srow2"></div>
+  <div class="p2c">
+    <input class="fi" id="filtro2" type="text" placeholder="🔍 Filtrar por data, código, bandeira..." oninput="filtrar(this.value)">
+    <button class="btn btn-ghost" onclick="document.getElementById('filtro2').value='';filtrar('')" style="height:40px;font-size:12px">Limpar</button>
+    <button class="btn btn-green" onclick="exportarExcel()" style="margin-left:auto;height:40px">⬇️ Exportar Excel</button>
+  </div>
+  <div class="tbl2w">
+    <table>
+      <thead><tr>
+        <th>Data Inter</th><th>Dep. SumUp</th><th>Bandeira</th>
+        <th class="tr">Vlr Dep.</th><th>Data Competência</th>
+        <th>Cód. Transação</th><th>Descrição / Parcela</th>
+        <th class="tr">Parcela R$</th><th class="tr">Taxa</th><th class="tr">Líquido</th>
+      </tr></thead>
+      <tbody id="tbody2"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── ESTADO ──
+let csvLoaded=false, pdfLoaded=false;
+let interData=[], sumupDeps=[], DB=[];
+let sumupFileB64=null; // PDF SumUp em base64 para enviar à API
+
+// ── UTILS ──
+function br(v){return typeof v==='number'?v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):String(v||'')}
+function pv(s){if(!s)return 0;s=String(s).replace(/[^\d,]/g,'').replace(',','.');return Math.round((parseFloat(s||0))*100)/100}
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,j)=>t.className='tab'+(i===j?' active':''));
+  document.querySelectorAll('.panel').forEach((p,j)=>{p.className='panel';if(i===j)p.classList.add('active')});
+}
+function setStatus(msg,type='info'){
+  const el=document.getElementById('smsg');
+  document.getElementById('sicon').textContent={info:'⏳',ok:'✅',err:'❌'}[type]||'ℹ️';
+  document.getElementById('stxt').textContent=msg;
+  el.className='smsg show '+type;
+  if(type==='ok'||type==='err')setTimeout(()=>el.classList.remove('show'),6000);
+}
+function showLoading(text,sub){
+  document.getElementById('loadingText').textContent=text||'Processando...';
+  document.getElementById('loadingSub').textContent=sub||'';
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show')}
+function checkReady(){
+  const ok=csvLoaded&&pdfLoaded;
+  document.getElementById('btn-process').disabled=!ok;
+  document.getElementById('ph').textContent=
+    !csvLoaded&&!pdfLoaded?'Carregue os dois arquivos para continuar':
+    !csvLoaded?'Falta o extrato do Inter':
+    !pdfLoaded?'Falta o PDF da SumUp':
+    '✅ Pronto! Clique em processar.';
+}
+
+// ── DRAG & DROP ──
+['inter','sumup'].forEach(id=>{
+  const dz=document.getElementById('dz-'+id);
+  dz.addEventListener('dragover',e=>{e.preventDefault();e.stopPropagation();dz.classList.add('over')});
+  dz.addEventListener('dragleave',e=>{e.preventDefault();dz.classList.remove('over')});
+  dz.addEventListener('drop',e=>{
+    e.preventDefault();e.stopPropagation();
+    dz.classList.remove('over');
+    const f=e.dataTransfer.files[0];
+    if(f) handleFile(id,f);
+  });
+});
+
+function handleFile(id,file){
+  if(id==='inter') lerExtrato(file);
+  else lerPDFSumup(file);
+}
+function resetFile(id){
+  if(id==='inter'){csvLoaded=false;interData=[];document.getElementById('previa-inter').style.display='none'}
+  else{pdfLoaded=false;sumupDeps=[];sumupFileB64=null}
+  document.getElementById('ok-'+id).classList.remove('show');
+  document.getElementById('fi-'+id).value='';
+  document.getElementById('card-'+id).classList.remove('ready');
+  checkReady();
+}
+
+// ── EXTRATO INTER ──
+function lerExtrato(file){
+  const name=file.name.toLowerCase();
+  if(name.endsWith('.xlsx')||name.endsWith('.xls')){
+    const r=new FileReader();
+    r.onload=e=>{
+      const wb=XLSX.read(e.target.result,{type:'binary'});
+      processCSV(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]],{FS:';'}),file.name);
+    };
+    r.readAsBinaryString(file);
+  } else if(name.endsWith('.pdf')){
+    lerPDFInter(file);
+  } else {
+    const r=new FileReader();
+    r.onload=e=>processCSV(e.target.result,file.name);
+    r.readAsText(file,'UTF-8');
+  }
+}
+
+function processCSV(text,filename){
+  const lines=text.split('\n');
+  const result=[];
+  let inData=false;
+  for(const line of lines){
+    const parts=line.split(';').map(s=>s.trim().replace(/"/g,''));
+    const h=parts[0]||'';
+    if(h==='Data Lançamento'||h==='Data'||h==='DATA'){inData=true;continue}
+    if(!inData)continue;
+    if(!h.match(/\d{2}\/\d{2}\/\d{4}/))continue;
+    const desc=(parts[2]||'').toLowerCase();
+    if(!desc.includes('sumup'))continue;
+    const val=pv(parts[3]);
+    if(!val||val<=0)continue;
+    result.push({data:h.substring(0,5),dataFull:h,
+      tipo:desc.includes('débito')||desc.includes('debito')?'Débito':'Crédito',
+      descricao:parts[2]||'',valor:val});
+  }
+  interData=result;
+  csvLoaded=result.length>0;
+  document.getElementById('ok-inter-name').textContent=filename+' ('+result.length+' lançamentos SumUp)';
+  document.getElementById('ok-inter').classList.toggle('show',csvLoaded);
+  document.getElementById('card-inter').classList.toggle('ready',csvLoaded);
+  if(!csvLoaded){setStatus('Nenhum lançamento SumUp encontrado. Verifique o formato.','err');return}
+  checkReady();
+  renderPreviaInter();
+}
+
+async function lerPDFInter(file){
+  // Para PDF do Inter, usa texto simples
+  const text=await file.text().catch(()=>'');
+  const lines=text.split('\n');
+  const result=[];
+  const meses={janeiro:'01',fevereiro:'02',março:'03',abril:'04',maio:'05',junho:'06',julho:'07',agosto:'08',setembro:'09',outubro:'10',novembro:'11',dezembro:'12'};
+  let diaAtual='';
+  for(const line of lines){
+    const dm=line.match(/^(\d{1,2})\s+de\s+(\w+)\s+de\s+(\d{4})/i);
+    if(dm){const d=dm[1].padStart(2,'0'),m=meses[dm[2].toLowerCase()]||'??';diaAtual=`${d}/${m}/${dm[3]}`;continue}
+    if(!line.toLowerCase().includes('sumup')||!diaAtual)continue;
+    const vals=line.match(/R\$\s*([\d.,]+)/g)||[];
+    if(!vals.length)continue;
+    const val=pv(vals[0].replace('R$','').trim());
+    if(val<=0)continue;
+    const isDebito=line.toLowerCase().includes('débito')||line.toLowerCase().includes('debito');
+    result.push({data:diaAtual.substring(0,5),dataFull:diaAtual,tipo:isDebito?'Débito':'Crédito',
+      descricao:isDebito?'Cartão De Débito - Sumup':'Cartão De Crédito - Sumup',valor:val});
+  }
+  interData=result;csvLoaded=result.length>0;
+  document.getElementById('ok-inter-name').textContent=file.name+' ('+result.length+' lançamentos)';
+  document.getElementById('ok-inter').classList.toggle('show',csvLoaded);
+  document.getElementById('card-inter').classList.toggle('ready',csvLoaded);
+  checkReady();renderPreviaInter();
+}
+
+function renderPreviaInter(){
+  if(!interData.length)return;
+  const sorted=[...interData].sort((a,b)=>a.dataFull.localeCompare(b.dataFull));
+  document.getElementById('tbody-inter').innerHTML=sorted.map(r=>`<tr>
+    <td><b>${r.dataFull}</b></td>
+    <td><span class="tag ${r.tipo==='Crédito'?'tag-av':'tag-p'}">${r.tipo}</span></td>
+    <td>${r.descricao}</td>
+    <td class="tr" style="color:var(--green);font-weight:600">R$ ${br(r.valor)}</td>
+  </tr>`).join('');
+  document.getElementById('total-inter').textContent='R$ '+br(interData.reduce((s,r)=>s+r.valor,0));
+  document.getElementById('previa-inter').style.display='block';
+}
+
+// ── PDF SUMUP via API Anthropic ──
+async function lerPDFSumup(file){
+  document.getElementById('pb-sumup').classList.add('show');
+  document.getElementById('pf-sumup').style.width='30%';
+  
+  // Converte para base64
+  const buf=await file.arrayBuffer();
+  const bytes=new Uint8Array(buf);
+  let binary='';
+  for(let i=0;i<bytes.length;i++) binary+=String.fromCharCode(bytes[i]);
+  sumupFileB64=btoa(binary);
+  
+  document.getElementById('pf-sumup').style.width='60%';
+  
+  // Valida que é um PDF SumUp (verifica tamanho mínimo)
+  if(bytes.length < 1000){setStatus('Arquivo muito pequeno. Use o relatório mensal completo.','err');return}
+  
+  pdfLoaded=true;
+  document.getElementById('ok-sumup-name').textContent=file.name+' ('+Math.round(bytes.length/1024)+' KB — será processado pela IA ao clicar em Processar)';
+  document.getElementById('ok-sumup').classList.add('show');
+  document.getElementById('card-sumup').classList.add('ready');
+  document.getElementById('pf-sumup').style.width='100%';
+  setTimeout(()=>document.getElementById('pb-sumup').classList.remove('show'),600);
+  checkReady();
+}
+
+// ── PROCESSAR: chama API Anthropic com o PDF ──
+async function processarArquivos(){
+  if(!csvLoaded||!pdfLoaded){setStatus('Carregue os dois arquivos primeiro.','err');return}
+  
+  showLoading('Enviando PDF para a IA...','A IA está lendo e extraindo os depósitos e vendas do relatório SumUp');
+  
+  try{
+    // Chama API com o PDF para extrair depósitos e vendas em JSON
+    const prompt=`Você é um extrator de dados financeiros. Analise este relatório de depósitos SumUp e extraia TODOS os dados em JSON.
+
+Retorne APENAS JSON válido, sem texto antes ou depois, no formato:
+{
+  "depositos": [
+    {
+      "num": "número do depósito (17-22 dígitos)",
+      "bandeira": "MC|VISA|VISA_ELECTRON|MAESTRO|ELO|AMEX",
+      "bruto": 1040.00,
+      "taxa": 10.92,
+      "liquido": 1029.08,
+      "vendas": [
+        {
+          "dataVenda": "DD/MM/YYYY",
+          "cod": "código da transação",
+          "desc": "descrição/nome paciente se houver",
+          "parcelas": "Àvista|1/2|2/6 etc",
+          "valorParcela": 1040.00,
+          "taxa": 10.92,
+          "liquido": 1029.08
+        }
+      ]
+    }
+  ]
+}
+
+IMPORTANTE:
+- dataVenda deve ser no formato DD/MM/YYYY (converter de MM/DD/YYYY se necessário)
+- valorParcela é o valor desta parcela específica (não o valor total da venda)
+- liquido = valorParcela - taxa
+- Extraia TODOS os depósitos e TODAS as vendas sem pular nenhum`;
+
+    const response=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:8000,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'document',source:{type:'base64',media_type:'application/pdf',data:sumupFileB64}},
+            {type:'text',text:prompt}
+          ]
+        }]
+      })
+    });
+
+    if(!response.ok){
+      const err=await response.text();
+      throw new Error('API erro '+response.status+': '+err.substring(0,200));
+    }
+
+    const data=await response.json();
+    const rawText=data.content.filter(c=>c.type==='text').map(c=>c.text).join('');
+    
+    document.getElementById('loadingText').textContent='Processando resposta da IA...';
+    
+    // Parse JSON
+    let jsonText=rawText.trim();
+    const jsonMatch=jsonText.match(/\{[\s\S]*\}/);
+    if(jsonMatch) jsonText=jsonMatch[0];
+    
+    const parsed=JSON.parse(jsonText);
+    sumupDeps=parsed.depositos||[];
+    
+    const nVendas=sumupDeps.reduce((s,d)=>s+d.vendas.length,0);
+    document.getElementById('ok-sumup-name').textContent=
+      `Processado pela IA: ${sumupDeps.length} depósitos, ${nVendas} vendas`;
+    
+    // Cruza com Inter
+    document.getElementById('loadingText').textContent='Cruzando com extrato Inter...';
+    cruzarDados();
+    
+    hideLoading();
+    const matched=DB.filter(d=>!d.semMatch).length;
+    const pct=Math.round(matched/DB.length*100);
+    setStatus(`Concluído: ${matched}/${DB.length} lançamentos identificados (${pct}%)`,
+      matched===DB.length?'ok':'info');
+    renderTabela2();
+    showTab(2);
+    
+  }catch(e){
+    hideLoading();
+    setStatus('Erro ao processar: '+e.message,'err');
+    console.error(e);
+  }
+}
+
+// ── CRUZAMENTO ──
+function cruzarDados(){
+  DB=[];
+  const tol=0.02;
+  const usados=new Set();
+  for(const row of interData){
+    const val=row.valor;
+    let match=sumupDeps.find(d=>!usados.has(d.num)&&Math.abs(d.liquido-val)<=tol);
+    if(match){
+      usados.add(match.num);
+      const dataDep=match.num.length>=8?match.num.substring(6,8)+'/'+match.num.substring(4,6):'—';
+      DB.push({dataInter:row.data,dataDep,bandeira:match.bandeira,numDep:match.num,
+        liquido:match.liquido,vendas:match.vendas,combo:false});
+      continue;
+    }
+    // Combinação de 2
+    const cands=sumupDeps.filter(d=>!usados.has(d.num)&&d.liquido<val);
+    let found=false;
+    for(let i=0;i<cands.length&&!found;i++){
+      for(let j=i+1;j<cands.length&&!found;j++){
+        if(Math.abs(cands[i].liquido+cands[j].liquido-val)<=tol){
+          usados.add(cands[i].num);usados.add(cands[j].num);
+          const dataDep=cands[i].num.substring(6,8)+'/'+cands[i].num.substring(4,6);
+          DB.push({dataInter:row.data,dataDep,
+            bandeira:cands[i].bandeira+' + '+cands[j].bandeira,
+            numDep:cands[i].num+' + '+cands[j].num,
+            liquido:cands[i].liquido+cands[j].liquido,
+            vendas:[...cands[i].vendas,...cands[j].vendas],combo:true});
+          found=true;
+        }
+      }
+    }
+    if(!found) DB.push({dataInter:row.data,dataDep:'—',bandeira:'?',numDep:'Não identificado',
+      liquido:val,vendas:[],combo:false,semMatch:true});
+  }
+}
+
+// ── BUSCA ──
+function buscar(){
+  const raw=document.getElementById('inp').value.trim();
+  if(!raw)return;
+  const s=raw.replace(/\./g,'').replace(',','.');
+  const val=Math.round(parseFloat(s)*100)/100;
+  if(isNaN(val)){alert('Valor inválido.');return}
+  if(!DB.length){setStatus('Processe os arquivos primeiro.','err');showTab(0);return}
+  const tol=0.02;
+  const matches=DB.filter(d=>Math.abs(d.liquido-val)<=tol);
+  const el=document.getElementById('resultado');
+  if(!matches.length){
+    const sugs=DB.filter(d=>Math.abs(d.liquido-val)/val<0.05)
+      .sort((a,b)=>Math.abs(a.liquido-val)-Math.abs(b.liquido-val)).slice(0,5);
+    el.innerHTML=`<div class="nf"><h3>R$ ${br(val)} não encontrado</h3>
+      <p>Valor não localizado. Verifique se o PDF SumUp cobre o mesmo período do extrato.</p>
+      ${sugs.length?`<div style="margin-top:16px;text-align:left"><p style="font-size:12px;color:var(--muted);margin-bottom:8px">Valores próximos:</p>
+      ${sugs.map(s=>`<div class="sug-item" onclick="document.getElementById('inp').value='${s.liquido.toFixed(2).replace('.',',')}';buscar()">
+        📅 ${s.dataInter} &nbsp;<b>R$ ${br(s.liquido)}</b>&nbsp;<span style="color:var(--muted)">${s.bandeira}</span>
+        <span style="margin-left:auto;color:var(--muted);font-size:11px">Δ R$ ${br(Math.abs(s.liquido-val))}</span>
+      </div>`).join('')}</div>`:''}
+    </div>`;
+    return;
+  }
+  let html='';
+  matches.forEach(m=>{
+    const tb=m.vendas.reduce((s,v)=>s+(v.valorParcela||0),0);
+    const tt=m.vendas.reduce((s,v)=>s+(v.taxa||0),0);
+    const comboTag=m.combo?'<span class="tag tag-combo">Agrupamento</span>':'';
+    html+=`<div class="mwrap">
+      <div class="mtop">
+        <div class="ml">
+          <div class="md">Inter ${m.dataInter} · Dep. SumUp ${m.dataDep} ${comboTag}</div>
+          <div class="mn">${m.numDep}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <span class="mbadge">${m.bandeira}</span>
+          <div class="mval">R$ ${br(m.liquido)}</div>
+        </div>
+      </div>
+      <div class="mbody">
+        <div class="dh"><span class="dh-t">Vendas que compõem este depósito</span></div>
+        <div class="dmeta">
+          <div class="dm"><div class="dl">Valor Parcelas</div><div class="dv">R$ ${br(tb)}</div></div>
+          <div class="dm"><div class="dl">Taxas SumUp</div><div class="dv r">– R$ ${br(tt)}</div></div>
+          <div class="dm"><div class="dl">Líquido</div><div class="dv g">R$ ${br(m.liquido)}</div></div>
+          <div class="dm"><div class="dl">Nº Vendas</div><div class="dv">${m.vendas.length}</div></div>
+        </div>
+        <div class="twrap"><table>
+          <thead><tr>
+            <th>Data Competência</th><th>Cód. Transação</th>
+            <th>Descrição</th><th>Parcela</th>
+            <th class="tr">Vlr Parcela</th><th class="tr">Taxa</th><th class="tr">Líquido</th>
+          </tr></thead>
+          <tbody>${m.vendas.length?m.vendas.map(v=>{
+            const tp=v.parcelas==='Àvista'||v.parcelas==='À vista'
+              ?'<span class="tag tag-av">À vista</span>'
+              :`<span class="tag tag-p">${v.parcelas}</span>`;
+            return `<tr>
+              <td><b>${v.dataVenda||'—'}</b></td>
+              <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${v.cod||'—'}</td>
+              <td>${v.desc||'—'}</td><td>${tp}</td>
+              <td class="tr">R$ ${br(v.valorParcela||0)}</td>
+              <td class="tr" style="color:var(--red)">R$ ${br(v.taxa||0)}</td>
+              <td class="tr" style="color:var(--green);font-weight:600">R$ ${br(v.liquido||0)}</td>
+            </tr>`;
+          }).join(''):`<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:20px">Depósito identificado mas sem vendas detalhadas.</td></tr>`}</tbody>
+          <tfoot><tr><td colspan="4"><b>Total</b></td>
+            <td class="tr"><b>R$ ${br(tb)}</b></td>
+            <td class="tr" style="color:var(--red)"><b>R$ ${br(tt)}</b></td>
+            <td class="tr" style="color:var(--green)"><b>R$ ${br(m.liquido)}</b></td>
+          </tr></tfoot>
+        </table></div>
+      </div>
+    </div>`;
+  });
+  const tv=matches.reduce((s,m)=>s+m.vendas.length,0);
+  const tb2=matches.reduce((s,m)=>s+m.vendas.reduce((a,v)=>a+(v.valorParcela||0),0),0);
+  html+=`<div class="rfinal">
+    <div class="rfi"><div class="rfl">Valor Inter</div><div class="rfv">R$ ${br(val)}</div></div>
+    <div class="rfi"><div class="rfl">Total Parcelas</div><div class="rfv">R$ ${br(tb2)}</div></div>
+    <div class="rfi"><div class="rfl">Nº Vendas</div><div class="rfv">${tv}</div></div>
+  </div>`;
+  el.innerHTML=html;
+}
+function renderEmpty(){
+  document.getElementById('resultado').innerHTML=
+    '<div class="empty"><div class="ei">🔎</div><p>Digite um valor do extrato para ver as vendas correspondentes.</p></div>';
+}
+
+// ── TABELA COMPLETA ──
+function renderTabela2(){
+  const tI=DB.reduce((s,d)=>s+d.liquido,0);
+  const tP=DB.reduce((s,d)=>s+d.vendas.reduce((a,v)=>a+(v.valorParcela||0),0),0);
+  const tT=DB.reduce((s,d)=>s+d.vendas.reduce((a,v)=>a+(v.taxa||0),0),0);
+  const tV=DB.reduce((s,d)=>s+d.vendas.length,0);
+  const sem=DB.filter(d=>d.semMatch).length;
+  document.getElementById('srow2').innerHTML=`
+    <div class="sc"><div class="sl">Total Inter</div><div class="sv g">R$ ${br(tI)}</div></div>
+    <div class="sc"><div class="sl">Total Parcelas</div><div class="sv">R$ ${br(tP)}</div></div>
+    <div class="sc"><div class="sl">Taxas SumUp</div><div class="sv r">R$ ${br(tT)}</div></div>
+    <div class="sc"><div class="sl">Nº Vendas</div><div class="sv a">${tV}</div></div>
+    <div class="sc"><div class="sl">Depósitos</div><div class="sv">${DB.length}</div></div>
+    ${sem?`<div class="sc"><div class="sl">Não identificados</div><div class="sv r">${sem}</div></div>`:''}
+  `;
+  const porDia={};
+  DB.forEach(d=>{if(!porDia[d.dataInter])porDia[d.dataInter]=[];porDia[d.dataInter].push(d)});
+  let rows='';
+  Object.keys(porDia).sort((a,b)=>{
+    const[da,ma]=a.split('/').map(Number);const[db,mb]=b.split('/').map(Number);
+    return ma!==mb?ma-mb:da-db;
+  }).forEach(dia=>{
+    const deps=porDia[dia];
+    const tot=deps.reduce((s,d)=>s+d.liquido,0);
+    rows+=`<tr class="day-row"><td colspan="10">📅 ${dia} <span>Total: R$ ${br(tot)}</span></td></tr>`;
+    deps.forEach(d=>{
+      if(!d.vendas.length){
+        const obs=d.semMatch?'<span class="tag tag-warn">Não identificado</span>':'<span class="tag tag-warn">Sem vendas</span>';
+        rows+=`<tr data-search="${dia} ${d.dataDep} ${d.bandeira}">
+          <td><b>${dia}</b></td><td style="color:var(--muted)">${d.dataDep}</td>
+          <td>${d.bandeira}</td><td class="tr" style="font-weight:600">R$ ${br(d.liquido)}</td>
+          <td colspan="6">${obs}</td></tr>`;
+        return;
+      }
+      d.vendas.forEach((v,i)=>{
+        const tp=v.parcelas==='Àvista'||v.parcelas==='À vista'
+          ?'<span class="tag tag-av" style="font-size:9px">À vista</span>'
+          :`<span class="tag tag-p" style="font-size:9px">${v.parcelas||'—'}</span>`;
+        rows+=`<tr data-search="${dia} ${d.dataDep} ${d.bandeira} ${v.dataVenda||''} ${v.cod||''} ${v.desc||''} ${v.parcelas||''}">
+          ${i===0?`<td rowspan="${d.vendas.length}"><b>${dia}</b>${d.combo?'<br><span class="tag tag-combo" style="font-size:9px">Agrup.</span>':''}</td>`:''}
+          ${i===0?`<td rowspan="${d.vendas.length}" style="color:var(--muted);font-size:12px">${d.dataDep}</td>`:''}
+          ${i===0?`<td rowspan="${d.vendas.length}" style="font-size:11px;font-weight:600">${d.bandeira}</td>`:''}
+          ${i===0?`<td rowspan="${d.vendas.length}" class="tr" style="font-weight:600">R$ ${br(d.liquido)}</td>`:''}
+          <td><b>${v.dataVenda||'—'}</b></td>
+          <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${v.cod||'—'}</td>
+          <td style="font-size:12px">${v.desc||'—'}</td>
+          <td class="tr">R$ ${br(v.valorParcela||0)}</td>
+          <td class="tr" style="color:var(--red)">R$ ${br(v.taxa||0)}</td>
+          <td class="tr" style="color:var(--green);font-weight:600">R$ ${br(v.liquido||0)}</td>
+        </tr>`;
+      });
+    });
+  });
+  document.getElementById('tbody2').innerHTML=rows;
+}
+
+function filtrar(q){
+  document.querySelectorAll('#tbody2 tr[data-search]').forEach(r=>{
+    r.style.display=(!q||r.dataset.search.toLowerCase().includes(q.toLowerCase()))?'':'none';
+  });
+}
+
+// ── EXPORTAR EXCEL ──
+function exportarExcel(){
+  if(!DB.length){alert('Processe os arquivos primeiro.');return}
+  const wb=XLSX.utils.book_new();
+  const r1=[['LUME FINANÇAS — Conciliação SumUp × Banco Inter | Rahme Serviços Médicos'],[''],
+    ['Data Inter','Dep. SumUp','Bandeira','Nº Depósito','Vlr Depósito (R$)','Agrupamento',
+     'Data Competência','Cód. Transação','Descrição','Parcela',
+     'Vlr Parcela (R$)','Taxa SumUp (R$)','Líquido Venda (R$)']];
+  const sorted=[...DB].sort((a,b)=>{
+    const[da,ma]=a.dataInter.split('/').map(Number);
+    const[db,mb]=b.dataInter.split('/').map(Number);
+    return ma!==mb?ma-mb:da-db;
+  });
+  sorted.forEach(d=>{
+    if(!d.vendas.length){
+      r1.push([d.dataInter,d.dataDep,d.bandeira,d.numDep,d.liquido,d.combo?'Sim':'Não',
+        '—','—',d.semMatch?'NÃO IDENTIFICADO':'Sem vendas','—','—','—','—']);return;
+    }
+    d.vendas.forEach((v,i)=>{
+      r1.push([i===0?d.dataInter:'',i===0?d.dataDep:'',i===0?d.bandeira:'',
+        i===0?d.numDep:'',i===0?d.liquido:'',i===0?(d.combo?'Sim':'Não'):'',
+        v.dataVenda||'—',v.cod||'—',v.desc||'—',v.parcelas||'—',
+        v.valorParcela||0,v.taxa||0,v.liquido||0]);
+    });
+    const tp=d.vendas.reduce((s,v)=>s+(v.valorParcela||0),0);
+    const tt=d.vendas.reduce((s,v)=>s+(v.taxa||0),0);
+    r1.push(['','','','','Subtotal','','','','',d.vendas.length+'v',tp,tt,d.liquido]);
+    r1.push(['']);
+  });
+  const ws1=XLSX.utils.aoa_to_sheet(r1);
+  ws1['!cols']=[{wch:12},{wch:11},{wch:18},{wch:26},{wch:14},{wch:11},{wch:14},{wch:14},{wch:30},{wch:10},{wch:14},{wch:13},{wch:14}];
+  ws1['!merges']=[{s:{r:0,c:0},e:{r:0,c:12}}];
+  XLSX.utils.book_append_sheet(wb,ws1,'Conciliação Detalhada');
+
+  const r2=[['RESUMO POR DIA'],[''],['Data Inter','Total Dia (R$)','Nº Depósitos','Nº Vendas']];
+  const porDia={};
+  sorted.forEach(d=>{if(!porDia[d.dataInter])porDia[d.dataInter]={tot:0,deps:0,v:0};
+    porDia[d.dataInter].tot+=d.liquido;porDia[d.dataInter].deps++;porDia[d.dataInter].v+=d.vendas.length});
+  Object.keys(porDia).sort((a,b)=>{const[da,ma]=a.split('/').map(Number);const[db,mb]=b.split('/').map(Number);return ma!==mb?ma-mb:da-db})
+    .forEach(dia=>{const v=porDia[dia];r2.push([dia,v.tot,v.deps,v.v])});
+  r2.push(['']);
+  r2.push(['TOTAL',DB.reduce((s,d)=>s+d.liquido,0),DB.length,DB.reduce((s,d)=>s+d.vendas.length,0)]);
+  const ws2=XLSX.utils.aoa_to_sheet(r2);ws2['!cols']=[{wch:12},{wch:16},{wch:14},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,ws2,'Resumo por Dia');
+
+  const r3=[['LANÇAMENTOS SUMUP — EXTRATO BANCO INTER'],[''],['Data','Tipo','Descrição','Valor (R$)']];
+  [...interData].sort((a,b)=>a.dataFull.localeCompare(b.dataFull)).forEach(r=>r3.push([r.dataFull,r.tipo,r.descricao,r.valor]));
+  r3.push(['']);r3.push(['TOTAL','','',interData.reduce((s,r)=>s+r.valor,0)]);
+  const ws3=XLSX.utils.aoa_to_sheet(r3);ws3['!cols']=[{wch:14},{wch:10},{wch:28},{wch:14}];
+  XLSX.utils.book_append_sheet(wb,ws3,'Extrato Inter');
+
+  const hoje=new Date();
+  const mes=hoje.toLocaleString('pt-BR',{month:'long',year:'numeric'}).replace(' de ','_');
+  XLSX.writeFile(wb,`Conciliacao_SumUp_Inter_Rahme_${mes}.xlsx`);
+  setStatus('Excel exportado com sucesso!','ok');
+}
+</script>
+</body>
+</html>
