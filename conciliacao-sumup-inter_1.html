@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Conciliação SumUp × Inter — Rahme</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+:root{--navy:#0d1b2e;--navy2:#162438;--gold:#c9a84c;--gold2:#e8c96a;--white:#fff;--cream:#f9f6f0;--bg:#f2efe9;--green:#1a7a4a;--green2:#d4f0e2;--red:#b03030;--red2:#fde8e8;--amber:#c07820;--amber2:#fef3dc;--muted:#7a8fa8;--border:rgba(13,27,46,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--navy)}
+header{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 28px;border-bottom:2px solid var(--gold);position:sticky;top:0;z-index:100}
+.logo{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;color:var(--gold)}
+.logo span{color:rgba(255,255,255,.3);font-weight:400;font-size:12px;margin-left:6px}
+.tabs{background:var(--navy2);display:flex;padding:0 28px;border-bottom:1px solid rgba(255,255,255,.06)}
+.tab{padding:11px 18px;font-size:13px;color:rgba(255,255,255,.4);cursor:pointer;border-bottom:2px solid transparent;user-select:none}
+.tab.on{color:var(--gold2);border-bottom-color:var(--gold);font-weight:600}
+.pnl{display:none;padding:24px 28px 80px;max-width:1100px;margin:0 auto}
+.pnl.on{display:block}
+.ugrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px}
+.card{background:var(--white);border-radius:10px;border:1.5px solid var(--border);padding:18px 20px;margin-bottom:16px}
+.card.ok{border-color:var(--green)}
+.card h3{font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:4px}
+.card p{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+input[type=file]{display:block;width:100%;padding:10px 12px;border:2px dashed rgba(201,168,76,.4);border-radius:8px;background:rgba(201,168,76,.03);font-size:13px;cursor:pointer;color:var(--navy)}
+input[type=file]:hover{border-color:var(--gold)}
+.bk{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:100px;font-size:12px;font-weight:600}
+.bk-ok{background:var(--green2);color:var(--green)}
+.btn{border:none;border-radius:8px;padding:11px 22px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:6px;height:42px}
+.btn-navy{background:var(--navy);color:var(--gold)}.btn-navy:hover{background:var(--navy2)}.btn-navy:disabled{opacity:.35;cursor:not-allowed}
+.btn-green{background:var(--green);color:#fff}.btn-ghost{background:transparent;color:var(--muted);border:1.5px solid var(--border)}.btn-ghost:hover{border-color:var(--red);color:var(--red)}
+.msg{display:none;align-items:center;gap:8px;padding:10px 14px;border-radius:8px;font-size:12px;margin-bottom:14px}
+.msg.on{display:flex}.msg.info{background:var(--amber2);color:var(--amber)}.msg.ok{background:var(--green2);color:var(--green)}.msg.err{background:var(--red2);color:var(--red)}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{background:var(--navy2);color:var(--gold2);font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;padding:9px 12px;text-align:left;white-space:nowrap}
+thead th.r{text-align:right}
+tbody td{padding:9px 12px;border-bottom:1px solid rgba(13,27,46,.05);vertical-align:middle}
+tbody td.r{text-align:right;font-family:'DM Mono',monospace;font-size:11px}
+tbody tr:hover td{background:rgba(201,168,76,.03)}
+tfoot td{background:rgba(13,27,46,.03);font-weight:600;padding:9px 12px;border-top:1px solid var(--border)}
+tfoot td.r{text-align:right;font-family:'DM Mono',monospace}
+.tw{border-radius:10px;overflow:hidden;border:1.5px solid var(--border);background:var(--white)}
+.tag{display:inline-block;padding:2px 7px;border-radius:100px;font-size:10px;font-weight:600}
+.tag-av{background:var(--green2);color:var(--green)}.tag-p{background:rgba(13,27,46,.08);color:var(--navy2)}
+.tag-combo{background:var(--amber2);color:var(--amber)}.tag-err{background:var(--red2);color:var(--red)}
+.rt{background:var(--navy);border-radius:10px 10px 0 0;padding:13px 18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.rb{background:var(--white);border:1.5px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;margin-bottom:14px}
+.rmeta{display:flex;gap:18px;padding:10px 18px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.sg{display:flex;flex-direction:column;gap:4px;flex:1;min-width:200px}
+.sg label{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.sg input{border:1.5px solid var(--border);border-radius:8px;padding:10px 12px;font-size:16px;font-family:'DM Mono',monospace;color:var(--navy);background:var(--cream);outline:none;width:100%}
+.sg input:focus{border-color:var(--gold);background:var(--white)}
+.fi2{border:1.5px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;background:var(--white);outline:none;min-width:200px}
+.fi2:focus{border-color:var(--gold)}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:18px}
+.sc{background:var(--white);border-radius:10px;border:1.5px solid var(--border);padding:13px 15px}
+.sc .sl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:4px}
+.sc .sv{font-family:'DM Mono',monospace;font-size:17px;font-weight:500}
+.sc .sv.g{color:var(--green)}.sc .sv.a{color:var(--amber)}.sc .sv.r{color:var(--red)}
+.dr td{background:var(--navy2);color:var(--gold2);font-family:'Syne',sans-serif;font-size:11px;font-weight:700;padding:8px 12px}
+.dr td span{color:rgba(255,255,255,.4);margin-left:6px;font-weight:400;font-family:'DM Sans',sans-serif}
+.empty{text-align:center;padding:48px 20px;color:var(--muted)}
+.empty .ei{font-size:40px;margin-bottom:10px;opacity:.3}
+.nf{background:var(--white);border:1.5px solid #f0caca;border-radius:10px;padding:28px;text-align:center}
+.nf h3{font-family:'Syne',sans-serif;font-size:14px;color:var(--red);margin-bottom:6px}
+.sug{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:12px;margin-top:6px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.sug:hover{border-color:var(--gold)}
+.ov{display:none;position:fixed;inset:0;background:rgba(13,27,46,.65);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px}
+.ov.on{display:flex}
+.spin{width:44px;height:44px;border:4px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ov-txt{color:var(--gold2);font-family:'Syne',sans-serif;font-size:14px;font-weight:600}
+.ov-sub{color:rgba(255,255,255,.5);font-size:12px}
+@media(max-width:650px){.ugrid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="ov" id="ov">
+  <div class="spin"></div>
+  <div class="ov-txt" id="ov-txt">Processando...</div>
+  <div class="ov-sub" id="ov-sub"></div>
+</div>
+
+<header>
+  <div class="logo">Lume Finanças <span>BPO Financeiro</span></div>
+  <div style="font-size:11px;color:rgba(255,255,255,.3)">Rahme Serviços Médicos</div>
+</header>
+<div class="tabs">
+  <div class="tab on" onclick="goTab(0)">📂 Carregar arquivos</div>
+  <div class="tab" onclick="goTab(1)">🔍 Buscar valor</div>
+  <div class="tab" onclick="goTab(2)">📋 Relatório completo</div>
+</div>
+
+<div class="pnl on" id="p0">
+  <div class="ugrid">
+    <div class="card" id="ci">
+      <h3>🏦 Extrato Banco Inter</h3>
+      <p>Exporte em <b>CSV</b> ou <b>Excel (.xlsx)</b> pelo Internet Banking Inter.<br>Qualquer formato do Inter é aceito.</p>
+      <input type="file" id="fi" accept=".csv,.xlsx,.xls,.txt">
+      <div id="oki" style="display:none;margin-top:10px"><span class="bk bk-ok">✅ <span id="oki-t"></span></span></div>
+    </div>
+    <div class="card" id="cs">
+      <h3>💳 Relatório SumUp (PDF mensal)</h3>
+      <p>Portal SumUp → <b>Relatórios → Relatório de depósitos</b> → mês completo.<br>Pode selecionar <b>vários PDFs</b> de uma vez para cruzar múltiplos meses.</p>
+      <input type="file" id="fs" accept=".pdf" multiple>
+      <div id="oks" style="display:none;margin-top:10px"><span class="bk bk-ok">✅ <span id="oks-t"></span></span></div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;flex-wrap:wrap">
+    <button class="btn btn-navy" id="btp" onclick="processar()" disabled>⚡ Processar e cruzar dados</button>
+    <span style="font-size:12px;color:var(--muted)" id="hint">Carregue os dois arquivos</span>
+  </div>
+  <div class="msg" id="msg"><span id="mi"></span>&nbsp;<span id="mt"></span></div>
+  <div id="pv" style="display:none">
+    <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;margin-bottom:10px">Lançamentos SumUp encontrados no extrato</div>
+    <div class="tw"><table>
+      <thead><tr><th>Data</th><th>Tipo</th><th>Descrição</th><th class="r">Valor (R$)</th></tr></thead>
+      <tbody id="pvb"></tbody>
+      <tfoot><tr><td colspan="3"><b>Total</b></td><td class="r" id="pvt"></td></tr></tfoot>
+    </table></div>
+  </div>
+</div>
+
+<div class="pnl" id="p1">
+  <div class="card">
+    <h3>Buscar entrada do Inter</h3>
+    <p>Digite o valor exato do extrato. Mostra as vendas com data de competência, código e parcela — pronto para dar baixa no Meu Dinheiro.</p>
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:4px">
+      <div class="sg"><label>Valor (R$)</label>
+        <input type="text" id="inp" placeholder="ex: 4.512,53" onkeydown="if(event.key==='Enter')buscar()">
+      </div>
+      <button class="btn btn-navy" onclick="buscar()">Buscar</button>
+      <button class="btn btn-ghost" onclick="document.getElementById('inp').value='';renderVazio()">Limpar</button>
+    </div>
+  </div>
+  <div id="res"><div class="empty"><div class="ei">🔎</div><p>Carregue os arquivos e pesquise um valor.</p></div></div>
+</div>
+
+<div class="pnl" id="p2">
+  <div class="sgrid" id="sg"></div>
+  <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap;align-items:center">
+    <input class="fi2" type="text" id="fil" placeholder="🔍 Filtrar por data, código, bandeira..." oninput="filtrar(this.value)">
+    <button class="btn btn-ghost" onclick="document.getElementById('fil').value='';filtrar('')" style="height:38px;font-size:12px">Limpar</button>
+    <button class="btn btn-green" onclick="exportar()" style="margin-left:auto;height:38px">⬇️ Exportar Excel</button>
+  </div>
+  <div class="tw"><table>
+    <thead><tr>
+      <th>Data Inter</th><th>Dep. SumUp</th><th>Bandeira</th>
+      <th class="r">Vlr Dep.</th><th>Data Competência</th>
+      <th>Cód. Transação</th><th>Parcela</th>
+      <th class="r">Vlr Parcela</th><th class="r">Taxa</th><th class="r">Líquido</th>
+    </tr></thead>
+    <tbody id="t2"></tbody>
+  </table></div>
+</div>
+
+<script>
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// ── Estado global ──
+var interData=[], SUMUP=[], DB=[];
+var interOk=false, sumupOk=false;
+
+// ── Utils ──
+function br(v){return typeof v==='number'?v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):String(v||'')}
+function pv(s){try{return Math.round(parseFloat(String(s).replace(/[^\d,]/g,'').replace(',','.'))*100)/100}catch(e){return 0}}
+function pvFull(s,nxt){
+  s=String(s); var toks=(String(nxt||'')).match(/\b\d{1,2}\b/g)||[];
+  if(s.endsWith(','))return pv(s+(toks[0]||'00'));
+  if(/,\d$/.test(s))return pv(s+(toks[0]||'0'));
+  return pv(s);
+}
+function goTab(i){
+  document.querySelectorAll('.tab').forEach(function(t,j){t.className='tab'+(i===j?' on':'')});
+  document.querySelectorAll('.pnl').forEach(function(p,j){p.className='pnl'+(i===j?' on':'')});
+}
+function showOv(t,s){document.getElementById('ov-txt').textContent=t;document.getElementById('ov-sub').textContent=s||'';document.getElementById('ov').classList.add('on')}
+function hideOv(){document.getElementById('ov').classList.remove('on')}
+function showMsg(txt,tp){
+  document.getElementById('mi').textContent={info:'⏳',ok:'✅',err:'❌'}[tp]||'ℹ️';
+  document.getElementById('mt').textContent=txt;
+  var el=document.getElementById('msg'); el.className='msg on '+tp;
+  if(tp==='ok'||tp==='err')setTimeout(function(){el.classList.remove('on')},6000);
+}
+function checkReady(){
+  var ok=interOk&&sumupOk;
+  document.getElementById('btp').disabled=!ok;
+  document.getElementById('hint').textContent=
+    !interOk&&!sumupOk?'Carregue os dois arquivos':
+    !interOk?'Falta o extrato Inter':
+    !sumupOk?'Falta o PDF da SumUp':
+    '✅ Pronto! Clique em Processar.';
+}
+
+// ── Uploads ──
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('fi').addEventListener('change',function(){
+    var f=this.files[0]; if(!f)return;
+    var nm=f.name.toLowerCase();
+    if(nm.endsWith('.xlsx')||nm.endsWith('.xls')){
+      var r=new FileReader();
+      r.onload=function(e){
+        var wb=XLSX.read(e.target.result,{type:'binary'});
+        var csv=XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]],{FS:';'});
+        parseInter(csv,f.name);
+      };
+      r.readAsBinaryString(f);
+    } else {
+      var r=new FileReader();
+      r.onload=function(e){parseInter(e.target.result,f.name)};
+      r.readAsText(f,'UTF-8');
+    }
+  });
+
+  document.getElementById('fs').addEventListener('change',function(){
+    if(!this.files||!this.files.length)return;
+    // Processa múltiplos PDFs acumulando depósitos
+    SUMUP=[]; sumupOk=false;
+    document.getElementById('oks').style.display='none';
+    document.getElementById('cs').classList.remove('ok');
+    parseSumupMultiplos(Array.from(this.files));
+  });
+});
+
+// ── Parser Inter ──
+function parseInter(text,fname){
+  var sep=(text.split('\n').slice(0,5).join('').indexOf(';')>-1)?';':',';
+  var lines=text.split('\n'), result=[], inData=false;
+  var cD=-1,cDesc=-1,cVal=-1,cTipo=-1;
+
+  for(var i=0;i<lines.length;i++){
+    var raw=lines[i].trim(); if(!raw)continue;
+    var p=raw.split(sep).map(function(s){return s.trim().replace(/"/g,'').replace(/'/g,'')});
+    if(!inData){
+      var hl=raw.toLowerCase();
+      if(hl.indexOf('data')!==-1&&(hl.indexOf('valor')!==-1||hl.indexOf('descri')!==-1||hl.indexOf('hist')!==-1)){
+        inData=true;
+        for(var c=0;c<p.length;c++){
+          var ch=p[c].toLowerCase();
+          if(/^data/.test(ch)&&cD<0)cD=c;
+          if((ch.indexOf('descri')!==-1||ch.indexOf('hist')!==-1||ch.indexOf('lan')!==-1)&&cDesc<0)cDesc=c;
+          if((ch==='valor'||ch==='valor (r$)')&&cVal<0)cVal=c;
+          if(ch.indexOf('tipo')!==-1)cTipo=c;
+        }
+        if(cD<0)cD=0; if(cDesc<0)cDesc=2; if(cVal<0)cVal=3;
+        continue;
+      }
+      if(/^\d{2}\/\d{2}\/\d{4}/.test(raw)){inData=true;cD=0;cDesc=2;cVal=3}
+      else continue;
+    }
+    var h=cD<p.length?p[cD]:'';
+    if(!/\d{2}\/\d{2}\/\d{4}/.test(h))continue;
+    if(raw.toLowerCase().indexOf('sumup')<0)continue;
+    var val=cVal<p.length?pv(p[cVal]):0;
+    if(val<=0){for(var c2=0;c2<p.length;c2++){var v2=pv(p[c2]);if(v2>0&&v2<9999999){val=v2;break}}}
+    if(val<=0)continue;
+    var desc=cDesc<p.length?p[cDesc]:'SumUp';
+    var isD=desc.toLowerCase().indexOf('débit')!==-1||desc.toLowerCase().indexOf('debit')!==-1;
+    result.push({data:h.substring(0,5),dataFull:h,tipo:isD?'Débito':'Crédito',descricao:desc,valor:val});
+  }
+  interData=result; interOk=result.length>0;
+  document.getElementById('oki-t').textContent=fname+' — '+result.length+' lançamentos SumUp';
+  document.getElementById('oki').style.display=interOk?'block':'none';
+  document.getElementById('ci').classList.toggle('ok',interOk);
+  if(!interOk){showMsg('Nenhum lançamento SumUp encontrado. Tente o arquivo CSV do Inter.','err');return}
+  checkReady();
+  var s=[].concat(result).sort(function(a,b){return a.dataFull.localeCompare(b.dataFull)});
+  document.getElementById('pvb').innerHTML=s.map(function(r){
+    return '<tr><td><b>'+r.dataFull+'</b></td><td><span class="tag '+(r.tipo==='Crédito'?'tag-av':'tag-p')+'">'+r.tipo+'</span></td><td>'+r.descricao+'</td><td class="r" style="color:var(--green);font-weight:600">R$ '+br(r.valor)+'</td></tr>';
+  }).join('');
+  document.getElementById('pvt').textContent='R$ '+br(result.reduce(function(s,r){return s+r.valor},0));
+  document.getElementById('pv').style.display='block';
+}
+
+// ── Parser SumUp PDF — múltiplos arquivos ──
+async function parseSumupMultiplos(files){
+  showOv('Lendo PDFs da SumUp...','Processando '+files.length+' arquivo(s)');
+  var todosDeps=[];
+  for(var fi=0;fi<files.length;fi++){
+    document.getElementById('ov-sub').textContent='Arquivo '+(fi+1)+' de '+files.length+': '+files[fi].name;
+    var deps=await parseSumupUm(files[fi]);
+    if(deps)todosDeps=todosDeps.concat(deps);
+  }
+  if(todosDeps.length===0){
+    hideOv();
+    showMsg('Não foi possível extrair depósitos dos PDFs. Verifique se são relatórios mensais da SumUp.','err');
+    return;
+  }
+  SUMUP=todosDeps;
+  sumupOk=true;
+  var nV=SUMUP.reduce(function(s,d){return s+d.vendas.length},0);
+  var nomes=files.length===1?files[0].name:files.length+' arquivos';
+  document.getElementById('oks-t').textContent=nomes+' — '+SUMUP.length+' depósitos · '+nV+' vendas';
+  document.getElementById('oks').style.display='block';
+  document.getElementById('cs').classList.add('ok');
+  hideOv(); checkReady();
+}
+
+// ── Parser SumUp PDF — um arquivo ──
+async function parseSumup(file){ await parseSumupMultiplos([file]); }
+async function parseSumupUm(file){
+  showOv('Lendo PDF da SumUp...','Extraindo depósitos e vendas — aguarde');
+  try{
+    var buf=await file.arrayBuffer();
+    var pdf=await pdfjsLib.getDocument({data:buf}).promise;
+
+    // Extrai texto do PDF linha por linha
+    // Estratégia: agrupa por Y arredondado, ordena Y decrescente (topo→baixo)
+    var allLines=[];
+    for(var pg=1;pg<=pdf.numPages;pg++){
+      var page=await pdf.getPage(pg);
+      var tc=await page.getTextContent();
+      var byY={};
+      for(var k=0;k<tc.items.length;k++){
+        var it=tc.items[k];
+        if(!it.str||!it.str.trim())continue;
+        // Arredonda Y com precisão de 2 unidades para agrupar palavras da mesma linha
+        var y=Math.round(it.transform[5]/2)*2;
+        if(!byY[y])byY[y]=[];
+        byY[y].push({s:it.str,x:it.transform[4]});
+      }
+      // Ordena Y DECRESCENTE: maior transform[5] = mais alto na página
+      Object.keys(byY).map(Number).sort(function(a,b){return b-a}).forEach(function(y){
+        var words=byY[y].sort(function(a,b){return a.x-b.x}).map(function(w){return w.s});
+        var line=words.join(' ');
+        // Normaliza: substitui char especial de hora por ':'
+        line=line.replace(/\ue092/g,':').replace(/\u2295/g,':');
+        // Remove espaços dentro de valores R$
+        line=line.replace(/R\s*\$\s*([\d][\d\s.,]*)/g,function(m,v){return 'R$'+v.replace(/\s+/g,'')});
+        // Une dígitos separados por espaço (ex: "09 : 51" → "09:51", "04/30" OK)
+        line=line.replace(/(\d)\s*:\s*(\d)/g,'$1:$2');
+        line=line.replace(/(\d)\s+(\d)/g,'$1$2').replace(/(\d)\s+(\d)/g,'$1$2');
+        allLines.push(line);
+      });
+    }
+
+    // Normaliza caractere especial de hora (vários códigos possíveis)
+    for(var li=0;li<allLines.length;li++){
+      allLines[li]=allLines[li].replace(/\ue092/g,':').replace(/\u2295/g,':');
+      // Corrige "HH : MM" → "HH:MM" nos horários
+      allLines[li]=allLines[li].replace(/(\d{2})\s*:\s*(\d{2})\b/g,'$1:$2');
+    }
+
+    // Encontra seção resumo
+    var resumoIdx=-1;
+    for(var li=0;li<allLines.length;li++){
+      if(allLines[li].indexOf('Resumo das suas vendas')>=0){resumoIdx=li;break}
+    }
+    if(resumoIdx<0){hideOv();showMsg('Seção "Resumo das suas vendas" não encontrada no PDF.','err');return}
+
+    // Extrai depósitos do cabeçalho
+    var depRe=/^(\d{15,22})\s+(MC|VISA_ELECTRON|VISA_ELECTR|VISA|MAESTRO|ELO|AMEX|HIPER)\s+20\*\*/;
+    var deps={};
+    for(var li=0;li<resumoIdx;li++){
+      var m=depRe.exec(allLines[li]); if(!m)continue;
+      var bandeira=m[2]==='VISA_ELECTR'?'VISA_ELECTRON':m[2];
+      var trecho=allLines.slice(li,li+6).join(' ');
+      var rvals=[],rx,re2=/R\$([\d.,]+)/g;
+      while((rx=re2.exec(trecho))!==null)rvals.push(rx[1]);
+      if(rvals.length<4)continue;
+      var nxt=allLines.slice(li+1,li+3).join(' ');
+      var bruto=pvFull(rvals[0],nxt);
+      var taxaTot=pvFull(rvals[1],nxt);
+      var liq=Math.round((bruto-taxaTot)*100)/100;
+      if(liq<=0)liq=pvFull(rvals[3],nxt);
+      var key=m[1]+'_'+bandeira;
+      if(!deps[key])deps[key]={num:m[1],bandeira:bandeira,bruto:bruto,taxaTotal:taxaTot,liquido:liq,vendas:[]};
+    }
+
+    // Mapa por prefixo do número
+    var depMap={};
+    var depKeys=Object.keys(deps);
+    for(var dk=0;dk<depKeys.length;dk++){
+      var d=deps[depKeys[dk]];
+      for(var n=15;n<=d.num.length;n++){
+        var pref=d.num.substring(0,n);
+        if(!depMap[pref])depMap[pref]=[];
+        if(depMap[pref].indexOf(d)<0)depMap[pref].push(d);
+      }
+    }
+
+    // Extrai vendas
+    var blocoRe=/^(\d{15,22})\s+R\$/;
+    var dateRe=/^(\d{2}\/\d{2}\/\d{4}), (\d{2}:\d{2}) ([A-Z0-9]{5,10})/;
+    var blocoAtual=null, blocoIdxMap={};
+
+    for(var li=resumoIdx;li<allLines.length;li++){
+      var line=allLines[li];
+
+      var mb=blocoRe.exec(line);
+      if(mb){
+        var num=mb[1];
+        var lista=depMap[num];
+        if(!lista){
+          for(var n=num.length;n>=14;n--){
+            lista=depMap[num.substring(0,n)];
+            if(lista)break;
+          }
+        }
+        if(lista){
+          var idx2=blocoIdxMap[num]||0;
+          blocoAtual=lista[idx2<lista.length?idx2:lista.length-1];
+          blocoIdxMap[num]=idx2+1;
+        }
+        continue;
+      }
+
+      var mv=dateRe.exec(line);
+      if(!mv||!blocoAtual||line.length<30)continue;
+
+      var nxt2=li+1<allLines.length?allLines[li+1]:'';
+      var cod=mv[3];
+      var sfx=/^([A-Z0-9]{2,6})\b/.exec(nxt2.trim());
+      if(sfx&&sfx[1].length<=6)cod+=sfx[1];
+
+      var parcM=/(À vista|\d+\s*\/\s*\d+)/.exec(line);
+      var parc=parcM?parcM[1].replace(/\s/g,''):'Àvista';
+
+      var combined=line+' '+nxt2;
+      var rv2=[],rx2,re3=/R\$([\d.,]+)/g;
+      while((rx2=re3.exec(combined))!==null)rv2.push(rx2[1]);
+      if(rv2.length<4)continue;
+
+      var zeroIdx=-1;
+      for(var j=2;j<rv2.length;j++){if(pv(rv2[j])===0){zeroIdx=j;break}}
+      if(zeroIdx<2)continue;
+
+      var dp=mv[1].split('/');
+      var vp=pvFull(rv2[1],nxt2);
+      var taxa=pv(rv2[zeroIdx-1]);
+      var liqV=Math.round((vp-taxa)*100)/100;
+
+      blocoAtual.vendas.push({
+        dataVenda:dp[1]+'/'+dp[0]+'/'+dp[2],
+        cod:cod.substring(0,12),
+        parcelas:parc,
+        valorParcela:vp,
+        taxa:taxa,
+        liquido:liqV
+      });
+    }
+
+    var result=[];
+    for(var dk=0;dk<depKeys.length;dk++)result.push(deps[depKeys[dk]]);
+    return result;
+
+  }catch(e){hideOv();showMsg('Erro ao ler PDF: '+e.message,'err');console.error(e);return null;}
+}
+
+// ── Processar ──
+function processar(){
+  if(!interOk||!sumupOk){showMsg('Carregue os dois arquivos.','err');return}
+  DB=[];
+  var tol=0.55;
+  var usados={};
+
+  for(var ri=0;ri<interData.length;ri++){
+    var val=interData[ri].valor;
+    var row=interData[ri];
+
+    // Match exato
+    var m=-1;
+    for(var si=0;si<SUMUP.length;si++){
+      if(!usados[si]&&Math.abs(SUMUP[si].liquido-val)<=tol){m=si;break}
+    }
+    if(m>=0){
+      usados[m]=true;
+      var d=SUMUP[m];
+      DB.push({dataInter:row.data,dataDep:d.num.substring(6,8)+'/'+d.num.substring(4,6),
+        bandeira:d.bandeira,numDep:d.num,liquido:d.liquido,vendas:d.vendas.slice(),combo:false});
+      continue;
+    }
+
+    // Combinação de 2
+    var cands=[];
+    for(var si=0;si<SUMUP.length;si++){if(!usados[si]&&SUMUP[si].liquido<val+tol)cands.push(si)}
+    var found=false;
+    outer2: for(var ci=0;ci<cands.length;ci++){
+      for(var cj=ci+1;cj<cands.length;cj++){
+        if(Math.abs(SUMUP[cands[ci]].liquido+SUMUP[cands[cj]].liquido-val)<=tol){
+          usados[cands[ci]]=usados[cands[cj]]=true;
+          var da=SUMUP[cands[ci]], db=SUMUP[cands[cj]];
+          DB.push({dataInter:row.data,dataDep:da.num.substring(6,8)+'/'+da.num.substring(4,6),
+            bandeira:da.bandeira+' + '+db.bandeira,numDep:da.num+' + '+db.num,
+            liquido:da.liquido+db.liquido,
+            vendas:da.vendas.slice().concat(db.vendas.slice()),combo:true});
+          found=true; break outer2;
+        }
+      }
+    }
+    if(found)continue;
+
+    // Combinação de 3
+    outer3: for(var ci=0;ci<cands.length;ci++){
+      for(var cj=ci+1;cj<cands.length;cj++){
+        for(var ck=cj+1;ck<cands.length;ck++){
+          if(Math.abs(SUMUP[cands[ci]].liquido+SUMUP[cands[cj]].liquido+SUMUP[cands[ck]].liquido-val)<=tol){
+            usados[cands[ci]]=usados[cands[cj]]=usados[cands[ck]]=true;
+            var da=SUMUP[cands[ci]],db=SUMUP[cands[cj]],dc=SUMUP[cands[ck]];
+            DB.push({dataInter:row.data,dataDep:da.num.substring(6,8)+'/'+da.num.substring(4,6),
+              bandeira:da.bandeira+'+'+db.bandeira+'+'+dc.bandeira,
+              numDep:da.num+' + '+db.num+' + '+dc.num,
+              liquido:da.liquido+db.liquido+dc.liquido,
+              vendas:da.vendas.slice().concat(db.vendas.slice()).concat(dc.vendas.slice()),combo:true});
+            found=true; break outer3;
+          }
+        }
+      }
+    }
+    if(!found)DB.push({dataInter:row.data,dataDep:'—',bandeira:'?',numDep:'—',
+      liquido:val,vendas:[],semMatch:true});
+  }
+
+  var matched=0;
+  for(var i=0;i<DB.length;i++)if(!DB[i].semMatch)matched++;
+  var pct=Math.round(matched/DB.length*100);
+  showMsg('Concluído: '+matched+'/'+DB.length+' identificados ('+pct+'%)',matched===DB.length?'ok':'info');
+  renderTabela();
+  goTab(2);
+}
+
+// ── Busca ──
+function buscar(){
+  var raw=document.getElementById('inp').value.trim(); if(!raw)return;
+  var val=pv(raw.replace(/\./g,'').replace(',','.'));
+  if(!val){alert('Valor inválido.');return}
+  if(!DB.length){showMsg('Processe os arquivos primeiro.','err');goTab(0);return}
+  var tol=0.55;
+  var matches=DB.filter(function(d){return Math.abs(d.liquido-val)<=tol});
+  var el=document.getElementById('res');
+  if(!matches.length){
+    var sugs=DB.filter(function(d){return Math.abs(d.liquido-val)/val<0.05})
+      .sort(function(a,b){return Math.abs(a.liquido-val)-Math.abs(b.liquido-val)}).slice(0,5);
+    var sh='';
+    if(sugs.length){
+      sh='<div style="margin-top:12px;text-align:left"><p style="font-size:11px;color:var(--muted);margin-bottom:6px">Valores próximos:</p>';
+      sugs.forEach(function(s){
+        sh+='<div class="sug" onclick="document.getElementById(\'inp\').value=\''+br(s.liquido).replace(/\./g,'').replace(',','.')+'\';buscar()">📅 '+s.dataInter+' &nbsp;<b>R$ '+br(s.liquido)+'</b>&nbsp;<span style="color:var(--muted)">'+s.bandeira+'</span><span style="margin-left:auto;color:var(--muted);font-size:11px">Δ R$ '+br(Math.abs(s.liquido-val))+'</span></div>';
+      });
+      sh+='</div>';
+    }
+    el.innerHTML='<div class="nf"><h3>R$ '+br(val)+' não encontrado</h3><p>Verifique se o PDF SumUp cobre o mesmo período do extrato.</p>'+sh+'</div>';
+    return;
+  }
+  var html='';
+  matches.forEach(function(m){
+    var tb=m.vendas.reduce(function(s,v){return s+(v.valorParcela||0)},0);
+    var tt=m.vendas.reduce(function(s,v){return s+(v.taxa||0)},0);
+    var ct=m.combo?'<span class="tag tag-combo">Agrupamento</span>':'';
+    var vh='';
+    if(m.vendas.length){
+      m.vendas.forEach(function(v){
+        var tp=(v.parcelas==='Àvista'||v.parcelas==='À vista')
+          ?'<span class="tag tag-av">À vista</span>'
+          :'<span class="tag tag-p">'+(v.parcelas||'—')+'</span>';
+        vh+='<tr><td><b>'+(v.dataVenda||'—')+'</b></td><td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted)">'+(v.cod||'—')+'</td><td>'+tp+'</td><td class="r">R$ '+br(v.valorParcela||0)+'</td><td class="r" style="color:var(--red)">R$ '+br(v.taxa||0)+'</td><td class="r" style="color:var(--green);font-weight:600">R$ '+br(v.liquido||0)+'</td></tr>';
+      });
+    } else {
+      vh='<tr><td colspan="6" style="text-align:center;color:var(--muted);padding:14px">Depósito identificado — sem detalhes de vendas</td></tr>';
+    }
+    html+='<div style="margin-bottom:16px">'
+      +'<div class="rt"><div><div style="font-size:11px;color:rgba(255,255,255,.4)">Inter '+m.dataInter+' · SumUp '+m.dataDep+' '+ct+'</div><div style="font-size:10px;color:rgba(255,255,255,.22);font-family:\'DM Mono\',monospace">'+m.numDep+'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:10px"><span style="padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;background:rgba(201,168,76,.2);color:var(--gold2)">'+m.bandeira+'</span><span style="font-family:\'DM Mono\',monospace;font-size:20px;color:var(--gold2)">R$ '+br(m.liquido)+'</span></div></div>'
+      +'<div class="rb"><div class="rmeta">'
+      +'<div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Total Parcelas</div><div style="font-family:\'DM Mono\',monospace;font-size:13px">R$ '+br(tb)+'</div></div>'
+      +'<div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Taxas SumUp</div><div style="font-family:\'DM Mono\',monospace;font-size:13px;color:var(--red)">– R$ '+br(tt)+'</div></div>'
+      +'<div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Líquido</div><div style="font-family:\'DM Mono\',monospace;font-size:13px;color:var(--green)">R$ '+br(m.liquido)+'</div></div>'
+      +'<div><div style="font-size:10px;color:var(--muted);text-transform:uppercase">Vendas</div><div style="font-family:\'DM Mono\',monospace;font-size:13px">'+m.vendas.length+'</div></div>'
+      +'</div><div style="overflow-x:auto"><table>'
+      +'<thead><tr><th>Data Competência</th><th>Cód. Transação</th><th>Parcela</th><th class="r">Vlr Parcela</th><th class="r">Taxa</th><th class="r">Líquido</th></tr></thead>'
+      +'<tbody>'+vh+'</tbody>'
+      +'<tfoot><tr><td colspan="3"><b>Total</b></td><td class="r"><b>R$ '+br(tb)+'</b></td><td class="r" style="color:var(--red)"><b>R$ '+br(tt)+'</b></td><td class="r" style="color:var(--green)"><b>R$ '+br(m.liquido)+'</b></td></tr></tfoot>'
+      +'</table></div></div></div>';
+  });
+  var tv=matches.reduce(function(s,m){return s+m.vendas.length},0);
+  var tb2=matches.reduce(function(s,m){return s+m.vendas.reduce(function(a,v){return a+(v.valorParcela||0)},0)},0);
+  html+='<div style="background:var(--navy);border-radius:10px;padding:16px 20px;display:flex;flex-wrap:wrap;gap:18px">'
+    +'<div><div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:2px">Valor Inter</div><div style="font-family:\'DM Mono\',monospace;font-size:16px;color:var(--gold2)">R$ '+br(val)+'</div></div>'
+    +'<div><div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:2px">Total Parcelas</div><div style="font-family:\'DM Mono\',monospace;font-size:16px;color:var(--gold2)">R$ '+br(tb2)+'</div></div>'
+    +'<div><div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;margin-bottom:2px">Nº Vendas</div><div style="font-family:\'DM Mono\',monospace;font-size:16px;color:var(--gold2)">'+tv+'</div></div>'
+    +'</div>';
+  el.innerHTML=html;
+}
+function renderVazio(){
+  document.getElementById('res').innerHTML='<div class="empty"><div class="ei">🔎</div><p>Digite um valor para buscar.</p></div>';
+}
+
+// ── Tabela completa ──
+function renderTabela(){
+  var tI=DB.reduce(function(s,d){return s+d.liquido},0);
+  var tP=DB.reduce(function(s,d){return s+d.vendas.reduce(function(a,v){return a+(v.valorParcela||0)},0)},0);
+  var tT=DB.reduce(function(s,d){return s+d.vendas.reduce(function(a,v){return a+(v.taxa||0)},0)},0);
+  var tV=DB.reduce(function(s,d){return s+d.vendas.length},0);
+  var sem=DB.filter(function(d){return d.semMatch}).length;
+  document.getElementById('sg').innerHTML=
+    '<div class="sc"><div class="sl">Total Inter</div><div class="sv g">R$ '+br(tI)+'</div></div>'
+    +'<div class="sc"><div class="sl">Total Parcelas</div><div class="sv">R$ '+br(tP)+'</div></div>'
+    +'<div class="sc"><div class="sl">Taxas SumUp</div><div class="sv r">R$ '+br(tT)+'</div></div>'
+    +'<div class="sc"><div class="sl">Nº Vendas</div><div class="sv a">'+tV+'</div></div>'
+    +'<div class="sc"><div class="sl">Depósitos</div><div class="sv">'+DB.length+'</div></div>'
+    +(sem?'<div class="sc"><div class="sl">Não identif.</div><div class="sv r">'+sem+'</div></div>':'');
+
+  var porDia={};
+  DB.forEach(function(d){if(!porDia[d.dataInter])porDia[d.dataInter]=[];porDia[d.dataInter].push(d)});
+  var rows='';
+  Object.keys(porDia).sort(function(a,b){
+    var ma=parseInt(a.split('/')[1]),mb=parseInt(b.split('/')[1]);
+    return ma!==mb?ma-mb:parseInt(a)-parseInt(b);
+  }).forEach(function(dia){
+    var tot=porDia[dia].reduce(function(s,d){return s+d.liquido},0);
+    rows+='<tr class="dr"><td colspan="10">📅 '+dia+' <span>Total: R$ '+br(tot)+'</span></td></tr>';
+    porDia[dia].forEach(function(d){
+      if(!d.vendas.length){
+        rows+='<tr data-s="'+dia+' '+d.bandeira+'"><td><b>'+dia+'</b></td><td style="color:var(--muted);font-size:11px">'+d.dataDep+'</td><td>'+d.bandeira+'</td><td class="r" style="font-weight:600">R$ '+br(d.liquido)+'</td><td colspan="6"><span class="tag tag-err">'+(d.semMatch?'Não identificado':'Sem vendas')+'</span></td></tr>';
+        return;
+      }
+      d.vendas.forEach(function(v,vi){
+        var tp=(v.parcelas==='Àvista'||v.parcelas==='À vista')
+          ?'<span class="tag tag-av" style="font-size:9px">À vista</span>'
+          :'<span class="tag tag-p" style="font-size:9px">'+(v.parcelas||'—')+'</span>';
+        rows+='<tr data-s="'+dia+' '+(d.dataDep||'')+' '+d.bandeira+' '+(v.dataVenda||'')+' '+(v.cod||'')+' '+(v.parcelas||'')+'">'
+          +(vi===0?'<td rowspan="'+d.vendas.length+'"><b>'+dia+'</b></td>':'')
+          +(vi===0?'<td rowspan="'+d.vendas.length+'" style="color:var(--muted);font-size:11px">'+(d.dataDep||'—')+'</td>':'')
+          +(vi===0?'<td rowspan="'+d.vendas.length+'" style="font-size:11px;font-weight:600">'+d.bandeira+(d.combo?'<br><span class="tag tag-combo" style="font-size:9px">Agrup.</span>':'')+'</td>':'')
+          +(vi===0?'<td rowspan="'+d.vendas.length+'" class="r" style="font-weight:600">R$ '+br(d.liquido)+'</td>':'')
+          +'<td><b>'+(v.dataVenda||'—')+'</b></td>'
+          +'<td style="font-family:\'DM Mono\',monospace;font-size:11px;color:var(--muted)">'+(v.cod||'—')+'</td>'
+          +'<td>'+tp+'</td>'
+          +'<td class="r">R$ '+br(v.valorParcela||0)+'</td>'
+          +'<td class="r" style="color:var(--red)">R$ '+br(v.taxa||0)+'</td>'
+          +'<td class="r" style="color:var(--green);font-weight:600">R$ '+br(v.liquido||0)+'</td></tr>';
+      });
+    });
+  });
+  document.getElementById('t2').innerHTML=rows;
+}
+function filtrar(q){
+  document.querySelectorAll('#t2 tr[data-s]').forEach(function(r){
+    r.style.display=(!q||r.dataset.s.toLowerCase().indexOf(q.toLowerCase())>=0)?'':'none';
+  });
+}
+
+// ── Exportar ──
+function exportar(){
+  if(!DB.length){alert('Processe os arquivos primeiro.');return}
+  var wb=XLSX.utils.book_new();
+  var r1=[['LUME FINANÇAS — Conciliação SumUp × Banco Inter | Rahme Serviços Médicos'],[''],
+    ['Data Inter','Dep. SumUp','Bandeira','Nº Depósito','Vlr Depósito (R$)',
+     'Data Competência','Cód. Transação','Parcela','Vlr Parcela (R$)','Taxa (R$)','Líquido (R$)']];
+  var sorted=DB.slice().sort(function(a,b){
+    var ma=parseInt(a.dataInter.split('/')[1]),mb=parseInt(b.dataInter.split('/')[1]);
+    return ma!==mb?ma-mb:parseInt(a.dataInter)-parseInt(b.dataInter);
+  });
+  sorted.forEach(function(d){
+    if(!d.vendas.length){r1.push([d.dataInter,d.dataDep||'—',d.bandeira,d.numDep||'—',d.liquido,'—','—','—','—','—','—']);return}
+    d.vendas.forEach(function(v,i){
+      r1.push([i===0?d.dataInter:'',i===0?d.dataDep||'—':'',i===0?d.bandeira:'',
+        i===0?d.numDep||'—':'',i===0?d.liquido:'',
+        v.dataVenda||'—',v.cod||'—',v.parcelas||'—',v.valorParcela||0,v.taxa||0,v.liquido||0]);
+    });
+    r1.push(['','','','','Sub '+d.vendas.length+'v','','','',
+      d.vendas.reduce(function(s,v){return s+(v.valorParcela||0)},0),
+      d.vendas.reduce(function(s,v){return s+(v.taxa||0)},0),d.liquido]);
+    r1.push(['']);
+  });
+  var ws=XLSX.utils.aoa_to_sheet(r1);
+  ws['!cols']=[{wch:12},{wch:10},{wch:16},{wch:24},{wch:14},{wch:14},{wch:14},{wch:8},{wch:14},{wch:12},{wch:12}];
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:10}}];
+  XLSX.utils.book_append_sheet(wb,ws,'Conciliação');
+  var r2=[['Resumo por Dia'],[''],['Data','Total (R$)','Depósitos','Vendas']];
+  var pd={};
+  sorted.forEach(function(d){if(!pd[d.dataInter])pd[d.dataInter]={t:0,d:0,v:0};pd[d.dataInter].t+=d.liquido;pd[d.dataInter].d++;pd[d.dataInter].v+=d.vendas.length});
+  Object.keys(pd).sort(function(a,b){var ma=parseInt(a.split('/')[1]),mb=parseInt(b.split('/')[1]);return ma!==mb?ma-mb:parseInt(a)-parseInt(b)}).forEach(function(dia){var v=pd[dia];r2.push([dia,v.t,v.d,v.v])});
+  r2.push(['']);r2.push(['TOTAL',DB.reduce(function(s,d){return s+d.liquido},0),DB.length,DB.reduce(function(s,d){return s+d.vendas.length},0)]);
+  var ws2=XLSX.utils.aoa_to_sheet(r2);
+  XLSX.utils.book_append_sheet(wb,ws2,'Resumo por Dia');
+  XLSX.writeFile(wb,'Conciliacao_SumUp_Inter_Rahme.xlsx');
+}
+</script>
+</body>
+</html>
