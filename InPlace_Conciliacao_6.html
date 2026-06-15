@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Academia In Place — Conciliação Getnet</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap');
+:root{
+  --navy:#0d1b3e;--navy2:#142247;--navy3:#1b2f5e;
+  --gold:#c9a84c;--gold2:#debb6a;
+  --white:#f7f4ee;--muted:#7a90b8;--border:rgba(255,255,255,.07);
+  --ok:#27ae60;--ok-bg:rgba(39,174,96,.1);
+  --warn:#e67e22;--warn-bg:rgba(230,126,34,.1);
+  --alert:#e74c3c;--alert-bg:rgba(231,76,60,.1);
+  --info:#2980b9;--info-bg:rgba(41,128,185,.12);
+  --purple:#8e44ad;--purple-bg:rgba(142,68,173,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;font-size:14px}
+
+/* HEADER */
+header{background:linear-gradient(135deg,#0a1630,var(--navy2));border-bottom:2px solid var(--gold);padding:0 28px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;gap:16px}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:36px;height:36px;background:var(--gold);border-radius:8px;display:grid;place-items:center;font-size:16px}
+.brand-name{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold)}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:.8px;text-transform:uppercase}
+.empresa-selector{display:flex;gap:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:30px;padding:4px}
+.emp-btn{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;padding:6px 16px;border-radius:24px;border:none;cursor:pointer;transition:all .2s;color:var(--muted);background:transparent}
+.emp-btn:hover{color:var(--white)}.emp-btn.active{background:var(--gold);color:var(--navy)}
+#periodo-hdr{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--border);padding:4px 12px;border-radius:20px;white-space:nowrap}
+
+/* UPLOAD */
+#upload-screen{padding:36px 28px;display:flex;flex-direction:column;align-items:center;gap:28px;min-height:calc(100vh - 62px)}
+.upload-hero{text-align:center}
+.upload-hero h1{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--gold);margin-bottom:6px}
+.upload-hero p{color:var(--muted);font-size:13px}
+.upload-grid{display:grid;gap:12px;width:100%;max-width:950px}
+.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:700px){.upload-grid{grid-template-columns:1fr!important}}
+.upload-card{background:var(--navy2);border:2px dashed rgba(201,168,76,.2);border-radius:12px;padding:20px 14px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.upload-card:hover{border-color:var(--gold);background:var(--navy3);transform:translateY(-2px)}
+.upload-card.loaded{border-color:var(--ok);border-style:solid}
+.upload-card.loaded::after{content:'✓';position:absolute;top:8px;right:10px;color:var(--ok);font-size:14px;font-weight:700}
+.upload-card input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;z-index:2}
+.card-icon{font-size:24px;margin-bottom:6px}
+.card-title{font-family:'Syne',sans-serif;font-size:12px;font-weight:700;color:var(--white);margin-bottom:3px}
+.ctag{display:inline-block;font-size:9px;padding:2px 7px;border-radius:10px;margin-bottom:5px;font-family:'Syne',sans-serif;font-weight:700}
+.te{background:rgba(41,128,185,.2);color:#74b9ff}.tg{background:rgba(39,174,96,.12);color:var(--ok)}
+.tp{background:rgba(201,168,76,.15);color:var(--gold)}.tn{background:rgba(142,68,173,.15);color:#c39bd3}
+.card-desc{font-size:10px;color:var(--muted);line-height:1.4}
+.card-fn{margin-top:6px;font-size:9px;font-family:'DM Mono',monospace;color:var(--ok);word-break:break-all;min-height:12px}
+.opt{font-size:9px;color:var(--muted);margin-top:2px}
+.btn-proc{font-family:'Syne',sans-serif;font-size:14px;font-weight:700;background:var(--gold);color:var(--navy);border:none;border-radius:12px;padding:13px 40px;cursor:pointer;transition:all .2s;opacity:.35;pointer-events:none}
+.btn-proc.on{opacity:1;pointer-events:auto}.btn-proc.on:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(201,168,76,.3)}
+
+/* MAIN */
+#main-content{display:none;padding:20px 28px}
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.page-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--gold)}
+.page-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.btn-s{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;border-radius:8px;padding:6px 13px;cursor:pointer;transition:all .2s;border:1px solid var(--border);background:rgba(255,255,255,.05);color:var(--muted)}
+.btn-s:hover{color:var(--white);background:rgba(255,255,255,.1)}
+.btn-gold{background:var(--gold)!important;color:var(--navy)!important;border-color:var(--gold)!important}
+.btn-gold:hover{background:var(--gold2)!important}
+
+/* CARDS RESUMO */
+.cards-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:24px}
+.kard{background:var(--navy2);border:1px solid var(--border);border-radius:11px;padding:13px 15px;position:relative;overflow:hidden}
+.kard::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--gold)}
+.kard.ok::before{background:var(--ok)}.kard.warn::before{background:var(--warn)}.kard.info::before{background:var(--info)}.kard.purple::before{background:var(--purple)}.kard.alert::before{background:var(--alert)}
+.kard-lbl{font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:4px;font-family:'Syne',sans-serif}
+.kard-val{font-family:'DM Mono',monospace;font-size:15px;color:var(--white)}
+.kard-sub{font-size:10px;color:var(--muted);margin-top:2px}
+
+/* SEÇÃO POR TIPO */
+.tipo-section{margin-bottom:28px}
+.tipo-header{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.tipo-icon{width:40px;height:40px;border-radius:10px;display:grid;place-items:center;font-size:20px;flex-shrink:0}
+.ti-cred{background:rgba(201,168,76,.15)}.ti-deb{background:rgba(41,128,185,.15)}.ti-pix{background:rgba(39,174,96,.12)}.ti-outros{background:rgba(255,255,255,.05)}
+.tipo-info{flex:1}
+.tipo-title{font-family:'Syne',sans-serif;font-size:13px;font-weight:800;color:var(--white)}
+.tipo-sub{font-size:11px;color:var(--muted);margin-top:1px}
+.tipo-total{font-family:'DM Mono',monospace;font-size:14px;color:var(--gold2);text-align:right}
+.tipo-total-sub{font-size:10px;color:var(--muted);text-align:right}
+.tipo-divider{height:1px;background:var(--border);margin-bottom:14px}
+
+/* TABELA PRINCIPAL */
+.tw{overflow-x:auto;border-radius:10px;border:1px solid var(--border);margin-bottom:12px}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--navy3);padding:8px 12px;text-align:left;font-family:'Syne',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--muted);white-space:nowrap}
+tbody tr{border-bottom:1px solid rgba(255,255,255,.03);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:rgba(255,255,255,.025)}
+tbody tr:last-child{border-bottom:none}
+tbody tr.expandable.open{background:rgba(255,255,255,.015)}
+td{padding:8px 12px;font-size:12px;white-space:nowrap;vertical-align:middle}
+
+/* EXPAND */
+.expand-btn{background:none;border:none;cursor:pointer;color:var(--muted);font-size:11px;padding:2px 6px;border-radius:4px;transition:all .15s;font-family:'DM Mono',monospace}
+.expand-btn:hover{color:var(--white);background:rgba(255,255,255,.07)}
+tr.expandable.open .expand-btn{color:var(--gold)}
+.detail-row{display:none;background:rgba(13,27,62,.6)}
+.detail-row.open{display:table-row}
+.detail-cell{padding:0!important}
+.detail-inner{padding:12px 16px}
+
+/* MINI TABELA INTERNA */
+.mini-tw{overflow-x:auto;border-radius:7px;border:1px solid var(--border)}
+.mini-tw table{width:100%}
+.mini-tw thead th{background:rgba(255,255,255,.03);padding:5px 10px;font-size:8px;letter-spacing:1.2px}
+.mini-tw tbody tr{border-bottom:1px solid rgba(255,255,255,.02);cursor:default}
+.mini-tw tbody tr:hover{background:rgba(255,255,255,.01)}
+.mini-tw td{padding:5px 10px;font-size:11px}
+
+/* LINHA TOTAL */
+tr.total-row td{background:rgba(255,255,255,.03);font-family:'Syne',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;color:var(--muted);padding:8px 12px;border-top:1px solid rgba(255,255,255,.08)}
+
+/* CHIPS */
+.chip{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:9px;font-family:'Syne',sans-serif;font-weight:700}
+.dot{width:4px;height:4px;border-radius:50%;background:currentColor}
+.c-ok{background:var(--ok-bg);color:var(--ok);border:1px solid rgba(39,174,96,.3)}
+.c-warn{background:var(--warn-bg);color:var(--warn);border:1px solid rgba(230,126,34,.3)}
+.c-alert{background:var(--alert-bg);color:var(--alert);border:1px solid rgba(231,76,60,.3)}
+.c-info{background:var(--info-bg);color:#74b9ff;border:1px solid rgba(41,128,185,.3)}
+.c-purple{background:var(--purple-bg);color:#c39bd3;border:1px solid rgba(142,68,173,.3)}
+.c-muted{background:rgba(255,255,255,.05);color:var(--muted);border:1px solid var(--border)}
+.c-gold{background:rgba(201,168,76,.12);color:var(--gold);border:1px solid rgba(201,168,76,.25)}
+
+/* TEXTO */
+.mono{font-family:'DM Mono',monospace;font-size:11px}
+.val{font-family:'DM Mono',monospace;color:var(--gold2)}
+.vpos{font-family:'DM Mono',monospace;color:var(--ok)}
+.vneg{font-family:'DM Mono',monospace;color:var(--alert)}
+.mt{color:var(--muted)}
+.band{display:inline-block;padding:2px 6px;border-radius:4px;font-size:10px;font-family:'DM Mono',monospace;background:rgba(255,255,255,.05)}
+.visa{background:rgba(26,90,213,.2);color:#7ac4ff}
+.mastercard{background:rgba(235,0,27,.15);color:#f98989}
+.elo{background:rgba(255,199,0,.15);color:#ffe080}
+
+/* BOX INFO */
+.box{border-radius:8px;padding:9px 13px;font-size:11px;line-height:1.6;border:1px solid;margin-bottom:10px}
+.box-gold{background:rgba(201,168,76,.07);border-color:rgba(201,168,76,.2);color:rgba(245,237,216,.8)}
+.box-warn{background:var(--warn-bg);border-color:rgba(230,126,34,.3);color:rgba(245,237,216,.8)}
+
+/* AVISO NÃO ACHADO NO PACTO */
+.sem-pacto{font-size:10px;color:var(--warn);font-style:italic}
+
+/* LOADING */
+#loading{display:none;position:fixed;inset:0;background:rgba(13,27,62,.88);backdrop-filter:blur(4px);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.spinner{width:42px;height:42px;border:3px solid rgba(201,168,76,.2);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-family:'Syne',sans-serif;font-size:12px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">🏋️</div>
+    <div>
+      <div class="brand-name">Academia In Place</div>
+      <div class="brand-sub">Conciliação Getnet × Extrato</div>
+    </div>
+  </div>
+  <div class="empresa-selector">
+    <button class="emp-btn active" id="empBtn-gut" onclick="selecionarEmpresa('gutierrez')">Gutierrez</button>
+    <button class="emp-btn" id="empBtn-bar" onclick="selecionarEmpresa('barreiro')">Barreiro</button>
+  </div>
+  <div id="periodo-hdr">Aguardando arquivos</div>
+</header>
+
+<div id="loading"><div class="spinner"></div><p>Processando...</p></div>
+
+<!-- UPLOAD -->
+<div id="upload-screen">
+  <div class="upload-hero">
+    <h1 id="upload-title">Gutierrez — Conciliação Getnet</h1>
+    <p id="upload-desc">Carregue os arquivos. Negociações é opcional.</p>
+  </div>
+
+  <div class="upload-grid g4" id="grid-gut">
+    <div class="upload-card" id="uc-gut-extrato"><input type="file" id="f-gut-extrato" accept=".csv,.txt">
+      <div class="card-icon">🏦</div><div class="ctag te">EXTRATO</div><div class="card-title">Extrato Bancário CSV</div>
+      <div class="card-desc">Santander PJ — exportar em CSV</div><div class="card-fn" id="fn-gut-extrato">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-gut-getnet"><input type="file" id="f-gut-getnet" accept=".xls,.xlsx">
+      <div class="card-icon">💳</div><div class="ctag tg">GETNET</div><div class="card-title">Vendas Detalhado</div>
+      <div class="card-desc">Relatório Getnet (cartões + PIX)</div><div class="card-fn" id="fn-gut-getnet">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-gut-pacto"><input type="file" id="f-gut-pacto" accept=".xls,.xlsx">
+      <div class="card-icon">🗂️</div><div class="ctag tp">PACTO</div><div class="card-title">Gestão de Recebíveis</div>
+      <div class="card-desc">Exportação Pacto (identificação dos alunos)</div><div class="card-fn" id="fn-gut-pacto">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-gut-neg"><input type="file" id="f-gut-neg" accept=".xls,.xlsx">
+      <div class="card-icon">📑</div><div class="ctag tn">GETNET</div><div class="card-title">Negociações Detalhado</div>
+      <div class="card-desc">URs de cessão (antecipação)</div><div class="card-fn" id="fn-gut-neg">Clique ou arraste</div>
+      <div class="opt">Opcional</div></div>
+  </div>
+
+  <div class="upload-grid g4" id="grid-bar" style="display:none">
+    <div class="upload-card" id="uc-bar-extrato"><input type="file" id="f-bar-extrato" accept=".csv,.txt">
+      <div class="card-icon">🏦</div><div class="ctag te">EXTRATO</div><div class="card-title">Extrato Bancário CSV</div>
+      <div class="card-desc">Santander PJ</div><div class="card-fn" id="fn-bar-extrato">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-bar-terminal"><input type="file" id="f-bar-terminal" accept=".xls,.xlsx" multiple>
+      <div class="card-icon">💳</div><div class="ctag tg">GETNET</div><div class="card-title">Vendas Terminais</div>
+      <div class="card-desc">Máquinas físicas — selecione <strong style="color:var(--gold)">todos</strong> os arquivos de uma vez</div><div class="card-fn" id="fn-bar-terminal">Clique ou arraste</div></div>
+    <div class="upload-card" id="uc-bar-recor"><input type="file" id="f-bar-recor" accept=".xls,.xlsx" multiple>
+      <div class="card-icon">🔄</div><div class="ctag tg">GETNET</div><div class="card-title">Vendas Recorrência</div>
+      <div class="card-desc">Mensalidades e-commerce — pode ser mais de um</div><div class="card-fn" id="fn-bar-recor">Clique ou arraste</div>
+      <div class="opt">Opcional</div></div>
+    <div class="upload-card" id="uc-bar-pacto"><input type="file" id="f-bar-pacto" accept=".xls,.xlsx">
+      <div class="card-icon">🗂️</div><div class="ctag tp">PACTO</div><div class="card-title">Gestão de Recebíveis</div>
+      <div class="card-desc">Exportação Pacto</div><div class="card-fn" id="fn-bar-pacto">Clique ou arraste</div></div>
+  </div>
+
+  <button class="btn-proc" id="btn-proc" onclick="processar()">⚡ Iniciar Conciliação</button>
+</div>
+
+<!-- MAIN -->
+<div id="main-content">
+  <div class="page-hdr">
+    <div>
+      <div class="page-title" id="main-title">Conciliação Getnet × Extrato</div>
+      <div class="page-sub">Entradas separadas por tipo · Crédito · Débito · PIX</div>
+    </div>
+    <button class="btn-s" onclick="novaAnalise()">← Nova análise</button>
+    <button class="btn-s btn-gold" onclick="exportarExcel()">⬇ Exportar Excel</button>
+  </div>
+  <div class="cards-row" id="cards-resumo"></div>
+  <div id="sec-credito"></div>
+  <div id="sec-debito"></div>
+  <div id="sec-pix"></div>
+  <div id="sec-outros"></div>
+</div>
+
+<script>
+var EMPRESA='gutierrez', FILES={}, FILES_LOADED=0, REQUIRED=3;
+var _DADOS=null; // guarda resultado para exportação
+
+// ── UTILS ─────────────────────────────────────────────────
+function fmt(n){
+  if(isNaN(n)||n==null) return 'R$ 0,00';
+  return 'R$ '+Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function parseValorBR(s){
+  if(s==null) return 0;
+  var n=parseFloat(String(s).replace(/R\$|\s/g,'').replace(/\./g,'').replace(',','.'));
+  return isNaN(n)?0:n;
+}
+function normAuthGetnet(a){
+  // Getnet: auth pura ex: "618068", "R52303"
+  var s=String(a==null?'':a).trim().toUpperCase();
+  if(!s||s==='NAN'||s==='NONE'||s==='0') return '';
+  if(s.endsWith('.0')) s=s.slice(0,-2);
+  if(/^\d+$/.test(s)) return String(parseInt(s));
+  return s;
+}
+function normAuthPacto(a){
+  // Pacto: auth pode ser "618068 CC 1234" ou "13644710" — pegar só antes do espaço
+  var s=String(a==null?'':a).trim().toUpperCase();
+  if(!s||s==='NAN'||s==='NONE'||s==='NaN') return '';
+  s=s.split(' ')[0];
+  if(s.endsWith('.0')) s=s.slice(0,-2);
+  if(/^\d+$/.test(s)) return String(parseInt(s));
+  return s;
+}
+function bandTag(b){
+  var bl=String(b||'').toLowerCase();
+  var c=bl.includes('visa')?'visa':bl.includes('master')?'mastercard':bl.includes('elo')?'elo':'';
+  return '<span class="band '+c+'">'+(b||'—')+'</span>';
+}
+function chip(cls,t){return '<span class="chip '+cls+'"><span class="dot"></span>'+t+'</span>';}
+function diaAnterior(s){
+  try{var p=s.split('/');var d=new Date(+p[2],+p[1]-1,+p[0]);d.setDate(d.getDate()-1);
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}
+  catch(e){return '';}
+}
+
+// ── SELETOR ───────────────────────────────────────────────
+function selecionarEmpresa(emp){
+  EMPRESA=emp; REQUIRED=3; // extrato + getnet(terminal) + pacto; recorrência e neg são opcionais
+  FILES={}; FILES_LOADED=0;
+  document.getElementById('empBtn-gut').className=emp==='gutierrez'?'emp-btn active':'emp-btn';
+  document.getElementById('empBtn-bar').className=emp==='barreiro'?'emp-btn active':'emp-btn';
+  document.getElementById('grid-gut').style.display=emp==='gutierrez'?'grid':'none';
+  document.getElementById('grid-bar').style.display=emp==='barreiro'?'grid':'none';
+  document.getElementById('upload-title').textContent=emp==='gutierrez'?'Gutierrez — Conciliação Getnet':'Barreiro — Conciliação Getnet';
+  document.getElementById('upload-screen').style.display='flex';
+  document.getElementById('main-content').style.display='none';
+  document.getElementById('btn-proc').className='btn-proc';
+  document.getElementById('periodo-hdr').textContent='Aguardando arquivos';
+  ['gut-extrato','gut-getnet','gut-pacto','gut-neg','bar-extrato','bar-terminal','bar-recor','bar-pacto'].forEach(function(k){
+    var uc=document.getElementById('uc-'+k);if(uc)uc.classList.remove('loaded');
+    var fn=document.getElementById('fn-'+k);if(fn)fn.textContent='Clique ou arraste';
+    var fi=document.getElementById('f-'+k);if(fi)fi.value='';
+  });
+}
+
+// ── FILE SETUP ────────────────────────────────────────────
+function readXL(file,cb){var r=new FileReader();r.onload=function(e){cb(XLSX.read(e.target.result,{type:'array'}));};r.readAsArrayBuffer(file);}
+function readCSV(file,cb){var r=new FileReader();r.onload=function(e){cb(e.target.result);};r.readAsText(file,'latin1');}
+function setupXL(fid,ucid,fnid,key){
+  document.getElementById(fid).addEventListener('change',function(e){
+    var f=e.target.files[0];if(!f)return;
+    document.getElementById(fnid).textContent=f.name;
+    readXL(f,function(wb){if(!FILES[key])FILES_LOADED++;FILES[key]=wb;document.getElementById(ucid).classList.add('loaded');if(FILES_LOADED>=REQUIRED)document.getElementById('btn-proc').classList.add('on');});
+  });
+}
+function setupCSV(fid,ucid,fnid,key){
+  document.getElementById(fid).addEventListener('change',function(e){
+    var f=e.target.files[0];if(!f)return;
+    document.getElementById(fnid).textContent=f.name;
+    readCSV(f,function(t){if(!FILES[key])FILES_LOADED++;FILES[key]=t;document.getElementById(ucid).classList.add('loaded');if(FILES_LOADED>=REQUIRED)document.getElementById('btn-proc').classList.add('on');});
+  });
+}
+setupCSV('f-gut-extrato','uc-gut-extrato','fn-gut-extrato','gut-extrato');
+setupXL('f-gut-getnet','uc-gut-getnet','fn-gut-getnet','gut-getnet');
+setupXL('f-gut-pacto','uc-gut-pacto','fn-gut-pacto','gut-pacto');
+setupXL('f-gut-neg','uc-gut-neg','fn-gut-neg','gut-neg');
+setupCSV('f-bar-extrato','uc-bar-extrato','fn-bar-extrato','bar-extrato');
+setupXLMulti('f-bar-terminal','uc-bar-terminal','fn-bar-terminal','bar-terminal');
+setupXLMulti('f-bar-recor','uc-bar-recor','fn-bar-recor','bar-recor', true); // opcional
+setupXL('f-bar-pacto','uc-bar-pacto','fn-bar-pacto','bar-pacto');
+
+function setupXLMulti(fid,ucid,fnid,key,optional){
+  document.getElementById(fid).addEventListener('change',function(e){
+    var files=Array.from(e.target.files); if(!files.length) return;
+    // Atualizar label
+    document.getElementById(fnid).textContent=files.length===1?files[0].name:files.length+' arquivos selecionados';
+    // Ler todos em paralelo e acumular
+    var wbs=[],done=0;
+    var wasLoaded=!!FILES[key];
+    FILES[key]=[]; // sempre começa do zero ao re-selecionar
+    files.forEach(function(f,i){
+      readXL(f,function(wb){
+        wbs[i]=wb; done++;
+        if(done===files.length){
+          var hadKey=wasLoaded;
+          FILES[key]=wbs;
+          if(!hadKey) FILES_LOADED++;
+          document.getElementById(ucid).classList.add('loaded');
+          if(FILES_LOADED>=REQUIRED) document.getElementById('btn-proc').classList.add('on');
+        }
+      });
+    });
+  });
+}
+
+// ── PARSERS ───────────────────────────────────────────────
+function parseExtrato(csv){
+  var lines=csv.split('\n'),start=0;
+  for(var i=0;i<lines.length;i++){if(lines[i].replace(/"/g,'').trim().startsWith('Data;')){start=i+1;break;}}
+  var out=[];
+  for(var j=start;j<lines.length;j++){
+    var ln=lines[j].trim();if(!ln)continue;
+    var cols=ln.split(';').map(function(c){return c.replace(/^"|"$/g,'').trim();});
+    if(cols.length<4||!cols[0])continue;
+    var v=parseValorBR(cols[3]);if(isNaN(v)||cols[3]==='')continue;
+    out.push({data:cols[0],hist:cols[1]||'',doc:cols[2]||'',valor:v});
+  }
+  return out;
+}
+
+function parseGetnet(wb){
+  var cartoes=[],pixList=[];
+  var snC=wb.SheetNames.find(function(s){return s.toUpperCase().includes('CART');});
+  if(snC){
+    XLSX.utils.sheet_to_json(wb.Sheets[snC],{defval:'',range:7}).forEach(function(r){
+      if(!String(r['STATUS DA TRANSAÇÃO']||'').toLowerCase().includes('aprovada'))return;
+      var auth=normAuthGetnet(r['NÚMERO DE AUTORIZAÇÃO (AUT)']);if(!auth)return;
+      var bruto=parseFloat(r['VALOR BRUTO'])||0;
+      var taxa=Math.abs(parseFloat(r['VALOR TAXA'])||0);
+      var liq=parseFloat(r['VALOR LÍQUIDO'])||0;if(!liq)liq=bruto-taxa;
+      var dh=String(r['DATA/HORA DA VENDA']||'');
+      var data=dh.substring(0,10);
+      if(data.match(/^\d{4}-\d{2}-\d{2}/)){var p=data.split('-');data=p[2]+'/'+p[1]+'/'+p[0];}
+      var hora=dh.length>10?dh.substring(11,16):'';
+      var dp=String(r['DATA PREVISTA DO 1º PAGAMENTO']||'');
+      if(dp.match(/^\d{4}-\d{2}-\d{2}/)){var pp=dp.substring(0,10).split('-');dp=pp[2]+'/'+pp[1]+'/'+pp[0];}else if(dp.length>10)dp=dp.substring(0,10);
+      cartoes.push({auth,bruto,taxa,liq,data,hora,dtPag:dp,band:String(r['BANDEIRA']||'').trim(),mod:String(r['MODALIDADE']||'').trim(),parc:String(r['PARCELAS']||'1').trim(),terminal:String(r['NÚMERO DO TERMINAL']||'').trim()});
+    });
+  }
+  var snP=wb.SheetNames.find(function(s){return s.toUpperCase().includes('PIX');});
+  if(snP){
+    XLSX.utils.sheet_to_json(wb.Sheets[snP],{defval:'',range:7}).forEach(function(r){
+      if(!String(r['STATUS']||'').toLowerCase().includes('paga'))return;
+      var dh=String(r['DATA/HORA DA VENDA']||'');
+      var data=dh.substring(0,10);
+      if(data.match(/^\d{4}-\d{2}-\d{2}/)){var p=data.split('-');data=p[2]+'/'+p[1]+'/'+p[0];}
+      pixList.push({data,valor:parseFloat(r['VALOR DA VENDA'])||0});
+    });
+  }
+  return {cartoes,pix:pixList};
+}
+
+function parsePacto(wb){
+  var rows=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+  var porAuth={},pixPorCPF={};
+  // Índice por terminal também (para débitos)
+  var porTerminal={};
+  rows.forEach(function(r){
+    var tipo=String(r['Tipo do Recebível']||'').toUpperCase();
+    var nome=String(r['Nome do pagador']||'').trim();
+    var cpf=String(r['CPF']||'').trim().replace(/\D/g,'');
+    var valor=parseValorBR(r['Valor']);
+    if(tipo.includes('PIX')){if(cpf)pixPorCPF[cpf]={nome,valor,comp:String(r['Compensação']||'').trim()};return;}
+    var auth=normAuthPacto(r['Autorização']);
+    if(auth){
+      if(!porAuth[auth])porAuth[auth]={nome,cpf,nomes:[]};
+      if(nome&&!porAuth[auth].nomes.includes(nome))porAuth[auth].nomes.push(nome);
+      if(cpf)porAuth[auth].cpf=cpf;
+    }
+    // Débito: auth do Pacto é o número do terminal (ex: 13644710)
+    // Mas também guarda por nome para múltiplos débitos no mesmo terminal
+    var doc=String(r['Documento']||'');
+    var authRaw=String(r['Autorização']||'').trim();
+    if((tipo.includes('DÉB')||tipo.includes('DEB'))&&nome){
+      var termKey=auth||'';
+      if(!porTerminal[termKey])porTerminal[termKey]=[];
+      porTerminal[termKey].push({nome,cpf,valor,authRaw});
+    }
+  });
+
+  // Índice cruzamento secundário crédito:
+  // Pacto às vezes grava o terminal como auth para crédito parcelado.
+  // Agrupa por terminal+nome e soma as parcelas -> nomesPorTerminalValor[terminal][totalBruto] = nome
+  var nomesPorTerminalValor={};
+  var grupoTN={};
+  rows.forEach(function(r){
+    var tipo=String(r['Tipo do Recebível']||'').toUpperCase();
+    if(!tipo.includes('CR')) return;
+    var auth=normAuthPacto(r['Autorização']); if(!auth) return;
+    var nome=String(r['Nome do pagador']||'').trim(); if(!nome) return;
+    var valor=parseValorBR(r['Valor']);
+    var gk=auth+'||'+nome;
+    if(!grupoTN[gk]) grupoTN[gk]={auth,nome,total:0};
+    grupoTN[gk].total+=valor;
+  });
+  Object.values(grupoTN).forEach(function(g){
+    if(!nomesPorTerminalValor[g.auth]) nomesPorTerminalValor[g.auth]={};
+    var k=Math.round(g.total*100)/100;
+    nomesPorTerminalValor[g.auth][k]=g.nome;
+  });
+
+  return {porAuth,pixPorCPF,porTerminal,nomesPorTerminalValor};
+}
+
+function parseNeg(wb){
+  var porData={};
+  XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:'',range:7}).forEach(function(r){
+    var data=String(r['DATA DA MOVIMENTAÇÃO']||'').trim();
+    if(data.match(/^\d{4}-\d{2}-\d{2}/)){var p=data.split('-');data=p[2]+'/'+p[1]+'/'+p[0];}
+    if(!data)return;
+    var valor=parseFloat(r['VALOR DA UR'])||0;if(!valor)return;
+    if(!String(r['TIPO DE NEGOCIAÇÃO']||'').toLowerCase().includes('cess'))return;
+    if(!porData[data])porData[data]={total:0,urs:[]};
+    porData[data].total+=valor;
+    porData[data].urs.push({band:String(r['BANDEIRA/MODALIDADE']||''),dtLiq:String(r['DATA DA LIQUIDAÇÃO']||''),situacao:String(r['SITUAÇÃO DA UR']||''),valor});
+  });
+  return porData;
+}
+
+// ── PROCESSAR ─────────────────────────────────────────────
+function processar(){
+  document.getElementById('loading').style.display='flex';
+  setTimeout(function(){try{_processar();}catch(e){document.getElementById('loading').style.display='none';alert('Erro: '+e.message);console.error(e);}},120);
+}
+
+function _processar(){
+  var isGut=EMPRESA==='gutierrez';
+  var extrato=parseExtrato(FILES[isGut?'gut-extrato':'bar-extrato']);
+  var pacto=parsePacto(FILES[isGut?'gut-pacto':'bar-pacto']);
+  var negPorData=FILES[isGut?'gut-neg':'bar-neg']?parseNeg(FILES[isGut?'gut-neg':'bar-neg']):{};
+
+  var allCartoes=[],allPix=[];
+  if(isGut){
+    var g=parseGetnet(FILES['gut-getnet']);
+    allCartoes=g.cartoes;allPix=g.pix;
+  } else {
+    // terminal: sempre array (pode ser 1 ou mais arquivos)
+    var termWbs=FILES['bar-terminal']||[];
+    if(!Array.isArray(termWbs)) termWbs=[termWbs];
+    termWbs.forEach(function(wb){var r=parseGetnet(wb);allCartoes=allCartoes.concat(r.cartoes);allPix=allPix.concat(r.pix);});
+    // recorrência: opcional, também array
+    var recWbs=FILES['bar-recor']||[];
+    if(!Array.isArray(recWbs)) recWbs=[recWbs];
+    recWbs.forEach(function(wb){var r=parseGetnet(wb);allCartoes=allCartoes.concat(r.cartoes);allPix=allPix.concat(r.pix);});
+  }
+
+  // Período
+  var datas=extrato.map(function(l){return l.data;}).filter(Boolean).sort();
+  if(datas.length)document.getElementById('periodo-hdr').textContent=datas[datas.length-1]+' → '+datas[0];
+
+  // Separar crédito e débito
+  var creditos=allCartoes.filter(function(c){return !c.mod.toLowerCase().includes('déb')&&!c.mod.toLowerCase().includes('deb');});
+  var debitos=allCartoes.filter(function(c){return c.mod.toLowerCase().includes('déb')||c.mod.toLowerCase().includes('deb');});
+
+  // Enriquecer créditos com nome do Pacto
+  // Passo 1: match direto por auth
+  // Passo 2 (fallback): Pacto às vezes grava o número do terminal em vez da auth real
+  //   -> soma das linhas do Pacto com auth_norm=terminal, mesma bandeira e mesmo dia = bruto Getnet
+
+  // Montar índice do Pacto por terminal+bandeira+data para cruzamento secundário
+  // porTerminalCredito[terminal][banda][data] = [{nome, valorLinha, ...}]
+  var porTerminalCred={};
+  if(pacto.porTerminalCred) porTerminalCred=pacto.porTerminalCred;
+
+  creditos.forEach(function(c){
+    var pi=pacto.porAuth[c.auth];
+    if(pi){
+      c.nomePacto=pi.nomes.length?pi.nomes[0]:pi.nome;
+      c.temPacto=true;
+      c.matchTipo='auth';
+    } else {
+      // Cruzamento secundário: buscar pelo terminal no Pacto
+      // O Pacto para crédito parcelado às vezes usa terminal como auth
+      // Soma das parcelas com mesmo terminal, mesma bandeira no mesmo dia deve = bruto Getnet
+      var terminal=c.terminal;
+      var piTerm=pacto.porAuth[terminal]; // linhas com auth_norm = terminal
+      if(piTerm){
+        // Verificar se a soma das linhas com esse terminal/dia/bandeira bate com bruto
+        // Como só temos o nome consolidado em porAuth, e pode ter múltiplos clientes
+        // por terminal, usamos porTerminalNomes para desambiguar por valor
+        var brutoKey=Math.round(c.bruto*100)/100;
+        var nomeCandidato=pacto.nomesPorTerminalValor&&pacto.nomesPorTerminalValor[terminal]?
+          pacto.nomesPorTerminalValor[terminal][brutoKey]:null;
+        c.nomePacto=nomeCandidato||piTerm.nomes[0]||piTerm.nome;
+        c.temPacto=true;
+        c.matchTipo='terminal+valor';
+      } else {
+        c.nomePacto='';
+        c.temPacto=false;
+        c.matchTipo='sem-match';
+      }
+    }
+  });
+
+  // Enriquecer débitos com nomes do Pacto (via terminal)
+  // Débito: Pacto indexa pelo número do terminal como auth
+  // Mas como múltiplas vendas no mesmo terminal: associar por ordem de valor
+  debitos.forEach(function(d){
+    // Buscar no Pacto por terminal
+    var termKey=d.terminal;
+    var pi=pacto.porAuth[termKey];
+    // Pacto para débito pode ter auth = terminal
+    // Tentar encontrar um cliente pelo valor exato no porTerminal
+    var clientesTerminal=pacto.porTerminal[termKey]||[];
+    var match=clientesTerminal.find(function(ct){return Math.abs(ct.valor-d.bruto)<0.05;});
+    d.nomePacto=match?match.nome:(pi?pi.nome:'');
+    d.temPacto=!!(match||pi);
+  });
+
+  // Enriquecer PIX com Pacto
+  allPix.forEach(function(p){
+    // PIX: sem CPF direto no arquivo Getnet, então não cruza direto
+    p.nomePacto='';p.temPacto=false;
+  });
+
+  // Lançamentos do extrato relevantes (só entradas Getnet)
+  var extGetnet=extrato.filter(function(l){
+    var h=l.hist.toUpperCase();
+    return l.valor>0&&(h.includes('ANTECIPACAO GETNET')||h.includes('PAGAMENTO CARTAO DE DEBITO GETNET')||h.startsWith('PIX RECEBIDO'));
+  });
+  var extOutros=extrato.filter(function(l){
+    var h=l.hist.toUpperCase();
+    return l.valor>0&&!h.includes('ANTECIPACAO GETNET')&&!h.includes('PAGAMENTO CARTAO DE DEBITO GETNET')&&!h.startsWith('PIX RECEBIDO');
+  });
+
+  // Cruzar antecipações do extrato com dados
+  var antecipacoes=[];
+  extrato.filter(function(l){var h=l.hist.toUpperCase();return l.valor>0&&(h.includes('ANTECIPACAO GETNET')||h.includes('ANTECIPAÇÃO GETNET'));}).forEach(function(lanc){
+    var dv=diaAnterior(lanc.data);
+    var credsD=creditos.filter(function(c){return c.data===dv;});
+    var somaCred=credsD.reduce(function(s,c){return s+c.liq;},0);
+    var cessao=negPorData[dv]||null;
+    var valorCessao=cessao?cessao.total:0;
+    antecipacoes.push({lanc,dv,credsD,somaCred,cessao,valorCessao});
+  });
+
+  // Cruzar débitos extrato
+  var debExtrato=[];
+  extrato.filter(function(l){return l.valor>0&&l.hist.toUpperCase().includes('PAGAMENTO CARTAO DE DEBITO GETNET');}).forEach(function(lanc){
+    var h=lanc.hist.toUpperCase();var bkey=h.includes('MAESTRO')?'maestro':h.includes('VISA')?'visa':'outros';
+    var dv=diaAnterior(lanc.data);
+    var debsDia=debitos.filter(function(d){
+      return d.data===dv&&(bkey==='maestro'?d.band.toLowerCase().includes('master'):bkey==='visa'?d.band.toLowerCase().includes('visa'):true);
+    });
+    var soma=debsDia.reduce(function(s,d){return s+d.liq;},0);
+    debExtrato.push({lanc,dv,debsDia,soma,diff:Math.abs(lanc.valor-soma)});
+  });
+
+  // PIX extrato
+  var pixExtrato=[];
+  extrato.filter(function(l){return l.valor>0&&l.hist.toUpperCase().startsWith('PIX RECEBIDO');}).forEach(function(lanc){
+    var cpf=lanc.hist.replace(/[^\d]/g,'').substring(0,14);
+    var pm=pacto.pixPorCPF[cpf]||pacto.pixPorCPF[cpf.substring(0,11)]||null;
+    var gm=allPix.find(function(p){return p.data===lanc.data&&Math.abs(p.valor-lanc.valor)<0.05;});
+    pixExtrato.push({lanc,cpf,pm,gm});
+  });
+
+  _DADOS={creditos,debitos,allPix,antecipacoes,debExtrato,pixExtrato,extOutros,pacto,negPorData};
+  render(_DADOS);
+
+  document.getElementById('loading').style.display='none';
+  document.getElementById('upload-screen').style.display='none';
+  document.getElementById('main-content').style.display='block';
+  document.getElementById('main-title').textContent=(EMPRESA==='gutierrez'?'Gutierrez':'Barreiro')+' — Conciliação Getnet × Extrato';
+}
+
+// ── RENDER ────────────────────────────────────────────────
+function render(D){
+  // CARDS
+  var totCred=D.creditos.reduce(function(s,c){return s+c.bruto;},0);
+  var totDeb=D.debitos.reduce(function(s,d){return s+d.bruto;},0);
+  var totPix=D.allPix.reduce(function(s,p){return s+p.valor;},0);
+  var semPacto=D.creditos.filter(function(c){return !c.temPacto;}).length;
+  var totGeral=totCred+totDeb+totPix;
+  var cr=document.getElementById('cards-resumo');cr.innerHTML='';
+  [{lbl:'Total Getnet',val:fmt(totGeral),sub:D.creditos.length+D.debitos.length+D.allPix.length+' transações',cls:''},
+   {lbl:'💳 Crédito',val:fmt(totCred),sub:D.creditos.length+' vendas',cls:''},
+   {lbl:'🏦 Débito',val:fmt(totDeb),sub:D.debitos.length+' vendas',cls:'info'},
+   {lbl:'📱 PIX',val:fmt(totPix),sub:D.allPix.length+' recebimentos',cls:'ok'},
+   {lbl:'⚠️ Sem Pacto',val:semPacto,sub:semPacto?'clientes não identificados':'Todos identificados',cls:semPacto?'warn':'ok'},
+  ].forEach(function(x){cr.innerHTML+='<div class="kard '+x.cls+'"><div class="kard-lbl">'+x.lbl+'</div><div class="kard-val">'+x.val+'</div><div class="kard-sub">'+x.sub+'</div></div>';});
+
+  // SEÇÃO CRÉDITO
+  renderCredito(D);
+  renderDebito(D);
+  renderPix(D);
+  renderOutros(D);
+}
+
+function renderCredito(D){
+  var el=document.getElementById('sec-credito');
+  if(!D.creditos.length){el.innerHTML='';return;}
+  var tot=D.creditos.reduce(function(s,c){return s+c.bruto;},0);
+  var totLiq=D.creditos.reduce(function(s,c){return s+c.liq;},0);
+  var totTaxa=D.creditos.reduce(function(s,c){return s+c.taxa;},0);
+
+  // Agrupar antecipações por data de venda
+  var antPorDv={};
+  D.antecipacoes.forEach(function(a){if(!antPorDv[a.dv])antPorDv[a.dv]=a;});
+
+  // Agrupar créditos por data
+  var porData={};
+  D.creditos.forEach(function(c){if(!porData[c.data])porData[c.data]=[];porData[c.data].push(c);});
+  var datasOrdenadas=Object.keys(porData).sort();
+
+  var h='<div class="tipo-section">';
+  h+='<div class="tipo-header"><div class="tipo-icon ti-cred">💳</div>';
+  h+='<div class="tipo-info"><div class="tipo-title">Cartão de Crédito</div><div class="tipo-sub">'+D.creditos.length+' vendas · Antecipadas pela Getnet</div></div>';
+  h+='<div><div class="tipo-total">'+fmt(tot)+'</div><div class="tipo-total-sub">bruto</div></div></div>';
+  h+='<div class="tipo-divider"></div>';
+
+  // Resumo de antecipação se tiver dados do extrato
+  if(D.antecipacoes.length){
+    h+='<div class="box box-gold" style="margin-bottom:14px">📑 Essas vendas foram antecipadas. Veja abaixo como cada dia de venda corresponde à antecipação que entrou no extrato.</div>';
+  }
+
+  h+='<div class="tw"><table><thead><tr>';
+  h+='<th></th><th>Autorização</th><th>Data</th><th>Hora</th><th>Bandeira</th><th>Modalidade</th><th>Parc.</th><th>Bruto</th><th>Taxa</th><th>Líquido</th><th>Dt Pagto</th><th>Cliente (Pacto)</th></tr></thead><tbody>';
+
+  var idx=0;
+  datasOrdenadas.forEach(function(data){
+    var vendas=porData[data];
+    var ant=antPorDv[data];
+
+    // Linha de sub-cabeçalho por data
+    var totDiaLiq=vendas.reduce(function(s,v){return s+v.liq;},0);
+    var totDiaBruto=vendas.reduce(function(s,v){return s+v.bruto;},0);
+    var antInfo='';
+    if(ant){
+      var cessaoVal=ant.valorCessao||ant.somaCred;
+      var taxaAnt=cessaoVal-ant.lanc.valor;
+      var pct=cessaoVal>0?((taxaAnt/cessaoVal)*100).toFixed(1):'';
+      antInfo=' <span class="chip c-purple" style="margin-left:8px"><span class="dot"></span>Antecipado '+fmt(ant.lanc.valor)+(pct?' · taxa ~'+pct+'%':'')+'</span>';
+    }
+
+    h+='<tr style="background:rgba(201,168,76,.04);cursor:default"><td colspan="12" style="padding:7px 12px">';
+    h+='<span style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:var(--gold)">'+data+'</span>';
+    h+='<span class="mt" style="font-size:10px;margin-left:10px">'+vendas.length+' vendas</span>';
+    h+='<span class="val" style="margin-left:10px">Bruto: '+fmt(totDiaBruto)+'</span>';
+    h+='<span class="vpos" style="margin-left:10px">Líq: '+fmt(totDiaLiq)+'</span>';
+    h+=antInfo;
+    h+='</td></tr>';
+
+    vendas.forEach(function(c){
+      var detId='dc-cred-'+idx;
+      var nomeCell=c.nomePacto?
+        (c.matchTipo==='terminal+valor'
+          ? c.nomePacto+' <span class="chip c-warn" style="font-size:8px;padding:1px 5px;vertical-align:middle">≈ valor</span>'
+          : c.nomePacto)
+        :'<span class="sem-pacto">Não encontrado no Pacto</span>';
+      h+='<tr class="expandable" id="tr-'+detId+'" onclick="toggleDet(\''+detId+'\')">';
+      h+='<td><button class="expand-btn" onclick="toggleDet(\''+detId+'\');event.stopPropagation()">▶</button></td>';
+      h+='<td class="mono">'+c.auth+'</td>';
+      h+='<td class="mt mono">'+c.data+'</td>';
+      h+='<td class="mt mono">'+c.hora+'</td>';
+      h+='<td>'+bandTag(c.band)+'</td>';
+      h+='<td class="mt">'+c.mod+'</td>';
+      h+='<td style="text-align:center">'+c.parc+'×</td>';
+      h+='<td class="val">'+fmt(c.bruto)+'</td>';
+      h+='<td class="vneg">-'+fmt(c.taxa)+'</td>';
+      h+='<td class="vpos">'+fmt(c.liq)+'</td>';
+      h+='<td class="mt mono">'+c.dtPag+'</td>';
+      h+='<td>'+nomeCell+'</td>';
+      h+='</tr>';
+      // Detalhe expandível
+      h+='<tr class="detail-row" id="'+detId+'"><td class="detail-cell" colspan="12">';
+      h+='<div class="detail-inner">';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;font-size:11px">';
+      h+=infoItem('Autorização',c.auth,'mono');
+      h+=infoItem('Terminal',c.terminal,'mono');
+      h+=infoItem('Data/Hora',c.data+' '+c.hora,'mono');
+      h+=infoItem('Parcelas',c.parc+'× de '+fmt(c.bruto/parseInt(c.parc||1)),'');
+      h+=infoItem('Data 1º Pagto',c.dtPag,'mono');
+      var clienteDetalhe=c.nomePacto||(c.temPacto?'—':'Não encontrado no Pacto');
+      var matchInfo=c.matchTipo==='terminal+valor'?' <span style="font-size:9px;color:var(--warn)">(match por valor — auth não conferiu)</span>':
+                    c.matchTipo==='auth'?' <span style="font-size:9px;color:var(--ok)">(auth confirmada)</span>':'';
+      h+='<div><div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:2px;font-family:Syne,sans-serif;font-weight:700">Cliente</div>';
+      h+='<div style="color:var(--white)">'+clienteDetalhe+matchInfo+'</div></div>';
+      h+='</div></div>';
+      h+='</td></tr>';
+      idx++;
+    });
+  });
+
+  // Total
+  var taxaTot=D.creditos.reduce(function(s,c){return s+c.taxa;},0);
+  h+='<tr class="total-row"><td colspan="7">TOTAL CRÉDITO</td>';
+  h+='<td class="val">'+fmt(tot)+'</td><td class="vneg">-'+fmt(taxaTot)+'</td><td class="vpos">'+fmt(totLiq)+'</td><td colspan="2"></td></tr>';
+  h+='</tbody></table></div>';
+  h+='</div>';
+  el.innerHTML=h;
+}
+
+function renderDebito(D){
+  var el=document.getElementById('sec-debito');
+  if(!D.debitos.length){el.innerHTML='';return;}
+  var tot=D.debitos.reduce(function(s,d){return s+d.bruto;},0);
+  var totLiq=D.debitos.reduce(function(s,d){return s+d.liq;},0);
+
+  // Cruzar com extrato
+  var extDebMap={};
+  D.debExtrato.forEach(function(de){extDebMap[de.dv]=de;});
+
+  // Agrupar por data e bandeira
+  var grupos={};
+  D.debitos.forEach(function(d){
+    var k=d.data+'__'+d.band;
+    if(!grupos[k])grupos[k]={data:d.data,band:d.band,itens:[],bruto:0,taxa:0,liq:0};
+    grupos[k].itens.push(d);grupos[k].bruto+=d.bruto;grupos[k].taxa+=d.taxa;grupos[k].liq+=d.liq;
+  });
+  var gruposArr=Object.values(grupos).sort(function(a,b){return a.data.localeCompare(b.data);});
+
+  var h='<div class="tipo-section">';
+  h+='<div class="tipo-header"><div class="tipo-icon ti-deb">🏦</div>';
+  h+='<div class="tipo-info"><div class="tipo-title">Cartão de Débito</div><div class="tipo-sub">'+D.debitos.length+' vendas · Entra na conta em D+1</div></div>';
+  h+='<div><div class="tipo-total">'+fmt(tot)+'</div><div class="tipo-total-sub">bruto</div></div></div>';
+  h+='<div class="tipo-divider"></div>';
+
+  h+='<div class="tw"><table><thead><tr><th></th><th>Autorização</th><th>Data</th><th>Hora</th><th>Bandeira</th><th>Bruto</th><th>Taxa</th><th>Líquido</th><th>Dt Pagto</th><th>Entrada Extrato</th><th>Cliente (Pacto)</th></tr></thead><tbody>';
+
+  var idx=0;
+  gruposArr.forEach(function(g){
+    var de=extDebMap[g.data];
+    var dtEntrada=de?diaApos(g.data):'D+1';
+    var extVal=de?de.lanc.valor:0;
+    var diff=de?Math.abs(g.liq-extVal):null;
+    var extChip=de?
+      (diff<0.05?chip('c-ok','✓ Extrato '+fmt(extVal)):chip('c-warn','Extrato '+fmt(extVal)+' · Diff '+fmt(diff))):
+      chip('c-muted','Aguardando D+1');
+
+    // Sub-cabeçalho do grupo
+    h+='<tr style="background:rgba(41,128,185,.06);cursor:default"><td colspan="11" style="padding:7px 12px">';
+    h+='<span style="font-family:Syne,sans-serif;font-size:10px;font-weight:700;color:#74b9ff">'+g.data+' · '+g.band+'</span>';
+    h+='<span class="mt" style="font-size:10px;margin-left:10px">'+g.itens.length+' venda(s)</span>';
+    h+='<span class="vpos" style="margin-left:10px">Líq: '+fmt(g.liq)+'</span>';
+    h+='<span style="margin-left:10px">'+extChip+'</span>';
+    h+='</td></tr>';
+
+    g.itens.forEach(function(d){
+      var detId='dc-deb-'+idx;
+      var nomeCell=d.nomePacto?d.nomePacto:'<span class="sem-pacto">—</span>';
+      h+='<tr class="expandable" id="tr-'+detId+'" onclick="toggleDet(\''+detId+'\')">';
+      h+='<td><button class="expand-btn" onclick="toggleDet(\''+detId+'\');event.stopPropagation()">▶</button></td>';
+      h+='<td class="mono">'+d.auth+'</td>';
+      h+='<td class="mt mono">'+d.data+'</td>';
+      h+='<td class="mt mono">'+d.hora+'</td>';
+      h+='<td>'+bandTag(d.band)+'</td>';
+      h+='<td class="val">'+fmt(d.bruto)+'</td>';
+      h+='<td class="vneg">-'+fmt(d.taxa)+'</td>';
+      h+='<td class="vpos">'+fmt(d.liq)+'</td>';
+      h+='<td class="mt mono">'+d.dtPag+'</td>';
+      h+='<td>'+extChip+'</td>';
+      h+='<td>'+nomeCell+'</td>';
+      h+='</tr>';
+      h+='<tr class="detail-row" id="'+detId+'"><td class="detail-cell" colspan="11"><div class="detail-inner">';
+      h+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;font-size:11px">';
+      h+=infoItem('Autorização',d.auth,'mono');
+      h+=infoItem('Terminal',d.terminal,'mono');
+      h+=infoItem('Bandeira',d.band,'');
+      h+=infoItem('Dt Pagto (D+1)',d.dtPag,'mono');
+      h+=infoItem('Cliente',d.nomePacto||'—','');
+      h+=infoItem('Liq. a entrar',fmt(d.liq),'vpos');
+      h+='</div></div></td></tr>';
+      idx++;
+    });
+  });
+
+  var taxaTot=D.debitos.reduce(function(s,d){return s+d.taxa;},0);
+  h+='<tr class="total-row"><td colspan="5">TOTAL DÉBITO</td>';
+  h+='<td class="val">'+fmt(tot)+'</td><td class="vneg">-'+fmt(taxaTot)+'</td><td class="vpos">'+fmt(totLiq)+'</td><td colspan="3"></td></tr>';
+  h+='</tbody></table></div></div>';
+  el.innerHTML=h;
+}
+
+function renderPix(D){
+  var el=document.getElementById('sec-pix');
+  if(!D.pixExtrato.length&&!D.allPix.length){el.innerHTML='';return;}
+  var tot=D.pixExtrato.reduce(function(s,p){return s+p.lanc.valor;},0);
+
+  var h='<div class="tipo-section">';
+  h+='<div class="tipo-header"><div class="tipo-icon ti-pix">📱</div>';
+  h+='<div class="tipo-info"><div class="tipo-title">PIX Recebido</div><div class="tipo-sub">'+D.pixExtrato.length+' lançamentos no extrato</div></div>';
+  h+='<div><div class="tipo-total">'+fmt(tot)+'</div><div class="tipo-total-sub">total recebido</div></div></div>';
+  h+='<div class="tipo-divider"></div>';
+
+  h+='<div class="tw"><table><thead><tr><th>Data</th><th>CPF / CNPJ</th><th>Nome (Pacto)</th><th>Valor</th><th>Status</th></tr></thead><tbody>';
+
+  D.pixExtrato.forEach(function(p){
+    var nome=p.pm?p.pm.nome:(p.gm?'Identificado no Getnet':'—');
+    var ok=!!(p.pm||p.gm);
+    var sc=ok?chip('c-ok','Identificado'):chip('c-warn','Não encontrado');
+    h+='<tr><td class="mt mono">'+p.lanc.data+'</td><td class="mono">'+p.cpf+'</td><td>'+(p.pm?p.pm.nome:nome)+'</td><td class="vpos">'+fmt(p.lanc.valor)+'</td><td>'+sc+'</td></tr>';
+  });
+
+  h+='</tbody></table></div></div>';
+  el.innerHTML=h;
+}
+
+function renderOutros(D){
+  var el=document.getElementById('sec-outros');
+  if(!D.extOutros.length){el.innerHTML='';return;}
+  var h='<div class="tipo-section">';
+  h+='<div class="tipo-header"><div class="tipo-icon ti-outros">💰</div>';
+  h+='<div class="tipo-info"><div class="tipo-title">Outras Entradas</div><div class="tipo-sub">'+D.extOutros.length+' lançamentos positivos não relacionados à Getnet</div></div></div>';
+  h+='<div class="tipo-divider"></div>';
+  h+='<div class="tw"><table><thead><tr><th>Data</th><th>Histórico</th><th>Documento</th><th>Valor</th></tr></thead><tbody>';
+  D.extOutros.forEach(function(l){
+    h+='<tr><td class="mt mono">'+l.data+'</td><td>'+l.hist+'</td><td class="mt mono">'+l.doc+'</td><td class="vpos">'+fmt(l.valor)+'</td></tr>';
+  });
+  h+='</tbody></table></div></div>';
+  el.innerHTML=h;
+}
+
+// ── HELPERS ───────────────────────────────────────────────
+function infoItem(label,val,cls){
+  return '<div><div style="font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:2px;font-family:Syne,sans-serif;font-weight:700">'+label+'</div><div class="'+cls+'" style="color:var(--white)">'+val+'</div></div>';
+}
+function diaApos(s){
+  try{var p=s.split('/');var d=new Date(+p[2],+p[1]-1,+p[0]);d.setDate(d.getDate()+1);
+    return String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+d.getFullYear();}catch(e){return '';}
+}
+function toggleDet(id){
+  var det=document.getElementById(id);
+  var tr=document.getElementById('tr-'+id);
+  var open=det.classList.toggle('open');
+  if(tr){tr.classList.toggle('open',open);var btn=tr.querySelector('.expand-btn');if(btn)btn.textContent=open?'▼':'▶';}
+}
+function novaAnalise(){selecionarEmpresa(EMPRESA);}
+
+// ── EXPORTAR EXCEL ────────────────────────────────────────
+function exportarExcel(){
+  if(!_DADOS){alert('Nenhum dado para exportar.');return;}
+  var wb=XLSX.utils.book_new();
+  var emp=EMPRESA==='gutierrez'?'Gutierrez':'Barreiro';
+
+  // ── ABA 1: CRÉDITO ──────────────────────────────────────
+  var hCred=['Autorização','Terminal','Data Venda','Hora','Bandeira','Modalidade','Parcelas',
+    'Valor Bruto','Taxa','Valor Líquido','Dt 1º Pagto','Cliente (Pacto)','Match Pacto',
+    'Antecipado?','Dt Antecipação','Vlr Antecipação','Cessão','Taxa Cessão'];
+  var rowsCred=[hCred];
+  // Montar mapa de antecipações por data de venda
+  var antPorDv={};
+  _DADOS.antecipacoes.forEach(function(a){antPorDv[a.dv]=a;});
+  _DADOS.creditos.forEach(function(c){
+    var ant=antPorDv[c.data];
+    var cessao=ant?ant.valorCessao:0;
+    var taxaCessao=ant?(cessao-ant.lanc.valor):0;
+    rowsCred.push([
+      c.auth, c.terminal, c.data, c.hora, c.band, c.mod, parseInt(c.parc)||1,
+      c.bruto, c.taxa, c.liq, c.dtPag,
+      c.nomePacto||'',
+      c.matchTipo==='auth'?'Auth':c.matchTipo==='terminal+valor'?'Valor (≈)':'Não encontrado',
+      ant?'Sim':'Não',
+      ant?ant.lanc.data:'',
+      ant?ant.lanc.valor:'',
+      cessao||'',
+      taxaCessao||''
+    ]);
+  });
+  // Linha de total
+  rowsCred.push([]);
+  rowsCred.push(['TOTAL','','','','','','',
+    _DADOS.creditos.reduce(function(s,c){return s+c.bruto;},0),
+    _DADOS.creditos.reduce(function(s,c){return s+c.taxa;},0),
+    _DADOS.creditos.reduce(function(s,c){return s+c.liq;},0),
+    '','','','','','','',''
+  ]);
+  var wsCred=XLSX.utils.aoa_to_sheet(rowsCred);
+  // Larguras de coluna
+  wsCred['!cols']=[{wch:12},{wch:11},{wch:12},{wch:6},{wch:12},{wch:10},{wch:7},
+    {wch:13},{wch:10},{wch:13},{wch:12},{wch:30},{wch:16},{wch:10},{wch:14},{wch:15},{wch:13},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,wsCred,'Crédito');
+
+  // ── ABA 2: DÉBITO ───────────────────────────────────────
+  var hDeb=['Autorização','Terminal','Data Venda','Hora','Bandeira',
+    'Valor Bruto','Taxa','Valor Líquido','Dt Pagto (D+1)','Extrato D+1','Diff Extrato','Cliente (Pacto)'];
+  var rowsDeb=[hDeb];
+  // Mapa extrato débito por dv
+  var debExtMap={};
+  _DADOS.debExtrato.forEach(function(de){debExtMap[de.dv]=de;});
+  _DADOS.debitos.forEach(function(d){
+    var de=debExtMap[d.data];
+    rowsDeb.push([
+      d.auth, d.terminal, d.data, d.hora, d.band,
+      d.bruto, d.taxa, d.liq, d.dtPag,
+      de?de.lanc.valor:'',
+      de?Math.abs(d.liq-de.lanc.valor):'',
+      d.nomePacto||''
+    ]);
+  });
+  rowsDeb.push([]);
+  rowsDeb.push(['TOTAL','','','','',
+    _DADOS.debitos.reduce(function(s,d){return s+d.bruto;},0),
+    _DADOS.debitos.reduce(function(s,d){return s+d.taxa;},0),
+    _DADOS.debitos.reduce(function(s,d){return s+d.liq;},0),
+    '','','',''
+  ]);
+  var wsDeb=XLSX.utils.aoa_to_sheet(rowsDeb);
+  wsDeb['!cols']=[{wch:12},{wch:11},{wch:12},{wch:6},{wch:12},{wch:13},{wch:10},{wch:13},{wch:13},{wch:13},{wch:12},{wch:30}];
+  XLSX.utils.book_append_sheet(wb,wsDeb,'Débito');
+
+  // ── ABA 3: PIX ──────────────────────────────────────────
+  var hPix=['Data','CPF / CNPJ','Nome (Pacto)','Valor','Identificado'];
+  var rowsPix=[hPix];
+  _DADOS.pixExtrato.forEach(function(p){
+    rowsPix.push([
+      p.lanc.data,
+      p.cpf,
+      p.pm?p.pm.nome:(p.gm?'Getnet':'Não identificado'),
+      p.lanc.valor,
+      p.pm||p.gm?'Sim':'Não'
+    ]);
+  });
+  rowsPix.push([]);
+  rowsPix.push(['TOTAL','','',_DADOS.pixExtrato.reduce(function(s,p){return s+p.lanc.valor;},0),'']);
+  var wsPix=XLSX.utils.aoa_to_sheet(rowsPix);
+  wsPix['!cols']=[{wch:12},{wch:16},{wch:30},{wch:13},{wch:12}];
+  XLSX.utils.book_append_sheet(wb,wsPix,'PIX');
+
+  // ── ABA 4: RESUMO ───────────────────────────────────────
+  var totCred=_DADOS.creditos.reduce(function(s,c){return s+c.bruto;},0);
+  var totCredLiq=_DADOS.creditos.reduce(function(s,c){return s+c.liq;},0);
+  var totDeb=_DADOS.debitos.reduce(function(s,d){return s+d.bruto;},0);
+  var totDebLiq=_DADOS.debitos.reduce(function(s,d){return s+d.liq;},0);
+  var totPix=_DADOS.pixExtrato.reduce(function(s,p){return s+p.lanc.valor;},0);
+  var semPacto=_DADOS.creditos.filter(function(c){return !c.temPacto;}).length;
+  var rowsRes=[
+    ['Academia In Place — '+emp],
+    ['Conciliação Getnet × Extrato'],
+    ['Gerado em', new Date().toLocaleDateString('pt-BR')+' '+new Date().toLocaleTimeString('pt-BR')],
+    [],
+    ['Tipo','Qtd Transações','Valor Bruto','Taxa','Valor Líquido'],
+    ['Crédito',_DADOS.creditos.length,totCred,_DADOS.creditos.reduce(function(s,c){return s+c.taxa;},0),totCredLiq],
+    ['Débito',_DADOS.debitos.length,totDeb,_DADOS.debitos.reduce(function(s,d){return s+d.taxa;},0),totDebLiq],
+    ['PIX',_DADOS.pixExtrato.length,'',0,totPix],
+    ['TOTAL',_DADOS.creditos.length+_DADOS.debitos.length+_DADOS.pixExtrato.length,totCred+totDeb,'',totCredLiq+totDebLiq+totPix],
+    [],
+    ['Vendas sem identificação no Pacto', semPacto],
+  ];
+  var wsRes=XLSX.utils.aoa_to_sheet(rowsRes);
+  wsRes['!cols']=[{wch:20},{wch:16},{wch:15},{wch:12},{wch:15}];
+  XLSX.utils.book_append_sheet(wb,wsRes,'Resumo');
+
+  var data=new Date().toLocaleDateString('pt-BR').replace(/\//g,'-');
+  XLSX.writeFile(wb,'InPlace_'+emp+'_Conciliacao_'+data+'.xlsx');
+}
+</script>
+</body>
+</html>
