@@ -303,9 +303,23 @@
         <div><label>Valor (R$)</label><input id="cVal" placeholder="0,00"></div>
         <div><label>Forma</label><select id="cForma"><option>Boleto</option><option>PIX</option><option>Débito automático</option><option>Transferência</option><option>Dinheiro</option><option>Cartão</option></select></div>
         <div><label>Parcelas</label><select id="cParc" onchange="previewParcelas()"><option value="1">À vista (1x)</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option></select></div>
-        <div class="full" id="boxFixaFlag" style="display:flex;align-items:center;gap:9px;background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:8px;padding:11px 13px;cursor:pointer" onclick="if(event.target.id!=='cFixaFlag'){const c=document.getElementById('cFixaFlag');c.checked=!c.checked;toggleFixaFlag()}">
-          <input type="checkbox" id="cFixaFlag" onchange="toggleFixaFlag()" style="width:17px;height:17px;accent-color:var(--gold)">
-          <span style="font-size:13px"><b>Conta fixa</b> — repete todo mês, no dia do vencimento informado</span>
+        <div class="full" id="boxFixaFlag" style="background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:8px;padding:11px 13px">
+          <div style="display:flex;align-items:center;gap:9px;cursor:pointer" onclick="if(event.target.id!=='cFixaFlag'){const c=document.getElementById('cFixaFlag');c.checked=!c.checked;toggleFixaFlag()}">
+            <input type="checkbox" id="cFixaFlag" onchange="toggleFixaFlag()" style="width:17px;height:17px;accent-color:var(--gold)">
+            <span style="font-size:13px"><b>Conta fixa</b> — repete automaticamente</span>
+          </div>
+          <div id="fixaOpts" style="display:none;gap:10px;margin-top:10px;align-items:center;flex-wrap:wrap">
+            <select id="cFreq" onchange="document.getElementById('cDiaSem').style.display=this.value==='semanal'?'inline-block':'none'" style="border:1px solid var(--gold-light);border-radius:7px;padding:8px 10px;font-size:13px;background:#fff">
+              <option value="mensal">Todo mês, no dia do vencimento</option>
+              <option value="semanal">Toda semana</option>
+            </select>
+            <select id="cDiaSem" style="display:none;border:1px solid var(--gold-light);border-radius:7px;padding:8px 10px;font-size:13px;background:#fff">
+              <option value="1">Segunda-feira</option><option value="2">Terça-feira</option>
+              <option value="3">Quarta-feira</option><option value="4">Quinta-feira</option>
+              <option value="5">Sexta-feira</option><option value="6">Sábado</option>
+              <option value="0">Domingo</option>
+            </select>
+          </div>
         </div>
         <div class="prev-parc" id="prevParc" style="display:none"></div>
       </div>
@@ -444,6 +458,7 @@ function init(){
 
   db.collection('fluxo_contas').onSnapshot(s=>{
     contas = s.docs.map(d=>({id:d.id,...d.data()}));
+    if(!contasProntas && !s.metadata.fromCache){ contasProntas = true; gerarFixasDoMes(); }
     renderTudo(); ok();
   }, err);
 
@@ -479,27 +494,43 @@ async function seedClientes(){
   }catch(e){ erroDb(e); }
 }
 
-/* ═══════ GERAÇÃO AUTOMÁTICA DE FIXAS (mês atual + próximo) ═══════ */
+/* ═══════ GERAÇÃO AUTOMÁTICA DE FIXAS (mensais: 12 meses / semanais: 12 semanas) ═══════ */
+let contasProntas = false;
 async function gerarFixasDoMes(){
-  if(!fixas.length) return;
+  if(!contasProntas || !fixas.length) return;
   try{
   const agora = new Date();
-  // gera do mês atual até 11 meses à frente (12 no total) — aparece nos filtros de período
-  const alvos = Array.from({length:12},(_,i)=>{ const d=new Date(agora.getFullYear(),agora.getMonth()+i,1); return {y:d.getFullYear(),m:d.getMonth()}; });
+  const pend = []; // {chave, dados}
   for(const f of fixas.filter(x=>x.ativo!==false)){
-    for(const a of alvos){
-      const chave = `fixa_${f.id}_${a.y}${String(a.m+1).padStart(2,'0')}`;
-      const ultimoDia = new Date(a.y,a.m+1,0).getDate();
-      const dia = Math.min(parseInt(f.dia)||1, ultimoDia);
-      const venc = `${a.y}-${String(a.m+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
-      const ref = db.collection('fluxo_contas').doc(chave);
-      const snap = await ref.get();
-      if(!snap.exists){
-        await ref.set({cliId:f.cliId,cliNome:f.cliNome,desc:f.desc,forn:f.forn||'',ndoc:'',venc,
-          valor:f.valor,forma:f.forma,status:'aberto',origem:'fixa',fixaId:f.id,criadoEm:hojeStr()});
+    const base = {cliId:f.cliId,cliNome:f.cliNome,desc:f.desc,forn:f.forn||'',ndoc:'',
+      valor:f.valor,forma:f.forma,status:'aberto',origem:'fixa',fixaId:f.id,criadoEm:hojeStr()};
+    if(f.freq==='semanal'){
+      // próximas 12 semanas no dia da semana escolhido
+      const alvo = parseInt(f.diaSemana);
+      const d = new Date(agora.getFullYear(),agora.getMonth(),agora.getDate());
+      d.setDate(d.getDate() + ((alvo - d.getDay() + 7) % 7)); // próxima ocorrência (hoje conta)
+      for(let i=0;i<12;i++){
+        const venc = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        pend.push({chave:`fixa_${f.id}_s${venc}`, dados:{...base, venc}});
+        d.setDate(d.getDate()+7);
+      }
+    } else {
+      // mensal: mês atual até 11 meses à frente
+      for(let i=0;i<12;i++){
+        const m = new Date(agora.getFullYear(),agora.getMonth()+i,1);
+        const ultimoDia = new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
+        const dia = Math.min(parseInt(f.dia)||1, ultimoDia);
+        const venc = `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+        pend.push({chave:`fixa_${f.id}_${m.getFullYear()}${String(m.getMonth()+1).padStart(2,'0')}`, dados:{...base, venc}});
       }
     }
   }
+  // cria só o que ainda não existe (verificação em memória, sem leituras extras)
+  const novos = pend.filter(p=>!contas.some(c=>c.id===p.chave));
+  if(!novos.length) return;
+  const batch = db.batch();
+  novos.forEach(p=>batch.set(db.collection('fluxo_contas').doc(p.chave), p.dados));
+  await batch.commit();
   }catch(e){ erroDb(e); }
 }
 
@@ -649,6 +680,9 @@ function abrirConta(id=null){
   document.getElementById('cForma').value= c?c.forma||'Boleto':'Boleto';
   document.getElementById('cParc').value = '1';
   document.getElementById('cFixaFlag').checked = false;
+  document.getElementById('cFreq').value = 'mensal';
+  document.getElementById('cDiaSem').style.display = 'none';
+  document.getElementById('fixaOpts').style.display = 'none';
   document.getElementById('boxFixaFlag').style.display = id ? 'none' : 'flex';
   document.getElementById('cParc').disabled = !!id;
   document.getElementById('prevParc').style.display='none';
@@ -682,6 +716,7 @@ function toggleFixaFlag(){
   const fixa = document.getElementById('cFixaFlag').checked;
   const p = document.getElementById('cParc');
   p.disabled = fixa;
+  document.getElementById('fixaOpts').style.display = fixa ? 'flex' : 'none';
   if(fixa){ p.value='1'; document.getElementById('prevParc').style.display='none'; }
 }
 
@@ -703,20 +738,30 @@ async function salvarConta(){
       await db.collection('fluxo_contas').doc(edicaoConta).update(base);
       const c = contas.find(x=>x.id===edicaoConta);
       if(c && c.origem==='fixa' && c.fixaId && (c.valor!==base.valor || c.desc!==base.desc)){
-        if(confirm('Esta conta é FIXA. Aplicar as alterações também aos próximos meses?')){
-          await db.collection('fluxo_fixas').doc(c.fixaId).update({
-            desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma,
-            dia:parseInt(base.venc.split('-')[2])
-          });
+        const fx = fixas.find(f=>f.id===c.fixaId);
+        if(confirm('Esta conta é FIXA. Aplicar as alterações também às próximas repetições?')){
+          const up = {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma};
+          if(fx && fx.freq==='semanal') up.diaSemana = new Date(base.venc+'T12:00').getDay();
+          else up.dia = parseInt(base.venc.split('-')[2]);
+          await db.collection('fluxo_fixas').doc(c.fixaId).update(up);
         }
       }
       toast('Conta atualizada ✓');
     } else if(document.getElementById('cFixaFlag').checked){
-      // Flag de conta fixa: cria o modelo mensal e gera os lançamentos
-      const dia = parseInt(base.venc.split('-')[2]);
-      await db.collection('fluxo_fixas').add({cliId, cliNome:cli.nome, desc:base.desc,
-        forn:base.forn, dia, valor:base.valor, forma:base.forma, ativo:true});
-      toast(`Conta fixa criada — dia ${dia} de todo mês, para <b>${esc(cli.nome)}</b> ✓`);
+      // Flag de conta fixa: cria o modelo (mensal ou semanal) e gera os lançamentos
+      const freq = document.getElementById('cFreq').value;
+      const modelo = {cliId, cliNome:cli.nome, desc:base.desc, forn:base.forn,
+        valor:base.valor, forma:base.forma, ativo:true, freq};
+      if(freq==='semanal'){
+        modelo.diaSemana = parseInt(document.getElementById('cDiaSem').value);
+        const nomes = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+        await db.collection('fluxo_fixas').add(modelo);
+        toast(`Conta fixa criada — toda ${nomes[modelo.diaSemana]}, para <b>${esc(cli.nome)}</b> ✓`);
+      } else {
+        modelo.dia = parseInt(base.venc.split('-')[2]);
+        await db.collection('fluxo_fixas').add(modelo);
+        toast(`Conta fixa criada — dia ${modelo.dia} de todo mês, para <b>${esc(cli.nome)}</b> ✓`);
+      }
       setTimeout(gerarFixasDoMes, 800);
     } else {
       const n = parseInt(document.getElementById('cParc').value);
