@@ -494,7 +494,7 @@ async function seedClientes(){
   }catch(e){ erroDb(e); }
 }
 
-/* ═══════ GERAÇÃO AUTOMÁTICA DE FIXAS (mensais: 12 meses / semanais: 12 semanas) ═══════ */
+/* ═══════ GERAÇÃO AUTOMÁTICA DE FIXAS (mensais: 12 meses / semanais: 52 semanas) ═══════ */
 let contasProntas = false;
 async function gerarFixasDoMes(){
   if(!contasProntas || !fixas.length) return;
@@ -502,35 +502,41 @@ async function gerarFixasDoMes(){
   const agora = new Date();
   const pend = []; // {chave, dados}
   for(const f of fixas.filter(x=>x.ativo!==false)){
+    const inicio = f.inicio || ''; // fixas antigas (sem início) geram desde já
     const base = {cliId:f.cliId,cliNome:f.cliNome,desc:f.desc,forn:f.forn||'',ndoc:'',
       valor:f.valor,forma:f.forma,status:'aberto',origem:'fixa',fixaId:f.id,criadoEm:hojeStr()};
     if(f.freq==='semanal'){
-      // próximas 12 semanas no dia da semana escolhido
+      // parte da data de início (se futura) ou de hoje, e acha o próximo dia da semana escolhido
       const alvo = parseInt(f.diaSemana);
-      const d = new Date(agora.getFullYear(),agora.getMonth(),agora.getDate());
-      d.setDate(d.getDate() + ((alvo - d.getDay() + 7) % 7)); // próxima ocorrência (hoje conta)
-      for(let i=0;i<12;i++){
+      const ref0 = inicio > hojeStr() ? new Date(inicio+'T12:00') : new Date(agora.getFullYear(),agora.getMonth(),agora.getDate());
+      const d = new Date(ref0.getFullYear(),ref0.getMonth(),ref0.getDate());
+      d.setDate(d.getDate() + ((alvo - d.getDay() + 7) % 7)); // próxima ocorrência (o próprio dia conta)
+      for(let i=0;i<52;i++){
         const venc = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-        pend.push({chave:`fixa_${f.id}_s${venc}`, dados:{...base, venc}});
+        if(!inicio || venc >= inicio) pend.push({chave:`fixa_${f.id}_s${venc}`, dados:{...base, venc}});
         d.setDate(d.getDate()+7);
       }
     } else {
-      // mensal: mês atual até 11 meses à frente
+      // mensal: mês atual até 11 meses à frente, sem criar nada antes da data de início
       for(let i=0;i<12;i++){
         const m = new Date(agora.getFullYear(),agora.getMonth()+i,1);
         const ultimoDia = new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
         const dia = Math.min(parseInt(f.dia)||1, ultimoDia);
         const venc = `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
-        pend.push({chave:`fixa_${f.id}_${m.getFullYear()}${String(m.getMonth()+1).padStart(2,'0')}`, dados:{...base, venc}});
+        if(!inicio || venc >= inicio)
+          pend.push({chave:`fixa_${f.id}_${m.getFullYear()}${String(m.getMonth()+1).padStart(2,'0')}`, dados:{...base, venc}});
       }
     }
   }
   // cria só o que ainda não existe (verificação em memória, sem leituras extras)
   const novos = pend.filter(p=>!contas.some(c=>c.id===p.chave));
   if(!novos.length) return;
-  const batch = db.batch();
-  novos.forEach(p=>batch.set(db.collection('fluxo_contas').doc(p.chave), p.dados));
-  await batch.commit();
+  // grava em lotes de até 400 (limite do Firestore é 500 por lote)
+  for(let i=0;i<novos.length;i+=400){
+    const batch = db.batch();
+    novos.slice(i,i+400).forEach(p=>batch.set(db.collection('fluxo_contas').doc(p.chave), p.dados));
+    await batch.commit();
+  }
   }catch(e){ erroDb(e); }
 }
 
@@ -726,10 +732,13 @@ function toggleFixaFlag(){
   if(fixa){ p.value='1'; document.getElementById('prevParc').style.display='none'; }
 }
 
+let salvandoConta = false;
 async function salvarConta(){
+  if(salvandoConta) return; // trava contra clique duplo (causa de duplicações)
   const cliId = document.getElementById('cCli').value;
   const desc = document.getElementById('cDesc').value.trim();
   if(!cliId||!desc){ toast('Preencha cliente e descrição'); return; }
+  salvandoConta = true;
   const cli = clientes.find(c=>c.id===cliId);
   const base = {
     cliId, cliNome: cli.nome,
@@ -757,7 +766,7 @@ async function salvarConta(){
       // Flag de conta fixa: cria o modelo (mensal ou semanal) e gera os lançamentos
       const freq = document.getElementById('cFreq').value;
       const modelo = {cliId, cliNome:cli.nome, desc:base.desc, forn:base.forn,
-        valor:base.valor, forma:base.forma, ativo:true, freq};
+        valor:base.valor, forma:base.forma, ativo:true, freq, inicio:base.venc};
       if(freq==='semanal'){
         modelo.diaSemana = parseInt(document.getElementById('cDiaSem').value);
         const nomes = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
@@ -789,6 +798,7 @@ async function salvarConta(){
     }
     fechar('ovConta');
   }catch(e){ erroDb(e); }
+  salvandoConta = false;
 }
 
 /* ═══════ CLIENTES ═══════ */
