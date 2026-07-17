@@ -663,13 +663,18 @@ async function excluirConta(id){
         const batch = db.batch();
         batch.delete(db.collection('fluxo_contas').doc(id));
         // apaga todas as repetições em aberto desta fixa (as pagas ficam no histórico)
-        const irmas = contas.filter(x=>x.fixaId===c.fixaId && x.status==='aberto' && x.id!==id);
+        const irmas = contas.filter(x=>x.fixaId===c.fixaId && x.status!=='pago' && x.id!==id);
         irmas.forEach(x=>batch.delete(db.collection('fluxo_contas').doc(x.id)));
         batch.delete(db.collection('fluxo_fixas').doc(c.fixaId));
         await batch.commit();
         toast(`Fixa encerrada — ${1+irmas.length} lançamento${irmas.length?'s':''} excluído${irmas.length?'s':''} ✓`);
         return;
       }
+      // exclusão de UM lançamento de fixa: marca como excluído (se apagasse de verdade,
+      // o gerador automático recriaria o mesmo vencimento na próxima abertura)
+      await db.collection('fluxo_contas').doc(id).update({status:'excluida'});
+      toast('Lançamento excluído — não será recriado ✓');
+      return;
     }
     await db.collection('fluxo_contas').doc(id).delete();
     toast('Conta excluída');
