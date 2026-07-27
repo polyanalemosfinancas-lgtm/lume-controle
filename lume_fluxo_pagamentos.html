@@ -78,7 +78,9 @@
   .grp.g-atr .grp-head h2,.grp.g-atr .grp-head .tot{color:var(--red)}
   .grp.g-hoje .grp-head h2{color:var(--amber)}
 
-  .conta{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:70px 1fr auto auto auto;gap:14px;align-items:center;margin-bottom:8px;transition:box-shadow .15s}
+  .conta{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:22px 70px 1fr auto auto auto;gap:14px;align-items:center;margin-bottom:8px;transition:box-shadow .15s}
+  .conta input.chk{width:17px;height:17px;accent-color:var(--navy);cursor:pointer}
+  .conta.selecionada{box-shadow:0 0 0 2px var(--gold) inset;background:var(--gold-pale)}
   .conta:hover{box-shadow:0 3px 12px rgba(13,33,55,.08)}
   .grp.g-atr .conta{border-left:4px solid var(--red)}
   .grp.g-hoje .conta{border-left:4px solid var(--gold)}
@@ -105,6 +107,16 @@
   .btn-ico.re:hover{border-color:var(--green);color:var(--green)}
 
   .empty{background:var(--card);border:1px dashed var(--line);border-radius:10px;padding:22px;text-align:center;color:var(--muted);font-size:13px}
+
+  /* ── BARRA DE SELEÇÃO ── */
+  .selbar{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(120px);background:var(--navy);color:#fff;border-radius:12px;padding:13px 18px;display:flex;align-items:center;gap:16px;box-shadow:0 10px 30px rgba(0,0,0,.3);z-index:150;transition:transform .25s;max-width:94vw;flex-wrap:wrap}
+  .selbar.on{transform:translateX(-50%) translateY(0)}
+  .selbar .cnt{font-size:13px;font-weight:600}
+  .selbar .soma{font-family:'Fraunces',serif;font-size:17px;font-weight:600;color:var(--gold-light)}
+  .selbar button{font-size:12.5px;font-weight:700;padding:9px 15px;border-radius:8px;border:none}
+  .selbar .b-pagar{background:var(--green);color:#fff}
+  .selbar .b-excluir{background:var(--red);color:#fff}
+  .selbar .b-limpar{background:rgba(255,255,255,.15);color:#fff}
 
   /* ── CLIENTES ── */
   .cli-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
@@ -176,10 +188,10 @@
 
   @media(max-width:860px){
     .kpis{grid-template-columns:1fr 1fr}
-    .conta,.fixa-row{grid-template-columns:56px 1fr;grid-template-rows:auto auto}
-    .conta .valor{text-align:left;grid-column:2}
-    .conta .st,.conta .acoes,.fixa-row>*{grid-column:2;justify-self:start}
-    .fixa-row .dia{grid-column:1}
+    .conta{grid-template-columns:22px 56px 1fr;grid-template-rows:auto auto}
+    .conta .valor{text-align:left;grid-column:2/-1}
+    .conta .st,.conta .acoes{grid-column:2/-1;justify-self:start}
+    .conta input.chk{align-self:start;margin-top:4px}
     .frm{grid-template-columns:1fr}
     .topbar{padding:10px 14px;height:auto}
   }
@@ -259,6 +271,11 @@
       <button class="chip" onclick="['mesAg','deAg','ateAg'].forEach(i=>document.getElementById(i).value='');renderAgenda()">✕ Limpar período</button>
     </div>
     <div class="filters" id="chipsAgenda"></div>
+    <div class="filters" style="margin-bottom:8px">
+      <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);cursor:pointer">
+        <input type="checkbox" id="chkTodosAg" onchange="selecionarTodosVisiveis('agenda')" style="width:15px;height:15px"> Selecionar todos os visíveis
+      </label>
+    </div>
     <div id="agenda"></div>
   </div>
 
@@ -268,6 +285,11 @@
       <input type="month" id="mesPagas" onchange="renderPagas()">
       <select id="cliPagas" onchange="renderPagas()"></select>
       <span style="margin-left:auto;font-weight:700;font-size:14px;color:var(--navy)" id="totPagas"></span>
+    </div>
+    <div class="filters" style="margin-bottom:8px">
+      <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--muted);cursor:pointer">
+        <input type="checkbox" id="chkTodosPg" onchange="selecionarTodosVisiveis('pagas')" style="width:15px;height:15px"> Selecionar todos os visíveis
+      </label>
     </div>
     <div id="listaPagas"></div>
   </div>
@@ -370,6 +392,14 @@
       <button class="btn-pri" id="btnImp" style="display:none" onclick="confirmarImport()">Importar contas válidas</button>
     </div>
   </div>
+</div>
+
+<div class="selbar" id="selbar">
+  <span class="cnt" id="selCnt"></span>
+  <span class="soma" id="selSoma"></span>
+  <button class="b-pagar" id="selBtnPagar" onclick="acaoLote('pagar')">Marcar pagas</button>
+  <button class="b-excluir" onclick="acaoLote('excluir')">Excluir</button>
+  <button class="b-limpar" onclick="limparSelecao()">✕ Limpar seleção</button>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -545,6 +575,7 @@ function trocarAba(v){
   document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));
   document.querySelectorAll('.view').forEach(x=>x.classList.remove('on'));
   document.getElementById('v-'+v).classList.add('on');
+  if(v!=='agenda' && v!=='pagas'){ selecionados.clear(); atualizarBarraSelecao(); }
 }
 
 function renderTudo(){ renderAgenda(); renderPagas(); renderClientes(); preencherSelects(); }
@@ -605,6 +636,8 @@ function renderAgenda(){
       ＋ ${ocultas.length} conta${ocultas.length>1?'s':''} futura${ocultas.length>1?'s':''} depois de 14 dias (${fmt(ocultas.reduce((s,c)=>s+c.valor,0))}) — clique para ver o próximo mês, ou use o filtro de período</div>`;
   }
   document.getElementById('agenda').innerHTML = html;
+  visiveisAgenda = vis.map(c=>c.id);
+  document.getElementById('chkTodosAg').checked = visiveisAgenda.length>0 && visiveisAgenda.every(id=>selecionados.has(id));
 }
 
 function linhaConta(c, paga=false){
@@ -618,13 +651,76 @@ function linhaConta(c, paga=false){
     : `<button class="btn-mini" onclick="marcarPaga('${c.id}')">Marcar paga</button>
        <button class="btn-ico ed" title="Editar" onclick="abrirConta('${c.id}')">✎</button>
        <button class="btn-ico" title="Excluir" onclick="excluirConta('${c.id}')">🗑</button>`;
-  return `<div class="conta">
+  return `<div class="conta ${selecionados.has(c.id)?'selecionada':''}">
+    <input type="checkbox" class="chk" ${selecionados.has(c.id)?'checked':''} onchange="toggleSelecao('${c.id}')">
     <div class="venc"><div class="d">${d.getDate()}</div><div class="m">${MESES[d.getMonth()]}${d.getFullYear()!==new Date().getFullYear()?'/'+String(d.getFullYear()).slice(2):''}</div></div>
     <div class="info"><div class="desc">${esc(c.desc)}</div>
       <div class="meta"><span class="tag-cli">${esc(c.cliNome)}</span>${c.forn?`<span>${esc(c.forn)}</span>`:''}<span>· ${esc(c.forma||'')}</span>${tags}${paga&&c.pagoEm?`<span>· paga em ${c.pagoEm.split('-').reverse().join('/')}</span>`:''}</div></div>
     <div class="valor">${fmt(c.valor)}</div>
     <div class="st ${st[0]}">${st[1]}</div>
     <div class="acoes">${acoes}</div></div>`;
+}
+
+/* ═══════ SELEÇÃO MÚLTIPLA (Agenda + Pagas) ═══════ */
+let selecionados = new Set();
+let visiveisAgenda = [], visiveisPagas = [];
+
+function selecionarTodosVisiveis(aba){
+  const lista = aba==='agenda' ? visiveisAgenda : visiveisPagas;
+  const chk = document.getElementById(aba==='agenda'?'chkTodosAg':'chkTodosPg').checked;
+  lista.forEach(id => chk ? selecionados.add(id) : selecionados.delete(id));
+  atualizarBarraSelecao();
+  if(aba==='agenda') renderAgenda(); else renderPagas();
+}
+
+function toggleSelecao(id){
+  if(selecionados.has(id)) selecionados.delete(id); else selecionados.add(id);
+  atualizarBarraSelecao();
+  const abaAtiva = document.querySelector('.view.on').id;
+  if(abaAtiva==='v-agenda') renderAgenda(); else if(abaAtiva==='v-pagas') renderPagas();
+}
+
+function limparSelecao(){ selecionados.clear(); atualizarBarraSelecao(); renderAgenda(); renderPagas(); }
+
+function atualizarBarraSelecao(){
+  const bar = document.getElementById('selbar');
+  if(!selecionados.size){ bar.classList.remove('on'); return; }
+  const itens = contas.filter(c=>selecionados.has(c.id));
+  const soma = itens.reduce((s,c)=>s+c.valor,0);
+  document.getElementById('selCnt').textContent = `${itens.length} selecionada${itens.length>1?'s':''}`;
+  document.getElementById('selSoma').textContent = fmt(soma);
+  // só mostra "Marcar pagas" se houver alguma conta ainda aberta selecionada
+  document.getElementById('selBtnPagar').style.display = itens.some(c=>c.status==='aberto') ? 'inline-block' : 'none';
+  bar.classList.add('on');
+}
+
+async function acaoLote(tipo){
+  const itens = contas.filter(c=>selecionados.has(c.id));
+  if(!itens.length) return;
+  try{
+    if(tipo==='pagar'){
+      const abertas = itens.filter(c=>c.status==='aberto');
+      const batch = db.batch();
+      abertas.forEach(c=>batch.update(db.collection('fluxo_contas').doc(c.id),{status:'pago',pagoEm:hojeStr()}));
+      await batch.commit();
+      toast(`${abertas.length} conta${abertas.length>1?'s':''} marcada${abertas.length>1?'s':''} como paga${abertas.length>1?'s':''} ✓`);
+    } else {
+      const temFixa = itens.some(c=>c.origem==='fixa');
+      const msg = temFixa
+        ? `Excluir ${itens.length} conta(s)? Algumas são FIXAS — serão excluídas só estas, sem afetar as próximas repetições.`
+        : `Excluir ${itens.length} conta(s) definitivamente?`;
+      if(!confirm(msg)) return;
+      const batch = db.batch();
+      itens.forEach(c=>{
+        if(c.origem==='fixa') batch.update(db.collection('fluxo_contas').doc(c.id),{status:'excluida'});
+        else batch.delete(db.collection('fluxo_contas').doc(c.id));
+      });
+      await batch.commit();
+      toast(`${itens.length} conta${itens.length>1?'s':''} excluída${itens.length>1?'s':''} ✓`);
+    }
+    selecionados.clear();
+    atualizarBarraSelecao();
+  }catch(e){ erroDb(e); }
 }
 
 /* ═══════ PAGAS ═══════ */
@@ -639,6 +735,8 @@ function renderPagas(){
   document.getElementById('listaPagas').innerHTML = arr.length
     ? arr.map(c=>linhaConta(c,true)).join('')
     : `<div class="empty">Nenhuma conta paga neste período.</div>`;
+  visiveisPagas = arr.map(c=>c.id);
+  document.getElementById('chkTodosPg').checked = visiveisPagas.length>0 && visiveisPagas.every(id=>selecionados.has(id));
 }
 
 async function marcarPaga(id){
