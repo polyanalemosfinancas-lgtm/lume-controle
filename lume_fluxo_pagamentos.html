@@ -269,6 +269,8 @@
       <label style="font-size:12px;font-weight:600;color:var(--muted)">Até:</label>
       <input type="date" id="ateAg" onchange="document.getElementById('mesAg').value='';renderAgenda()" style="border:1px solid var(--line);border-radius:8px;padding:8px 11px;font-size:13px;background:#fff">
       <button class="chip" onclick="['mesAg','deAg','ateAg'].forEach(i=>document.getElementById(i).value='');renderAgenda()">✕ Limpar período</button>
+      <input type="text" id="buscaAg" placeholder="🔎 Buscar por nome, descrição ou valor…" oninput="renderAgenda()"
+        style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff">
     </div>
     <div class="filters" id="chipsAgenda"></div>
     <div class="filters" style="margin-bottom:8px">
@@ -284,6 +286,8 @@
     <div class="filters">
       <input type="month" id="mesPagas" onchange="renderPagas()">
       <select id="cliPagas" onchange="renderPagas()"></select>
+      <input type="text" id="buscaPg" placeholder="🔎 Buscar por nome, descrição ou valor…" oninput="renderPagas()"
+        style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff">
       <span style="margin-left:auto;font-weight:700;font-size:14px;color:var(--navy)" id="totPagas"></span>
     </div>
     <div class="filters" style="margin-bottom:8px">
@@ -591,6 +595,21 @@ function preencherSelects(){
   eP.value = vP && [...eP.options].some(o=>o.value===vP) ? vP : 'Todos';
 }
 
+/* ═══════ BUSCA (nome, descrição, fornecedor ou valor) ═══════ */
+function combinaBusca(c, termo){
+  if(!termo) return true;
+  const t = termo.trim().toLowerCase();
+  // busca por valor: aceita "150", "150,00", "1.500" etc.
+  const soNum = t.replace(/[^\d,.-]/g,'');
+  if(soNum && /^[\d.,]+$/.test(soNum)){
+    const alvo = parseVal(soNum);
+    if(alvo>0 && Math.abs(c.valor - alvo) < 0.01) return true;
+    // também casa por prefixo (ex.: "15" encontra 150,00 e 15,90)
+    if(String(c.valor.toFixed(2)).replace('.',',').startsWith(soNum.replace('.',','))) return true;
+  }
+  return [c.cliNome,c.desc,c.forn,c.ndoc].some(campo => (campo||'').toLowerCase().includes(t));
+}
+
 /* ═══════ AGENDA ═══════ */
 function renderAgenda(){
   const nomes = ['Todos',...clientesAtivos().map(c=>c.nome)];
@@ -601,14 +620,17 @@ function renderAgenda(){
   const de = document.getElementById('deAg').value;
   const ate = document.getElementById('ateAg').value;
   const temFiltro = !!(mes||de||ate);
+  const busca = document.getElementById('buscaAg').value;
   let vis = contas.filter(c => c.status==='aberto'
     && (filtroCli==='Todos'||c.cliNome===filtroCli)
     && (!mes || c.venc.startsWith(mes))
     && (!de || c.venc>=de)
-    && (!ate || c.venc<=ate));
-  // sem filtro de período: resumo enxuto — só até 14 dias; o resto fica acessível pelo filtro
-  const ocultas = temFiltro ? [] : vis.filter(c=>dias(c.venc)>14);
-  if(!temFiltro) vis = vis.filter(c=>dias(c.venc)<=14);
+    && (!ate || c.venc<=ate)
+    && combinaBusca(c, busca));
+  // sem filtro de período nem busca ativa: resumo enxuto — só até 14 dias
+  const semCorte = temFiltro || !!busca.trim();
+  const ocultas = semCorte ? [] : vis.filter(c=>dias(c.venc)>14);
+  if(!semCorte) vis = vis.filter(c=>dias(c.venc)<=14);
 
   const atr = vis.filter(c=>dias(c.venc)<0);
   const hj  = vis.filter(c=>dias(c.venc)===0);
@@ -620,7 +642,7 @@ function renderAgenda(){
     {cls:'g-atr',  t:'⚠ Atrasadas', f:c=>dias(c.venc)<0, sempre:true},
     {cls:'g-hoje', t:'Vencem hoje', f:c=>dias(c.venc)===0, sempre:true},
     {cls:'',       t:'Próximos 7 dias', f:c=>dias(c.venc)>0&&dias(c.venc)<=7},
-    {cls:'',       t:temFiltro?'Mais adiante':'Semana seguinte (8–14 dias)', f:c=>dias(c.venc)>7},
+    {cls:'',       t:semCorte?'Mais adiante':'Semana seguinte (8–14 dias)', f:c=>dias(c.venc)>7},
   ];
   let html = grupos.map(g=>{
     const arr = vis.filter(g.f).sort((a,b)=>a.venc.localeCompare(b.venc));
@@ -727,9 +749,11 @@ async function acaoLote(tipo){
 function renderPagas(){
   const mes = document.getElementById('mesPagas').value;
   const cli = document.getElementById('cliPagas').value || 'Todos';
+  const busca = document.getElementById('buscaPg').value;
   const arr = contas.filter(c=>c.status==='pago'
     && (!mes || (c.pagoEm||c.venc||'').startsWith(mes))
-    && (cli==='Todos'||c.cliId===cli))
+    && (cli==='Todos'||c.cliId===cli)
+    && combinaBusca(c, busca))
     .sort((a,b)=>(b.pagoEm||b.venc).localeCompare(a.pagoEm||a.venc));
   document.getElementById('totPagas').textContent = arr.length ? `${arr.length} contas · ${fmt(arr.reduce((s,c)=>s+c.valor,0))}` : '';
   document.getElementById('listaPagas').innerHTML = arr.length
