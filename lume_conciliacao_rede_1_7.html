@@ -156,7 +156,7 @@ td{padding:8px 11px;font-size:13px;white-space:nowrap;vertical-align:middle}
     </div>
     <div class="pane active" id="t1a"><div class="sec-title">Vendas Conciliadas — Pacto × Rede</div><div class="tw"><table id="tab-conc"><thead><tr><th>Unidade</th><th>Autorização</th><th>Cliente</th><th>Operadora</th><th>Parc.</th><th>Valor Pacto</th><th>Valor Rede</th><th>Bandeira</th><th>Data Venda</th><th>Status</th></tr></thead><tbody></tbody></table></div></div>
     <div class="pane" id="t1b"><div class="box box-alert"><strong>⚠️ Divergências encontradas.</strong> Verifique cada item no Pacto e na Rede antes de prosseguir.</div><div class="sec-title">Itens com Divergência de Valor</div><div class="tw"><table id="tab-div"><thead><tr><th>Unidade</th><th>Autorização</th><th>Cliente</th><th>Valor Pacto</th><th>Valor Rede</th><th>Diferença</th><th>Ação</th></tr></thead><tbody></tbody></table></div></div>
-    <div class="pane" id="t1c"><div class="box box-warn"><strong>Vendas aprovadas na Rede sem correspondência no Pacto.</strong> Podem ser de uma das unidades ou lançamentos pendentes.</div><div class="sec-title">Vendas Rede sem par no Pacto</div><div class="tw"><table id="tab-sr"><thead><tr><th>NSU</th><th>Autorização</th><th>Data</th><th>Valor Bruto</th><th>Valor Líquido</th><th>Bandeira</th><th>Modalidade</th><th>Parcelas</th><th>Estabelecimento</th></tr></thead><tbody></tbody></table></div></div>
+    <div class="pane" id="t1c"><div class="box box-warn"><strong>Vendas aprovadas na Rede sem correspondência no Pacto.</strong> Podem ser de uma das unidades ou lançamentos pendentes.</div><div class="sec-title">Vendas Rede sem par no Pacto</div><div class="tw"><table id="tab-sr"><thead><tr><th>Unidade</th><th>NSU</th><th>Autorização</th><th>Data</th><th>Valor Bruto</th><th>Valor Líquido</th><th>Bandeira</th><th>Modalidade</th><th>Parcelas</th><th>Estab.</th></tr></thead><tbody></tbody></table></div></div>
     <div class="pane" id="t1d"><div class="box box-gold">💡 PIX, Dinheiro e outros meios não passam pela Rede e entram diretamente no relatório do Conta Azul com categoria própria (PIX Recebido / Dinheiro Recebido), sem taxa.</div><div class="sec-title">PIX e Outros — Pacto (Matriz + Filial)</div><div class="tw"><table id="tab-pix"><thead><tr><th>Unidade</th><th>Cliente</th><th>Tipo</th><th>Valor</th><th>Compensação</th></tr></thead><tbody></tbody></table></div></div>
     <div class="pane" id="t1e"><div class="sec-title">Vendas por Bandeira — Rede (aprovadas)</div><div class="tw"><table id="tab-band"><thead><tr><th>Bandeira</th><th>Qtd</th><th>Total Bruto</th><th>Total Líquido</th></tr></thead><tbody></tbody></table></div></div>
     <div class="pane" id="t1f">
@@ -226,6 +226,18 @@ td{padding:8px 11px;font-size:13px;white-space:nowrap;vertical-align:middle}
 var G={pm:null,pf:null,rv:null,rr:null,loaded:0,matches:[],divs:[],soRede:[],pix:[],pixList:[],dinList:[],outrosList:[],parcelas:[],lancamentos:[],divContaErrada:[]};
 var CONTA_MATRIZ='993441';
 var CONTA_FILIAL='993672';
+
+// Mapa de códigos de estabelecimento → unidade
+var ESTAB_MAP={
+  '94940010':'Matriz',
+  '95249494':'Matriz',
+  '94940126':'Filial'
+};
+
+function unidadeByEstab(codEstab){
+  var cod=String(codEstab||'').trim().replace(/\.0$/,'');
+  return ESTAB_MAP[cod]||'Não identificado';
+}
 
 function fmt(n){if(isNaN(n)||n==null)return 'R$ 0,00';var s='R$ '+Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2});return n<0?'-'+s:s;}
 
@@ -448,7 +460,10 @@ function _processar(){
       var diff=Math.abs(p.valor-r.valor);
       var item={auth:k,nome:p.nome,op:p.op,unidade:p.unidade,numPacto:p.registros.length,vPacto:p.valor,vRede:r.valor,vRedeLiq:r.valorLiq,data:r.registros[0].data,band:r.registros[0].band,diff:diff,ok:diff<0.05};
       if(item.ok)G.matches.push(item);else G.divs.push(item);
-    }else if(r){r.registros.forEach(function(reg){G.soRede.push(reg);});}
+    }else if(r){r.registros.forEach(function(reg){
+      reg.unidade = unidadeByEstab(reg.codEstab);
+      G.soRede.push(reg);
+    });}
   });
   pactoAll.forEach(function(p){if(!p.isCart)G.pix.push(p);});
   // Separar PIX e Dinheiro dentro de G.pix para o relatório
@@ -511,6 +526,28 @@ function _processar(){
     });
   });
 
+  // Vendas só na Rede: entram no relatório com unidade identificada pelo código do estabelecimento
+  G.soRede.forEach(function(r){
+    var uni=r.unidade||'Não identificado';
+    G.lancamentos.push({
+      unidade:uni,
+      nome:'Não identificado no Pacto',
+      auth:r.auth||r.nsu||'—',
+      band:r.band,
+      codEstab:r.codEstab||'',
+      dtComp:r.data,
+      dtVenc:'',
+      dtRec:'',
+      parc:(r.parc||'1')+'/1',
+      tipo:'Não identificado',
+      valor:r.valor,
+      status:'⚠️ Sem par no Pacto',
+      obsContaErrada:'',
+      isPix:false,
+      soRede:true
+    });
+  });
+
   G.parcelas.filter(function(p){return !p.semRec;}).forEach(function(p){
     var st=p.isPago?'Recebido':'A receber';
     G.lancamentos.push({unidade:p.unidade,nome:p.nome,auth:p.auth,band:p.band,codEstab:p.codEstab||'',dtComp:p.dataVenda,dtVenc:p.dtRec||'',dtRec:p.isPago?p.dtRec:'',parc:p.parc,tipo:'A Receber',valor:p.bruto,status:st,obsContaErrada:p.obsContaErrada||''});
@@ -552,7 +589,24 @@ function renderE1(){
   G.divs.forEach(function(m){td.innerHTML+='<tr><td>'+unitChip(m.unidade)+'</td><td class="mono">'+m.auth+'</td><td>'+(m.nome||'—')+'</td><td class="val">'+fmt(m.vPacto)+'</td><td class="val">'+fmt(m.vRede)+'</td><td class="val-neg">'+fmt(m.diff)+'</td><td><span class="chip c-alert"><span class="dot"></span>Verificar</span></td></tr>';});
 
   var tsr=document.querySelector('#tab-sr tbody');tsr.innerHTML='';
-  G.soRede.forEach(function(r){tsr.innerHTML+='<tr><td class="mono muted">'+(r.nsu||'—')+'</td><td class="mono">'+(r.auth||'—')+'</td><td class="muted mono">'+r.data+'</td><td class="val">'+fmt(r.valor)+'</td><td class="val">'+(r.valorLiq?fmt(r.valorLiq):'<span class="muted">—</span>')+'</td><td>'+bandTag(r.band)+'</td><td class="muted">'+(r.mod||'—')+'</td><td style="text-align:center">'+(r.parc||'1')+'×</td><td class="muted">'+(r.estab||'—')+'</td></tr>';});
+  G.soRede.forEach(function(r){
+    var uni=r.unidade||'Não identificado';
+    var uniChipSR=uni==='Matriz'?'<span class="chip c-ok"><span class="dot"></span>Matriz</span>':
+                  uni==='Filial'?'<span class="chip c-warn"><span class="dot"></span>Filial</span>':
+                  '<span class="chip c-alert"><span class="dot"></span>⚠️ '+uni+'</span>';
+    tsr.innerHTML+='<tr>'+
+      '<td>'+uniChipSR+'</td>'+
+      '<td class="mono muted">'+(r.nsu||'—')+'</td>'+
+      '<td class="mono">'+(r.auth||'—')+'</td>'+
+      '<td class="muted mono">'+r.data+'</td>'+
+      '<td class="val">'+fmt(r.valor)+'</td>'+
+      '<td class="val">'+(r.valorLiq?fmt(r.valorLiq):'<span class="muted">—</span>')+'</td>'+
+      '<td>'+bandTag(r.band)+'</td>'+
+      '<td class="muted">'+(r.mod||'—')+'</td>'+
+      '<td style="text-align:center">'+(r.parc||'1')+'×</td>'+
+      '<td class="mono muted">'+(r.codEstab||'—')+'</td>'+
+      '</tr>';
+  });
 
   var tpx=document.querySelector('#tab-pix tbody');tpx.innerHTML='';
   G.pix.forEach(function(p){
@@ -662,9 +716,13 @@ var hCA=['Data','Valor','Descrição','Conta','Conta transferência','Cartão','
       var isTaxa=l.valor<0;
       var conta='';
       if(l.isPix && l.tipo==='Dinheiro Recebido'){
-        conta=l.unidade==='Matriz'?'Dinheiro Matriz':'Dinheiro Filial';
+        conta=l.unidade==='Matriz'?'Dinheiro Matriz':l.unidade==='Filial'?'Dinheiro Filial':'Não identificado';
+      } else if(l.unidade==='Matriz'){
+        conta='Itaú Matriz';
+      } else if(l.unidade==='Filial'){
+        conta='Itaú Filial';
       } else {
-        conta=l.unidade==='Matriz'?'Itaú Matriz':'Itaú Filial';
+        conta='Não identificado';
       }
       var cat='', subcat='';
       if(l.isPix){
@@ -673,6 +731,9 @@ var hCA=['Data','Valor','Descrição','Conta','Conta transferência','Cartão','
         else { cat=l.tipo; subcat=''; }
       } else if(isTaxa){
         cat='Financeiras'; subcat='Taxa Cartão';
+      } else if(l.soRede){
+        cat='Não identificado';
+        subcat='Cod. Estab: '+(l.codEstab||'—');
       } else {
         cat='Cartão Antecipação';
         subcat=l.unidade==='Matriz'?'Cartão - Matriz':'Cartão - Filial';
