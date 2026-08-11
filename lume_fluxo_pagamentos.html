@@ -438,6 +438,14 @@ const CLIENTES_INICIAIS = [
 let db, clientes = [], contas = [], fixas = [];
 let filtroCli = 'Todos', edicaoConta = null, edicaoFixa = null, edicaoCli = null, linhasImport = [];
 
+/* ═══════ GRUPOS RECOLHÍVEIS (Agenda) ═══════ */
+let gruposRecolhidos = new Set(JSON.parse(localStorage.getItem('lume_grupos_recolhidos')||'[]'));
+function toggleGrupo(id){
+  gruposRecolhidos.has(id) ? gruposRecolhidos.delete(id) : gruposRecolhidos.add(id);
+  localStorage.setItem('lume_grupos_recolhidos', JSON.stringify([...gruposRecolhidos]));
+  renderAgenda();
+}
+
 const fmt = v => (v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
 const MESES = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
 const hojeStr = () => { const d=new Date(); return d.toISOString().slice(0,10); };
@@ -639,17 +647,23 @@ function renderAgenda(){
   setK('kAtr',atr,'kAtrN'); setK('kHoje',hj,'kHojeN'); setK('kSem',sem,'kSemN'); setK('kTot',vis,'kTotN');
 
   const grupos=[
-    {cls:'g-atr',  t:'⚠ Atrasadas', f:c=>dias(c.venc)<0, sempre:true},
-    {cls:'g-hoje', t:'Vencem hoje', f:c=>dias(c.venc)===0, sempre:true},
-    {cls:'',       t:'Próximos 7 dias', f:c=>dias(c.venc)>0&&dias(c.venc)<=7},
-    {cls:'',       t:semCorte?'Mais adiante':'Semana seguinte (8–14 dias)', f:c=>dias(c.venc)>7},
+    {id:'atr',   cls:'g-atr',  t:'⚠ Atrasadas', f:c=>dias(c.venc)<0, sempre:true},
+    {id:'hoje',  cls:'g-hoje', t:'Vencem hoje', f:c=>dias(c.venc)===0, sempre:true},
+    {id:'sem7',  cls:'',       t:'Próximos 7 dias', f:c=>dias(c.venc)>0&&dias(c.venc)<=7},
+    {id:'dep',   cls:'',       t:semCorte?'Mais adiante':'Semana seguinte (8–14 dias)', f:c=>dias(c.venc)>7},
   ];
   let html = grupos.map(g=>{
     const arr = vis.filter(g.f).sort((a,b)=>a.venc.localeCompare(b.venc));
     if(!arr.length && !g.sempre) return '';
     const tot = arr.reduce((s,c)=>s+c.valor,0);
-    const linhas = arr.length ? arr.map(c=>linhaConta(c)).join('') : `<div class="empty">Nenhuma conta aqui 🎉</div>`;
-    return `<div class="grp ${g.cls}"><div class="grp-head"><h2>${g.t}</h2><span class="cnt">${arr.length}</span><span class="tot">${arr.length?fmt(tot):''}</span></div>${linhas}</div>`;
+    const recolhido = gruposRecolhidos.has(g.id);
+    const linhas = !arr.length ? `<div class="empty">Nenhuma conta aqui 🎉</div>`
+      : (recolhido ? '' : arr.map(c=>linhaConta(c)).join(''));
+    return `<div class="grp ${g.cls}">
+      <div class="grp-head" style="cursor:pointer" onclick="toggleGrupo('${g.id}')">
+        <span class="chev" style="display:inline-block;transition:transform .15s;transform:rotate(${recolhido?-90:0}deg)">▾</span>
+        <h2>${g.t}</h2><span class="cnt">${arr.length}</span><span class="tot">${arr.length?fmt(tot):''}</span>
+      </div>${linhas}</div>`;
   }).join('');
   if(ocultas.length){
     const prox = ocultas.slice().sort((a,b)=>a.venc.localeCompare(b.venc))[0];
@@ -879,16 +893,29 @@ async function salvarConta(){
     if(edicaoConta){
       await db.collection('fluxo_contas').doc(edicaoConta).update(base);
       const c = contas.find(x=>x.id===edicaoConta);
-      if(c && c.origem==='fixa' && c.fixaId && (c.valor!==base.valor || c.desc!==base.desc)){
+      if(c && c.origem==='fixa' && c.fixaId && (c.valor!==base.valor || c.desc!==base.desc || c.forn!==base.forn || c.forma!==base.forma)){
         const fx = fixas.find(f=>f.id===c.fixaId);
-        if(confirm('Esta conta é FIXA. Aplicar as alterações também às próximas repetições?')){
+        if(confirm('Esta conta é FIXA. Aplicar esta alteração também às OUTRAS repetições em aberto (passadas e futuras já geradas)?')){
           const up = {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma};
           if(fx && fx.freq==='semanal') up.diaSemana = new Date(base.venc+'T12:00').getDay();
           else up.dia = parseInt(base.venc.split('-')[2]);
+          // atualiza o modelo (afeta as futuras ainda não geradas)
           await db.collection('fluxo_fixas').doc(c.fixaId).update(up);
+          // atualiza também os lançamentos já gerados e ainda em aberto (mantendo a data de cada um)
+          const irmas = contas.filter(x=>x.fixaId===c.fixaId && x.status==='aberto' && x.id!==c.id);
+          if(irmas.length){
+            const batch2 = db.batch();
+            irmas.forEach(x=>batch2.update(db.collection('fluxo_contas').doc(x.id),
+              {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma}));
+            await batch2.commit();
+          }
+          toast(`Conta atualizada — alteração aplicada a ${1+irmas.length} lançamento${irmas.length?'s':''} ✓`);
+        } else {
+          toast('Conta atualizada — só este lançamento ✓');
         }
+      } else {
+        toast('Conta atualizada ✓');
       }
-      toast('Conta atualizada ✓');
     } else if(document.getElementById('cFixaFlag').checked){
       // Flag de conta fixa: cria o modelo (mensal ou semanal) e gera os lançamentos
       const freq = document.getElementById('cFreq').value;
