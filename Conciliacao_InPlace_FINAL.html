@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lume Finanças · Conciliação In Place</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{--navy:#0D2137;--navy2:#1a3450;--gold:#C9A84C;--gold-pale:#fdf8ee;--white:#fff;--gray:#f4f5f7;--muted:#6b7c93;--ok:#1a5c35;--ok-bg:#d7f5e3;--err:#8B0000;--err-bg:#FFD7D7;--warn:#7B5E00;--warn-bg:#FFF3CD;--div-bg:#FFE4B5;--azul:#1a3a8a;--azul-bg:#e8eeff;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gray);color:#1a2535;min-height:100vh}
+header{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:18px 32px;border-bottom:2px solid var(--gold);display:flex;align-items:center;gap:14px}
+.logo-mark{width:36px;height:36px;background:var(--gold);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:17px;font-weight:900;color:var(--navy)}
+.logo-text h1{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:#fff}
+.logo-text span{font-size:10px;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+main{padding:22px 32px;max-width:1400px;margin:0 auto}
+.modulos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+.modulo{background:#fff;border-radius:10px;padding:14px 16px;border:2px solid #e8ecf2;cursor:pointer;transition:all .2s}
+.modulo:hover{border-color:var(--gold)}
+.modulo.ativo{border-color:var(--navy);background:var(--navy)}
+.modulo-icon{font-size:18px;margin-bottom:4px}
+.modulo-nome{font-size:13px;font-weight:600;color:var(--navy)}
+.modulo.ativo .modulo-nome{color:var(--gold)}
+.modulo-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.modulo.ativo .modulo-desc{color:rgba(255,255,255,.5)}
+.secao{display:none}.secao.ativa{display:block}
+.abas{display:flex;border-bottom:2px solid #e8ecf2;margin-bottom:16px}
+.aba{padding:9px 20px;cursor:pointer;font-size:13px;font-weight:600;color:var(--muted);border:none;border-bottom:3px solid transparent;margin-bottom:-2px;background:none;font-family:'DM Sans',sans-serif;transition:all .15s}
+.aba.ativa{color:var(--navy);border-bottom-color:var(--gold)}
+.painel{display:none}.painel.ativo{display:block}
+.up-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.up-card{background:#fff;border-radius:10px;padding:14px;border:2px dashed #d1d9e6;cursor:pointer;transition:all .2s;text-align:center}
+.up-card:hover{border-color:var(--gold);background:var(--gold-pale)}
+.up-card.ok{border-color:var(--ok);border-style:solid;background:#f0fdf5}
+.up-card input[type=file]{display:none}
+.tag{display:inline-block;background:var(--navy);color:var(--gold);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:6px}
+.tag.opc{background:#6b7c93}
+.up-icon{font-size:20px;margin-bottom:5px}
+.up-label{font-size:13px;font-weight:500;color:var(--navy)}
+.up-hint{font-size:11px;color:var(--muted);margin-top:2px}
+.up-card.ok .up-label{color:var(--ok)}
+.barra{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .15s}
+.btn-p{background:var(--navy);color:var(--gold)}.btn-p:hover{background:#1a3450}.btn-p:disabled{opacity:.4;cursor:not-allowed}
+.btn-s{background:#fff;color:var(--navy);border:1.5px solid #d1d9e6}.btn-s:hover{background:var(--gold-pale);border-color:var(--gold)}.btn-s:disabled{opacity:.4;cursor:not-allowed}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.stat{background:#fff;border-radius:9px;padding:12px 14px;border:1.5px solid #e8ecf2}
+.stat-l{font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500}
+.stat-v{font-size:21px;font-weight:700}
+.v-ok{color:var(--ok)}.v-err{color:var(--err)}.v-warn{color:var(--warn)}.v-az{color:var(--azul)}
+.filtros{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;align-items:center}
+.filtros input{padding:6px 11px;border:1.5px solid #d1d9e6;border-radius:7px;font-size:12px;font-family:'DM Sans',sans-serif;width:220px;outline:none}
+.filtros input:focus{border-color:var(--navy)}
+.fb{padding:5px 13px;border-radius:20px;border:1.5px solid #d1d9e6;background:#fff;font-size:11px;font-weight:600;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all .15s}
+.fb.on,.fb:hover{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.leg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;align-items:center}
+.leg-t{font-size:11px;font-weight:600;color:var(--muted);margin-right:4px}
+.lp{display:inline-flex;align-items:center;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:600}
+.tbl-wrap{overflow-x:auto;border-radius:9px;border:1.5px solid #e8ecf2;background:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead tr{background:var(--navy)}
+thead th{padding:8px 10px;text-align:left;font-size:11px;font-weight:600;color:rgba(255,255,255,.8);white-space:nowrap;border-right:1px solid rgba(255,255,255,.07)}
+thead th:last-child{border-right:none}
+tbody tr{border-bottom:1px solid #f0f2f5}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{filter:brightness(.97)}
+tbody td{padding:7px 10px;vertical-align:middle}
+.r-ok{background:#f4fdf7}.r-warn{background:#fffcf0}.r-err{background:#fff4f4}.r-rec{background:#fff8f0}.r-pend{background:#fffde7}.r-tot{background:#f0f2f5;font-weight:700;border-top:2px solid #d1d9e6}
+.badge{display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)}.b-warn{background:var(--warn-bg);color:var(--warn)}.b-div{background:var(--div-bg);color:#7B3F00}.b-err{background:var(--err-bg);color:var(--err)}.b-az{background:var(--azul-bg);color:var(--azul)}.b-rec{background:#fff8f0;color:#7B3F00;border:1px solid var(--gold)}
+.mono{font-family:'Courier New',monospace;font-size:11px}
+.dt{font-size:11px;color:var(--muted);cursor:pointer;text-decoration:underline;background:none;border:none;font-family:inherit}
+.det-row{display:none}.det-row.open{display:table-row}
+.det-td{padding:8px 12px 12px 26px;background:#fafbfc;border-bottom:1px solid #f0f2f5}
+.det-g{display:grid;grid-template-columns:repeat(4,1fr);gap:4px 12px;font-size:11px}
+.di{display:flex;flex-direction:column;gap:1px}
+.di b{font-size:10px;color:#aaa;font-weight:600;text-transform:uppercase}
+.foot{background:var(--navy);color:#fff;padding:8px 14px;display:flex;gap:18px;flex-wrap:wrap;font-size:12px;border-radius:0 0 8px 8px}
+.foot span{opacity:.6}.foot b{font-size:14px}
+.info{background:var(--gold-pale);border-left:3px solid var(--gold);border-radius:0 8px 8px 0;padding:9px 13px;font-size:12px;color:#5a4200;margin-bottom:12px;line-height:1.6}
+.info strong{color:var(--navy)}
+.empty{text-align:center;padding:50px 20px;color:#bbb}
+.empty-icon{font-size:40px;margin-bottom:10px}
+.sp-t{font-size:12px;font-weight:700;color:var(--err);margin:14px 0 8px}
+/* Tabela interna no detalhe */
+.sub-tbl{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px}
+.sub-tbl th{padding:4px 8px;background:#f0f2f5;text-align:left;font-weight:600;color:var(--muted)}
+.sub-tbl td{padding:4px 8px;border-top:1px solid #f0f2f5}
+.sub-tbl tr:last-child td{font-weight:700;background:#f0f2f5}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-mark">L</div>
+  <div class="logo-text">
+    <h1>Conciliação In Place Academia</h1>
+    <span>Lume Finanças · BPO Financeiro</span>
+  </div>
+</header>
+<main>
+
+<!-- MÓDULOS -->
+<div class="modulos">
+  <div class="modulo ativo" id="mod-vendas" onclick="trocarMod('vendas')">
+    <div class="modulo-icon">💳</div>
+    <div class="modulo-nome">Vendas — Pacto × Stone</div>
+    <div class="modulo-desc">Confronta venda a venda por valor + data. 1 transação Stone = N alunos Pacto</div>
+  </div>
+  <div class="modulo" id="mod-entradas" onclick="trocarMod('entradas')">
+    <div class="modulo-icon">🏦</div>
+    <div class="modulo-nome">Antecipação D+1 — Recebível × Extrato</div>
+    <div class="modulo-desc">Confirma entradas D+1 e mostra taxa Stone por dia de venda para baixar na Pacto</div>
+  </div>
+</div>
+
+<!-- MÓDULO VENDAS -->
+<div class="secao ativa" id="sec-vendas">
+  <div class="abas">
+    <button class="aba ativa" id="aba-vg" onclick="trocarAba('v','g')">🏋️ Gutierrez</button>
+    <button class="aba" id="aba-vb" onclick="trocarAba('v','b')">🏋️ Barreiro</button>
+  </div>
+  <!-- Gutierrez Vendas -->
+  <div class="painel ativo" id="pv-g">
+    <div class="info"><strong>Gutierrez:</strong> carregue o <strong>Gestão de Recebíveis (Pacto)</strong> e o <strong>Relatório de Vendas (Stone)</strong>. O sistema agrupa os alunos por autorização e cruza por <strong>valor + data</strong>.</div>
+    <div class="up-grid">
+      <div class="up-card" id="c-vg-p" onclick="document.getElementById('i-vg-p').click()">
+        <input type="file" id="i-vg-p" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'vg','pacto')">
+        <div class="tag">Pacto</div><div class="up-icon">📋</div>
+        <div class="up-label">Gestão de Recebíveis</div>
+        <div class="up-hint">GestaoRecebiveis · XLS / XLSX</div>
+      </div>
+      <div class="up-card" id="c-vg-s" onclick="document.getElementById('i-vg-s').click()">
+        <input type="file" id="i-vg-s" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'vg','stone')">
+        <div class="tag">Stone</div><div class="up-icon">💳</div>
+        <div class="up-label">Relatório de Vendas Stone</div>
+        <div class="up-hint">Vendas detalhadas · XLSX</div>
+      </div>
+    </div>
+    <div class="barra">
+      <button class="btn btn-p" id="btn-vg" onclick="rodarVendas('g')" disabled>▶ Conciliar Gutierrez</button>
+      <button class="btn btn-s" id="exp-vg" onclick="exportar('vg')" disabled>⬇ Exportar CSV</button>
+      <button class="btn btn-s" onclick="limpar('vg')">✕ Limpar</button>
+    </div>
+    <div id="res-vg"><div class="empty"><div class="empty-icon">💳</div>Carregue os dois arquivos para iniciar</div></div>
+  </div>
+  <!-- Barreiro Vendas -->
+  <div class="painel" id="pv-b">
+    <div class="info"><strong>Barreiro:</strong> mesma lógica do Gutierrez. Carregue o <strong>Gestão de Recebíveis (Pacto)</strong> e o <strong>Relatório de Vendas (Stone)</strong>.</div>
+    <div class="up-grid">
+      <div class="up-card" id="c-vb-p" onclick="document.getElementById('i-vb-p').click()">
+        <input type="file" id="i-vb-p" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'vb','pacto')">
+        <div class="tag">Pacto</div><div class="up-icon">📋</div>
+        <div class="up-label">Gestão de Recebíveis</div>
+        <div class="up-hint">GestaoRecebiveis · XLS / XLSX</div>
+      </div>
+      <div class="up-card" id="c-vb-s" onclick="document.getElementById('i-vb-s').click()">
+        <input type="file" id="i-vb-s" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'vb','stone')">
+        <div class="tag">Stone</div><div class="up-icon">💳</div>
+        <div class="up-label">Relatório de Vendas Stone</div>
+        <div class="up-hint">Vendas detalhadas · XLSX</div>
+      </div>
+    </div>
+    <div class="barra">
+      <button class="btn btn-p" id="btn-vb" onclick="rodarVendas('b')" disabled>▶ Conciliar Barreiro</button>
+      <button class="btn btn-s" id="exp-vb" onclick="exportar('vb')" disabled>⬇ Exportar CSV</button>
+      <button class="btn btn-s" onclick="limpar('vb')">✕ Limpar</button>
+    </div>
+    <div id="res-vb"><div class="empty"><div class="empty-icon">💳</div>Carregue os dois arquivos para iniciar</div></div>
+  </div>
+</div>
+
+<!-- MÓDULO ENTRADAS -->
+<div class="secao" id="sec-entradas">
+  <div class="abas">
+    <button class="aba ativa" id="aba-eg" onclick="trocarAba('e','g')">🏋️ Gutierrez</button>
+    <button class="aba" id="aba-eb" onclick="trocarAba('e','b')">🏋️ Barreiro</button>
+  </div>
+  <!-- Gutierrez Entradas -->
+  <div class="painel ativo" id="pe-g">
+    <div class="info"><strong>Antecipação D+1 (Gutierrez):</strong> venda dia D → recebível vence em D+1 → entra no extrato como <strong>"Transferência entre contas Stone"</strong> → lançado na Pacto como <strong>compensação</strong> nesse mesmo D+1. Carregue os 3 arquivos.</div>
+    <div class="up-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="up-card" id="c-eg-r" onclick="document.getElementById('i-eg-r').click()">
+        <input type="file" id="i-eg-r" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eg','rec')">
+        <div class="tag">Stone</div><div class="up-icon">📊</div>
+        <div class="up-label">Recebível de Cartão</div>
+        <div class="up-hint">DATA DE VENCIMENTO + VALOR LÍQUIDO</div>
+      </div>
+      <div class="up-card" id="c-eg-e" onclick="document.getElementById('i-eg-e').click()">
+        <input type="file" id="i-eg-e" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eg','ext')">
+        <div class="tag">Stone</div><div class="up-icon">🏦</div>
+        <div class="up-label">Extrato Stone</div>
+        <div class="up-hint">Transferência entre contas Stone</div>
+      </div>
+      <div class="up-card" id="c-eg-pac" onclick="document.getElementById('i-eg-pac').click()">
+        <input type="file" id="i-eg-pac" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eg','pac')">
+        <div class="tag opc">Pacto</div><div class="up-icon">📋</div>
+        <div class="up-label">Gestão de Recebíveis</div>
+        <div class="up-hint">Opcional — confirma compensação D+1</div>
+      </div>
+    </div>
+    <div class="barra">
+      <button class="btn btn-p" id="btn-eg" onclick="rodarEntradas('g')" disabled>▶ Conferir Antecipação Gutierrez</button>
+      <button class="btn btn-s" id="exp-eg" onclick="exportar('eg')" disabled>⬇ Exportar CSV</button>
+      <button class="btn btn-s" onclick="limpar('eg')">✕ Limpar</button>
+    </div>
+    <div id="res-eg"><div class="empty"><div class="empty-icon">🏦</div>Carregue os arquivos para iniciar</div></div>
+  </div>
+  <!-- Barreiro Entradas -->
+  <div class="painel" id="pe-b">
+    <div class="info"><strong>Antecipação D+1 (Barreiro):</strong> mesma lógica. O Barreiro também usa "Transferência entre contas Stone" e "Recebível de Cartão" para débito. A Pacto confirma via campo Compensação.</div>
+    <div class="up-grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="up-card" id="c-eb-r" onclick="document.getElementById('i-eb-r').click()">
+        <input type="file" id="i-eb-r" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eb','rec')">
+        <div class="tag">Stone</div><div class="up-icon">📊</div>
+        <div class="up-label">Recebível de Cartão</div>
+        <div class="up-hint">DATA DE VENCIMENTO + VALOR LÍQUIDO</div>
+      </div>
+      <div class="up-card" id="c-eb-e" onclick="document.getElementById('i-eb-e').click()">
+        <input type="file" id="i-eb-e" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eb','ext')">
+        <div class="tag">Stone</div><div class="up-icon">🏦</div>
+        <div class="up-label">Extrato Stone</div>
+        <div class="up-hint">Transferência entre contas Stone</div>
+      </div>
+      <div class="up-card" id="c-eb-pac" onclick="document.getElementById('i-eb-pac').click()">
+        <input type="file" id="i-eb-pac" accept=".xls,.xlsx,.csv" onchange="carregarArq(event,'eb','pac')">
+        <div class="tag opc">Pacto</div><div class="up-icon">📋</div>
+        <div class="up-label">Gestão de Recebíveis</div>
+        <div class="up-hint">Opcional — confirma compensação D+1</div>
+      </div>
+    </div>
+    <div class="barra">
+      <button class="btn btn-p" id="btn-eb" onclick="rodarEntradas('b')" disabled>▶ Conferir Antecipação Barreiro</button>
+      <button class="btn btn-s" id="exp-eb" onclick="exportar('eb')" disabled>⬇ Exportar CSV</button>
+      <button class="btn btn-s" onclick="limpar('eb')">✕ Limpar</button>
+    </div>
+    <div id="res-eb"><div class="empty"><div class="empty-icon">🏦</div>Carregue os arquivos para iniciar</div></div>
+  </div>
+</div>
+</main>
+
+<script>
+/* ── STATE ─────────────────────────────────────────────── */
+var A={}, CSV={};
+
+/* ── UTILITÁRIOS ───────────────────────────────────────── */
+function num(v){
+  if(v===null||v===undefined||v==='') return 0;
+  var s=String(v).replace(/R\$\s*/g,'').replace(/\s/g,'');
+  if(s.indexOf(',')>-1&&s.indexOf('.')>-1) s=s.replace(/\./g,'').replace(',','.');
+  else if(s.indexOf(',')>-1) s=s.replace(',','.');
+  return Math.round((parseFloat(s.replace(/[^0-9.\-]/g,''))||0)*100)/100;
+}
+function moeda(v){ return 'R$ '+Math.abs(num(v)).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function parseDt(v){
+  if(!v&&v!==0) return '';
+  if(v instanceof Date) return ('0'+v.getDate()).slice(-2)+'/'+('0'+(v.getMonth()+1)).slice(-2)+'/'+v.getFullYear();
+  var s=String(v).trim();
+  // dd/mm/yyyy (4 dígitos)
+  var m=s.match(/(\d{2})\/(\d{2})\/(\d{4})/); if(m) return m[1]+'/'+m[2]+'/'+m[3];
+  // dd/mm/yy (2 dígitos) — Pacto usa esse formato: "03/09/26 16:39"
+  var m2=s.match(/(\d{2})\/(\d{2})\/(\d{2})/); if(m2) return m2[1]+'/'+m2[2]+'/'+(parseInt(m2[3])<50?'20':'19')+m2[3];
+  // yyyy-mm-dd
+  var m3=s.match(/^(\d{4})-(\d{2})-(\d{2})/); if(m3) return m3[3]+'/'+m3[2]+'/'+m3[1];
+  // número serial Excel
+  if(/^\d{5}$/.test(s)){var d=new Date(Math.round((parseFloat(s)-25569)*864e5));return ('0'+d.getUTCDate()).slice(-2)+'/'+('0'+(d.getUTCMonth()+1)).slice(-2)+'/'+d.getUTCFullYear();}
+  return s.substring(0,10);
+}
+function dtMs(s){var p=String(s||'').split('/');return p.length<3?0:new Date(p[2]+'-'+p[1]+'-'+p[0]).getTime()||0;}
+function horaStr(v){var m=String(v||'').match(/(\d{1,2}):(\d{2})/);return m?m[0]:'';}
+function proxUtil(dtStr){
+  var p=dtStr.split('/'); var d=new Date(p[2]+'-'+p[1]+'-'+p[0]);
+  d.setDate(d.getDate()+1); while(d.getDay()===0||d.getDay()===6) d.setDate(d.getDate()+1);
+  return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();
+}
+var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+function diaSem(dtStr){var p=dtStr.split('/');return DIAS[new Date(p[2]+'-'+p[1]+'-'+p[0]).getDay()]||'';}
+
+/* ── NAVEGAÇÃO ─────────────────────────────────────────── */
+function trocarMod(id){
+  document.querySelectorAll('.modulo').forEach(function(m){m.classList.remove('ativo');});
+  document.getElementById('mod-'+id).classList.add('ativo');
+  document.querySelectorAll('.secao').forEach(function(s){s.classList.remove('ativa');});
+  document.getElementById('sec-'+id).classList.add('ativa');
+}
+function trocarAba(mod,un){
+  ['g','b'].forEach(function(u){
+    var b=document.getElementById('aba-'+mod+u); if(b) b.classList.toggle('ativa',u===un);
+    var p=document.getElementById('p'+mod+'-'+u); if(p) p.classList.toggle('ativo',u===un);
+  });
+}
+
+/* ── UPLOAD ────────────────────────────────────────────── */
+function carregarArq(ev,pref,tipo){
+  var file=ev.target.files[0]; if(!file) return;
+  var r=new FileReader();
+  r.onload=function(e){
+    var wb=XLSX.read(e.target.result,{type:'binary',raw:false,dateNF:'dd/mm/yyyy'});
+    var raw=XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1,defval:'',raw:false,dateNF:'dd/mm/yyyy'});
+    A[pref+'_'+tipo]=raw;
+    // ID do card: pacto→p, stone→s, rec→r, ext→e, pac→pac
+    var cardSuf=tipo==='pac'?'pac':tipo.charAt(0);
+    var card=document.getElementById('c-'+pref+'-'+cardSuf);
+    if(card){
+      card.classList.add('ok');
+      card.querySelector('.up-label').textContent=file.name.length>32?file.name.substring(0,29)+'...':file.name;
+      card.querySelector('.up-hint').textContent='✓ '+raw.length+' linhas';
+    }
+    chkBtn(pref);
+  };
+  r.readAsBinaryString(file);
+}
+function chkBtn(pref){
+  var mod=pref.charAt(0);
+  var s1=mod==='v'?'_pacto':'_rec', s2=mod==='v'?'_stone':'_ext';
+  var ok=!!(A[pref+s1]&&A[pref+s2]);
+  var b=document.getElementById('btn-'+pref); if(b) b.disabled=!ok;
+}
+
+/* ── PARSE PACTO ───────────────────────────────────────── */
+// Colunas: [2]=Tipo do Recebível [4]=Nome do pagador [5]=Aluno [8]=Valor [13]=Compensação [14]=Data lançamento [16]=Operadora [18]=Autorização
+function parsePacto(raw){
+  var TIPOS=['CARTÃO DE CRÉDITO','CARTÃO DE CREDITO','CARTÃO DE DÉBITO','CARTÃO DE DEBITO','CARTÃO RECORRENTE'];
+  var out=[], hdr=0;
+  for(var i=0;i<Math.min(raw.length,5);i++){
+    if(String(raw[i][2]||'').trim()==='Tipo do Recebível'||String(raw[i][1]||'').trim()==='Empresa'){hdr=i;break;}
+  }
+  for(var i=hdr+1;i<raw.length;i++){
+    var r=raw[i]; if(!r||r.every(function(v){return !v||v==='';})){ continue; }
+    var tipo=String(r[2]||'').trim().toUpperCase();
+    if(!TIPOS.some(function(t){return tipo===t;})) continue;
+    var val=num(r[8]); if(val<=0) continue;
+    var dtRaw=String(r[14]||'');
+    var autRaw=String(r[18]||'');
+    var autM=autRaw.match(/AUT\s*([A-Z0-9]+)/i);
+    var aut=autM?autM[1].toUpperCase():autRaw.replace(/[^A-Z0-9]/gi,'').toUpperCase().substring(0,10);
+    out.push({tipo:tipo,nome:String(r[4]||'').trim(),aluno:String(r[5]||'').trim(),val:val,
+      dt:parseDt(dtRaw),hora:horaStr(dtRaw),comp:parseDt(String(r[13]||'')),
+      oper:String(r[16]||'').trim(),aut_raw:autRaw,aut:aut,is_rec:tipo==='CARTÃO RECORRENTE'});
+  }
+  return out;
+}
+
+/* ── PARSE STONE VENDAS ────────────────────────────────── */
+// Colunas: [2]=DATA DA VENDA [3]=BANDEIRA [4]=PRODUTO [6]=PARCELAS [7]=VALOR BRUTO [8]=VALOR LIQUIDO [11]=DESCONTO UNIFICADO [12]=N DO CARTAO [13]=MEIO DE CAPTURA [15]=ULTIMO STATUS [17]=CÓDIGO DE AUTORIZAÇÃO
+function parseStone(raw){
+  var out=[], hdr=0;
+  for(var i=0;i<Math.min(raw.length,5);i++){
+    if(String(raw[i][2]||'').toUpperCase().indexOf('DATA')>=0&&String(raw[i][3]||'').toUpperCase()==='BANDEIRA'){hdr=i;break;}
+  }
+  for(var i=hdr+1;i<raw.length;i++){
+    var r=raw[i]; if(!r||r.every(function(v){return !v||v==='';})){ continue; }
+    var vb=num(r[7]); if(vb<=0) continue;
+    var st=String(r[15]||'').toUpperCase();
+    if(st&&st.indexOf('APROVADA')<0&&st.indexOf('APPROVED')<0&&st!=='') continue;
+    var dtRaw=String(r[2]||'');
+    out.push({dt:parseDt(dtRaw),hora:horaStr(dtRaw),bandeira:String(r[3]||'').trim(),
+      produto:String(r[4]||'').trim(),parcelas:String(r[6]||'1').trim(),
+      vb:vb,vl:num(r[8]),desc:num(r[11]),cartao:String(r[12]||'').trim(),
+      captura:String(r[13]||'').trim(),aut:String(r[17]||'').trim()});
+  }
+  return out;
+}
+
+/* ── PARSE RECEBÍVEL STONE ─────────────────────────────── */
+// Colunas: [3]=DATA DA VENDA [4]=DATA DE VENCIMENTO [6]=BANDEIRA [7]=PRODUTO [9]=QTD PARCELAS [10]=Nº PARCELA [11]=VALOR BRUTO [12]=VALOR LÍQUIDO [15]=DESCONTO UNIFICADO
+function parseRec(raw){
+  var out=[], hdr=0;
+  for(var i=0;i<Math.min(raw.length,5);i++){
+    if(String(raw[i][4]||'').toUpperCase().indexOf('VENCIMENTO')>=0){hdr=i;break;}
+  }
+  for(var i=hdr+1;i<raw.length;i++){
+    var r=raw[i]; if(!r||r.every(function(v){return !v||v==='';})){ continue; }
+    var vb=num(r[11]), vl=num(r[12]); if(vb===0) continue;
+    out.push({dt_venda:parseDt(String(r[3]||'')),dt_venc:parseDt(String(r[4]||'')),
+      bandeira:String(r[6]||'').trim(),produto:String(r[7]||'').trim(),
+      parcelas:String(r[9]||'').trim(),num_parcela:String(r[10]||'').trim(),
+      vb:vb,vl:vl,desc:Math.abs(num(r[15]))});
+  }
+  return out;
+}
+
+/* ── PARSE EXTRATO STONE ───────────────────────────────── */
+// Colunas: [0]=Movimentação [1]=Tipo [2]=Valor [6]=Data
+// Tipos de antecipação: "Transferência entre contas Stone", "Recebível de Cartão", "Transação"
+function parseExt(raw){
+  var out=[], hdr=0;
+  for(var i=0;i<Math.min(raw.length,5);i++){
+    if(String(raw[i][0]||'').indexOf('Movimenta')>=0||String(raw[i][1]||'').trim()==='Tipo'){hdr=i;break;}
+  }
+  var TIPOS_ANT=['Transferência entre contas Stone','Recebível de Cartão','Transação'];
+  for(var i=hdr+1;i<raw.length;i++){
+    var r=raw[i]; if(!r||r.every(function(v){return !v||v==='';})){ continue; }
+    var mov=String(r[0]||'').trim();
+    var tipo=String(r[1]||'').trim();
+    var val=num(r[2]);
+    var dt=parseDt(r[6]);
+    var isAnt=mov==='Crédito'&&val>0&&TIPOS_ANT.indexOf(tipo)>=0;
+    out.push({dt:dt,tipo:tipo,mov:mov,val:val,isAnt:isAnt});
+  }
+  return out;
+}
+
+/* ── AGRUPAR PACTO ─────────────────────────────────────── */
+function agruparPacto(rows){
+  var g={};
+  rows.forEach(function(r){
+    var k=(r.aut||'X')+'||'+r.dt;
+    if(!g[k]) g[k]={aut:r.aut,dt:r.dt,total:0,qtd:0,nomes:[],linhas:[],is_rec:r.is_rec,opers:[],comps:[]};
+    g[k].total=Math.round((g[k].total+r.val)*100)/100; g[k].qtd++;
+    if(r.nome&&g[k].nomes.indexOf(r.nome)<0) g[k].nomes.push(r.nome);
+    if(r.oper&&g[k].opers.indexOf(r.oper)<0) g[k].opers.push(r.oper);
+    if(r.comp&&g[k].comps.indexOf(r.comp)<0) g[k].comps.push(r.comp);
+    g[k].linhas.push(r);
+  });
+  return Object.values(g);
+}
+
+/* ── MÓDULO 1: VENDAS ──────────────────────────────────── */
+function rodarVendas(un){
+  var pref='v'+un;
+  var pac=parsePacto(A[pref+'_pacto']);
+  var stone=parseStone(A[pref+'_stone']);
+  if(!pac.length){alert('Nenhum lançamento de cartão na Pacto. Verifique o arquivo.');return;}
+  if(!stone.length){alert('Nenhuma venda aprovada na Stone. Verifique o arquivo.');return;}
+
+  var pacGrp=agruparPacto(pac);
+  var usados=new Set(), matches=new Map();
+
+  // Passo 1: match exato valor + data
+  stone.forEach(function(s,si){
+    for(var pi=0;pi<pacGrp.length;pi++){
+      if(usados.has(pi)) continue;
+      if(Math.round(pacGrp[pi].total*100)===Math.round(s.vb*100)&&pacGrp[pi].dt===s.dt){
+        matches.set(si,{pi:pi,met:'Valor + Data'}); usados.add(pi); return;
+      }
+    }
+  });
+  // Passo 2: fallback valor + data ±1 dia
+  stone.forEach(function(s,si){
+    if(matches.has(si)) return;
+    for(var pi=0;pi<pacGrp.length;pi++){
+      if(usados.has(pi)) continue;
+      if(Math.round(pacGrp[pi].total*100)===Math.round(s.vb*100)){
+        if(Math.abs(dtMs(s.dt)-dtMs(pacGrp[pi].dt))<=864e5){
+          matches.set(si,{pi:pi,met:'Valor + Data ±1d'}); usados.add(pi); return;
+        }
+      }
+    }
+  });
+
+  var res=[]; var nOk=0,nDiv=0,nErr=0,nRec=0; var totSt=0,totPac=0;
+  var csv='Data Stone;Hora;Bandeira;Produto;Parcelas;AUT Stone;Nº Cartão;Vl Bruto Stone;Vl Líq Stone;Alunos Pacto;Qtd Alunos;Total Pacto;Diferença;Compensação;Método;Status\n';
+
+  stone.forEach(function(s,si){
+    var m=matches.get(si); var pg=m!==undefined?pacGrp[m.pi]:null;
+    var vPac=pg?pg.total:0; var dif=pg?Math.round((s.vb-vPac)*100)/100:null;
+    var st,cls;
+    if(!pg){st='err';cls='r-err';nErr++;}
+    else if(pg.is_rec){st='rec';cls='r-rec';nRec++;}
+    else if(dif!==null&&Math.abs(dif)<0.5){st='ok';cls='r-ok';nOk++;}
+    else{st='div';cls='r-warn';nDiv++;}
+    totSt+=s.vb; if(pg) totPac+=vPac;
+    res.push({s:s,pg:pg,st:st,cls:cls,dif:dif,met:m?m.met:''});
+    csv+=s.dt+';'+s.hora+';'+s.bandeira+';'+s.produto+';'+s.parcelas+';'+s.aut+';'+s.cartao+';'+s.vb.toFixed(2)+';'+s.vl.toFixed(2)+';'+(pg?pg.nomes.slice(0,3).join(' | '):'')+';'+(pg?pg.qtd:'')+';'+vPac.toFixed(2)+';'+(dif!==null?dif.toFixed(2):'')+';'+(pg&&pg.comps[0]?pg.comps[0]:'')+';'+(m?m.met:'')+';'+st+'\n';
+  });
+  CSV[pref]=csv;
+  var pacSemPar=pacGrp.filter(function(_,i){return !usados.has(i);});
+  var totDif=Math.round((totSt-totPac)*100)/100;
+
+  var h='<div class="stats">';
+  h+='<div class="stat"><div class="stat-l">✓ Conferido</div><div class="stat-v v-ok">'+nOk+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">⚠ Divergência</div><div class="stat-v '+(nDiv?'v-warn':'v-ok')+'">'+nDiv+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">✗ Sem par</div><div class="stat-v '+(nErr?'v-err':'v-ok')+'">'+nErr+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">🔄 Recorrente</div><div class="stat-v v-warn">'+nRec+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">Diferença total</div><div class="stat-v '+(Math.abs(totDif)>0.5?'v-err':'v-ok')+'">'+moeda(totDif)+'</div></div>';
+  h+='</div>';
+  h+='<div class="filtros"><button class="fb on" onclick="filtV(\''+un+'\',\'todos\',this)">Todos ('+stone.length+')</button>';
+  h+='<button class="fb" onclick="filtV(\''+un+'\',\'ok\',this)">✓ OK ('+nOk+')</button>';
+  h+='<button class="fb" onclick="filtV(\''+un+'\',\'div\',this)">⚠ Divergência ('+nDiv+')</button>';
+  h+='<button class="fb" onclick="filtV(\''+un+'\',\'err\',this)">✗ Sem par ('+nErr+')</button>';
+  h+='<button class="fb" onclick="filtV(\''+un+'\',\'rec\',this)">🔄 Recorrente ('+nRec+')</button>';
+  h+='<input type="text" placeholder="🔍 Buscar aluno, valor, data..." oninput="buscaV(\''+un+'\',this.value)" style="margin-left:auto"></div>';
+  h+='<div class="leg"><span class="leg-t">Legenda:</span>';
+  h+='<span class="lp" style="background:var(--ok-bg);color:var(--ok)">✓ Valor bate</span>';
+  h+='<span class="lp" style="background:var(--warn-bg);color:var(--warn)">⚠ Divergência</span>';
+  h+='<span class="lp" style="background:var(--err-bg);color:var(--err)">✗ Sem par</span>';
+  h+='<span class="lp" style="background:#fff8f0;color:#7B3F00">🔄 Recorrente</span></div>';
+  h+='<div class="tbl-wrap"><table><thead><tr>';
+  h+='<th>Data</th><th>Hora</th><th>Bandeira</th><th>Produto</th><th>Parcelas</th>';
+  h+='<th>Vl Bruto Stone</th><th>Vl Líq Stone</th><th>Alunos Pacto</th><th>Qtd</th>';
+  h+='<th>Total Pacto</th><th>Diferença</th><th>Compensação</th><th>Status</th><th></th>';
+  h+='</tr></thead><tbody id="tb-v'+un+'">';
+
+  res.forEach(function(r,idx){
+    var dId='d-v'+un+idx;
+    var badge=r.st==='ok'?'<span class="badge b-ok">✓ OK</span>':r.st==='div'?'<span class="badge b-div">⚠ Dif.</span>':r.st==='rec'?'<span class="badge b-rec">🔄 Rec.</span>':'<span class="badge b-err">✗ Sem par</span>';
+    var difTxt=r.dif!==null?'<td style="font-weight:700;color:'+(Math.abs(r.dif)<0.5?'var(--ok)':'var(--err)')+'">'+moeda(r.dif)+'</td>':'<td>—</td>';
+    h+='<tr class="'+r.cls+'" data-st="'+r.st+'">';
+    h+='<td><b>'+r.s.dt+'</b></td><td>'+r.s.hora+'</td><td>'+r.s.bandeira+'</td><td>'+r.s.produto+'</td><td style="text-align:center">'+r.s.parcelas+'</td>';
+    h+='<td><b>'+moeda(r.s.vb)+'</b></td><td>'+moeda(r.s.vl)+'</td>';
+    h+='<td>'+(r.pg?r.pg.nomes.slice(0,3).join(' | '):'<span style="color:var(--err)">Não localizado na Pacto</span>')+'</td>';
+    h+='<td style="text-align:center">'+(r.pg?r.pg.qtd:'—')+'</td>';
+    h+='<td>'+(r.pg?'<b>'+moeda(r.pg.total)+'</b>':'—')+'</td>';
+    h+=difTxt;
+    h+='<td>'+(r.pg&&r.pg.comps[0]?r.pg.comps[0]:'—')+'</td>';
+    h+='<td>'+badge+'</td>';
+    h+='<td><button class="dt" onclick="togDet(\''+dId+'\')">▸</button></td></tr>';
+    h+='<tr class="det-row" id="'+dId+'"><td colspan="14" class="det-td"><div class="det-g">';
+    h+='<div class="di"><b>AUT Stone</b>'+r.s.aut+'</div>';
+    h+='<div class="di"><b>Nº Cartão</b>'+r.s.cartao+'</div>';
+    h+='<div class="di"><b>Captura</b>'+r.s.captura+'</div>';
+    h+='<div class="di"><b>Método match</b>'+r.met+'</div>';
+    if(r.pg) r.pg.linhas.forEach(function(a,ai){
+      h+='<div class="di"><b>Aluno '+(ai+1)+'</b>'+a.nome+' → '+a.aluno+' ('+moeda(a.val)+')</div>';
+    });
+    h+='</div></td></tr>';
+  });
+
+  h+='</tbody></table>';
+  h+='<div class="foot"><span>Stone:</span><b>'+moeda(totSt)+'</b><span>Pacto:</span><b>'+moeda(totPac)+'</b><span>Dif:</span><b style="color:'+(Math.abs(totDif)<0.5?'#90EE90':'#FFB3B3')+'">'+moeda(totDif)+'</b><span style="margin-left:auto;opacity:.5">'+stone.length+' transações · '+pac.length+' alunos Pacto</span></div></div>';
+
+  if(pacSemPar.length){
+    h+='<div class="sp-t">✗ Lançamentos Pacto sem par na Stone ('+pacSemPar.length+')</div>';
+    h+='<div class="tbl-wrap"><table><thead><tr><th>Data</th><th>AUT Pacto</th><th>Alunos</th><th>Operadora</th><th>Total Pacto</th><th>Qtd</th></tr></thead><tbody>';
+    pacSemPar.forEach(function(p){h+='<tr class="r-err"><td><b>'+p.dt+'</b></td><td class="mono">'+p.aut+'</td><td>'+p.nomes.join(' | ')+'</td><td>'+p.opers.join(', ')+'</td><td><b>'+moeda(p.total)+'</b></td><td>'+p.qtd+'</td></tr>';});
+    h+='</tbody></table></div>';
+  }
+
+  document.getElementById('res-'+pref).innerHTML=h;
+  document.getElementById('exp-'+pref).disabled=false;
+}
+
+function filtV(un,st,btn){
+  document.querySelectorAll('#res-v'+un+' .fb').forEach(function(b){b.classList.remove('on');});
+  if(btn) btn.classList.add('on');
+  document.querySelectorAll('#tb-v'+un+' tr[data-st]').forEach(function(tr){
+    var show=st==='todos'||tr.dataset.st===st; tr.style.display=show?'':'none';
+    var n=tr.nextElementSibling; if(n&&n.classList.contains('det-row')) n.style.display=show&&n.classList.contains('open')?'':'none';
+  });
+}
+function buscaV(un,q){
+  q=q.toLowerCase();
+  document.querySelectorAll('#tb-v'+un+' tr[data-st]').forEach(function(tr){
+    var show=!q||tr.textContent.toLowerCase().indexOf(q)>=0; tr.style.display=show?'':'none';
+    var n=tr.nextElementSibling; if(n&&n.classList.contains('det-row')) n.style.display=show&&n.classList.contains('open')?'':'none';
+  });
+}
+
+/* ── MÓDULO 2: ENTRADAS (ANTECIPAÇÃO D+1) ──────────────── */
+function rodarEntradas(un){
+  var pref='e'+un;
+  var rec=parseRec(A[pref+'_rec']);
+  var ext=parseExt(A[pref+'_ext']);
+  var pacRaw=A[pref+'_pac']||null;
+  if(!rec.length){alert('Nenhuma linha no Recebível. Verifique o arquivo.');return;}
+
+  // ── Pacto opcional: agrupar por DATA DE COMPENSAÇÃO (= D+1, dia em que entra no banco)
+  var pacPorComp={};
+  if(pacRaw){
+    var TIPOS=['CARTÃO DE CRÉDITO','CARTÃO DE CREDITO','CARTÃO DE DÉBITO','CARTÃO DE DEBITO','CARTÃO RECORRENTE'];
+    var hdrPac=0;
+    for(var i=0;i<Math.min(pacRaw.length,5);i++){
+      if(String(pacRaw[i][2]||'').trim()==='Tipo do Recebível'||String(pacRaw[i][1]||'').trim()==='Empresa'){hdrPac=i;break;}
+    }
+    for(var i=hdrPac+1;i<pacRaw.length;i++){
+      var r=pacRaw[i]; if(!r||r.every(function(v){return !v||v==='';})){ continue; }
+      var tipo=String(r[2]||'').trim().toUpperCase();
+      if(!TIPOS.some(function(t){return tipo===t;})) continue;
+      var val=num(r[8]); if(val<=0) continue;
+      // DATA DO LANÇAMENTO = dia da venda (D)
+      var dtLanc=parseDt(String(r[14]||'')); if(!dtLanc) continue;
+      // COMPENSAÇÃO = dia que entra no banco (D+1)
+      var comp=parseDt(String(r[13]||'')); if(!comp) comp=proxUtil(dtLanc);
+      if(!pacPorComp[comp]) pacPorComp[comp]={bruto:0,qtd:0,alunos:[]};
+      pacPorComp[comp].bruto=Math.round((pacPorComp[comp].bruto+val)*100)/100;
+      pacPorComp[comp].qtd++;
+      var nome=String(r[4]||'').trim();
+      var aluno=String(r[5]||'').trim();
+      var display=aluno&&aluno!==nome?aluno:nome;
+      if(display&&pacPorComp[comp].alunos.indexOf(display)<0&&pacPorComp[comp].alunos.length<50)
+        pacPorComp[comp].alunos.push(display);
+    }
+  }
+  var temPac=Object.keys(pacPorComp).length>0;
+
+  // ── Recebível: agrupar por DATA DE VENCIMENTO (D+1) — essa é a chave certa
+  // D+1 = dia que o dinheiro entra no banco = DATA DE VENCIMENTO do recebível Stone
+  var recPorVenc={};
+  rec.forEach(function(r){
+    var k=r.dt_venc; if(!k) return;
+    if(!recPorVenc[k]) recPorVenc[k]={bruto:0,liq:0,taxa:0,qtd:0,linhas:[],dt_vendas:{}};
+    recPorVenc[k].bruto=Math.round((recPorVenc[k].bruto+r.vb)*100)/100;
+    recPorVenc[k].liq  =Math.round((recPorVenc[k].liq+r.vl)*100)/100;
+    recPorVenc[k].taxa =Math.round((recPorVenc[k].taxa+r.desc)*100)/100;
+    recPorVenc[k].qtd++; recPorVenc[k].linhas.push(r);
+    // Registrar de quais dias de venda vieram essas parcelas
+    if(r.dt_venda){
+      if(!recPorVenc[k].dt_vendas[r.dt_venda]) recPorVenc[k].dt_vendas[r.dt_venda]={b:0,l:0,t:0};
+      recPorVenc[k].dt_vendas[r.dt_venda].b=Math.round((recPorVenc[k].dt_vendas[r.dt_venda].b+r.vb)*100)/100;
+      recPorVenc[k].dt_vendas[r.dt_venda].l=Math.round((recPorVenc[k].dt_vendas[r.dt_venda].l+r.vl)*100)/100;
+      recPorVenc[k].dt_vendas[r.dt_venda].t=Math.round((recPorVenc[k].dt_vendas[r.dt_venda].t+r.desc)*100)/100;
+    }
+  });
+
+  // ── Extrato: entradas por data
+  var extPorDia={};
+  ext.forEach(function(e){
+    if(!e.dt||!e.isAnt) return;
+    if(!extPorDia[e.dt]) extPorDia[e.dt]=[];
+    extPorDia[e.dt].push(e);
+  });
+
+  // ── Construir resultado por DATA DE VENCIMENTO (D+1)
+  var DIAS=['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  function diaSem(dt){var p=dt.split('/');return DIAS[new Date(p[2]+'-'+p[1]+'-'+p[0]).getDay()]||'';}
+
+  var datas=Object.keys(recPorVenc).sort(function(a,b){return dtMs(a)-dtMs(b);});
+  var res=[], nOk=0,nDif=0,nPend=0;
+  var totRB=0,totTx=0,totRL=0,totExt=0,totPac=0;
+
+  var csv='Entrada Banco (D+1);Dia;Dias de Venda (D);Stone Bruto;Taxa Stone;Líquido Stone;Extrato Stone'+(temPac?';Pacto Compensação;Alunos Pacto':'')+';;Dif Ext vs Líq;Status\n';
+
+  datas.forEach(function(d1){
+    var rv=recPorVenc[d1];
+    var ed=extPorDia[d1]||[];
+    var totE=Math.round(ed.reduce(function(s,e){return s+e.val;},0)*100)/100;
+    var dif=Math.round((totE-rv.liq)*100)/100;
+    var dia=diaSem(d1);
+    var pac=pacPorComp[d1]||null;
+    // Dias de venda que compõem esta entrada
+    var diasVenda=Object.keys(rv.dt_vendas).sort(function(a,b){return dtMs(a)-dtMs(b);});
+    var st,cls;
+    if(totE===0){st='pend';cls='r-pend';nPend++;}
+    else if(Math.abs(dif)<0.5){st='ok';cls='r-ok';nOk++;}
+    else{st='dif';cls='r-warn';nDif++;}
+    totRB+=rv.bruto; totTx+=rv.taxa; totRL+=rv.liq; totExt+=totE;
+    if(pac) totPac+=pac.bruto;
+    res.push({d1:d1,dia:dia,rv:rv,ed:ed,totE:totE,dif:dif,st:st,cls:cls,pac:pac,diasVenda:diasVenda});
+    csv+=d1+';'+dia+';'+diasVenda.join('+')+';'+rv.bruto.toFixed(2)+';'+rv.taxa.toFixed(2)+';'+rv.liq.toFixed(2)+';'+totE.toFixed(2)+(temPac?';'+(pac?pac.bruto.toFixed(2):'')+';'+(pac?pac.alunos.slice(0,5).join(' | '):'')+';':';')+dif.toFixed(2)+';'+st+'\n';
+  });
+
+  // Tabela 2: taxa por dia de venda
+  var recPorVenda={};
+  rec.forEach(function(r){
+    if(!r.dt_venda) return;
+    if(!recPorVenda[r.dt_venda]) recPorVenda[r.dt_venda]={bruto:0,liq:0,taxa:0};
+    recPorVenda[r.dt_venda].bruto=Math.round((recPorVenda[r.dt_venda].bruto+r.vb)*100)/100;
+    recPorVenda[r.dt_venda].liq  =Math.round((recPorVenda[r.dt_venda].liq+r.vl)*100)/100;
+    recPorVenda[r.dt_venda].taxa =Math.round((recPorVenda[r.dt_venda].taxa+r.desc)*100)/100;
+  });
+  var datasVenda=Object.keys(recPorVenda).sort(function(a,b){return dtMs(a)-dtMs(b);});
+  csv+='\nTAXA POR DIA DE VENDA (para baixar na Pacto)\nData Venda;Dia;→ Entrada Banco (D+1);Stone Bruto;Taxa Stone;Líquido\n';
+  datasVenda.forEach(function(dt){
+    var rv=recPorVenda[dt];
+    csv+=dt+';'+diaSem(dt)+';'+proxUtil(dt)+';'+rv.bruto.toFixed(2)+';'+rv.taxa.toFixed(2)+';'+rv.liq.toFixed(2)+'\n';
+  });
+  CSV[pref]=csv;
+
+  var totDif=Math.round((totExt-totRL)*100)/100;
+
+  // ── RENDER
+  var h='<div class="stats">';
+  h+='<div class="stat"><div class="stat-l">✓ D+1 confirmado</div><div class="stat-v v-ok">'+nOk+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">⚠ Diferença</div><div class="stat-v '+(nDif?'v-warn':'v-ok')+'">'+nDif+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">⏳ Pendente</div><div class="stat-v '+(nPend?'v-err':'v-ok')+'">'+nPend+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">Taxa Stone total</div><div class="stat-v v-warn">'+moeda(totTx)+'</div></div>';
+  h+='<div class="stat"><div class="stat-l">Líquido antecipado</div><div class="stat-v v-az">'+moeda(totRL)+'</div></div>';
+  h+='</div>';
+
+  // Info box explicativo
+  h+='<div class="info" style="margin-bottom:12px">';
+  h+='<strong>Como ler:</strong> cada linha = um dia de entrada no banco (D+1). ';
+  h+='A entrada de D+1 liquida as parcelas cujo vencimento cai naquele dia — que normalmente são vendas do dia anterior (D), mas podem incluir parcelas de contratos parcelados com vencimento futuro. ';
+  h+='<b>Dif Ext vs Líq</b>: diferença entre o que entrou no extrato e o líquido do recebível Stone (deve ser ≈ R$0,00). ';
+  if(temPac) h+='<b>Pacto Comp.</b>: valor bruto lançado na Pacto com compensação neste D+1 — diferença da taxa Stone é normal.';
+  h+='</div>';
+
+  // TABELA PRINCIPAL — por D+1
+  h+='<div style="font-size:12px;font-weight:700;color:var(--navy);margin-bottom:8px">📥 Conferência de Entradas por Dia (D+1)</div>';
+  var colspan=temPac?13:11;
+  h+='<div class="tbl-wrap"><table><thead><tr>';
+  h+='<th>Entrada no Banco (D+1)</th><th>Dia</th><th>Vendas do Dia (D)</th>';
+  h+='<th>Stone Bruto</th><th>Taxa Stone</th><th>Líquido Stone</th>';
+  h+='<th>Extrato Stone</th><th>Dif Ext vs Líq</th>';
+  if(temPac) h+='<th>Pacto Comp. (Bruto)</th><th>Alunos na Pacto</th>';
+  h+='<th>Status</th><th></th>';
+  h+='</tr></thead><tbody>';
+
+  res.forEach(function(r,idx){
+    var dId='d-e'+un+idx;
+    var badge=r.st==='ok'?'<span class="badge b-ok">✓ OK</span>':r.st==='dif'?'<span class="badge b-div">⚠ Dif.</span>':'<span class="badge b-err">⏳ Pendente</span>';
+    var difOk=Math.abs(r.dif)<0.5;
+    h+='<tr class="'+r.cls+'">';
+    h+='<td><b>'+r.d1+'</b></td>';
+    h+='<td style="color:var(--muted)">'+r.dia+'</td>';
+    h+='<td style="font-size:11px;color:var(--azul)">'+r.diasVenda.join(' + ')+'</td>';
+    h+='<td>'+moeda(r.rv.bruto)+'</td>';
+    h+='<td style="color:var(--warn);font-weight:700">'+moeda(r.rv.taxa)+'</td>';
+    h+='<td><b>'+moeda(r.rv.liq)+'</b></td>';
+    h+='<td><b style="color:'+(r.totE>0?'var(--ok)':'var(--err)')+'">'+moeda(r.totE)+'</b></td>';
+    h+='<td style="font-weight:700;color:'+(difOk?'var(--ok)':'var(--err)')+'">'+moeda(r.dif)+'</td>';
+    if(temPac){
+      h+='<td style="font-weight:600">'+(!r.pac?'<span style="color:var(--err)">❌ Não lançado</span>':moeda(r.pac.bruto)+'</td>');
+      h+='<td style="font-size:10px;color:var(--muted)">'+(!r.pac?'—':(r.pac.alunos.slice(0,4).join(', ')+(r.pac.alunos.length>4?' +mais…':'')))+'</td>';
+    }
+    h+='<td>'+badge+'</td>';
+    h+='<td><button class="dt" onclick="togDet(\''+dId+'\')">▸</button></td>';
+    h+='</tr>';
+    // Detalhe expansível
+    h+='<tr class="det-row" id="'+dId+'"><td colspan="'+colspan+'" class="det-td">';
+    // Sub-tabela: composição por dia de venda
+    h+='<div style="font-size:11px;font-weight:600;color:var(--muted);margin-bottom:6px">Composição da entrada de '+r.d1+' ('+r.rv.qtd+' parcelas):</div>';
+    h+='<table class="sub-tbl"><thead><tr><th>Dia da Venda (D)</th><th>Dia</th><th>Stone Bruto</th><th>Taxa Stone</th><th>Líquido Stone</th></tr></thead><tbody>';
+    r.diasVenda.forEach(function(dv){
+      var g=r.rv.dt_vendas[dv];
+      h+='<tr><td><b>'+dv+'</b></td><td style="color:var(--muted)">'+diaSem(dv)+'</td><td>'+moeda(g.b)+'</td><td style="color:var(--warn)">'+moeda(g.t)+'</td><td style="color:var(--ok);font-weight:700">'+moeda(g.l)+'</td></tr>';
+    });
+    h+='<tr><td colspan="2"><b>TOTAL</b></td><td>'+moeda(r.rv.bruto)+'</td><td style="color:var(--warn)">'+moeda(r.rv.taxa)+'</td><td style="color:var(--ok)"><b>'+moeda(r.rv.liq)+'</b></td></tr>';
+    h+='</tbody></table>';
+    // Entradas do extrato
+    h+='<div style="font-size:11px;font-weight:600;color:var(--muted);margin:8px 0 4px">Entradas no extrato Stone ('+r.d1+'):</div>';
+    if(r.ed.length){
+      r.ed.forEach(function(e){h+='<div style="font-size:11px;color:var(--ok)">'+e.tipo+' → <b>'+moeda(e.val)+'</b></div>';});
+    } else {
+      h+='<div style="font-size:11px;color:var(--err)">⏳ Nenhuma entrada no extrato para este dia ainda.</div>';
+    }
+    // Alunos da Pacto
+    if(temPac&&r.pac&&r.pac.alunos.length){
+      h+='<div style="font-size:11px;font-weight:600;color:var(--muted);margin:8px 0 4px">Alunos lançados na Pacto com compensação '+r.d1+' ('+r.pac.qtd+' lançamentos):</div>';
+      h+='<div style="font-size:11px;color:var(--navy);line-height:1.7">'+r.pac.alunos.join(' · ')+'</div>';
+    }
+    h+='</td></tr>';
+  });
+
+  h+='</tbody></table>';
+  h+='<div class="foot"><span>Stone bruto:</span><b>'+moeda(totRB)+'</b><span>Taxa Stone:</span><b>'+moeda(totTx)+'</b><span>Líquido:</span><b>'+moeda(totRL)+'</b><span>Extrato:</span><b>'+moeda(totExt)+'</b><span>Dif:</span><b style="color:'+(Math.abs(totDif)<0.5?'#90EE90':'#FFB3B3')+'">'+moeda(totDif)+'</b></div></div>';
+
+  // TABELA 2: taxa por dia de venda
+  h+='<div style="font-size:12px;font-weight:700;color:var(--navy);margin:20px 0 8px">💰 Taxa Stone por Dia de Venda — para baixar na Pacto</div>';
+  h+='<div class="info" style="margin-bottom:10px">Use a coluna <b>Taxa Stone</b> para lançar o desconto na Pacto. O <b>Líquido Stone</b> é o que entrou no banco em D+1.</div>';
+  h+='<div class="tbl-wrap"><table><thead><tr><th>Data Venda (D)</th><th>Dia</th><th>→ Entrou no Banco (D+1)</th><th>Stone Bruto</th><th>Taxa Stone</th><th>Líquido Antecipado</th></tr></thead><tbody>';
+  var totB2=0,totT2=0,totL2=0;
+  datasVenda.forEach(function(dt,idx){
+    var rv=recPorVenda[dt];
+    var bg=idx%2===0?'':'background:#fafbfc';
+    h+='<tr style="'+bg+'"><td><b>'+dt+'</b></td><td style="color:var(--muted)">'+diaSem(dt)+'</td><td style="font-weight:700;color:var(--azul)">'+proxUtil(dt)+'</td><td>'+moeda(rv.bruto)+'</td><td style="font-weight:700;color:var(--warn)">'+moeda(rv.taxa)+'</td><td><b style="color:var(--ok)">'+moeda(rv.liq)+'</b></td></tr>';
+    totB2+=rv.bruto; totT2+=rv.taxa; totL2+=rv.liq;
+  });
+  h+='<tr class="r-tot"><td colspan="3"><b>TOTAL DO PERÍODO</b></td><td><b>'+moeda(totB2)+'</b></td><td style="color:var(--warn)"><b>'+moeda(totT2)+'</b></td><td style="color:var(--ok)"><b>'+moeda(totL2)+'</b></td></tr>';
+  h+='</tbody></table></div>';
+
+  document.getElementById('res-'+pref).innerHTML=h;
+  document.getElementById('exp-'+pref).disabled=false;
+}
+
+/* ── DETALHE / EXPORTAR / LIMPAR ───────────────────────── */
+function togDet(id){
+  var el=document.getElementById(id); if(!el) return;
+  el.classList.toggle('open');
+  var pr=el.previousElementSibling; if(pr){var b=pr.querySelector('.dt');if(b) b.textContent=el.classList.contains('open')?'▾':'▸';}
+}
+function exportar(pref){
+  var csv=CSV[pref]; if(!csv) return;
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  var url=URL.createObjectURL(blob); var a=document.createElement('a');
+  a.href=url; a.download='conciliacao_inplace_'+pref+'_'+new Date().toISOString().substring(0,10)+'.csv';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+}
+function limpar(pref){
+  var mod=pref.charAt(0);
+  var tipos=mod==='v'?['pacto','stone']:['rec','ext','pac'];
+  tipos.forEach(function(t){
+    delete A[pref+'_'+t]; delete CSV[pref];
+    var cardSuf=t==='pac'?'pac':t.charAt(0);
+    var card=document.getElementById('c-'+pref+'-'+cardSuf);
+    if(card){
+      card.classList.remove('ok');
+      var labels={pacto:'Gestão de Recebíveis',stone:'Relatório de Vendas Stone',rec:'Recebível de Cartão',ext:'Extrato Stone',pac:'Gestão de Recebíveis'};
+      var hints={pacto:'GestaoRecebiveis · XLS / XLSX',stone:'Vendas detalhadas · XLSX',rec:'DATA DE VENCIMENTO + VALOR LÍQUIDO',ext:'Transferência entre contas Stone',pac:'Opcional — confirma compensação D+1'};
+      card.querySelector('.up-label').textContent=labels[t]||t;
+      card.querySelector('.up-hint').textContent=hints[t]||'';
+    }
+  });
+  var btn=document.getElementById('btn-'+pref); if(btn) btn.disabled=true;
+  var exp=document.getElementById('exp-'+pref); if(exp) exp.disabled=true;
+  var icon=mod==='v'?'💳':'🏦';
+  var el=document.getElementById('res-'+pref);
+  if(el) el.innerHTML='<div class="empty"><div class="empty-icon">'+icon+'</div>Carregue os arquivos para iniciar</div>';
+}
+</script>
+</body>
+</html>
