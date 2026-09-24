@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lume Finanças · Conciliação Feegow × Infinite / C6</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --navy:#0D2137;--navy-mid:#1a3450;--gold:#C9A84C;--gold-pale:#fdf8ee;
+  --white:#fff;--gray:#f4f5f7;--muted:#6b7c93;
+  --ok:#1a5c35;--ok-bg:#d7f5e3;
+  --err:#8B0000;--err-bg:#FFD7D7;
+  --warn:#7B5E00;--warn-bg:#FFF3CD;
+  --div:#7B3F00;--div-bg:#FFE4B5;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--gray);color:#1a2535;min-height:100vh}
+header{background:linear-gradient(135deg,var(--navy),var(--navy-mid));padding:22px 40px;border-bottom:2px solid var(--gold)}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-mark{width:38px;height:38px;background:var(--gold);border-radius:9px;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:18px;font-weight:900;color:var(--navy)}
+.logo-text h1{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#fff}
+.logo-text span{font-size:10px;color:var(--gold);letter-spacing:3px;text-transform:uppercase}
+.header-sub{margin-top:6px;font-size:11px;color:rgba(255,255,255,.4)}
+.header-sub strong{color:var(--gold)}
+main{padding:24px 40px;max-width:1400px;margin:0 auto}
+
+/* MÓDULOS */
+.modulos{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.modulo{background:#fff;border-radius:12px;padding:16px 18px;border:2px solid #e8ecf2;cursor:pointer;transition:all .2s}
+.modulo:hover{border-color:var(--gold)}
+.modulo.ativo{border-color:var(--navy);background:var(--navy)}
+.modulo-icon{font-size:20px;margin-bottom:6px}
+.modulo-nome{font-size:13px;font-weight:600;color:var(--navy)}
+.modulo.ativo .modulo-nome{color:var(--gold)}
+.modulo-desc{font-size:11px;color:var(--muted);margin-top:2px}
+.modulo.ativo .modulo-desc{color:rgba(255,255,255,.5)}
+.secao{display:none}.secao.ativa{display:block}
+
+/* UPLOAD */
+.upload-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+.upload-grid.dois{grid-template-columns:1fr 1fr}
+.upload-card{background:#fff;border-radius:11px;padding:16px;border:2px dashed #d1d9e6;cursor:pointer;transition:all .2s}
+.upload-card:hover{border-color:var(--gold);background:var(--gold-pale)}
+.upload-card.loaded{border-color:var(--ok);border-style:solid;background:#f0fdf5}
+.upload-card input[type=file]{display:none}
+.tag{display:inline-block;background:var(--navy);color:var(--gold);font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 7px;border-radius:20px;margin-bottom:7px}
+.tag.opc{background:#6b7c93}
+.upload-icon{font-size:20px;margin-bottom:6px}
+.upload-label{font-size:12px;font-weight:600;color:var(--navy);margin-bottom:2px}
+.upload-hint{font-size:10px;color:var(--muted);line-height:1.4}
+.upload-st{margin-top:6px;font-size:10px;font-weight:500;color:var(--ok);display:none}
+.upload-card.loaded .upload-st{display:block}
+
+/* BOTÕES */
+.btn-row{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.btn{padding:9px 20px;border-radius:8px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s}
+.btn-gold{background:var(--gold);color:var(--navy)}.btn-gold:hover{background:#b8952f}
+.btn-gold:disabled{background:#d4c9a8;color:#888;cursor:not-allowed}
+.btn-navy{background:var(--navy);color:var(--gold)}.btn-navy:hover{background:#254568}
+.btn-navy:disabled{opacity:.4;cursor:not-allowed}
+.btn-out{background:#fff;color:var(--navy);border:1.5px solid #d1d9e6}
+.btn-out:hover{border-color:var(--navy)}
+
+/* RESUMO */
+.resumo{display:none;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.resumo.dois{grid-template-columns:repeat(2,1fr)}
+.resumo.tres{grid-template-columns:repeat(3,1fr)}
+.rcard{background:#fff;border-radius:10px;padding:14px 16px;border-left:4px solid transparent;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.rcard.ok{border-color:var(--ok)}.rcard.err{border-color:var(--err)}
+.rcard.warn{border-color:#e6c300}.rcard.div{border-color:#e07b00}
+.rnum{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;line-height:1;margin-bottom:2px}
+.rcard.ok .rnum{color:var(--ok)}.rcard.err .rnum{color:var(--err)}
+.rcard.warn .rnum{color:#a08500}.rcard.div .rnum{color:var(--div)}
+.rlabel{font-size:10px;color:var(--muted);font-weight:500}
+
+/* TABELA CONCILIAÇÃO */
+.conc-wrap{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);margin-bottom:16px}
+.conc-header{background:var(--navy);padding:12px 18px;display:flex;align-items:center;justify-content:space-between}
+.conc-title{font-size:13px;font-weight:600;color:var(--gold)}
+.conc-sub{font-size:11px;color:rgba(255,255,255,.5)}
+.tbl-scroll{overflow:auto;max-height:520px}
+table{width:100%;border-collapse:collapse;font-size:11px}
+thead th{background:#1a3450;color:#fff;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;padding:9px 10px;text-align:left;position:sticky;top:0;z-index:3;white-space:nowrap}
+tbody tr{border-bottom:1px solid #edf0f5}
+tbody tr:hover{background:var(--gold-pale)!important}
+tbody td{padding:8px 10px;vertical-align:middle}
+tbody tr:nth-child(even){background:#f9fafb}
+
+/* DIA HEADER */
+.dia-row td{background:#254568!important;color:#fff!important;font-weight:700;font-size:11px;padding:6px 10px;letter-spacing:.5px}
+.dia-row:hover{background:#254568!important}
+
+/* STATUS BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 8px;border-radius:20px;font-size:9px;font-weight:700;white-space:nowrap}
+.b-ok{background:var(--ok-bg);color:var(--ok)}
+.b-err{background:var(--err-bg);color:var(--err)}
+.b-warn{background:var(--warn-bg);color:var(--warn)}
+.b-div{background:var(--div-bg);color:var(--div)}
+
+.money{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap;text-align:right}
+.mono{font-family:monospace;font-size:10px;color:#666}
+.obs-cell{font-size:10px;color:#555;max-width:280px;line-height:1.3}
+.edit-btn{background:transparent;border:1px solid #d1d9e6;border-radius:5px;padding:2px 7px;font-size:10px;cursor:pointer;color:var(--navy);font-family:'DM Sans',sans-serif;white-space:nowrap}
+.edit-btn:hover{border-color:var(--navy);background:var(--gold-pale)}
+.edit-row td{background:#f0f4f8!important;padding:10px 12px!important}
+.edit-form{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-end}
+.edit-field{display:flex;flex-direction:column;gap:3px}
+.edit-field label{font-size:9px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.edit-field input,.edit-field select{padding:5px 8px;border:1.5px solid #d1d9e6;border-radius:6px;font-size:11px;font-family:'DM Sans',sans-serif;color:var(--navy);background:#fff;min-width:120px}
+.edit-field input:focus,.edit-field select:focus{outline:none;border-color:var(--gold)}
+.edit-actions{display:flex;gap:6px;align-items:center;margin-top:2px}
+.btn-salvar-edit{padding:5px 14px;background:var(--gold);color:var(--navy);border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif}
+.btn-cancelar-edit{padding:5px 12px;background:#fff;color:var(--muted);border:1px solid #d1d9e6;border-radius:6px;font-size:11px;cursor:pointer;font-family:'DM Sans',sans-serif}
+.fbtn{padding:4px 12px;border-radius:20px;border:1.5px solid #d1d9e6;background:#fff;
+      font-size:11px;font-weight:500;cursor:pointer;color:var(--muted);transition:all .15s;
+      font-family:'DM Sans',sans-serif}
+.fbtn:hover{border-color:var(--navy);color:var(--navy)}
+.fbtn.active{background:var(--navy);color:var(--gold);border-color:var(--navy)}
+.empty{text-align:center;padding:40px;color:var(--muted);font-size:13px}
+
+/* OVERLAY */
+.overlay{display:none;position:fixed;inset:0;background:rgba(13,33,55,.85);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:12px}
+.overlay.show{display:flex}
+.spinner{width:38px;height:38px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.overlay-txt{color:#fff;font-size:13px}
+
+footer{background:var(--navy);text-align:center;padding:12px;font-size:10px;color:rgba(255,255,255,.3)}
+footer span{color:var(--gold)}
+
+@media(max-width:768px){
+  header{padding:16px 18px}main{padding:16px}
+  .modulos{grid-template-columns:1fr}.upload-grid{grid-template-columns:1fr}
+  .resumo{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<div class="overlay" id="overlay"><div class="spinner"></div><div class="overlay-txt" id="overlayTxt">Processando...</div></div>
+
+<header>
+  <div class="logo">
+    <div class="logo-mark">L</div>
+    <div class="logo-text"><h1>Lume Finanças</h1><span>BPO Financeiro</span></div>
+  </div>
+  <div class="header-sub">Conciliação <strong>Feegow × Infinite / C6 Bank</strong> &nbsp;·&nbsp; Clínica Médica</div>
+</header>
+
+<main>
+  <div class="modulos">
+    <div class="modulo ativo" id="mod-cartao" onclick="trocarModulo('cartao')">
+      <div class="modulo-icon">💳</div>
+      <div class="modulo-nome">Cartão — Feegow × Infinite</div>
+      <div class="modulo-desc">Confronto venda a venda por código de autorização + exporta Meu Dinheiro</div>
+    </div>
+    <div class="modulo" id="mod-pix" onclick="trocarModulo('pix')">
+      <div class="modulo-icon">📱</div>
+      <div class="modulo-nome">PIX — Feegow × C6 Bank</div>
+      <div class="modulo-desc">Confronto por data e valor + exporta Meu Dinheiro</div>
+    </div>
+  </div>
+
+  <!-- ═══ CARTÃO ═══ -->
+  <div class="secao ativa" id="sec-cartao">
+    <input type="file" id="fileCC"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cc',this)">
+    <input type="file" id="fileCR"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cr',this)">
+    <input type="file" id="fileInf"   accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('inf',this)">
+    <input type="file" id="fileStone" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('stone',this)">
+
+    <div class="upload-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
+      <div class="upload-card" id="cardCC" onclick="abrirInput('fileCC')">
+        <div class="tag">Feegow — Obrigatório</div>
+        <div class="upload-icon">🏥</div>
+        <div class="upload-label">Cartão de Crédito (Feegow)</div>
+        <div class="upload-hint">Relatório CartaoCredito exportado do Feegow (.xlsx)</div>
+        <div class="upload-st" id="stCC">✓ Carregado</div>
+      </div>
+      <div class="upload-card" id="cardCR" onclick="abrirInput('fileCR')">
+        <div class="tag opc">Contas a Receber — Opcional</div>
+        <div class="upload-icon">📋</div>
+        <div class="upload-label">Contas a Receber (Feegow)</div>
+        <div class="upload-hint">Melhora a categoria automaticamente (Consulta, Medicamento, etc.)</div>
+        <div class="upload-st" id="stCR">✓ Carregado</div>
+      </div>
+    </div>
+    <div class="upload-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="upload-card" id="cardInf" onclick="abrirInput('fileInf')">
+        <div class="tag opc">Infinite — Opcional</div>
+        <div class="upload-icon">🔵</div>
+        <div class="upload-label">Relatório de Vendas (Infinite)</div>
+        <div class="upload-hint">Carregar se a clínica usa Infinite. Pode usar Infinite, Stone ou os dois.</div>
+        <div class="upload-st" id="stInf">✓ Carregado</div>
+      </div>
+      <div class="upload-card" id="cardStone" onclick="abrirInput('fileStone')">
+        <div class="tag opc">Stone — Opcional</div>
+        <div class="upload-icon">🟢</div>
+        <div class="upload-label">Relatório de Vendas (Stone)</div>
+        <div class="upload-hint">Carregar se a clínica usa Stone. Pode usar Stone, Infinite ou os dois.</div>
+        <div class="upload-st" id="stStone">✓ Carregado</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" id="btnAnalisarCC" disabled onclick="analisarCartao()">⚡ Confrontar Vendas</button>
+      <button class="btn btn-navy" id="btnExportMD" disabled onclick="exportarMeuDinheiro()">⬇ Exportar Meu Dinheiro</button>
+      <button class="btn btn-out" onclick="resetar('cartao')">↺ Limpar</button>
+    </div>
+
+    <div class="resumo" id="resumoCC">
+      <div class="rcard ok"><div class="rnum" id="rCCok">0</div><div class="rlabel">✅ OK — nos dois sistemas</div></div>
+      <div class="rcard err"><div class="rnum" id="rCCerr">0</div><div class="rlabel">🔴 No Feegow, não no Infinite</div></div>
+      <div class="rcard warn"><div class="rnum" id="rCCwarn">0</div><div class="rlabel">🟡 No Infinite, não no Feegow</div></div>
+      <div class="rcard div"><div class="rnum" id="rCCdiv">0</div><div class="rlabel">🟠 Divergência de valor</div></div>
+    </div>
+
+    <div class="conc-wrap" id="wrapCC" style="display:none">
+      <div class="conc-header">
+        <div class="conc-title">📋 Confronto Diário — Cartão</div>
+        <div class="conc-sub" id="subCC">—</div>
+      </div>
+      <div style="background:#f4f5f7;padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e0e5ee">
+        <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
+        <button class="fbtn active" id="fCC_todos" onclick="filtrarCC('todos')">Todos</button>
+        <button class="fbtn" id="fCC_ok" onclick="filtrarCC('ok')">✅ OK</button>
+        <button class="fbtn" id="fCC_err" onclick="filtrarCC('err')">🔴 No Feegow s/ Infinite</button>
+        <button class="fbtn" id="fCC_warn" onclick="filtrarCC('warn')">🟡 No Infinite s/ Feegow</button>
+        <button class="fbtn" id="fCC_div" onclick="filtrarCC('div')">🟠 Divergência</button>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Paciente (Feegow)</th><th>Bandeira</th>
+            <th>Código Auth</th><th>Origem</th><th>Parcela</th>
+            <th>Valor Feegow</th><th>Valor Maquininha</th>
+            <th>STATUS</th><th>Observação</th><th>—</th>
+          </tr></thead>
+          <tbody id="tbCC"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PIX ═══ -->
+  <div class="secao" id="sec-pix">
+    <input type="file" id="fileMov" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('mov',this)">
+    <input type="file" id="fileOFX" accept=".ofx,.csv,.xlsx,.xls" style="display:none" onchange="carregarArq('ofx',this)">
+
+    <div class="upload-grid dois">
+      <div class="upload-card" id="cardMov" onclick="abrirInput('fileMov')">
+        <div class="tag">Feegow — Obrigatório</div>
+        <div class="upload-icon">🏥</div>
+        <div class="upload-label">Movimentação (Feegow)</div>
+        <div class="upload-hint">Relatório de Movimentação exportado do Feegow. PIX será filtrado automaticamente.</div>
+        <div class="upload-st" id="stMov">✓ Carregado</div>
+      </div>
+      <div class="upload-card" id="cardOFX" onclick="abrirInput('fileOFX')">
+        <div class="tag opc">C6 Bank — Opcional</div>
+        <div class="upload-icon">🏦</div>
+        <div class="upload-label">Extrato C6 Bank</div>
+        <div class="upload-hint">Extrato do C6 Bank em formato OFX, XLSX ou CSV. Opcional — sem ele, gera Meu Dinheiro direto do Feegow.</div>
+        <div class="upload-st" id="stOFX">✓ Carregado</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" id="btnAnalisarPix" disabled onclick="analisarPix()">⚡ Analisar / Confrontar PIX</button>
+      <button class="btn btn-navy" id="btnExportPix" disabled onclick="exportarPixMD()">⬇ Exportar Meu Dinheiro</button>
+      <button class="btn btn-out" onclick="resetar('pix')">↺ Limpar</button>
+    </div>
+
+    <div class="resumo tres" id="resumoPix">
+      <div class="rcard ok"><div class="rnum" id="rPok">0</div><div class="rlabel">✅ OK — nos dois</div></div>
+      <div class="rcard err"><div class="rnum" id="rPerr">0</div><div class="rlabel">🔴 No Feegow, não no C6</div></div>
+      <div class="rcard warn"><div class="rnum" id="rPwarn">0</div><div class="rlabel">🟡 No C6, não no Feegow</div></div>
+    </div>
+
+    <div class="conc-wrap" id="wrapPix" style="display:none">
+      <div class="conc-header">
+        <div class="conc-title">📋 Confronto Diário — PIX</div>
+        <div class="conc-sub" id="subPix">—</div>
+      </div>
+      <div style="background:#f4f5f7;padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e0e5ee">
+        <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
+        <button class="fbtn active" id="fPix_todos" onclick="filtrarPix('todos')">Todos</button>
+        <button class="fbtn" id="fPix_pok" onclick="filtrarPix('pok')">✅ OK</button>
+        <button class="fbtn" id="fPix_perr" onclick="filtrarPix('perr')">🔴 No Feegow s/ C6</button>
+        <button class="fbtn" id="fPix_pwarn" onclick="filtrarPix('pwarn')">🟡 No C6 s/ Feegow</button>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr>
+            <th>Data</th><th>Paciente (Feegow)</th><th>Nome no C6 Bank</th>
+            <th>Valor Feegow</th><th>Valor C6</th>
+            <th>STATUS</th><th>Observação</th><th>—</th>
+          </tr></thead>
+          <tbody id="tbPix"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</main>
+<footer><span>Lume Finanças</span> · BPO Financeiro · Conciliação Feegow × Infinite / C6 · uso interno</footer>
+
+<script>
+var dados = {}, resCC = [], resPix = [];
+var filtroCC = 'todos', filtroPix = 'todos';
+var HDR_MD = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
+
+// ── Utilitários ────────────────────────────────────────────────────────────────
+function num(v) {
+  if (v === null || v === undefined || v === '') return 0;
+  var s = String(v).trim().replace(/'/g,'').replace('R$','').replace(' ','');
+  if (s.indexOf(',') >= 0 && s.indexOf('.') >= 0) s = s.replace(/\./g,'').replace(',','.');
+  else if (s.indexOf(',') >= 0) s = s.replace(',','.');
+  s = s.replace(/[^0-9.\-]/g,'');
+  return parseFloat(s) || 0;
+}
+
+function moeda(v) {
+  var n = num(v);
+  return 'R$ ' + Math.abs(n).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function fmtData(v) {
+  if (!v || String(v) === 'nan' || String(v) === 'undefined') return '';
+  // Se for objeto Date do Excel
+  if (v instanceof Date) return v.toLocaleDateString('pt-BR');
+  var s = String(v).trim();
+  if (!s) return '';
+  // dd/mm/yyyy ou dd/mm/yyyy HH:MM
+  var m1 = s.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+  if (m1) return m1[1]+'/'+m1[2]+'/'+m1[3];
+  // yyyy-mm-dd
+  var m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m2) return m2[3]+'/'+m2[2]+'/'+m2[1];
+  // mm/dd/yyyy (formato americano do Excel)
+  var m3 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m3) {
+    var mes=parseInt(m3[1]), dia=parseInt(m3[2]);
+    // Se mes > 12 provavelmente está invertido
+    if (mes > 12) return ('0'+dia).slice(-2)+'/'+('0'+mes).slice(-2)+'/'+m3[3];
+    return ('0'+m3[1]).slice(-2)+'/'+('0'+m3[2]).slice(-2)+'/'+m3[3];
+  }
+  return s.substring(0,10);
+}
+
+function dtMs(s) {
+  try { var p=s.split('/'); return new Date(p[2]+'-'+p[1]+'-'+p[0]).getTime(); }
+  catch(e){ return 9999999999999; }
+}
+
+function normAuth(v) {
+  if (!v || String(v) === 'nan') return '';
+  var s = String(v).trim().toUpperCase();
+  if (/^[0-9]+$/.test(s)) return s.replace(/^0+/,'') || '0';
+  // Alfanumérico: remover zeros à esquerda
+  return s.replace(/^0+([^0])/,'$1') || s;
+}
+
+// Normaliza ambiguidade 0/O e I/1 para comparação entre sistemas
+function normAuthCmp(v) {
+  return normAuth(v).replace(/O/g,'0').replace(/I/g,'1').replace(/L/g,'1');
+}
+
+// Distância de Levenshtein para tolerar 1 caractere diferente (ex: A9BQB vs A9BBQB)
+function levenshtein(a, b) {
+  if (a === b) return 0;
+  if (!a) return b.length;
+  if (!b) return a.length;
+  var m = a.length, n = b.length;
+  var dp = [];
+  for (var i=0;i<=m;i++){ dp[i]=[i]; }
+  for (var j=0;j<=n;j++){ dp[0][j]=j; }
+  for (var i=1;i<=m;i++){
+    for (var j=1;j<=n;j++){
+      dp[i][j] = a[i-1]===b[j-1] ? dp[i-1][j-1] : 1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+      if (dp[i][j] > 2) break; // early exit
+    }
+  }
+  return dp[m][n];
+}
+
+function normNome(s) {
+  return String(s).replace(/Pix recebido( c6)? de /i,'').replace(/[^A-Za-zÀ-ÖØ-öø-ÿ]/g,'').toUpperCase().substring(0,10);
+}
+
+function mktr(html) { var r=document.createElement('tr'); r.innerHTML=html; return r; }
+function abrirInput(id) { var el=document.getElementById(id); if(el){el.value='';el.click();} }
+function mostrarOv(t) { document.getElementById('overlayTxt').textContent=t||'Processando...'; document.getElementById('overlay').classList.add('show'); }
+function esconderOv() { document.getElementById('overlay').classList.remove('show'); }
+
+function badgeHtml(st) {
+  if (st==='ok')   return '<span class="badge b-ok">✅ OK</span>';
+  if (st==='err')  return '<span class="badge b-err">🔴 No Feegow, não no Infinite</span>';
+  if (st==='warn') return '<span class="badge b-warn">🟡 No Infinite, não no Feegow</span>';
+  if (st==='div')  return '<span class="badge b-div">🟠 Divergência</span>';
+  if (st==='pok')  return '<span class="badge b-ok">✅ OK</span>';
+  if (st==='perr') return '<span class="badge b-err">🔴 No Feegow, não no C6</span>';
+  if (st==='pwarn')return '<span class="badge b-warn">🟡 No C6, não no Feegow</span>';
+  if (st==='psd')  return '<span class="badge b-ok">📋 Feegow — sem confronto C6</span>';
+  return st;
+}
+
+// ── Carregar arquivos ──────────────────────────────────────────────────────────
+var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',stone:'cardStone',cr:'cardCR'};
+var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',stone:'stStone',cr:'stCR'};
+
+function carregarArq(tipo, input) {
+  var file = input.files[0]; if (!file) return;
+  var nome = file.name.toLowerCase();
+  var reader = new FileReader();
+
+  if (nome.endsWith('.ofx')) {
+    reader.onload = function(e) {
+      dados[tipo] = parseOFX(e.target.result);
+      atualizarCard(tipo, file.name, dados[tipo].length);
+      checarBotoes();
+    };
+    // Tentar UTF-8 primeiro, depois Latin-1
+    try { reader.readAsText(file, 'UTF-8'); } catch(e) { reader.readAsText(file, 'ISO-8859-1'); }
+  } else if (tipo === 'ofx' && (nome.endsWith('.xlsx') || nome.endsWith('.xls'))) {
+    // C6 em formato Excel
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
+        dados[tipo] = parseC6Excel(wb);
+        atualizarCard(tipo, file.name, dados[tipo].length);
+        checarBotoes();
+      } catch(err) { alert('Erro Excel C6: '+err.message); }
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (nome.endsWith('.csv')) {
+    reader.onload = function(e) {
+      try { dados[tipo] = parseCSV(e.target.result); }
+      catch(err) { alert('Erro CSV: '+err.message); return; }
+      atualizarCard(tipo, file.name, dados[tipo].length);
+      checarBotoes();
+    };
+    reader.readAsText(file, 'UTF-8');
+  } else {
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+        dados[tipo] = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{defval:''});
+      } catch(err) { alert('Erro Excel: '+err.message); return; }
+      atualizarCard(tipo, file.name, dados[tipo].length);
+      checarBotoes();
+    };
+    reader.readAsArrayBuffer(file);
+  }
+}
+
+function parseC6Excel(wb) {
+  // Extrato C6 em Excel: header na linha 8 (índice 8), dados a partir da linha 9
+  var sheet = wb.Sheets[wb.SheetNames[0]];
+  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+  var result = [];
+  // Encontrar linha de header
+  var hdrIdx = -1;
+  for (var i=0;i<rows.length;i++) {
+    if (String(rows[i][0]||'').indexOf('Data') >= 0 && String(rows[i][4]||'').indexOf('Entrada') >= 0) {
+      hdrIdx = i; break;
+    }
+  }
+  if (hdrIdx < 0) hdrIdx = 8;
+  for (var i=hdrIdx+1;i<rows.length;i++) {
+    var r = rows[i];
+    var data = r[0] ? fmtData(String(r[0])) : '';
+    var titulo = String(r[2]||'').trim();
+    var desc   = String(r[3]||'').trim();
+    var entrada= parseFloat(String(r[4]||'0').replace(',','.')) || 0;
+    var saida  = parseFloat(String(r[5]||'0').replace(',','.')) || 0;
+    if (!data && !titulo) continue;
+    if (entrada > 0) {
+      result.push({data:data, valor:entrada, memo:titulo||desc, _xlsx:true});
+    }
+  }
+  return result;
+}
+
+function parseOFX(txt) {
+  var blocos = txt.match(/<STMTTRN>[\s\S]*?<\/STMTTRN>/g) || [];
+  return blocos.map(function(b) {
+    function get(tag) { var m=b.match(new RegExp('<'+tag+'>([^\\n<]*)'));return m?m[1].trim():''; }
+    var d = get('DTPOSTED').substring(0,8);
+    var data = d.length===8 ? d.substring(6,8)+'/'+d.substring(4,6)+'/'+d.substring(0,4) : '';
+    var v = parseFloat(get('TRNAMT').replace(',','.')) || 0;
+    return {data:data, valor:v, memo:get('MEMO'), _ofx:true};
+  }).filter(function(t){ return t.valor > 0; });
+}
+
+function parseCSV(txt) {
+  // Remover BOM UTF-8 se presente
+  if (txt.charCodeAt(0) === 0xFEFF) txt = txt.slice(1);
+  txt = txt.replace(/^\uFEFF/,'');
+  // Detectar separador: ponto-e-vírgula ou vírgula
+  var primeiraLinha = txt.split('\n')[0];
+  var sep = primeiraLinha.indexOf(';') > primeiraLinha.indexOf(',') &&
+            primeiraLinha.indexOf(';') >= 0 ? ';' : ',';
+  var linhas = txt.split('\n');
+  var hdrs = splitLinha(linhas[0], sep), rows=[];
+  if (hdrs[0]) hdrs[0] = hdrs[0].replace(/^\uFEFF/,'').trim();
+  for (var i=1;i<linhas.length;i++) {
+    var l=linhas[i].trim(); if(!l) continue;
+    var v=splitLinha(l,sep), o={};
+    for (var j=0;j<hdrs.length;j++) o[hdrs[j].trim()]=j<v.length?v[j].trim():'';
+    rows.push(o);
+  }
+  return rows;
+}
+
+function splitL(l) { return splitLinha(l,','); }
+
+function splitLinha(l, sep) {
+  sep = sep || ',';
+  var res=[],cur='',inQ=false;
+  for(var i=0;i<l.length;i++){
+    var c=l[i];
+    if(c==='"'){inQ=!inQ;}
+    else if(c===sep&&!inQ){res.push(cur.trim());cur='';}
+    else{cur+=c;}
+  }
+  res.push(cur.trim());
+  return res;
+}
+
+function atualizarCard(tipo, nome, total) {
+  var card=document.getElementById(cardMap[tipo]);
+  var st=document.getElementById(stMap[tipo]);
+  if(card) card.classList.add('loaded');
+  if(st) st.textContent='✓ '+nome.substring(0,35)+' · '+total+' registros';
+}
+
+function checarBotoes() {
+  document.getElementById('btnAnalisarCC').disabled  = !(dados['cc'] && (dados['inf'] || dados['stone']));
+  document.getElementById('btnAnalisarPix').disabled = !dados['mov'];
+}
+
+// ── ANÁLISE CARTÃO ─────────────────────────────────────────────────────────────
+function analisarCartao() {
+  mostrarOv('Confrontando vendas...');
+  setTimeout(function(){
+    try { _analisarCartao(); } catch(e){ alert('Erro: '+e.message); }
+    esconderOv();
+  }, 80);
+}
+
+function _analisarCartao() {
+  var ccRows = dados['cc'].filter(function(r){ return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador'; });
+  var infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+
+  // Indexar Infinite
+  var idxInf = {};
+  infRows.forEach(function(r) {
+    var id = normAuthCmp(String(r['Identificador']||'').trim());
+    if (id) idxInf[id] = r;
+  });
+
+  // Stone
+  var stoneRows = (dados['stone']||[]).filter(function(r){
+    var status = r['ULTIMO STATUS'] || r['ÚLTIMO STATUS'] || '';
+    return String(status).trim().toLowerCase() === 'aprovada';
+  });
+  var idxStone = {};
+  stoneRows.forEach(function(r) {
+    // Tentar coluna com e sem BOM/acento
+    var authVal = r['CÓDIGO DE AUTORIZAÇÃO'] || r['C\u00d3DIGO DE AUTORIZA\u00c7\u00c3O'] || r['CODIGO DE AUTORIZACAO'] || '';
+    // Também tentar achar a coluna que contém "AUTORIZA"
+    if (!authVal) {
+      Object.keys(r).forEach(function(k){
+        if (k.toUpperCase().indexOf('AUTORIZA') >= 0) authVal = r[k];
+      });
+    }
+    var id = normAuthCmp(String(authVal||'').trim());
+    if (id) idxStone[id] = r;
+  });
+
+  // Contas a Receber — indexar por nome normalizado para busca de procedimento/categoria
+  var crRows = dados['cr'] || [];
+  var idxCR = {};
+  crRows.forEach(function(r) {
+    var conta = String(r['Conta']||'').toLowerCase().replace(/[^a-záàãâéêíóõôúç ]/gi,'').trim().substring(0,20);
+    if (conta && conta !== 'conta') {
+      if (!idxCR[conta]) idxCR[conta] = [];
+      idxCR[conta].push(r);
+    }
+  });
+
+  // Feegow — só parcela 1, agrupar por auth+data somando múltiplos procedimentos
+  var grupFeegow = {};
+  ccRows.forEach(function(r) {
+    var parc = String(r['Parcela']||'').trim();
+    if (!parc.startsWith('1 /') && !parc.startsWith('1/')) return;
+    var auth  = normAuthCmp(String(r['Autorização']||'').trim());
+    var trans = normAuthCmp(String(r['Transação']||'').trim());
+    var chave = auth || trans;
+    if (!chave) return;
+    var dataComp = fmtData(String(r['Data compra']||''));
+    var chaveData = chave + '|' + dataComp;
+    if (!grupFeegow[chaveData]) {
+      grupFeegow[chaveData] = {
+        auth:chave, pac:String(r['Pagador']||'').trim(),
+        dataComp:dataComp,
+        band:String(r['Bandeira']||'').trim(),
+        totParc:parseInt((parc.indexOf('/')>=0?parc.split('/')[1]:parc.split('x')[1]||'1').replace(/[^0-9]/g,''))||1,
+        taxaPct:num(r['Taxa %']||0),
+        valTotal:0, dataCred:fmtData(String(r['Data créd.']||''))
+      };
+    }
+    grupFeegow[chaveData].valTotal += num(r['Valor compra']);
+  });
+
+  resCC = [];
+
+  // Feegow vs Infinite — iterar por chaveData (auth|data)
+  Object.keys(grupFeegow).forEach(function(chaveData) {
+    var fg   = grupFeegow[chaveData];
+    var auth = fg.auth;
+    // ── Buscar na maquininha (Infinite primeiro, depois Stone) ──
+    // Buscar no Infinite com tolerância 0/O, I/1
+    var authCmp = normAuthCmp(auth);
+    var inf = idxInf[authCmp] || null;
+    // Buscar por NSU se não achou
+    if (!inf) {
+      for (var k in idxInf) {
+        if (normAuthCmp(String(idxInf[k]['NSU']||'')) === authCmp) { inf = idxInf[k]; break; }
+      }
+    }
+    // Busca por valor + data no Infinite como último recurso
+    if (!inf && fg.dataComp) {
+      var dtFgI = fg.dataComp;
+      var valFgI= fg.valTotal;
+      infRows.forEach(function(ir) {
+        if (inf) return;
+        var dtI = String(ir['Data e hora']||'').substring(0,10);
+        var valI= num(ir['Valor (R$)']);
+        if (dtI === dtFgI && Math.abs(valFgI - valI) < 0.02) inf = ir;
+      });
+    }
+    // Busca fuzzy: código com 1 caractere diferente (ex: A9BQB vs A9BBQB, 48630 vs 48631)
+    if (!inf && authCmp.length >= 4) {
+      for (var k in idxInf) {
+        if (levenshtein(k, authCmp) <= 1) { inf = idxInf[k]; break; }
+      }
+    }
+    // Buscar na Stone se não achou no Infinite
+    var stoneRow = (!inf) ? (idxStone[authCmp] || null) : null;
+    // Busca fuzzy Stone: 1 caractere diferente
+    if (!inf && !stoneRow && authCmp.length >= 4) {
+      for (var k in idxStone) {
+        if (levenshtein(k, authCmp) <= 1) { stoneRow = idxStone[k]; break; }
+      }
+    }
+    // Busca por valor + data quando código não casa (ex: Feegow gravou código errado)
+    if (!inf && !stoneRow && fg.dataComp) {
+      var valFg = fg.valTotal;
+      var dtFg  = fg.dataComp; // dd/mm/yyyy
+      for (var si = 0; si < stoneRows.length; si++) {
+        var sr   = stoneRows[si];
+        var dtSt = String(sr['DATA DA VENDA']||'').substring(0,10);
+        var valSt= Math.abs(num(String(sr['VALOR BRUTO']||'0').replace(/\.+/g,'').replace(',','.')));
+        if (dtSt === dtFg && Math.abs(valFg - valSt) < 0.02) {
+          stoneRow = sr;
+          break;
+        }
+      }
+    }
+    var origem   = inf ? 'Infinite' : (stoneRow ? 'Stone' : null);
+
+    // Valor e taxa da maquininha encontrada
+    var valInf, taxaInfVal;
+    if (inf) {
+      valInf     = num(inf['Valor (R$)']);
+      taxaInfVal = Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0'));
+    } else if (stoneRow) {
+      valInf     = num(String(stoneRow['VALOR BRUTO']||'0').replace(/\./g,'').replace(',','.'));
+      // DESCONTO DE MDR na Stone vem negativo — usar Math.abs
+      taxaInfVal = Math.abs(num(String(stoneRow['DESCONTO DE MDR']||'0').replace(/\./g,'').replace(',','.')))
+    } else {
+      valInf = null; taxaInfVal = 0;
+    }
+    var taxa = taxaInfVal > 0 ? taxaInfVal : Math.round(fg.valTotal * num(fg.taxaPct||0) / 100 * 100) / 100;
+
+    // ── Buscar procedimento no Contas a Receber para categoria ──
+    var procedimentoCR = '';
+    var pacNorm = fg.pac.toLowerCase().replace(/[^a-záàãâéêíóõôúç ]/gi,'').substring(0,15);
+    for (var crKey in idxCR) {
+      if (crKey.indexOf(pacNorm) >= 0 || pacNorm.indexOf(crKey.substring(0,12)) >= 0) {
+        var crMatch = idxCR[crKey];
+        crMatch.forEach(function(cr){ if (cr['Procedimento']) procedimentoCR += ' '+cr['Procedimento']; });
+        break;
+      }
+    }
+
+    var st;
+    if (!inf && !stoneRow) st='err';
+    else if (valInf !== null && Math.abs(fg.valTotal - valInf) > 0.02) st='div';
+    else st='ok';
+
+    resCC.push({data:fg.dataComp, pac:fg.pac, band:fg.band, auth:chave,
+                totParc:fg.totParc, valF:fg.valTotal, valI:valInf,
+                taxa:taxa, dataCred:fg.dataCred, st:st,
+                origem:origem||'—', proc:procedimentoCR.trim()});
+  });
+
+  // Infinite sem Feegow — comparar usando normAuthCmp
+  Object.keys(idxInf).forEach(function(id) {
+    // Verificar se alguma chave do Feegow bate com essa (incluindo fuzzy)
+    var fgBateu = false;
+    Object.keys(grupFeegow).forEach(function(fgKey){
+      var fgAuth = grupFeegow[fgKey].auth;
+      if (normAuthCmp(fgAuth)===id || levenshtein(normAuthCmp(fgAuth),id)<=1) fgBateu=true;
+    });
+    if (!fgBateu) {
+      var inf = idxInf[id];
+      var dh = String(inf['Data e hora']||'').trim();
+      var dt = dh.length >= 10 ? fmtData(dh) : '';
+      resCC.push({data:dt, pac:'—', band:String(inf['Meio - Bandeira']||'').trim(),
+                  auth:id, totParc:1, valF:null, valI:num(inf['Valor (R$)']),
+                  taxa:Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0')),
+                  dataCred:'', st:'warn', origem:'Infinite', proc:''});
+    }
+  });
+
+  // Stone sem Feegow
+  Object.keys(idxStone).forEach(function(id) {
+    var fgBateu = false;
+    Object.keys(grupFeegow).forEach(function(cd){ var fgA=grupFeegow[cd].auth; if (normAuthCmp(fgA)===id || levenshtein(normAuthCmp(fgA),id)<=1) fgBateu=true; });
+    var infBateu = !!idxInf[id];
+    if (!fgBateu && !infBateu) {
+      var s  = idxStone[id];
+      var dt = fmtData(String(s['DATA DA VENDA']||'').substring(0,10));
+      var vb = num(String(s['VALOR BRUTO']||'0').replace(/\./g,'').replace(',','.'));
+      var tx = Math.abs(num(String(s['DESCONTO DE MDR']||'0').replace(/\./g,'').replace(',','.')));
+      var nParc_s = parseInt(String(s['N DE PARCELAS']||'1'))||1;
+      resCC.push({data:dt, pac:'—', band:String(s['BANDEIRA']||'').trim(),
+                  auth:id, totParc:nParc_s,
+                  valF:null, valI:vb, taxa:Math.abs(tx),
+                  dataCred:'', st:'warn', origem:'Stone', proc:''});
+    }
+  });
+
+    resCC.sort(function(a,b){ return dtMs(a.data)-dtMs(b.data); });
+  renderCartao();
+}
+
+function renderCartao() {
+  var cnt={ok:0,err:0,warn:0,div:0};
+  resCC.forEach(function(r){ cnt[r.st]++; });
+  document.getElementById('rCCok').textContent   = cnt.ok;
+  document.getElementById('rCCerr').textContent  = cnt.err;
+  document.getElementById('rCCwarn').textContent = cnt.warn;
+  document.getElementById('rCCdiv').textContent  = cnt.div;
+  document.getElementById('resumoCC').style.display = 'grid';
+
+  var datas = resCC.filter(function(r){return r.data&&r.data!=='—';}).map(function(r){return r.data;});
+  datas.sort(function(a,b){return dtMs(a)-dtMs(b);});
+  document.getElementById('subCC').textContent = datas.length ? datas[0]+' a '+datas[datas.length-1]+' · '+resCC.length+' vendas' : '';
+
+  var tb = document.getElementById('tbCC'); tb.innerHTML='';
+  var diaAnt='';
+  var listaCC = filtroCC==='todos' ? resCC : resCC.filter(function(r){ return r.st===filtroCC; });
+  listaCC.forEach(function(r) {
+    try {
+    if (r.data && r.data !== diaAnt && r.data !== '—') {
+      var tr=document.createElement('tr'); tr.className='dia-row';
+      tr.innerHTML='<td colspan="11">📅 &nbsp;'+r.data+'</td>';
+      tb.appendChild(tr); diaAnt=r.data;
+    }
+    var obs='';
+    if (r.st==='ok')   obs='✓ Confirmado no Feegow e no Infinite';
+    else if (r.st==='err')  obs='Lançado no Feegow mas NÃO no Infinite. Verificar se passou na maquininha.';
+    else if (r.st==='warn') obs='Passou no Infinite mas NÃO no Feegow. Verificar se foi registrado.';
+    else if (r.st==='div')  obs='Divergência — Feegow: '+moeda(r.valF)+' | Infinite: '+moeda(r.valI);
+    var parcStr = r.totParc>1 ? '1/'+r.totParc : '1/1';
+    var idx_r = resCC.indexOf(r);
+    var origemBadge = r.origem==='Stone' ? '<span style="background:#e8f5e9;color:#2e7d32;font-size:9px;padding:2px 6px;border-radius:10px;font-weight:600">🟢 Stone</span>'
+                   : r.origem==='Infinite' ? '<span style="background:#e3f2fd;color:#1565c0;font-size:9px;padding:2px 6px;border-radius:10px;font-weight:600">🔵 Infinite</span>'
+                   : '<span style="color:#999;font-size:9px">—</span>';
+    var tr = mktr(
+      '<td>'+r.data+'</td>'+
+      '<td style="max-width:160px" id="cc_pac_'+idx_r+'">'+r.pac+'</td>'+
+      '<td style="font-size:10px">'+r.band+'</td>'+
+      '<td class="mono" id="cc_auth_'+idx_r+'">'+r.auth+'</td>'+
+      '<td>'+origemBadge+'</td>'+
+      '<td style="text-align:center">'+parcStr+'</td>'+
+      '<td class="money">'+(r.valF!==null?moeda(r.valF):'—')+'</td>'+
+      '<td class="money">'+(r.valI!==null?moeda(r.valI):'—')+'</td>'+
+      '<td>'+badgeHtml(r.st)+'</td>'+
+      '<td class="obs-cell" id="cc_obs_'+idx_r+'">'+obs+'</td>'+
+      '<td><button class="edit-btn" onclick="abrirEditCC('+idx_r+',this)">✏️ Editar</button></td>'
+    );
+    tr.id = 'cc_row_'+idx_r;
+    tb.appendChild(tr);
+    } catch(e){ console.log('Erro linha:', e.message, r); }
+  });
+
+  document.getElementById('wrapCC').style.display='block';
+  document.getElementById('btnExportMD').disabled=false;
+}
+
+// ── ANÁLISE PIX ───────────────────────────────────────────────────────────────
+function analisarPix() {
+  mostrarOv('Confrontando PIX...');
+  setTimeout(function(){
+    try { _analisarPix(); } catch(e){ alert('Erro: '+e.message); }
+    esconderOv();
+  }, 80);
+}
+
+function _analisarPix() {
+  var movRows = dados['mov'].filter(function(r){
+    var f=String(r['Forma de Pagamento (Detalhado)']||'').trim();
+    return f==='PIX' || f.toLowerCase()==='pix';
+  });
+  var c6Rows = dados['ofx'] || []; // Opcional — se não tiver, sem confronto
+
+  // Agrupar Feegow PIX por data+nome
+  var grupFeegow = {};
+  movRows.forEach(function(r) {
+    var data = fmtData(String(r['Data']||''));
+    var pac  = String(r['Pagador']||'').trim();
+    var chave = data+'|'+normNome(pac);
+    if (!grupFeegow[chave]) grupFeegow[chave]={data:data,pac:pac,valor:0,linhas:[]};
+    grupFeegow[chave].valor += num(r['Valor']);
+    grupFeegow[chave].linhas.push({prof:String(r['Profissional']||'').trim(), val:num(r['Valor'])});
+  });
+
+  var fgList = Object.values(grupFeegow).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
+  var c6Usado = {};
+
+  resPix = [];
+  fgList.forEach(function(fg) {
+    var enc = null;
+    // Buscar por valor exato + data exata
+    for (var i=0;i<c6Rows.length;i++) {
+      if (c6Usado[i]) continue;
+      if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02) { enc=i; break; }
+    }
+    // Buscar por valor exato ± 1 dia
+    if (enc===null) {
+      for (var i=0;i<c6Rows.length;i++) {
+        if (c6Usado[i]) continue;
+        if (Math.abs(c6Rows[i].valor-fg.valor)<0.02 && Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000) { enc=i; break; }
+      }
+    }
+    if (enc !== null) {
+      c6Usado[enc]=true;
+      var nomeC6 = c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+      var qtd=fg.linhas.length;
+      resPix.push({data:fg.data,pac:fg.pac,nomeC6:nomeC6,valF:fg.valor,valC6:c6Rows[enc].valor,
+                   linhas:fg.linhas,st:'pok',
+                   obs:qtd>1?'✓ '+qtd+' lançamentos no Feegow somados = '+moeda(fg.valor):'✓ Confirmado no Feegow e no C6'});
+    } else if (c6Rows.length === 0) {
+      // Sem extrato C6 — lançar direto sem confronto
+      resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                   linhas:fg.linhas,st:'psd',
+                   obs:'Sem extrato C6 — lançado direto do Feegow'});
+    } else {
+      resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                   linhas:fg.linhas,st:'perr',
+                   obs:'PIX lançado no Feegow mas NÃO localizado no extrato C6. Verificar se o recebimento entrou.'});
+    }
+  });
+
+  // C6 sem Feegow
+  if (c6Rows.length > 0) c6Rows.forEach(function(c6,i) {
+    if (c6Usado[i]) return;
+    var memo=c6.memo||'';
+    if (memo.indexOf('Return')>=0||memo.toLowerCase().indexOf('lucro')>=0||memo.toLowerCase().indexOf('distribuicao')>=0) return;
+    var nomeC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
+    resPix.push({data:c6.data,pac:'—',nomeC6:nomeC6,valF:null,valC6:c6.valor,
+                 linhas:[],st:'pwarn',
+                 obs:'Entrada no C6 Bank mas NÃO lançada no Feegow. Verificar: '+nomeC6});
+  }); // fim c6Rows.forEach
+
+  resPix.sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
+  renderPix();
+}
+
+function renderPix() {
+  var cnt={pok:0,perr:0,pwarn:0,psd:0};
+  resPix.forEach(function(r){if(cnt[r.st]!==undefined)cnt[r.st]++; else cnt.psd++;});
+  document.getElementById('rPok').textContent   = cnt.pok;
+  document.getElementById('rPerr').textContent  = cnt.perr;
+  document.getElementById('rPwarn').textContent = cnt.pwarn;
+  document.getElementById('resumoPix').style.display='grid';
+
+  var datas=resPix.filter(function(r){return r.data&&r.data!=='—';}).map(function(r){return r.data;});
+  datas.sort(function(a,b){return dtMs(a)-dtMs(b);});
+  var temC6 = dados['ofx'] && dados['ofx'].length > 0;
+  var subTxt = datas.length ? datas[0]+' a '+datas[datas.length-1]+' · '+resPix.length+' itens' : '';
+  if (!temC6) subTxt += ' · Sem confronto C6 (extrato não carregado)';
+  document.getElementById('subPix').textContent = subTxt;
+
+  var tb=document.getElementById('tbPix'); tb.innerHTML='';
+  var diaAnt='';
+  var listaPix = filtroPix==='todos' ? resPix : resPix.filter(function(r){ return r.st===filtroPix; });
+  listaPix.forEach(function(r) {
+    if (r.data&&r.data!==diaAnt&&r.data!=='—') {
+      var dtr=document.createElement('tr'); dtr.className='dia-row';
+      dtr.innerHTML='<td colspan="8">📅 &nbsp;'+r.data+'</td>';
+      tb.appendChild(dtr); diaAnt=r.data;
+    }
+      var idx_p = resPix.indexOf(r);
+    var trp = mktr(
+      '<td>'+r.data+'</td>'+
+      '<td id="pix_pac_'+idx_p+'">'+r.pac+'</td>'+
+      '<td style="color:'+(r.nomeC6==='—'?'#999':'#1a2535')+'">'+( r.nomeC6||'—')+'</td>'+
+      '<td class="money">'+(r.valF!==null?moeda(r.valF):'—')+'</td>'+
+      '<td class="money">'+(r.valC6!==null?moeda(r.valC6):'—')+'</td>'+
+      '<td>'+badgeHtml(r.st)+'</td>'+
+      '<td class="obs-cell" id="pix_obs_'+idx_p+'">'+r.obs+'</td>'+
+      '<td><button class="edit-btn" onclick="abrirEditPix('+idx_p+',this)">✏️ Editar</button></td>'
+    );
+    trp.id = 'pix_row_'+idx_p;
+    tb.appendChild(trp);
+  });
+
+  document.getElementById('wrapPix').style.display='block';
+  document.getElementById('btnExportPix').disabled=false;
+}
+
+// ── EXPORTAR MEU DINHEIRO — CARTÃO ────────────────────────────────────────────
+function exportarMeuDinheiro() {
+  if (!resCC.length) { alert('Faça a análise primeiro.'); return; }
+
+  var wb = XLSX.utils.book_new();
+  var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
+
+  // Recarregar parcelas do Feegow
+  var ccRows = dados['cc'].filter(function(r){
+    return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador';
+  });
+  var infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+
+  // Indexar Infinite — taxa e parcelas
+  var idxInf = {};
+  infRows.forEach(function(r){
+    var id = normAuth(String(r['Identificador']||'').trim());
+    if (id) idxInf[id] = r;
+  });
+
+  var dMD   = [HDR]; // Meu Dinheiro cartão (C/R e C/P juntos)
+  var dPend = [['Data','Paciente','Bandeira','Cód. Auth','Val Feegow','Val Infinite','STATUS','Observação (preencher)']];
+  var jaProc = {};
+
+  // ── 1. FEEGOW × INFINITE ──────────────────────────────────
+  // Agrupar Feegow por auth para pegar paciente, data e valor total
+  var grupFeegow = {};
+  ccRows.forEach(function(r) {
+    var auth  = normAuthCmp(String(r['Autorização']||'').trim());
+    var trans = normAuthCmp(String(r['Transação']||'').trim());
+    var chave = auth || trans;
+    // Se não tem código, criar chave temporária por paciente+data+valor
+    if (!chave) {
+      var pac_tmp = String(r['Pagador']||'').trim();
+      var dt_tmp  = fmtData(String(r['Data compra']||''));
+      var vl_tmp  = num(r['Valor compra']);
+      chave = 'SEM_AUTH_'+pac_tmp.substring(0,10).replace(/\s/g,'_')+'_'+dt_tmp+'_'+vl_tmp;
+    }
+    // Normalizar chave para comparação homogênea
+    chave = normAuthCmp(chave) || chave;
+    var parc    = String(r['Parcela']||'').trim();
+    // Aceitar formatos: "1 / 6", "1/6", "1x", "1", "01/12"
+    var nParcNum = parseInt((parc.split('/')[0]||parc.split('x')[0]||'1').replace(/[^0-9]/g,''))||1;
+    if (nParcNum !== 1) return; // só parcela 1 para agrupar
+    // Chave inclui data para separar vendas com mesmo código em datas diferentes
+    var dataComp_ = fmtData(String(r['Data compra']||''));
+    var chaveData = chave + '|' + dataComp_;
+    if (!grupFeegow[chaveData]) {
+      grupFeegow[chaveData] = {
+        auth: chave,
+        pac: String(r['Pagador']||'').trim(),
+        band: String(r['Bandeira']||'').trim(),
+        dataComp: dataComp_,
+        dataCred: fmtData(String(r['Data créd.']||'')),
+        valTotal: 0,
+        taxaPct: num(r['Taxa %']||0)
+      };
+    }
+    grupFeegow[chaveData].valTotal += num(r['Valor compra']);
+  });
+
+  // Processar cada grupo único (chave = "auth|data")
+  Object.keys(grupFeegow).forEach(function(chaveGrp) {
+    var fg    = grupFeegow[chaveGrp];
+    var chave = fg.auth; // código de autorização puro para buscar nas maquininhas
+
+    // Buscar resultado da análise (inclui edições feitas pelo usuário)
+    var st = null;
+    for (var i=0;i<resCC.length;i++){ if(resCC[i].auth===chave && resCC[i].data===fg.dataComp){st=resCC[i];break;} }
+    // Aplicar edições do usuário ao grupo
+    if (st) {
+      if (st.pac && st.pac !== '—') fg.pac = st.pac;
+      if (st.obs) fg.obsEdit = st.obs;
+      if (st.catEdit) fg.catEdit = st.catEdit;
+    }
+
+    // 🔴 Feegow sem Infinite → só pendência
+    if (!st || st.st === 'err') {
+      if (!jaProc[chave+'_pend']) {
+        jaProc[chave+'_pend'] = true;
+        dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), '—',
+                    '🔴 No Feegow, não no Infinite',
+                    'Verificar se a venda foi processada na maquininha']);
+      }
+      return;
+    }
+
+    // Buscar dados do Infinite
+    var inf = idxInf[chave] || null;
+    if (!inf) {
+      for (var k in idxInf) {
+        if (normAuth(String(idxInf[k]['NSU']||'')) === chave) { inf = idxInf[k]; break; }
+      }
+    }
+
+    var valInfTotal = inf ? num(inf['Valor (R$)']) : fg.valTotal;
+    var taxaTotal   = inf ? Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0')) : 0;
+    // ★ Usar número de parcelas da maquininha (Infinite ou Stone)
+    var nParcsInf;
+    if (inf) {
+      nParcsInf = parseInt(String(inf['Meio - Parcelas']||'1').replace(/[^0-9]/g,'')) || 1;
+    } else if (stoneRow) {
+      nParcsInf = parseInt(String(stoneRow['N DE PARCELAS']||'1')) || 1;
+    } else {
+      nParcsInf = 1;
+    }
+    var forma       = fg.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+
+    // Divergência → pendência
+    if (st.st === 'div' && !jaProc[chave+'_div']) {
+      jaProc[chave+'_div'] = true;
+      dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), moeda(valInfTotal),
+                  '🟠 Divergência de valor', 'Verificar qual valor está correto']);
+    }
+
+    // ★ Gerar UMA LINHA POR PARCELA baseado no Infinite
+    var valParcela = Math.round(valInfTotal / nParcsInf * 100) / 100;
+    var taxaParcela= Math.round(taxaTotal   / nParcsInf * 100) / 100;
+    // Ajuste de arredondamento na última parcela
+    var somaVal = Math.round(valParcela * (nParcsInf-1) * 100) / 100;
+    var somaTax = Math.round(taxaParcela * (nParcsInf-1) * 100) / 100;
+
+    for (var p = 1; p <= nParcsInf; p++) {
+      var valP = p === nParcsInf ? Math.round((valInfTotal - somaVal)*100)/100 : valParcela;
+      var taxP = p === nParcsInf ? Math.round((taxaTotal   - somaTax)*100)/100 : taxaParcela;
+
+      // Calcular vencimento
+      var venc = fg.dataComp;
+      try {
+        var pts = fg.dataComp.split('/');
+        var dtBase = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
+        if (forma === 'Débito') {
+          // +1 dia útil: pular sábado (6) e domingo (0)
+          dtBase.setDate(dtBase.getDate()+1);
+          var diaSem = dtBase.getDay();
+          if (diaSem === 6) dtBase.setDate(dtBase.getDate()+2); // sáb → seg
+          if (diaSem === 0) dtBase.setDate(dtBase.getDate()+1); // dom → seg
+        } else if (origem === 'Stone') {
+          // Stone: 37 dias para primeira parcela, +30 dias para cada parcela seguinte
+          dtBase.setDate(dtBase.getDate() + 37 + 30*(p-1));
+        } else {
+          // Infinite/padrão: 30 dias por parcela
+          dtBase.setDate(dtBase.getDate() + 30*p);
+        }
+        venc = dtBase.toLocaleDateString('pt-BR');
+      } catch(e) {}
+
+      var parcStr = nParcsInf > 1 ? ' | Parcela '+p+'/'+nParcsInf : '';
+      var obsBase = (st.st==='div'?'DIVERGÊNCIA: Feegow '+moeda(fg.valTotal)+' vs Infinite '+moeda(valInfTotal)+' | ':'') +
+                   'Auth: '+chave+parcStr;
+
+      // C/R
+      var pacMD = fg.pac || 'A Identificar';
+      var catMD   = fg.catEdit || categoriaCartao(st ? st.proc : '', fg.pac);
+      var contaMD = (st && st.origem==='Stone') ? 'Stone' : 'Infinite';
+      dMD.push([venc, valP, pacMD, contaMD,'','', catMD,'', pacMD,'','', forma, chave, fg.obsEdit||obsBase, fg.dataComp, '']);
+      // C/P taxa
+      if (taxP > 0) {
+        var contaTaxa = (st && st.origem==='Stone') ? 'Stone' : 'Infinite';
+        var taxaLabel = contaTaxa === 'Stone' ? 'Taxa Stone' : 'Taxa Infinite';
+        dMD.push([venc, -taxP, taxaLabel+' - '+(fg.pac||'A Identificar'), contaTaxa,'','',
+                  '06 - Tarifa Bancária','Taxa de Cartão',contaTaxa,'','', '', chave,
+                  taxaLabel+' | '+(fg.obsEdit||obsBase), fg.dataComp, '']);
+      }
+    }
+  });
+
+  // ── 2. INFINITE SEM FEEGOW → Meu Dinheiro + Pendência ────
+  infRows.forEach(function(inf) {
+    var id = normAuth(String(inf['Identificador']||'').trim());
+    if (!id) return;
+    // Verificar se já foi processado pelo Feegow (ok ou div = já está no MD)
+    var jaNoMD = false;
+    for (var i=0;i<resCC.length;i++){
+      if (resCC[i].auth===id && (resCC[i].st==='ok'||resCC[i].st==='div')){ jaNoMD=true; break; }
+    }
+    if (jaNoMD) return; // já entrou via Feegow, não duplicar
+
+    var dh       = String(inf['Data e hora']||'').trim();
+    var dataVenda= dh.length >= 10 ? fmtData(dh) : '';
+    var valBruto = num(inf['Valor (R$)']);
+    var valTaxa  = Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0'));
+    var valLiq   = Math.round((valBruto - valTaxa) * 100) / 100;
+    var nParcsStr= String(inf['Meio - Parcelas']||'1x');
+    var nParcs   = parseInt(nParcsStr.split('x')[0]) || 1;
+    var band     = String(inf['Meio - Bandeira']||'').trim();
+    var forma    = String(inf['Tipo']||'').toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+
+    // Gerar uma linha por parcela
+    for (var p=1; p<=nParcs; p++) {
+      var valParc = Math.round(valBruto / nParcs * 100) / 100;
+      var taxaParc= Math.round(valTaxa  / nParcs * 100) / 100;
+      // Calcular vencimento
+      var venc = dataVenda;
+      try {
+        var pts = dataVenda.split('/');
+        var dtBase = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
+        if (forma === 'Débito') {
+          dtBase.setDate(dtBase.getDate()+1);
+          var diaSem2 = dtBase.getDay();
+          if (diaSem2 === 6) dtBase.setDate(dtBase.getDate()+2);
+          if (diaSem2 === 0) dtBase.setDate(dtBase.getDate()+1);
+        } else {
+          dtBase.setDate(dtBase.getDate() + 30*p);
+        }
+        venc = dtBase.toLocaleDateString('pt-BR');
+      } catch(e){}
+
+      var parcStr = nParcs > 1 ? ' | Parcela '+p+'/'+nParcs : '';
+      var obs = 'A IDENTIFICAR | Auth: '+id+parcStr;
+
+      // C/R — aplicar edição se usuário corrigiu
+      var stAI = null;
+      for (var ii=0;ii<resCC.length;ii++){ if(resCC[ii].auth===id){stAI=resCC[ii];break;} }
+      var pacAI = (stAI && stAI.pac && stAI.pac!=='—') ? stAI.pac : 'A Identificar';
+      var catAI = (stAI && stAI.catEdit) ? stAI.catEdit : 'Identificar';
+      var obsAI = (stAI && stAI.obs) ? stAI.obs : obs;
+      dMD.push([
+        venc, valParc, pacAI,
+        'Infinite','','',
+        catAI,'', pacAI,'','',
+        forma, id, obsAI, dataVenda, ''
+      ]);
+      // C/P taxa
+      if (taxaParc > 0) {
+        dMD.push([
+          venc, -taxaParc, 'Taxa Infinite - A Identificar',
+          'Infinite','','',
+          '06 - Tarifa Bancária','Taxa de Cartão','Infinite','','',
+          '', id, 'Taxa Infinite | '+obs, dataVenda, ''
+        ]);
+      }
+    }
+
+    // Pendência
+    if (!jaProc[id+'_warn']) {
+      jaProc[id+'_warn'] = true;
+      dPend.push([dataVenda, 'A Identificar', band, id, '—', moeda(valBruto),
+                  '🟡 No Infinite, não no Feegow',
+                  'Identificar paciente e lançar no Feegow']);
+    }
+  });
+
+  // ── Ordenar Meu Dinheiro por data ─────────────────────────
+  var hdrMD = dMD.shift();
+  dMD.sort(function(a,b){ return dtMs(a[0]||'')-dtMs(b[0]||''); });
+  dMD.unshift(hdrMD);
+
+  // ── Ordenar Pendências por data ───────────────────────────
+  var hdrP = dPend.shift();
+  dPend.sort(function(a,b){ return dtMs(a[0]||'')-dtMs(b[0]||''); });
+  dPend.unshift(hdrP);
+
+  // ── Gerar arquivos ─────────────────────────────────────────
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Cartao');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias');
+  XLSX.writeFile(wb, 'Lume_MeuDinheiro_Cartao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+  alert('✓ Exportado! ' + (dMD.length-1) + ' lançamentos · ' + (dPend.length-1) + ' pendências');
+}
+
+// ── EXPORTAR MEU DINHEIRO — PIX ───────────────────────────────────────────────
+function categoriaCartao(proc, pac) {
+  // Usa o Procedimento do Contas a Receber para determinar categoria
+  var texto = String(proc||'') + ' ' + String(pac||'');
+  var textoL = texto.toLowerCase();
+
+  var palavrasMed   = ['tirzepatida','ferrinject','soro','vitamina','noripurum','morosil',
+                       'pellet','implante','hormonal','coenzima','trio metilador','ocitocina',
+                       'embalagem','frasco','medicação','medicamento','oxandrolona','nadh',
+                       'gestrinona','testosterona','estradiol','thermoativador','tsculptor',
+                       'mmp capilar','intradermo','botox','mounjaro','ozempic'];
+  var palavrasConsulta = ['consulta','bioimpedância','avaliação','ecocardiograma',
+                          'teste hidrogênio','1ª consulta'];
+
+  var temMed      = palavrasMed.some(function(p){ return textoL.indexOf(p) >= 0; });
+  var temConsulta = palavrasConsulta.some(function(p){ return textoL.indexOf(p) >= 0; });
+
+  if (temConsulta && temMed) return 'Plano Consulta e Procedimentos';
+  if (temMed)      return 'Procedimentos';
+  if (temConsulta) return 'Consultas';
+  return 'Identificar';
+}
+
+function categoriaPIX(prof, pac, desc) {
+  // Verificar se é medicamento pelo nome do paciente, descrição ou procedimento
+  var texto = String(prof||'') + ' ' + String(pac||'') + ' ' + String(desc||'');
+  var textoL = texto.toLowerCase();
+  var palavrasMed = ['medicamento','tirzepatida','ferrinject','soro','vitamina',
+                     'mounjaro','ozempic','saxenda','injetavel','injetável',
+                     'suplemento','hormonio','hormônio','botox','toxina'];
+  var temMed = palavrasMed.some(function(p){ return textoL.indexOf(p) >= 0; });
+
+  // Limpar profissional — remover "Não Executado"
+  var profL = String(prof||'').toLowerCase().trim();
+  var profLimpo = profL.replace(/não executado/gi,'').replace(/,+/g,',').replace(/^,|,$/g,'').trim();
+
+  // Se tem medicamento
+  if (temMed) {
+    // Se também tem profissional de consulta = Plano Consulta e Procedimentos
+    if (profLimpo.length > 0) return {cat:'Plano Consulta e Procedimentos', sub:''};
+    return {cat:'Procedimentos', sub:'Plano de medicamentos'};
+  }
+
+  // Sem profissional identificado = Identificar
+  if (!profLimpo) return {cat:'Identificar', sub:''};
+
+  // Verificar se tem Laila + outro profissional
+  var temLaila  = profLimpo.indexOf('laila') >= 0;
+  var outroProf = profLimpo.replace(/laila rahme/gi,'').replace(/,+/g,',').replace(/^,|,$/g,'').trim();
+  var temOutro  = outroProf.length > 0;
+
+  if (temLaila && temOutro) return {cat:'Plano Consulta e Procedimentos', sub:''};
+  return {cat:'Consultas', sub:'Plano consultas'};
+}
+
+function exportarPixMD() {
+  if (!resPix.length) { alert('Faça a análise PIX primeiro.'); return; }
+
+  var wb = XLSX.utils.book_new();
+  var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
+
+  var dPix  = [HDR];
+  var dDin  = [HDR];
+  var dPend = [['Data','Paciente Feegow','Nome C6','Valor Feegow','Valor C6','STATUS','Observação (preencher)']];
+
+  // PIX do Feegow (todos)
+  var movRows = dados['mov'] ? dados['mov'].filter(function(r){
+    var f = String(r['Forma de Pagamento (Detalhado)']||'').trim().toLowerCase();
+    return f === 'pix';
+  }) : [];
+  var dinRows = dados['mov'] ? dados['mov'].filter(function(r){
+    var f = String(r['Forma de Pagamento (Detalhado)']||'').trim().toLowerCase();
+    return f === 'dinheiro';
+  }) : [];
+
+  // ── PIX ───────────────────────────────────────────────────
+  resPix.forEach(function(r) {
+    if (r.st === 'pok' || r.st === 'perr' || r.st === 'psd') {
+      if (r.linhas && r.linhas.length > 0) {
+        r.linhas.forEach(function(l) {
+          var obs = (r.st==='perr' ? 'NÃO LOCALIZADO NO C6 | ' : '') + 'Prof: '+(l.prof||'—') + (r.st==='psd'?' | Sem confronto C6':'');
+          var cat = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : categoriaPIX(l.prof, r.pac, r.nomeC6);
+          var pacNome = r.pac || 'A Identificar';
+          dPix.push([r.data, l.val, pacNome, 'C6 Bank','','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
+        });
+      } else {
+        var obs = r.obs || (r.st==='perr' ? 'NÃO LOCALIZADO NO C6' : 'OK');
+        var cat2 = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : categoriaPIX('', r.pac, r.nomeC6);
+        var pacNome2 = r.pac || 'A Identificar';
+        dPix.push([r.data, r.valF||r.valC6, pacNome2, 'C6 Bank','','', cat2.cat, cat2.sub, pacNome2,'','','PIX','', obs, r.data,'']);
+      }
+    }
+    if (r.st === 'pwarn') {
+      // No C6 sem Feegow → Meu Dinheiro como A Identificar
+      var cat_ai = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:'Identificar', sub:''};
+      var pac_ai = r.pac && r.pac !== '—' ? r.pac : 'A Identificar';
+      dPix.push([r.data, r.valC6, pac_ai, 'C6 Bank','','',
+                 cat_ai.cat, cat_ai.sub, pac_ai,'','','PIX','',
+                 r.obs||('A IDENTIFICAR | '+r.nomeC6), r.data,'']);
+    }
+    // Pendências
+    if (r.st === 'perr') {
+      dPend.push([r.data, r.pac, '—', moeda(r.valF), '—',
+                  '🔴 No Feegow, não no C6', 'Verificar se o PIX foi recebido']);
+    }
+    if (r.st === 'pwarn') {
+      dPend.push([r.data, '—', r.nomeC6, '—', moeda(r.valC6),
+                  '🟡 No C6, não no Feegow', 'Identificar paciente e lançar no Feegow']);
+    }
+  });
+
+  // ── DINHEIRO ──────────────────────────────────────────────
+  dinRows.forEach(function(r) {
+    var data = fmtData(String(r['Data']||''));
+    var pac  = String(r['Pagador']||'').trim();
+    var val  = num(r['Valor']);
+    var prof = String(r['Profissional']||'').trim();
+    var cat_din = categoriaPIX(prof, pac, '');
+    dDin.push([data, val, pac, 'Banco Dinheiro','','',
+               cat_din.cat, cat_din.sub, pac,'','','Dinheiro','',
+               'Prof: '+prof, data,'']);
+  });
+
+  // ── Ordenar ───────────────────────────────────────────────
+  var hP=dPix.shift(); dPix.sort(function(a,b){return dtMs(a[0]||'')-dtMs(b[0]||'');}); dPix.unshift(hP);
+  var hD=dDin.shift(); dDin.sort(function(a,b){return dtMs(a[0]||'')-dtMs(b[0]||'');}); dDin.unshift(hD);
+
+  // ── Gerar ─────────────────────────────────────────────────
+  if (dPix.length  > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPix),  'MeuDinheiro-PIX');
+  if (dDin.length  > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dDin),  'MeuDinheiro-Dinheiro');
+  if (dPend.length > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias-PIX');
+
+  XLSX.writeFile(wb, 'Lume_MeuDinheiro_PIX_Dinheiro_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+  alert('✓ Exportado! PIX: '+(dPix.length-1)+' · Dinheiro: '+(dDin.length-1)+' · Pendências: '+(dPend.length-1));
+}
+
+// ── EDIÇÃO INLINE ─────────────────────────────────────────────────────────────
+var editAtivo = null;
+
+function abrirEditCC(idx, btn) {
+  fecharEdits();
+  var r = resCC[idx];
+  if (!r) return;
+  editAtivo = 'cc_'+idx;
+
+  var tr = document.createElement('tr');
+  tr.className = 'edit-row';
+  tr.id = 'edit_row_cc_'+idx;
+  tr.innerHTML = '<td colspan="10">'+
+    '<div class="edit-form">'+
+      '<div class="edit-field"><label>Data</label>'+
+        '<input id="ef_cc_data_'+idx+'" value="'+(r.data||'')+'"></div>'+
+      '<div class="edit-field"><label>Paciente</label>'+
+        '<input id="ef_cc_pac_'+idx+'" value="'+(r.pac||'')+'" style="min-width:200px"></div>'+
+      '<div class="edit-field"><label>Cód. Auth</label>'+
+        '<input id="ef_cc_auth_'+idx+'" value="'+(r.auth||'')+'"></div>'+
+      '<div class="edit-field"><label>Valor Feegow</label>'+
+        '<input id="ef_cc_valf_'+idx+'" type="number" step="0.01" value="'+(r.valF||'')+'"></div>'+
+      '<div class="edit-field"><label>Valor Infinite</label>'+
+        '<input id="ef_cc_vali_'+idx+'" type="number" step="0.01" value="'+(r.valI||'')+'"></div>'+
+      '<div class="edit-field"><label>Status</label>'+
+        '<select id="ef_cc_st_'+idx+'">'+
+          '<option value="ok"'+(r.st==='ok'?' selected':'')+'>✅ OK</option>'+
+          '<option value="err"'+(r.st==='err'?' selected':'')+'>🔴 Feegow s/ Infinite</option>'+
+          '<option value="warn"'+(r.st==='warn'?' selected':'')+'>🟡 Infinite s/ Feegow</option>'+
+          '<option value="div"'+(r.st==='div'?' selected':'')+'>🟠 Divergência</option>'+
+        '</select></div>'+
+      '<div class="edit-field"><label>Categoria</label>'+
+        '<select id="ef_cc_cat_'+idx+'">'+
+          '<option value="Consultas"'+((!r.catEdit||r.catEdit==='Consultas')?' selected':'')+'>Consultas</option>'+
+          '<option value="Procedimentos"'+(r.catEdit==='Procedimentos'?' selected':'')+'>Procedimentos</option>'+
+          '<option value="Plano Consulta e Procedimentos"'+(r.catEdit==='Plano Consulta e Procedimentos'?' selected':'')+'>Plano Consulta e Procedimentos</option>'+
+          '<option value="Identificar"'+(r.catEdit==='Identificar'?' selected':'')+'>Identificar</option>'+
+        '</select></div>'+
+      '<div class="edit-field"><label>Observação</label>'+
+        '<input id="ef_cc_obs_'+idx+'" value="'+(r.obs||'')+'" style="min-width:280px"></div>'+
+      '<div class="edit-actions">'+
+        '<button class="btn-salvar-edit" onclick="salvarEditCC('+idx+')">✓ Salvar</button>'+
+        '<button class="btn-cancelar-edit" onclick="fecharEdits()">Cancelar</button>'+
+      '</div>'+
+    '</div>'+
+  '</td>';
+
+  var rowAtual = document.getElementById('cc_row_'+idx);
+  if (rowAtual && rowAtual.nextSibling) {
+    rowAtual.parentNode.insertBefore(tr, rowAtual.nextSibling);
+  } else if (rowAtual) {
+    rowAtual.parentNode.appendChild(tr);
+  }
+  document.getElementById('ef_cc_pac_'+idx).focus();
+}
+
+function salvarEditCC(idx) {
+  var r = resCC[idx];
+  if (!r) return;
+  r.data  = document.getElementById('ef_cc_data_'+idx).value.trim() || r.data;
+  r.pac   = document.getElementById('ef_cc_pac_'+idx).value.trim()  || r.pac;
+  r.auth  = document.getElementById('ef_cc_auth_'+idx).value.trim() || r.auth;
+  var vf  = parseFloat(document.getElementById('ef_cc_valf_'+idx).value);
+  var vi  = parseFloat(document.getElementById('ef_cc_vali_'+idx).value);
+  if (!isNaN(vf)) r.valF = vf;
+  if (!isNaN(vi)) r.valI = vi;
+  r.st    = document.getElementById('ef_cc_st_'+idx).value;
+  r.obs   = document.getElementById('ef_cc_obs_'+idx).value.trim();
+  r.catEdit = document.getElementById('ef_cc_cat_'+idx) ? document.getElementById('ef_cc_cat_'+idx).value.trim() : '';
+  fecharEdits();
+  renderCartao();
+}
+
+function abrirEditPix(idx, btn) {
+  fecharEdits();
+  var r = resPix[idx];
+  if (!r) return;
+  editAtivo = 'pix_'+idx;
+
+  var tr = document.createElement('tr');
+  tr.className = 'edit-row';
+  tr.id = 'edit_row_pix_'+idx;
+  tr.innerHTML = '<td colspan="8">'+
+    '<div class="edit-form">'+
+      '<div class="edit-field"><label>Data</label>'+
+        '<input id="ef_pix_data_'+idx+'" value="'+(r.data||'')+'"></div>'+
+      '<div class="edit-field"><label>Paciente (Feegow)</label>'+
+        '<input id="ef_pix_pac_'+idx+'" value="'+(r.pac||'')+'" style="min-width:200px"></div>'+
+      '<div class="edit-field"><label>Valor Feegow</label>'+
+        '<input id="ef_pix_valf_'+idx+'" type="number" step="0.01" value="'+(r.valF||'')+'"></div>'+
+      '<div class="edit-field"><label>Valor C6</label>'+
+        '<input id="ef_pix_valc_'+idx+'" type="number" step="0.01" value="'+(r.valC6||'')+'"></div>'+
+      '<div class="edit-field"><label>Status</label>'+
+        '<select id="ef_pix_st_'+idx+'">'+
+          '<option value="pok"'+(r.st==='pok'?' selected':'')+'>✅ OK</option>'+
+          '<option value="perr"'+(r.st==='perr'?' selected':'')+'>🔴 Feegow s/ C6</option>'+
+          '<option value="pwarn"'+(r.st==='pwarn'?' selected':'')+'>🟡 C6 s/ Feegow</option>'+
+          '<option value="psd"'+(r.st==='psd'?' selected':'')+'>📋 Sem confronto</option>'+
+        '</select></div>'+
+      '<div class="edit-field"><label>Nome no C6</label>'+
+        '<input id="ef_pix_nomec6_'+idx+'" value="'+(r.nomeC6||'')+'" style="min-width:200px"></div>'+
+      '<div class="edit-field"><label>Categoria</label>'+
+        '<select id="ef_pix_cat_'+idx+'">'+
+          '<option value="Consultas"'+((!r.catEdit||r.catEdit==='Consultas')?' selected':'')+'>Consultas</option>'+
+          '<option value="Procedimentos"'+(r.catEdit==='Procedimentos'?' selected':'')+'>Procedimentos</option>'+
+          '<option value="Plano Consulta e Procedimentos"'+(r.catEdit==='Plano Consulta e Procedimentos'?' selected':'')+'>Plano Consulta e Procedimentos</option>'+
+          '<option value="Identificar"'+(r.catEdit==='Identificar'?' selected':'')+'>Identificar</option>'+
+        '</select></div>'+
+      '<div class="edit-field"><label>Subcategoria</label>'+
+        '<select id="ef_pix_sub_'+idx+'">'+
+          '<option value="Plano consultas"'+((!r.subEdit||r.subEdit==='Plano consultas')?' selected':'')+'>Plano consultas</option>'+
+          '<option value="Plano de medicamentos"'+(r.subEdit==='Plano de medicamentos'?' selected':'')+'>Plano de medicamentos</option>'+
+          '<option value=""'+(r.subEdit===''?' selected':'')+'>— (nenhuma)</option>'+
+        '</select></div>'+
+      '<div class="edit-field"><label>Observação</label>'+
+        '<input id="ef_pix_obs_'+idx+'" value="'+(r.obs||'')+'" style="min-width:280px"></div>'+
+      '<div class="edit-actions">'+
+        '<button class="btn-salvar-edit" onclick="salvarEditPix('+idx+')">✓ Salvar</button>'+
+        '<button class="btn-cancelar-edit" onclick="fecharEdits()">Cancelar</button>'+
+      '</div>'+
+    '</div>'+
+  '</td>';
+
+  var rowAtual = document.getElementById('pix_row_'+idx);
+  if (rowAtual && rowAtual.nextSibling) {
+    rowAtual.parentNode.insertBefore(tr, rowAtual.nextSibling);
+  } else if (rowAtual) {
+    rowAtual.parentNode.appendChild(tr);
+  }
+  document.getElementById('ef_pix_pac_'+idx).focus();
+}
+
+function salvarEditPix(idx) {
+  var r = resPix[idx];
+  if (!r) return;
+  r.data    = document.getElementById('ef_pix_data_'+idx).value.trim() || r.data;
+  r.pac     = document.getElementById('ef_pix_pac_'+idx).value.trim()  || r.pac;
+  r.nomeC6  = document.getElementById('ef_pix_nomec6_'+idx).value.trim() || r.nomeC6;
+  var vf    = parseFloat(document.getElementById('ef_pix_valf_'+idx).value);
+  var vc    = parseFloat(document.getElementById('ef_pix_valc_'+idx).value);
+  if (!isNaN(vf)) r.valF = vf;
+  if (!isNaN(vc)) r.valC6 = vc;
+  r.st      = document.getElementById('ef_pix_st_'+idx).value;
+  r.obs     = document.getElementById('ef_pix_obs_'+idx).value.trim();
+  r.catEdit = document.getElementById('ef_pix_cat_'+idx).value.trim();
+  r.subEdit = document.getElementById('ef_pix_sub_'+idx).value.trim();
+  // Atualizar linhas internas para que exportação reflita edição
+  if (r.linhas && r.linhas.length > 0) {
+    r.linhas.forEach(function(l){ l.prof = r.catEdit || l.prof; });
+  }
+  fecharEdits();
+  renderPix();
+}
+
+function fecharEdits() {
+  ['edit_row_cc_', 'edit_row_pix_'].forEach(function(prefix) {
+    document.querySelectorAll('[id^="'+prefix+'"]').forEach(function(el){ el.remove(); });
+  });
+  editAtivo = null;
+}
+
+// ── TROCAR MÓDULO ─────────────────────────────────────────────────────────────
+function trocarModulo(mod) {
+  ['cartao','pix'].forEach(function(m){
+    document.getElementById('mod-'+m).classList.remove('ativo');
+    document.getElementById('sec-'+m).classList.remove('ativa');
+  });
+  document.getElementById('mod-'+mod).classList.add('ativo');
+  document.getElementById('sec-'+mod).classList.add('ativa');
+}
+
+function resetar(mod) {
+  var tipos=mod==='cartao'?['cc','inf','stone','cr']:['mov','ofx'];
+  tipos.forEach(function(t){
+    dados[t]=null;
+    var card=document.getElementById(cardMap[t]);
+    var st=document.getElementById(stMap[t]);
+    if(card) card.classList.remove('loaded');
+    if(st) st.textContent='✓ Carregado';
+  });
+  checarBotoes();
+  if (mod==='cartao'){
+    document.getElementById('resumoCC').style.display='none';
+    document.getElementById('wrapCC').style.display='none';
+    document.getElementById('btnExportMD').disabled=true;
+    resCC=[];
+  } else {
+    document.getElementById('resumoPix').style.display='none';
+    document.getElementById('wrapPix').style.display='none';
+    document.getElementById('btnExportPix').disabled=true;
+    resPix=[];
+  }
+}
+</script>
+</body>
+</html>
