@@ -699,7 +699,7 @@ function _analisarCartao() {
     else if (valInf !== null && Math.abs(fg.valTotal - valInf) > 0.02) st='div';
     else st='ok';
 
-    resCC.push({data:fg.dataComp, pac:fg.pac, band:fg.band, auth:chave,
+    resCC.push({data:fg.dataComp, pac:fg.pac, band:fg.band, auth:auth,
                 totParc:fg.totParc, valF:fg.valTotal, valI:valInf,
                 taxa:taxa, dataCred:fg.dataCred, st:st,
                 origem:origem||'—', proc:procedimentoCR.trim()});
