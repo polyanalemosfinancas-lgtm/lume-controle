@@ -210,8 +210,8 @@ footer span{color:var(--gold)}
 
     <div class="resumo" id="resumoCC">
       <div class="rcard ok"><div class="rnum" id="rCCok">0</div><div class="rlabel">✅ OK — nos dois sistemas</div></div>
-      <div class="rcard err"><div class="rnum" id="rCCerr">0</div><div class="rlabel">🔴 No Feegow, não no Infinite</div></div>
-      <div class="rcard warn"><div class="rnum" id="rCCwarn">0</div><div class="rlabel">🟡 No Infinite, não no Feegow</div></div>
+      <div class="rcard err"><div class="rnum" id="rCCerr">0</div><div class="rlabel">🔴 No Feegow, não no Cartão</div></div>
+      <div class="rcard warn"><div class="rnum" id="rCCwarn">0</div><div class="rlabel">🟡 No Cartão, não no Feegow</div></div>
       <div class="rcard div"><div class="rnum" id="rCCdiv">0</div><div class="rlabel">🟠 Divergência de valor</div></div>
     </div>
 
@@ -224,8 +224,8 @@ footer span{color:var(--gold)}
         <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
         <button class="fbtn active" id="fCC_todos" onclick="filtrarCC('todos')">Todos</button>
         <button class="fbtn" id="fCC_ok" onclick="filtrarCC('ok')">✅ OK</button>
-        <button class="fbtn" id="fCC_err" onclick="filtrarCC('err')">🔴 No Feegow s/ Infinite</button>
-        <button class="fbtn" id="fCC_warn" onclick="filtrarCC('warn')">🟡 No Infinite s/ Feegow</button>
+        <button class="fbtn" id="fCC_err" onclick="filtrarCC('err')">🔴 No Feegow s/ Cartão</button>
+        <button class="fbtn" id="fCC_warn" onclick="filtrarCC('warn')">🟡 No Cartão s/ Feegow</button>
         <button class="fbtn" id="fCC_div" onclick="filtrarCC('div')">🟠 Divergência</button>
       </div>
       <div class="tbl-scroll">
@@ -393,8 +393,8 @@ function esconderOv() { document.getElementById('overlay').classList.remove('sho
 
 function badgeHtml(st) {
   if (st==='ok')   return '<span class="badge b-ok">✅ OK</span>';
-  if (st==='err')  return '<span class="badge b-err">🔴 No Feegow, não no Infinite</span>';
-  if (st==='warn') return '<span class="badge b-warn">🟡 No Infinite, não no Feegow</span>';
+  if (st==='err')  return '<span class="badge b-err">🔴 No Feegow, não no Cartão</span>';
+  if (st==='warn') return '<span class="badge b-warn">🟡 No Cartão, não no Feegow</span>';
   if (st==='div')  return '<span class="badge b-div">🟠 Divergência</span>';
   if (st==='pok')  return '<span class="badge b-ok">✅ OK</span>';
   if (st==='perr') return '<span class="badge b-err">🔴 No Feegow, não no C6</span>';
@@ -771,8 +771,8 @@ function renderCartao() {
     }
     var obs='';
     if (r.st==='ok')   obs='✓ Confirmado no Feegow e no Infinite';
-    else if (r.st==='err')  obs='Lançado no Feegow mas NÃO no Infinite. Verificar se passou na maquininha.';
-    else if (r.st==='warn') obs='Passou no Infinite mas NÃO no Feegow. Verificar se foi registrado.';
+    else if (r.st==='err')  obs='Lançado no Feegow mas NÃO no Cartão. Verificar se passou no cartão.';
+    else if (r.st==='warn') obs='Passou no Cartão mas NÃO no Feegow. Verificar se foi registrado.';
     else if (r.st==='div')  obs='Divergência — Feegow: '+moeda(r.valF)+' | Infinite: '+moeda(r.valI);
     var parcStr = r.totParc>1 ? '1/'+r.totParc : '1/1';
     var idx_r = resCC.indexOf(r);
@@ -1004,7 +1004,7 @@ function exportarMeuDinheiro() {
       if (!jaProc[chave+'_pend']) {
         jaProc[chave+'_pend'] = true;
         dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), '—',
-                    '🔴 No Feegow, não no Infinite',
+                    '🔴 No Feegow, não no Cartão',
                     'Verificar se a venda foi processada na maquininha']);
       }
       return;
@@ -1161,7 +1161,7 @@ function exportarMeuDinheiro() {
     if (!jaProc[id+'_warn']) {
       jaProc[id+'_warn'] = true;
       dPend.push([dataVenda, 'A Identificar', band, id, '—', moeda(valBruto),
-                  '🟡 No Infinite, não no Feegow',
+                  '🟡 No Cartão, não no Feegow',
                   'Identificar paciente e lançar no Feegow']);
     }
   });
@@ -1177,10 +1177,20 @@ function exportarMeuDinheiro() {
   dPend.unshift(hdrP);
 
   // ── Gerar arquivos ─────────────────────────────────────────
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Cartao');
+  // Separar por maquininha
+  var dInfinite = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]==='Infinite'; }));
+  var dStone    = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]==='Stone'; }));
+  var dOutros   = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]!=='Infinite' && r[3]!=='Stone'; }));
+
+  if (dInfinite.length > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dInfinite), 'MD-Infinite');
+  if (dStone.length    > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dStone),    'MD-Stone');
+  if (dOutros.length   > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dOutros),   'MD-Outros');
+  // Também exportar completo
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Completo');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias');
   XLSX.writeFile(wb, 'Lume_MeuDinheiro_Cartao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
-  alert('✓ Exportado! ' + (dMD.length-1) + ' lançamentos · ' + (dPend.length-1) + ' pendências');
+  var nInf = dInfinite.length-1, nSt = dStone.length-1;
+  alert('✓ Exportado! Infinite: '+nInf+' · Stone: '+nSt+' · Pendências: '+(dPend.length-1));
 }
 
 // ── EXPORTAR MEU DINHEIRO — PIX ───────────────────────────────────────────────
