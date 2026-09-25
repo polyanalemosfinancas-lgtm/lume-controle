@@ -22,6 +22,7 @@
     --amber:#b07d10; --amber-bg:#fdf5e2;
     --green:#1e7d4f; --green-bg:#e8f5ee;
     --blue:#2563a8; --blue-bg:#e9f1fa;
+    --teal:#2F6F62; --teal-pale:#e6f0ee;
   }
   body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
   button{font-family:inherit;cursor:pointer}
@@ -132,6 +133,45 @@
   .cli-acts button{font-size:12px;font-weight:600;padding:7px 12px;border-radius:7px;border:1px solid var(--line);background:#fff}
   .cli-acts .ed{color:var(--blue)} .cli-acts .cx{color:var(--amber)} .cli-acts .dx{color:var(--red)} .cli-acts .rx{color:var(--green)}
 
+  /* ── COMPROMISSOS ── */
+  .pessoas{display:flex;gap:10px;margin-bottom:18px}
+  .pchip{flex:1;background:var(--card);border:2px solid var(--line);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:12px;transition:all .15s;cursor:pointer}
+  .pchip .av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;color:#fff;flex-shrink:0}
+  .pchip.p-polyana .av{background:var(--gold);color:var(--navy)}
+  .pchip.p-miguel .av{background:var(--teal)}
+  .pchip .nome{font-weight:700;font-size:14.5px;font-family:'Fraunces',serif}
+  .pchip .cnt{font-size:11.5px;color:var(--muted)}
+  .pchip.on.p-polyana{border-color:var(--gold);background:var(--gold-pale)}
+  .pchip.on.p-miguel{border-color:var(--teal);background:var(--teal-pale)}
+  .pchip.todos{flex:0 0 auto;padding:14px 20px}
+  .subtabs{display:flex;gap:8px;margin-bottom:16px}
+  .subtab{background:var(--card);border:1px solid var(--line);color:var(--text);font-size:12.5px;font-weight:600;padding:8px 16px;border-radius:8px}
+  .subtab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .subview{display:none}
+  .subview.on{display:block}
+  .citem{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:13px 16px;display:grid;grid-template-columns:56px 1fr auto auto;gap:14px;align-items:center;margin-bottom:8px}
+  .citem.resp-Polyana{border-left:4px solid var(--gold)}
+  .citem.resp-Miguel{border-left:4px solid var(--teal)}
+  .citem .dt{text-align:center}
+  .citem .dt .d{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--navy);line-height:1}
+  .citem .dt .m{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted)}
+  .citem.venc .dt .d{color:var(--red)}
+  .citem .info .tit{font-size:14px;font-weight:600}
+  .citem .info .meta{font-size:12px;color:var(--muted);margin-top:2px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  .badge-tipo{font-size:11px;font-weight:600;padding:2px 9px;border-radius:10px}
+  .badge-tipo.Reunião{background:var(--teal-pale);color:var(--teal)}
+  .badge-tipo.Tarefa{background:var(--gold-pale);color:#8a6d1f}
+  .badge-tipo.Outro{background:#eee;color:var(--muted)}
+  .badge-resp{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:9px}
+  .badge-resp.Polyana{background:var(--gold-pale);color:#8a6d1f}
+  .badge-resp.Miguel{background:var(--teal-pale);color:var(--teal)}
+  .horac{font-weight:600;color:var(--navy)}
+  .resp-pick{display:flex;gap:8px}
+  .resp-pick label{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;border:2px solid var(--line);border-radius:8px;padding:9px;cursor:pointer;font-size:13px;font-weight:600;color:var(--text);text-transform:none;letter-spacing:0}
+  .resp-pick input{width:auto;accent-color:var(--navy)}
+  .resp-pick label.on-Polyana{border-color:var(--gold);background:var(--gold-pale)}
+  .resp-pick label.on-Miguel{border-color:var(--teal);background:var(--teal-pale)}
+
   /* ── FIXAS ── */
   .fixa-row{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto auto auto;gap:14px;align-items:center;margin-bottom:8px}
   .fixa-row .dia{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--navy);text-align:center}
@@ -194,6 +234,9 @@
     .conta input.chk{align-self:start;margin-top:4px}
     .frm{grid-template-columns:1fr}
     .topbar{padding:10px 14px;height:auto}
+    .pessoas{flex-direction:column}
+    .citem{grid-template-columns:50px 1fr;grid-template-rows:auto auto}
+    .citem .st,.citem .acoes{grid-column:2;justify-self:start}
   }
 </style>
 </head>
@@ -249,6 +292,7 @@
   <button class="tab on" data-v="agenda" onclick="trocarAba('agenda')">Agenda</button>
   <button class="tab" data-v="pagas" onclick="trocarAba('pagas')">Contas pagas</button>
   <button class="tab" data-v="clientes" onclick="trocarAba('clientes')">Clientes</button>
+  <button class="tab" data-v="compromissos" onclick="trocarAba('compromissos')">Compromissos</button>
 </div>
 
 <div class="wrap">
@@ -307,6 +351,85 @@
     <div class="cli-grid" id="listaClientes"></div>
   </div>
 
+  <!-- ═══════ COMPROMISSOS ═══════ -->
+  <div class="view" id="v-compromissos">
+    <div class="pessoas">
+      <div class="pchip p-polyana on" onclick="setPessoaComp('Polyana')">
+        <div class="av">P</div><div><div class="nome">Polyana</div><div class="cnt" id="cntPolyana"></div></div>
+      </div>
+      <div class="pchip p-miguel" onclick="setPessoaComp('Miguel')">
+        <div class="av">M</div><div><div class="nome">Miguel</div><div class="cnt" id="cntMiguel"></div></div>
+      </div>
+      <div class="pchip todos" onclick="setPessoaComp('Todos')"><div class="nome">Ver os dois</div></div>
+      <button class="btn-top" style="margin-left:auto" onclick="abrirItemComp()">＋ Novo compromisso</button>
+    </div>
+
+    <div class="subtabs">
+      <button class="subtab on" data-sv="cagenda" onclick="trocarSubComp('cagenda')">Agenda</button>
+      <button class="subtab" data-sv="cpend" onclick="trocarSubComp('cpend')">Pendências</button>
+      <button class="subtab" data-sv="cconcl" onclick="trocarSubComp('cconcl')">Concluídos</button>
+    </div>
+
+    <div class="subview on" id="sv-cagenda">
+      <div class="filters"><input type="text" id="buscaCAg" placeholder="🔎 Buscar por título ou observação…" oninput="renderCompAgenda()" style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff"></div>
+      <div id="compAgenda"></div>
+    </div>
+    <div class="subview" id="sv-cpend">
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Compromissos que venceram sem serem concluídos caem aqui automaticamente.</p>
+      <div class="filters"><input type="text" id="buscaCPd" placeholder="🔎 Buscar por título ou observação…" oninput="renderCompPend()" style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff"></div>
+      <div id="compPend"></div>
+    </div>
+    <div class="subview" id="sv-cconcl">
+      <div class="filters">
+        <input type="month" id="mesCConcl" onchange="renderCompConcl()">
+        <input type="text" id="buscaCCo" placeholder="🔎 Buscar por título ou observação…" oninput="renderCompConcl()" style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff">
+      </div>
+      <div id="compConcl"></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════ MODAL NOVO/EDITAR COMPROMISSO ═══════ -->
+<div class="overlay" id="ovCpItem">
+  <div class="modal">
+    <div class="modal-head"><h3 id="tCpItem">Novo compromisso</h3><button onclick="fechar('ovCpItem')">✕</button></div>
+    <div class="modal-body">
+      <div class="frm">
+        <div class="full">
+          <label>Responsável</label>
+          <div class="resp-pick">
+            <label id="lblCpPolyana"><input type="radio" name="cpResp" value="Polyana" onchange="atualizarRespPickComp()"> Polyana</label>
+            <label id="lblCpMiguel"><input type="radio" name="cpResp" value="Miguel" onchange="atualizarRespPickComp()"> Miguel</label>
+          </div>
+        </div>
+        <div class="full"><label>Título</label><input id="cpTitulo" placeholder="Ex.: Reunião com Sala Conceito"></div>
+        <div><label>Tipo</label><select id="cpTipo"><option>Reunião</option><option>Tarefa</option><option>Outro</option></select></div>
+        <div><label>Data</label><input id="cpData" type="date"></div>
+        <div><label>Hora (opcional)</label><input id="cpHora" type="time"></div>
+        <div class="full"><label>Observação (opcional)</label><textarea id="cpObs" style="width:100%;border:1px solid var(--line);border-radius:7px;padding:9px 11px;font-size:13.5px;min-height:60px;resize:vertical" placeholder="Detalhes, link da reunião, contexto…"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="fechar('ovCpItem')">Cancelar</button>
+      <button class="btn-pri" onclick="salvarItemComp()">Salvar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ MODAL REAGENDAR COMPROMISSO ═══════ -->
+<div class="overlay" id="ovCpReag">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-head"><h3>Reagendar</h3><button onclick="fechar('ovCpReag')">✕</button></div>
+    <div class="modal-body">
+      <label style="display:block;font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px">Nova data</label>
+      <input id="cpNovaData" type="date" style="width:100%;border:1px solid var(--line);border-radius:7px;padding:10px 11px;font-size:14px">
+    </div>
+    <div class="modal-foot">
+      <button class="btn-sec" onclick="fechar('ovCpReag')">Cancelar</button>
+      <button class="btn-pri" onclick="confirmarReagendarComp()">Reagendar</button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════ MODAL CONTA ═══════ -->
@@ -444,6 +567,7 @@ function toggleGrupo(id){
   gruposRecolhidos.has(id) ? gruposRecolhidos.delete(id) : gruposRecolhidos.add(id);
   localStorage.setItem('lume_grupos_recolhidos', JSON.stringify([...gruposRecolhidos]));
   renderAgenda();
+  if(typeof renderCompAgenda==='function') renderCompAgenda();
 }
 
 const fmt = v => (v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
@@ -511,6 +635,13 @@ function init(){
   }, err);
 
   const m = new Date(); document.getElementById('mesPagas').value = m.toISOString().slice(0,7);
+
+  // Compromissos — coleção própria (agenda_itens), não interfere em fluxo_clientes/fluxo_contas/fluxo_fixas
+  db.collection('agenda_itens').onSnapshot(s=>{
+    itensComp = s.docs.map(d=>({id:d.id,...d.data()}));
+    renderCompTudo(); ok();
+  }, err);
+  document.getElementById('mesCConcl').value = m.toISOString().slice(0,7);
 }
 function ok(){ document.getElementById('dotSync').classList.remove('off'); document.getElementById('txtSync').textContent='sincronizado'; }
 function err(e){ console.error(e); document.getElementById('dotSync').classList.add('off'); document.getElementById('txtSync').textContent='erro de conexão'; }
@@ -519,7 +650,7 @@ function err(e){ console.error(e); document.getElementById('dotSync').classList.
 function erroDb(e){
   console.error(e);
   const msg = (e && e.code==='permission-denied')
-    ? 'permissão negada no Firebase. Abra o console do Firebase → Firestore → Regras e libere as coleções fluxo_clientes, fluxo_contas e fluxo_fixas.'
+    ? 'permissão negada no Firebase. Abra o console do Firebase → Firestore → Regras e confirme que a leitura/escrita está liberada.'
     : ((e && e.message) || 'erro desconhecido');
   toast('⚠ Não foi possível salvar: '+msg);
 }
@@ -893,10 +1024,19 @@ async function salvarConta(){
     if(edicaoConta){
       await db.collection('fluxo_contas').doc(edicaoConta).update(base);
       const c = contas.find(x=>x.id===edicaoConta);
-      if(c && c.origem==='fixa' && c.fixaId && (c.valor!==base.valor || c.desc!==base.desc || c.forn!==base.forn || c.forma!==base.forma)){
+      const mudouAlgo = c && c.origem==='fixa' && c.fixaId && (
+        c.valor!==base.valor || c.desc!==base.desc || c.forn!==base.forn ||
+        c.forma!==base.forma || c.venc!==base.venc || c.ndoc!==base.ndoc);
+      if(mudouAlgo){
         const fx = fixas.find(f=>f.id===c.fixaId);
-        if(confirm('Esta conta é FIXA. Aplicar esta alteração também às OUTRAS repetições em aberto (passadas e futuras já geradas)?')){
+        const mudouData = c.venc!==base.venc;
+        const mudouDoc = c.ndoc!==base.ndoc;
+        let pergunta = 'Esta conta é FIXA. Aplicar esta alteração também às OUTRAS repetições em aberto (passadas e futuras já geradas)?';
+        if(mudouDoc && !mudouData && !(c.valor!==base.valor||c.desc!==base.desc||c.forn!==base.forn||c.forma!==base.forma))
+          pergunta = 'O Nº do documento normalmente muda a cada repetição (ex.: boleto novo por mês).\n\nAplicar mesmo assim às outras? Cancelar mantém o nº do documento só deste lançamento.';
+        if(confirm(pergunta)){
           const up = {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma};
+          if(mudouDoc) up.ndocPadrao = base.ndoc; // referência; cada lançamento pode ter o seu próprio depois
           if(fx && fx.freq==='semanal') up.diaSemana = new Date(base.venc+'T12:00').getDay();
           else up.dia = parseInt(base.venc.split('-')[2]);
           // atualiza o modelo (afeta as futuras ainda não geradas)
@@ -905,8 +1045,20 @@ async function salvarConta(){
           const irmas = contas.filter(x=>x.fixaId===c.fixaId && x.status==='aberto' && x.id!==c.id);
           if(irmas.length){
             const batch2 = db.batch();
-            irmas.forEach(x=>batch2.update(db.collection('fluxo_contas').doc(x.id),
-              {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma}));
+            // se a data mudou, desloca a data de todas as outras pelo mesmo número de dias
+            let deltaDias = 0;
+            if(mudouData){
+              deltaDias = Math.round((new Date(base.venc+'T12:00') - new Date(c.venc+'T12:00'))/86400000);
+            }
+            irmas.forEach(x=>{
+              const upd = {desc:base.desc, forn:base.forn, valor:base.valor, forma:base.forma};
+              if(mudouDoc) upd.ndoc = base.ndoc;
+              if(deltaDias){
+                const d = new Date(x.venc+'T12:00'); d.setDate(d.getDate()+deltaDias);
+                upd.venc = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+              }
+              batch2.update(db.collection('fluxo_contas').doc(x.id), upd);
+            });
             await batch2.commit();
           }
           toast(`Conta atualizada — alteração aplicada a ${1+irmas.length} lançamento${irmas.length?'s':''} ✓`);
@@ -1280,6 +1432,168 @@ function aplicarLeitura(d){
   previewParcelas();
   if(n>0) docStatus('ok',`✓ ${d.nomeTipo} identificado — ${n} campo${n>1?'s':''} preenchido${n>1?'s':''}. Confira e complete o restante.`);
   else docStatus('warn','⚠ Documento lido, mas não identifiquei os dados — preencha manualmente.');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   COMPROMISSOS — agenda pessoal de Polyana e Miguel
+   Usa a coleção 'agenda_itens', separada de fluxo_clientes/
+   fluxo_contas/fluxo_fixas: não lê nem grava nada do módulo
+   de contas a pagar.
+   ═══════════════════════════════════════════════════════════ */
+let itensComp = [], pessoaAtivaComp = 'Polyana', edicaoItemComp = null, reagendandoIdComp = null, salvandoItemComp = false;
+
+function trocarSubComp(sv){
+  document.querySelectorAll('.subtab').forEach(t=>t.classList.toggle('on',t.dataset.sv===sv));
+  document.querySelectorAll('.subview').forEach(x=>x.classList.remove('on'));
+  document.getElementById('sv-'+sv).classList.add('on');
+}
+
+function setPessoaComp(p){
+  pessoaAtivaComp = p;
+  document.querySelectorAll('#v-compromissos .pchip').forEach(el=>el.classList.remove('on'));
+  if(p==='Polyana') document.querySelector('#v-compromissos .p-polyana').classList.add('on');
+  else if(p==='Miguel') document.querySelector('#v-compromissos .p-miguel').classList.add('on');
+  else document.querySelector('#v-compromissos .pchip.todos').classList.add('on');
+  renderCompTudo();
+}
+
+function renderCompTudo(){
+  document.getElementById('cntPolyana').textContent = itensComp.filter(i=>i.responsavel==='Polyana'&&i.status==='pendente').length+' pendente(s)';
+  document.getElementById('cntMiguel').textContent = itensComp.filter(i=>i.responsavel==='Miguel'&&i.status==='pendente').length+' pendente(s)';
+  renderCompAgenda(); renderCompPend(); renderCompConcl();
+}
+function filtroPessoaComp(i){ return pessoaAtivaComp==='Todos' || i.responsavel===pessoaAtivaComp; }
+function combinaBuscaComp(i, termo){
+  if(!termo) return true;
+  const t = termo.trim().toLowerCase();
+  return (i.titulo||'').toLowerCase().includes(t) || (i.obs||'').toLowerCase().includes(t);
+}
+
+function cartaoComp(i, modo){ // modo: 'agenda' | 'pend' | 'concl'
+  const d = new Date(i.data+'T12:00');
+  const venc = modo==='pend';
+  const st = modo==='concl' ? ['pago','Concluído'] : (venc ? ['atrasado',`${-dias(i.data)}d`] : ['aberto','A fazer']);
+  const acoes = modo==='concl'
+    ? `<button class="btn-ico re" title="Reabrir" onclick="reabrirComp('${i.id}')">↩</button>
+       <button class="btn-ico" title="Excluir" onclick="excluirComp('${i.id}')">🗑</button>`
+    : modo==='pend'
+    ? `<button class="btn-mini" onclick="resolverComp('${i.id}')">Resolver</button>
+       <button class="btn-mini" style="background:var(--gold);color:var(--navy)" onclick="abrirReagendarComp('${i.id}')">Reagendar</button>
+       <button class="btn-ico" title="Excluir" onclick="excluirComp('${i.id}')">🗑</button>`
+    : `<button class="btn-mini" onclick="resolverComp('${i.id}')">Concluir</button>
+       <button class="btn-ico ed" title="Editar" onclick="abrirItemComp('${i.id}')">✎</button>
+       <button class="btn-ico" title="Excluir" onclick="excluirComp('${i.id}')">🗑</button>`;
+  const reagInfo = i.reagendadoDe ? `<span>· reagendado de ${i.reagendadoDe.split('-').reverse().join('/')}</span>` : '';
+  return `<div class="citem resp-${i.responsavel} ${venc?'venc':''}">
+    <div class="dt"><div class="d">${d.getDate()}</div><div class="m">${MESES[d.getMonth()]}</div></div>
+    <div class="info">
+      <div class="tit">${esc(i.titulo)}${i.hora?` <span class="horac">· ${i.hora}</span>`:''}</div>
+      <div class="meta"><span class="badge-resp ${i.responsavel}">${i.responsavel}</span><span class="badge-tipo ${i.tipo}">${i.tipo}</span>${i.obs?`<span>${esc(i.obs)}</span>`:''}${reagInfo}${modo==='concl'&&i.concluidoEm?`<span>· em ${i.concluidoEm.split('-').reverse().join('/')}</span>`:''}</div>
+    </div>
+    <div class="st ${st[0]}">${st[1]}</div>
+    <div class="acoes">${acoes}</div>
+  </div>`;
+}
+
+function renderCompAgenda(){
+  const busca = document.getElementById('buscaCAg').value;
+  const vis = itensComp.filter(i=>i.status==='pendente' && dias(i.data)>=0 && filtroPessoaComp(i) && combinaBuscaComp(i,busca));
+  const grupos=[
+    {id:'choje', t:'Hoje', f:i=>dias(i.data)===0, sempre:true},
+    {id:'csem',  t:'Próximos 7 dias', f:i=>dias(i.data)>0&&dias(i.data)<=7},
+    {id:'cdep',  t:'Mais adiante', f:i=>dias(i.data)>7},
+  ];
+  document.getElementById('compAgenda').innerHTML = grupos.map(g=>{
+    const arr = vis.filter(g.f).sort((a,b)=>a.data.localeCompare(b.data));
+    if(!arr.length && !g.sempre) return '';
+    const recolhido = gruposRecolhidos.has(g.id);
+    const linhas = !arr.length ? `<div class="empty">Nada por aqui 🎉</div>`
+      : (recolhido?'':arr.map(i=>cartaoComp(i,'agenda')).join(''));
+    return `<div class="grp"><div class="grp-head" style="cursor:pointer" onclick="toggleGrupo('${g.id}')">
+      <span class="chev" style="display:inline-block;transition:transform .15s;transform:rotate(${recolhido?-90:0}deg)">▾</span><h2>${g.t}</h2><span class="cnt">${arr.length}</span></div>${linhas}</div>`;
+  }).join('');
+}
+
+function renderCompPend(){
+  const busca = document.getElementById('buscaCPd').value;
+  const arr = itensComp.filter(i=>i.status==='pendente' && dias(i.data)<0 && filtroPessoaComp(i) && combinaBuscaComp(i,busca))
+    .sort((a,b)=>a.data.localeCompare(b.data));
+  document.getElementById('compPend').innerHTML = arr.length ? arr.map(i=>cartaoComp(i,'pend')).join('') : `<div class="empty">Nenhuma pendência em aberto 🎉</div>`;
+}
+
+function renderCompConcl(){
+  const mes = document.getElementById('mesCConcl').value;
+  const busca = document.getElementById('buscaCCo').value;
+  const arr = itensComp.filter(i=>i.status==='concluido' && filtroPessoaComp(i)
+    && (!mes || (i.concluidoEm||i.data||'').startsWith(mes)) && combinaBuscaComp(i,busca))
+    .sort((a,b)=>(b.concluidoEm||b.data).localeCompare(a.concluidoEm||a.data));
+  document.getElementById('compConcl').innerHTML = arr.length ? arr.map(i=>cartaoComp(i,'concl')).join('') : `<div class="empty">Nenhum item concluído neste período.</div>`;
+}
+
+async function resolverComp(id){
+  try{ await db.collection('agenda_itens').doc(id).update({status:'concluido',concluidoEm:hojeStr()}); toast('Marcado como concluído ✓'); }
+  catch(e){ erroDb(e); }
+}
+async function reabrirComp(id){
+  try{ await db.collection('agenda_itens').doc(id).update({status:'pendente'}); toast('Reaberto'); }
+  catch(e){ erroDb(e); }
+}
+async function excluirComp(id){
+  if(!confirm('Excluir este compromisso definitivamente?')) return;
+  try{ await db.collection('agenda_itens').doc(id).delete(); toast('Excluído'); }
+  catch(e){ erroDb(e); }
+}
+function abrirReagendarComp(id){ reagendandoIdComp=id; document.getElementById('cpNovaData').value=hojeStr(); document.getElementById('ovCpReag').classList.add('open'); }
+async function confirmarReagendarComp(){
+  const novaData = document.getElementById('cpNovaData').value;
+  if(!novaData){ toast('Escolha uma data'); return; }
+  const i = itensComp.find(x=>x.id===reagendandoIdComp);
+  try{
+    await db.collection('agenda_itens').doc(reagendandoIdComp).update({data:novaData, reagendadoDe:i.data});
+    fechar('ovCpReag');
+    toast(`Reagendado para ${novaData.split('-').reverse().join('/')} ✓`);
+  }catch(e){ erroDb(e); }
+}
+
+function atualizarRespPickComp(){
+  const v = document.querySelector('input[name=cpResp]:checked')?.value;
+  document.getElementById('lblCpPolyana').classList.toggle('on-Polyana', v==='Polyana');
+  document.getElementById('lblCpMiguel').classList.toggle('on-Miguel', v==='Miguel');
+}
+function abrirItemComp(id=null){
+  edicaoItemComp = id;
+  const i = id ? itensComp.find(x=>x.id===id) : null;
+  document.getElementById('tCpItem').textContent = id?'Editar compromisso':'Novo compromisso';
+  const resp = i ? i.responsavel : (pessoaAtivaComp!=='Todos'?pessoaAtivaComp:'Polyana');
+  document.querySelectorAll('input[name=cpResp]').forEach(r=>r.checked = r.value===resp);
+  atualizarRespPickComp();
+  document.getElementById('cpTitulo').value = i?i.titulo:'';
+  document.getElementById('cpTipo').value = i?i.tipo:'Reunião';
+  document.getElementById('cpData').value = i?i.data:hojeStr();
+  document.getElementById('cpHora').value = i?(i.hora||''):'';
+  document.getElementById('cpObs').value = i?(i.obs||''):'';
+  document.getElementById('ovCpItem').classList.add('open');
+}
+async function salvarItemComp(){
+  if(salvandoItemComp) return;
+  const resp = document.querySelector('input[name=cpResp]:checked')?.value;
+  const titulo = document.getElementById('cpTitulo').value.trim();
+  if(!resp){ toast('Escolha o responsável'); return; }
+  if(!titulo){ toast('Preencha o título'); return; }
+  salvandoItemComp = true;
+  const dados = {
+    responsavel: resp, titulo, tipo: document.getElementById('cpTipo').value,
+    data: document.getElementById('cpData').value || hojeStr(),
+    hora: document.getElementById('cpHora').value || '',
+    obs: document.getElementById('cpObs').value.trim(),
+  };
+  try{
+    if(edicaoItemComp) await db.collection('agenda_itens').doc(edicaoItemComp).update(dados);
+    else await db.collection('agenda_itens').add({...dados, status:'pendente', criadoEm:hojeStr()});
+    fechar('ovCpItem');
+    toast(edicaoItemComp?'Compromisso atualizado ✓':`Compromisso salvo para <b>${esc(resp)}</b> ✓`);
+  }catch(e){ erroDb(e); }
+  salvandoItemComp = false;
 }
 
 function fechar(id){ document.getElementById(id).classList.remove('open'); }
