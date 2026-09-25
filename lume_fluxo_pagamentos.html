@@ -390,13 +390,13 @@
     </div>
 
     <div class="subtabs">
-      <button class="subtab" data-sv="ccal" onclick="trocarSubComp('ccal')">Calendário</button>
-      <button class="subtab on" data-sv="cagenda" onclick="trocarSubComp('cagenda')">Agenda</button>
+      <button class="subtab on" data-sv="ccal" onclick="trocarSubComp('ccal')">Calendário</button>
+      <button class="subtab" data-sv="cagenda" onclick="trocarSubComp('cagenda')">Agenda</button>
       <button class="subtab" data-sv="cpend" onclick="trocarSubComp('cpend')">Pendências</button>
       <button class="subtab" data-sv="cconcl" onclick="trocarSubComp('cconcl')">Concluídos</button>
     </div>
 
-    <div class="subview" id="sv-ccal">
+    <div class="subview on" id="sv-ccal">
       <div class="calnav">
         <button class="btn-ico" onclick="navCal(-1)">‹</button>
         <h2 id="calTitulo"></h2>
@@ -413,7 +413,7 @@
       </div>
     </div>
 
-    <div class="subview on" id="sv-cagenda">
+    <div class="subview" id="sv-cagenda">
       <div class="filters"><input type="text" id="buscaCAg" placeholder="🔎 Buscar por título ou observação…" oninput="renderCompAgenda()" style="flex:1;min-width:200px;border:1px solid var(--line);border-radius:8px;padding:8px 12px;font-size:13px;background:#fff"></div>
       <div id="compAgenda"></div>
     </div>
