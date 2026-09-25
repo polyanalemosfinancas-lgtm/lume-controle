@@ -172,6 +172,31 @@
   .resp-pick label.on-Polyana{border-color:var(--gold);background:var(--gold-pale)}
   .resp-pick label.on-Miguel{border-color:var(--teal);background:var(--teal-pale)}
 
+  /* ── CALENDÁRIO ── */
+  .calnav{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+  .calnav h2{font-family:'Fraunces',serif;font-size:18px;font-weight:600;color:var(--navy);min-width:150px;text-align:center}
+  .calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:22px}
+  .caldow{text-align:center;font-size:11px;font-weight:700;letter-spacing:.5px;color:var(--muted);padding-bottom:4px;text-transform:uppercase}
+  .calday{background:var(--card);border:1px solid var(--line);border-radius:9px;min-height:58px;padding:6px 7px;cursor:pointer;transition:all .15s;display:flex;flex-direction:column;gap:4px}
+  .calday:hover{border-color:var(--gold)}
+  .calday.out{opacity:.35}
+  .calday .calnum{font-size:13px;font-weight:600;color:var(--navy)}
+  .calday.today{background:var(--gold-pale);border-color:var(--gold-light)}
+  .calday.today .calnum{color:#8a6d1f}
+  .calday.sel{border-color:var(--navy);box-shadow:0 0 0 2px var(--navy) inset}
+  .caldots{display:flex;gap:3px}
+  .dot-P,.dot-M{width:7px;height:7px;border-radius:50%}
+  .dot-P{background:var(--gold)}
+  .dot-M{background:var(--teal)}
+  .caldia-box{border-top:1px solid var(--line);padding-top:16px}
+  .caldia-head{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+  .caldia-head h3{font-family:'Fraunces',serif;font-size:15.5px;font-weight:600;color:var(--navy);text-transform:capitalize}
+  .caldia-head .btn-mini{margin-left:auto}
+  @media(max-width:700px){
+    .calday{min-height:46px;padding:5px}
+    .calnav h2{min-width:110px;font-size:15px}
+  }
+
   /* ── FIXAS ── */
   .fixa-row{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 18px;display:grid;grid-template-columns:56px 1fr auto auto auto;gap:14px;align-items:center;margin-bottom:8px}
   .fixa-row .dia{font-family:'Fraunces',serif;font-size:19px;font-weight:600;color:var(--navy);text-align:center}
@@ -365,9 +390,27 @@
     </div>
 
     <div class="subtabs">
+      <button class="subtab" data-sv="ccal" onclick="trocarSubComp('ccal')">Calendário</button>
       <button class="subtab on" data-sv="cagenda" onclick="trocarSubComp('cagenda')">Agenda</button>
       <button class="subtab" data-sv="cpend" onclick="trocarSubComp('cpend')">Pendências</button>
       <button class="subtab" data-sv="cconcl" onclick="trocarSubComp('cconcl')">Concluídos</button>
+    </div>
+
+    <div class="subview" id="sv-ccal">
+      <div class="calnav">
+        <button class="btn-ico" onclick="navCal(-1)">‹</button>
+        <h2 id="calTitulo"></h2>
+        <button class="btn-ico" onclick="navCal(1)">›</button>
+        <button class="chip" style="margin-left:10px" onclick="calHoje()">Hoje</button>
+      </div>
+      <div id="compCalGrid"></div>
+      <div class="caldia-box">
+        <div class="caldia-head">
+          <h3 id="calDiaTitulo"></h3>
+          <button class="btn-mini" onclick="abrirItemComp(null, calSel)">＋ Adicionar neste dia</button>
+        </div>
+        <div id="compCalDia"></div>
+      </div>
     </div>
 
     <div class="subview on" id="sv-cagenda">
@@ -1441,6 +1484,8 @@ function aplicarLeitura(d){
    de contas a pagar.
    ═══════════════════════════════════════════════════════════ */
 let itensComp = [], pessoaAtivaComp = 'Polyana', edicaoItemComp = null, reagendandoIdComp = null, salvandoItemComp = false;
+let calMes = new Date(); calMes.setDate(1);
+let calSel = hojeStr();
 
 function trocarSubComp(sv){
   document.querySelectorAll('.subtab').forEach(t=>t.classList.toggle('on',t.dataset.sv===sv));
@@ -1460,7 +1505,7 @@ function setPessoaComp(p){
 function renderCompTudo(){
   document.getElementById('cntPolyana').textContent = itensComp.filter(i=>i.responsavel==='Polyana'&&i.status==='pendente').length+' pendente(s)';
   document.getElementById('cntMiguel').textContent = itensComp.filter(i=>i.responsavel==='Miguel'&&i.status==='pendente').length+' pendente(s)';
-  renderCompAgenda(); renderCompPend(); renderCompConcl();
+  renderCompAgenda(); renderCompPend(); renderCompConcl(); renderCompCalendario();
 }
 function filtroPessoaComp(i){ return pessoaAtivaComp==='Todos' || i.responsavel===pessoaAtivaComp; }
 function combinaBuscaComp(i, termo){
@@ -1530,6 +1575,50 @@ function renderCompConcl(){
   document.getElementById('compConcl').innerHTML = arr.length ? arr.map(i=>cartaoComp(i,'concl')).join('') : `<div class="empty">Nenhum item concluído neste período.</div>`;
 }
 
+/* ═══════ CALENDÁRIO MENSAL ═══════ */
+const NOMES_MES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+function navCal(delta){ calMes.setMonth(calMes.getMonth()+delta); renderCompCalendario(); }
+function calHoje(){ calMes = new Date(); calMes.setDate(1); calSel = hojeStr(); renderCompCalendario(); }
+function selecionarDiaCal(ds){ calSel = ds; renderCompCalendario(); }
+
+function renderCompCalendario(){
+  const elGrid = document.getElementById('compCalGrid');
+  if(!elGrid) return; // sub-view ainda não está no DOM nesta carga
+  const ano = calMes.getFullYear(), mes = calMes.getMonth();
+  document.getElementById('calTitulo').textContent = `${NOMES_MES[mes]} ${ano}`;
+
+  const primeiro = new Date(ano, mes, 1);
+  const inicioGrid = new Date(ano, mes, 1 - primeiro.getDay());
+
+  // dias com compromisso, por pessoa (respeita o filtro Polyana/Miguel/Todos)
+  const porDia = {};
+  itensComp.filter(filtroPessoaComp).forEach(i=>{
+    if(!porDia[i.data]) porDia[i.data] = {Polyana:false, Miguel:false};
+    porDia[i.data][i.responsavel] = true;
+  });
+
+  const dow = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  let html = dow.map(d=>`<div class="caldow">${d}</div>`).join('');
+  for(let i=0;i<42;i++){
+    const d = new Date(inicioGrid); d.setDate(inicioGrid.getDate()+i);
+    const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    const outMes = d.getMonth()!==mes;
+    const marc = porDia[ds];
+    const dots = marc ? `<div class="caldots">${marc.Polyana?'<span class="dot-P"></span>':''}${marc.Miguel?'<span class="dot-M"></span>':''}</div>` : '';
+    html += `<div class="calday ${outMes?'out':''} ${ds===hojeStr()?'today':''} ${ds===calSel?'sel':''}" onclick="selecionarDiaCal('${ds}')">
+      <span class="calnum">${d.getDate()}</span>${dots}</div>`;
+  }
+  elGrid.innerHTML = `<div class="calgrid">${html}</div>`;
+
+  const dSel = new Date(calSel+'T12:00');
+  document.getElementById('calDiaTitulo').textContent = `${dSel.getDate()} de ${NOMES_MES[dSel.getMonth()].toLowerCase()}`;
+  const itensDia = itensComp.filter(i=>i.data===calSel && filtroPessoaComp(i))
+    .sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
+  document.getElementById('compCalDia').innerHTML = itensDia.length
+    ? itensDia.map(i=>cartaoComp(i, i.status==='concluido'?'concl':(dias(i.data)<0?'pend':'agenda'))).join('')
+    : `<div class="empty">Nenhum compromisso neste dia.</div>`;
+}
+
 async function resolverComp(id){
   try{ await db.collection('agenda_itens').doc(id).update({status:'concluido',concluidoEm:hojeStr()}); toast('Marcado como concluído ✓'); }
   catch(e){ erroDb(e); }
@@ -1560,7 +1649,7 @@ function atualizarRespPickComp(){
   document.getElementById('lblCpPolyana').classList.toggle('on-Polyana', v==='Polyana');
   document.getElementById('lblCpMiguel').classList.toggle('on-Miguel', v==='Miguel');
 }
-function abrirItemComp(id=null){
+function abrirItemComp(id=null, dataPre=null){
   edicaoItemComp = id;
   const i = id ? itensComp.find(x=>x.id===id) : null;
   document.getElementById('tCpItem').textContent = id?'Editar compromisso':'Novo compromisso';
@@ -1569,7 +1658,7 @@ function abrirItemComp(id=null){
   atualizarRespPickComp();
   document.getElementById('cpTitulo').value = i?i.titulo:'';
   document.getElementById('cpTipo').value = i?i.tipo:'Reunião';
-  document.getElementById('cpData').value = i?i.data:hojeStr();
+  document.getElementById('cpData').value = i ? i.data : (dataPre || hojeStr());
   document.getElementById('cpHora').value = i?(i.hora||''):'';
   document.getElementById('cpObs').value = i?(i.obs||''):'';
   document.getElementById('ovCpItem').classList.add('open');
