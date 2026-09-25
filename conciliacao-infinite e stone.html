@@ -564,6 +564,7 @@ function _analisarCartao() {
     return String(status).trim().toLowerCase() === 'aprovada';
   });
   var idxStone = {};
+  var stoneUsados = new Set(); // rastrear Stone já usados no confronto
   stoneRows.forEach(function(r) {
     // Tentar coluna com e sem BOM/acento
     var authVal = r['CÓDIGO DE AUTORIZAÇÃO'] || r['C\u00d3DIGO DE AUTORIZA\u00c7\u00c3O'] || r['CODIGO DE AUTORIZACAO'] || '';
@@ -647,10 +648,11 @@ function _analisarCartao() {
     }
     // Buscar na Stone se não achou no Infinite
     var stoneRow = (!inf) ? (idxStone[authCmp] || null) : null;
+    if (stoneRow) stoneUsados.add(authCmp);
     // Busca fuzzy Stone: 1 caractere diferente
     if (!inf && !stoneRow && authCmp.length >= 4) {
       for (var k in idxStone) {
-        if (levenshtein(k, authCmp) <= 1) { stoneRow = idxStone[k]; break; }
+        if (levenshtein(k, authCmp) <= 1) { stoneRow = idxStone[k]; stoneUsados.add(k); break; }
       }
     }
     // Busca por valor + data quando código não casa (ex: Feegow gravou código errado)
@@ -663,6 +665,8 @@ function _analisarCartao() {
         var valSt= Math.abs(num(String(sr['VALOR BRUTO']||'0').replace(/\.+/g,'').replace(',','.')));
         if (dtSt === dtFg && Math.abs(valFg - valSt) < 0.02) {
           stoneRow = sr;
+          var authSr = normAuthCmp(String(sr['CÓDIGO DE AUTORIZAÇÃO']||''));
+          if (authSr) stoneUsados.add(authSr);
           break;
         }
       }
@@ -726,6 +730,8 @@ function _analisarCartao() {
 
   // Stone sem Feegow
   Object.keys(idxStone).forEach(function(id) {
+    // Pular se já foi usada no confronto (match exato, fuzzy ou valor+data)
+    if (stoneUsados.has(id)) return;
     var fgBateu = false;
     Object.keys(grupFeegow).forEach(function(cd){ var fgA=grupFeegow[cd].auth; if (normAuthCmp(fgA)===id || levenshtein(normAuthCmp(fgA),id)<=1) fgBateu=true; });
     var infBateu = !!idxInf[id];
