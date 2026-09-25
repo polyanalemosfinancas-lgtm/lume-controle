@@ -450,6 +450,10 @@
         <div><label>Tipo</label><select id="cpTipo"><option>Reunião</option><option>Tarefa</option><option>Outro</option></select></div>
         <div><label>Data</label><input id="cpData" type="date"></div>
         <div><label>Hora (opcional)</label><input id="cpHora" type="time"></div>
+        <div class="full" id="cpFixaBox" style="display:flex;align-items:center;gap:9px;background:var(--gold-pale);border:1px solid var(--gold-light);border-radius:8px;padding:11px 13px;cursor:pointer" onclick="if(event.target.id!=='cpFixaFlag'){const c=document.getElementById('cpFixaFlag');c.checked=!c.checked}">
+          <input type="checkbox" id="cpFixaFlag" style="width:17px;height:17px;accent-color:var(--gold)">
+          <span style="font-size:13px"><b>Repete todo mês</b> — no mesmo dia da data escolhida acima</span>
+        </div>
         <div class="full"><label>Observação (opcional)</label><textarea id="cpObs" style="width:100%;border:1px solid var(--line);border-radius:7px;padding:9px 11px;font-size:13.5px;min-height:60px;resize:vertical" placeholder="Detalhes, link da reunião, contexto…"></textarea></div>
       </div>
     </div>
@@ -679,9 +683,15 @@ function init(){
 
   const m = new Date(); document.getElementById('mesPagas').value = m.toISOString().slice(0,7);
 
-  // Compromissos — coleção própria (agenda_itens), não interfere em fluxo_clientes/fluxo_contas/fluxo_fixas
+  // Compromissos — coleções próprias (agenda_itens, agenda_fixas), não interferem em fluxo_clientes/fluxo_contas/fluxo_fixas
   db.collection('agenda_itens').onSnapshot(s=>{
     itensComp = s.docs.map(d=>({id:d.id,...d.data()}));
+    if(!itensCompProntos && !s.metadata.fromCache){ itensCompProntos = true; gerarFixasComp(); }
+    renderCompTudo(); ok();
+  }, err);
+  db.collection('agenda_fixas').onSnapshot(s=>{
+    fixasComp = s.docs.map(d=>({id:d.id,...d.data()}));
+    gerarFixasComp();
     renderCompTudo(); ok();
   }, err);
   document.getElementById('mesCConcl').value = m.toISOString().slice(0,7);
@@ -1483,7 +1493,7 @@ function aplicarLeitura(d){
    fluxo_contas/fluxo_fixas: não lê nem grava nada do módulo
    de contas a pagar.
    ═══════════════════════════════════════════════════════════ */
-let itensComp = [], pessoaAtivaComp = 'Polyana', edicaoItemComp = null, reagendandoIdComp = null, salvandoItemComp = false;
+let itensComp = [], fixasComp = [], itensCompProntos = false, pessoaAtivaComp = 'Polyana', edicaoItemComp = null, reagendandoIdComp = null, salvandoItemComp = false;
 let calMes = new Date(); calMes.setDate(1);
 let calSel = hojeStr();
 
@@ -1514,6 +1524,35 @@ function combinaBuscaComp(i, termo){
   return (i.titulo||'').toLowerCase().includes(t) || (i.obs||'').toLowerCase().includes(t);
 }
 
+/* ═══════ GERAÇÃO AUTOMÁTICA DE COMPROMISSOS FIXOS (12 meses à frente) ═══════ */
+async function gerarFixasComp(){
+  if(!itensCompProntos || !fixasComp.length) return;
+  try{
+    const agora = new Date();
+    const pend = [];
+    for(const f of fixasComp.filter(x=>x.ativo!==false)){
+      const inicio = f.inicio || '';
+      const base = {responsavel:f.responsavel, titulo:f.titulo, tipo:f.tipo, hora:f.hora||'', obs:f.obs||'',
+        status:'pendente', origem:'fixa', fixaId:f.id, criadoEm:hojeStr()};
+      for(let i=0;i<12;i++){
+        const m = new Date(agora.getFullYear(), agora.getMonth()+i, 1);
+        const ultimoDia = new Date(m.getFullYear(), m.getMonth()+1, 0).getDate();
+        const dia = Math.min(parseInt(f.dia)||1, ultimoDia);
+        const data = `${m.getFullYear()}-${String(m.getMonth()+1).padStart(2,'0')}-${String(dia).padStart(2,'0')}`;
+        if(!inicio || data >= inicio)
+          pend.push({chave:`compfixa_${f.id}_${m.getFullYear()}${String(m.getMonth()+1).padStart(2,'0')}`, dados:{...base, data}});
+      }
+    }
+    const novos = pend.filter(p=>!itensComp.some(i=>i.id===p.chave));
+    if(!novos.length) return;
+    for(let i=0;i<novos.length;i+=400){
+      const batch = db.batch();
+      novos.slice(i,i+400).forEach(p=>batch.set(db.collection('agenda_itens').doc(p.chave), p.dados));
+      await batch.commit();
+    }
+  }catch(e){ erroDb(e); }
+}
+
 function cartaoComp(i, modo){ // modo: 'agenda' | 'pend' | 'concl'
   const d = new Date(i.data+'T12:00');
   const venc = modo==='pend';
@@ -1529,11 +1568,12 @@ function cartaoComp(i, modo){ // modo: 'agenda' | 'pend' | 'concl'
        <button class="btn-ico ed" title="Editar" onclick="abrirItemComp('${i.id}')">✎</button>
        <button class="btn-ico" title="Excluir" onclick="excluirComp('${i.id}')">🗑</button>`;
   const reagInfo = i.reagendadoDe ? `<span>· reagendado de ${i.reagendadoDe.split('-').reverse().join('/')}</span>` : '';
+  const fixaTag = i.origem==='fixa' ? `<span class="tag-rec">↻ fixa</span>` : '';
   return `<div class="citem resp-${i.responsavel} ${venc?'venc':''}">
     <div class="dt"><div class="d">${d.getDate()}</div><div class="m">${MESES[d.getMonth()]}</div></div>
     <div class="info">
       <div class="tit">${esc(i.titulo)}${i.hora?` <span class="horac">· ${i.hora}</span>`:''}</div>
-      <div class="meta"><span class="badge-resp ${i.responsavel}">${i.responsavel}</span><span class="badge-tipo ${i.tipo}">${i.tipo}</span>${i.obs?`<span>${esc(i.obs)}</span>`:''}${reagInfo}${modo==='concl'&&i.concluidoEm?`<span>· em ${i.concluidoEm.split('-').reverse().join('/')}</span>`:''}</div>
+      <div class="meta"><span class="badge-resp ${i.responsavel}">${i.responsavel}</span><span class="badge-tipo ${i.tipo}">${i.tipo}</span>${fixaTag}${i.obs?`<span>${esc(i.obs)}</span>`:''}${reagInfo}${modo==='concl'&&i.concluidoEm?`<span>· em ${i.concluidoEm.split('-').reverse().join('/')}</span>`:''}</div>
     </div>
     <div class="st ${st[0]}">${st[1]}</div>
     <div class="acoes">${acoes}</div>
@@ -1592,7 +1632,7 @@ function renderCompCalendario(){
 
   // dias com compromisso, por pessoa (respeita o filtro Polyana/Miguel/Todos)
   const porDia = {};
-  itensComp.filter(filtroPessoaComp).forEach(i=>{
+  itensComp.filter(i=>i.status!=='excluida' && filtroPessoaComp(i)).forEach(i=>{
     if(!porDia[i.data]) porDia[i.data] = {Polyana:false, Miguel:false};
     porDia[i.data][i.responsavel] = true;
   });
@@ -1612,7 +1652,7 @@ function renderCompCalendario(){
 
   const dSel = new Date(calSel+'T12:00');
   document.getElementById('calDiaTitulo').textContent = `${dSel.getDate()} de ${NOMES_MES[dSel.getMonth()].toLowerCase()}`;
-  const itensDia = itensComp.filter(i=>i.data===calSel && filtroPessoaComp(i))
+  const itensDia = itensComp.filter(i=>i.data===calSel && i.status!=='excluida' && filtroPessoaComp(i))
     .sort((a,b)=>(a.hora||'').localeCompare(b.hora||''));
   document.getElementById('compCalDia').innerHTML = itensDia.length
     ? itensDia.map(i=>cartaoComp(i, i.status==='concluido'?'concl':(dias(i.data)<0?'pend':'agenda'))).join('')
@@ -1628,9 +1668,29 @@ async function reabrirComp(id){
   catch(e){ erroDb(e); }
 }
 async function excluirComp(id){
+  const i = itensComp.find(x=>x.id===id);
   if(!confirm('Excluir este compromisso definitivamente?')) return;
-  try{ await db.collection('agenda_itens').doc(id).delete(); toast('Excluído'); }
-  catch(e){ erroDb(e); }
+  try{
+    if(i && i.origem==='fixa' && i.fixaId){
+      if(confirm('Este compromisso é FIXO (repete todo mês).\n\nOK = excluir e ENCERRAR a repetição (apaga também as outras ocorrências em aberto já geradas)\nCancelar = excluir só este mês e continuar repetindo nos próximos')){
+        const batch = db.batch();
+        batch.delete(db.collection('agenda_itens').doc(id));
+        const irmas = itensComp.filter(x=>x.fixaId===i.fixaId && x.status!=='concluido' && x.id!==id);
+        irmas.forEach(x=>batch.delete(db.collection('agenda_itens').doc(x.id)));
+        batch.delete(db.collection('agenda_fixas').doc(i.fixaId));
+        await batch.commit();
+        toast(`Repetição encerrada — ${1+irmas.length} compromisso(s) excluído(s) ✓`);
+        return;
+      }
+      // exclui só esta ocorrência: marca como excluída (apagar de verdade faria o
+      // gerador automático recriar o mesmo mês na próxima sincronização)
+      await db.collection('agenda_itens').doc(id).update({status:'excluida'});
+      toast('Excluído — não será recriado ✓');
+      return;
+    }
+    await db.collection('agenda_itens').doc(id).delete();
+    toast('Excluído');
+  }catch(e){ erroDb(e); }
 }
 function abrirReagendarComp(id){ reagendandoIdComp=id; document.getElementById('cpNovaData').value=hojeStr(); document.getElementById('ovCpReag').classList.add('open'); }
 async function confirmarReagendarComp(){
@@ -1661,6 +1721,8 @@ function abrirItemComp(id=null, dataPre=null){
   document.getElementById('cpData').value = i ? i.data : (dataPre || hojeStr());
   document.getElementById('cpHora').value = i?(i.hora||''):'';
   document.getElementById('cpObs').value = i?(i.obs||''):'';
+  document.getElementById('cpFixaFlag').checked = false;
+  document.getElementById('cpFixaBox').style.display = id ? 'none' : 'flex';
   document.getElementById('ovCpItem').classList.add('open');
 }
 async function salvarItemComp(){
@@ -1677,10 +1739,53 @@ async function salvarItemComp(){
     obs: document.getElementById('cpObs').value.trim(),
   };
   try{
-    if(edicaoItemComp) await db.collection('agenda_itens').doc(edicaoItemComp).update(dados);
-    else await db.collection('agenda_itens').add({...dados, status:'pendente', criadoEm:hojeStr()});
+    if(edicaoItemComp){
+      await db.collection('agenda_itens').doc(edicaoItemComp).update(dados);
+      const i = itensComp.find(x=>x.id===edicaoItemComp);
+      const mudouAlgo = i && i.origem==='fixa' && i.fixaId && (
+        i.titulo!==dados.titulo || i.tipo!==dados.tipo || i.hora!==dados.hora ||
+        i.obs!==dados.obs || i.data!==dados.data);
+      if(mudouAlgo){
+        if(confirm('Este compromisso é FIXO. Aplicar esta alteração também às OUTRAS ocorrências em aberto (passadas e futuras já geradas)?')){
+          const up = {titulo:dados.titulo, tipo:dados.tipo, hora:dados.hora, obs:dados.obs,
+            dia: parseInt(dados.data.split('-')[2])};
+          await db.collection('agenda_fixas').doc(i.fixaId).update(up);
+          const irmas = itensComp.filter(x=>x.fixaId===i.fixaId && x.status==='pendente' && x.id!==i.id);
+          if(irmas.length){
+            const deltaDias = i.data!==dados.data
+              ? Math.round((new Date(dados.data+'T12:00') - new Date(i.data+'T12:00'))/86400000) : 0;
+            const batch2 = db.batch();
+            irmas.forEach(x=>{
+              const upd = {titulo:dados.titulo, tipo:dados.tipo, hora:dados.hora, obs:dados.obs};
+              if(deltaDias){
+                const d = new Date(x.data+'T12:00'); d.setDate(d.getDate()+deltaDias);
+                upd.data = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+              }
+              batch2.update(db.collection('agenda_itens').doc(x.id), upd);
+            });
+            await batch2.commit();
+          }
+          toast(`Atualizado — aplicado a ${1+irmas.length} compromisso(s) ✓`);
+        } else {
+          toast('Atualizado — só este compromisso ✓');
+        }
+      } else {
+        toast('Compromisso atualizado ✓');
+      }
+    } else if(document.getElementById('cpFixaFlag').checked){
+      // cria só o modelo — gerarFixasComp() gera as ocorrências (mês atual em diante)
+      await db.collection('agenda_fixas').add({
+        responsavel: dados.responsavel, titulo: dados.titulo, tipo: dados.tipo,
+        hora: dados.hora, obs: dados.obs, dia: parseInt(dados.data.split('-')[2]),
+        inicio: dados.data, ativo: true
+      });
+      toast(`Compromisso fixo criado — dia ${dados.data.split('-')[2]} de todo mês, para <b>${esc(resp)}</b> ✓`);
+      setTimeout(gerarFixasComp, 800);
+    } else {
+      await db.collection('agenda_itens').add({...dados, status:'pendente', criadoEm:hojeStr()});
+      toast(`Compromisso salvo para <b>${esc(resp)}</b> ✓`);
+    }
     fechar('ovCpItem');
-    toast(edicaoItemComp?'Compromisso atualizado ✓':`Compromisso salvo para <b>${esc(resp)}</b> ✓`);
   }catch(e){ erroDb(e); }
   salvandoItemComp = false;
 }
