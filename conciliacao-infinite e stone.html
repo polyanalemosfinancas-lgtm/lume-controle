@@ -157,7 +157,7 @@ footer span{color:var(--gold)}
       <div style="font-size:28px">📋</div>
       <div style="flex:1">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
-          <span class="tag opc" style="position:static;transform:none">Opcional — usado em Cartão e PIX</span>
+          <span class="tag" style="position:static;transform:none;background:#254568;color:#fff">Obrigatório — usado em Cartão e PIX</span>
         </div>
         <div class="upload-label" style="margin:0 0 2px 0">Contas a Receber (Feegow)</div>
         <div class="upload-hint" style="margin:0">Melhora categorias e identifica pacientes automaticamente nos dois módulos.</div>
@@ -255,17 +255,11 @@ footer span{color:var(--gold)}
 
   <!-- ═══ PIX ═══ -->
   <div class="secao" id="sec-pix">
-    <input type="file" id="fileMov" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('mov',this)">
+
     <input type="file" id="fileOFX" accept=".ofx,.csv,.xlsx,.xls" style="display:none" onchange="carregarArq('ofx',this)">
 
     <div class="upload-grid dois">
-      <div class="upload-card" id="cardMov" style="border-style:dashed;opacity:0.6;cursor:default">
-        <div class="tag opc">Não necessário</div>
-        <div class="upload-icon">🏥</div>
-        <div class="upload-label">Movimentação (Feegow)</div>
-        <div class="upload-hint">Os PIX vêm do <strong>Contas a Receber</strong> acima — não é necessário subir a Movimentação.</div>
-        <div class="upload-st" id="stMov" style="display:none"></div>
-      </div>
+
       <div class="upload-card" id="cardOFX" onclick="abrirInput('fileOFX')">
         <div class="tag opc">C6 Bank — Opcional</div>
         <div class="upload-icon">🏦</div>
@@ -885,9 +879,9 @@ function _analisarPix() {
   var crRows = dados['cr'] || [];
   var c6Rows = dados['ofx'] || [];
 
-  // Extrair PIX do Contas a Receber
-  // A forma de pagamento contém "PIX - R$XXX em YYYY-MM-DD"
-  var grupFeegow = {};
+  // Extrair cada PIX individual do Contas a Receber (sem agrupar)
+  // Cada linha do CR pode ter múltiplos PIX na Forma de Pagamento
+  var pixList = []; // lista de {data, pac, valor, proc, prof}
   crRows.forEach(function(r) {
     if (String(r['Conta']||'').trim() === 'Conta') return;
     if (String(r['Situação']||'').trim() === 'Situação') return;
@@ -896,19 +890,23 @@ function _analisarPix() {
     var proc   = String(r['Procedimento']||'').trim();
     var prof   = String(r['Profissional Solicitante']||'').trim();
 
-    // Extrair cada pagamento PIX da forma de pagamento
-    var rgx = /(\d+)x PIX - R\$([\.\d,]+) em (\d{4}-\d{2}-\d{2})/g;
+    var rgx = /\d+x PIX - R\$([\.\d,]+) em (\d{4}-\d{2}-\d{2})/g;
     var m;
     while ((m = rgx.exec(fmtPag)) !== null) {
-      var parcelas = parseInt(m[1]) || 1;
-      var valTotal = num(m[2].replace(',','.'));
-      var dtRaw    = m[3]; // yyyy-mm-dd
-      var data     = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
-      var chave    = data+'|'+normNome(pac);
-      if (!grupFeegow[chave]) grupFeegow[chave]={data:data,pac:pac,valor:0,linhas:[]};
-      grupFeegow[chave].valor += valTotal;
-      grupFeegow[chave].linhas.push({prof:prof, val:valTotal, proc:proc});
+      var val   = num(m[1].replace(',','.'));
+      var dtRaw = m[2];
+      var data  = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
+      pixList.push({data:data, pac:pac, valor:val, proc:proc, prof:prof});
     }
+  });
+
+  // Agrupar por data+pac (mesmo paciente no mesmo dia = uma linha)
+  var grupFeegow = {};
+  pixList.forEach(function(p) {
+    var chave = p.data+'|'+normNome(p.pac);
+    if (!grupFeegow[chave]) grupFeegow[chave]={data:p.data,pac:p.pac,valor:0,linhas:[]};
+    grupFeegow[chave].valor += p.valor;
+    grupFeegow[chave].linhas.push({prof:p.prof, val:p.valor, proc:p.proc});
   });
 
   var fgList = Object.values(grupFeegow).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
