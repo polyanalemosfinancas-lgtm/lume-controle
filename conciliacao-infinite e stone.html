@@ -340,13 +340,16 @@ function fmtData(v) {
   // yyyy-mm-dd
   var m2 = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
   if (m2) return m2[3]+'/'+m2[2]+'/'+m2[1];
-  // mm/dd/yyyy (formato americano do Excel)
+  // d/m/yyyy ou m/d/yyyy — assumir dd/mm/yyyy (padrão brasileiro)
   var m3 = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
   if (m3) {
-    var mes=parseInt(m3[1]), dia=parseInt(m3[2]);
-    // Se mes > 12 provavelmente está invertido
-    if (mes > 12) return ('0'+dia).slice(-2)+'/'+('0'+mes).slice(-2)+'/'+m3[3];
-    return ('0'+m3[1]).slice(-2)+'/'+('0'+m3[2]).slice(-2)+'/'+m3[3];
+    var p1=parseInt(m3[1]), p2=parseInt(m3[2]);
+    // Se p1 > 12 certamente é dia — formato dd/mm/yyyy
+    if (p1 > 12) return ('0'+p1).slice(-2)+'/'+('0'+p2).slice(-2)+'/'+m3[3];
+    // Se p2 > 12 certamente é dia — formato mm/dd/yyyy invertido
+    if (p2 > 12) return ('0'+p2).slice(-2)+'/'+('0'+p1).slice(-2)+'/'+m3[3];
+    // Ambíguo: assumir dd/mm (padrão BR)
+    return ('0'+p1).slice(-2)+'/'+('0'+p2).slice(-2)+'/'+m3[3];
   }
   return s.substring(0,10);
 }
@@ -460,7 +463,7 @@ function carregarArq(tipo, input) {
 function parseC6Excel(wb) {
   var sheet = wb.Sheets[wb.SheetNames[0]];
   // Ler sem converter datas para preservar formato original
-  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:false});
+  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:true, cellDates:true});
   var result = [];
   // Encontrar linha de header dinamicamente
   var hdrIdx = -1;
