@@ -591,14 +591,38 @@ function _analisarCartao() {
     if (id) idxStone[id] = r;
   });
 
-  // Contas a Receber — indexar por nome normalizado para busca de procedimento/categoria
+  // Contas a Receber — indexar por nome E por valor+data (para cruzar com cartão e PIX)
   var crRows = dados['cr'] || [];
-  var idxCR = {};
+  var idxCR     = {}; // por nome normalizado
+  var idxCRValDt= {}; // por valor+data para match preciso
+
   crRows.forEach(function(r) {
-    var conta = String(r['Conta']||'').toLowerCase().replace(/[^a-záàãâéêíóõôúç ]/gi,'').trim().substring(0,20);
-    if (conta && conta !== 'conta') {
+    if (String(r['Conta']||'').trim() === 'Conta') return;
+
+    // Índice por nome
+    var conta = String(r['Conta']||'').toLowerCase()
+                  .replace(/[^a-záàãâéêíóõôúç ]/gi,'').trim().substring(0,20);
+    if (conta) {
       if (!idxCR[conta]) idxCR[conta] = [];
       idxCR[conta].push(r);
+    }
+
+    // Índice por valor+data extraído da Forma de Pagamento
+    // Ex: "3x Cartão de Crédito - R$3610 em 2026-09-03"
+    var fmtPag = String(r['Forma de Pagamento (Detalhado)']||'');
+    var mFmt = fmtPag.match(/R\$([\.\d]+)\s+em\s+(\d{4}-\d{2}-\d{2})/g);
+    if (mFmt) {
+      mFmt.forEach(function(m) {
+        var parts = m.match(/R\$([\.\d]+)\s+em\s+(\d{4}-\d{2}-\d{2})/);
+        if (parts) {
+          var val  = parseFloat(parts[1].replace(',','.'));
+          var dtRaw= parts[2]; // yyyy-mm-dd
+          var dt   = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
+          var key  = Math.round(val*100)+'|'+dt;
+          if (!idxCRValDt[key]) idxCRValDt[key] = [];
+          idxCRValDt[key].push(r);
+        }
+      });
     }
   });
 
@@ -700,15 +724,32 @@ function _analisarCartao() {
     }
     var taxa = taxaInfVal > 0 ? taxaInfVal : Math.round(fg.valTotal * num(fg.taxaPct||0) / 100 * 100) / 100;
 
-    // ── Buscar procedimento no Contas a Receber para categoria ──
+    // ── Buscar procedimento no Contas a Receber ─────────────────
     var procedimentoCR = '';
-    var pacNorm = fg.pac.toLowerCase().replace(/[^a-záàãâéêíóõôúç ]/gi,'').substring(0,15);
-    for (var crKey in idxCR) {
-      if (crKey.indexOf(pacNorm) >= 0 || pacNorm.indexOf(crKey.substring(0,12)) >= 0) {
-        var crMatch = idxCR[crKey];
-        crMatch.forEach(function(cr){ if (cr['Procedimento']) procedimentoCR += ' '+cr['Procedimento']; });
-        break;
+    var crEncontrado   = null;
+
+    // 1. Buscar por valor+data (mais preciso)
+    var crKey1 = Math.round(fg.valTotal*100)+'|'+fg.dataComp;
+    if (idxCRValDt[crKey1] && idxCRValDt[crKey1].length > 0) {
+      crEncontrado = idxCRValDt[crKey1][0];
+    }
+
+    // 2. Buscar por nome normalizado (fallback)
+    if (!crEncontrado) {
+      var pacNorm = fg.pac.toLowerCase().replace(/[^a-záàãâéêíóõôúç ]/gi,'').substring(0,15);
+      for (var crKey in idxCR) {
+        if (crKey.indexOf(pacNorm) >= 0 || pacNorm.indexOf(crKey.substring(0,12)) >= 0) {
+          crEncontrado = idxCR[crKey][0]; break;
+        }
       }
+    }
+
+    if (crEncontrado) {
+      var proc = String(crEncontrado['Procedimento']||'').trim();
+      var pack = String(crEncontrado['Pacote']||'').trim();
+      procedimentoCR = proc + ' ' + pack;
+      // Se nome do paciente está vazio (A Identificar), preencher do CR
+      if (!fg.pac || fg.pac === '—') fg.pac = String(crEncontrado['Conta']||'').trim();
     }
 
     var st;
