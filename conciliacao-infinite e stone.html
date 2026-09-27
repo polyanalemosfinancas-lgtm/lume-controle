@@ -149,6 +149,23 @@ footer span{color:var(--gold)}
 </header>
 
 <main>
+  <!-- ── CONTAS A RECEBER COMPARTILHADO ───────────────────────── -->
+  <div style="max-width:960px;margin:0 auto 16px auto;padding:0 20px">
+    <input type="file" id="fileCRshared" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cr',this)">
+    <div class="upload-card" id="cardCRshared" onclick="abrirInput('fileCRshared')"
+         style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px">
+      <div style="font-size:28px">📋</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+          <span class="tag opc" style="position:static;transform:none">Opcional — usado em Cartão e PIX</span>
+        </div>
+        <div class="upload-label" style="margin:0 0 2px 0">Contas a Receber (Feegow)</div>
+        <div class="upload-hint" style="margin:0">Melhora categorias e identifica pacientes automaticamente nos dois módulos.</div>
+      </div>
+      <div class="upload-st" id="stCRshared" style="white-space:nowrap">✓ Carregado</div>
+    </div>
+  </div>
+
   <div class="modulos">
     <div class="modulo ativo" id="mod-cartao" onclick="trocarModulo('cartao')">
       <div class="modulo-icon">💳</div>
@@ -165,7 +182,7 @@ footer span{color:var(--gold)}
   <!-- ═══ CARTÃO ═══ -->
   <div class="secao ativa" id="sec-cartao">
     <input type="file" id="fileCC"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cc',this)">
-    <input type="file" id="fileCR"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cr',this)">
+    <!-- fileCR movido para área compartilhada -->
     <input type="file" id="fileInf"   accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('inf',this)">
     <input type="file" id="fileStone" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('stone',this)">
 
@@ -177,13 +194,7 @@ footer span{color:var(--gold)}
         <div class="upload-hint">Relatório CartaoCredito exportado do Feegow (.xlsx)</div>
         <div class="upload-st" id="stCC">✓ Carregado</div>
       </div>
-      <div class="upload-card" id="cardCR" onclick="abrirInput('fileCR')">
-        <div class="tag opc">Contas a Receber — Opcional</div>
-        <div class="upload-icon">📋</div>
-        <div class="upload-label">Contas a Receber (Feegow)</div>
-        <div class="upload-hint">Melhora a categoria automaticamente (Consulta, Medicamento, etc.)</div>
-        <div class="upload-st" id="stCR">✓ Carregado</div>
-      </div>
+      <!-- CR movido para área compartilhada acima -->
     </div>
     <div class="upload-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
       <div class="upload-card" id="cardInf" onclick="abrirInput('fileInf')">
@@ -404,8 +415,8 @@ function badgeHtml(st) {
 }
 
 // ── Carregar arquivos ──────────────────────────────────────────────────────────
-var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',stone:'cardStone',cr:'cardCR'};
-var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',stone:'stStone',cr:'stCR'};
+var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',stone:'cardStone',cr:'cardCRshared'};
+var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',stone:'stStone',cr:'stCRshared'};
 
 function carregarArq(tipo, input) {
   var file = input.files[0]; if (!file) return;
@@ -1334,7 +1345,13 @@ function exportarPixMD() {
       if (r.linhas && r.linhas.length > 0) {
         r.linhas.forEach(function(l) {
           var obs = (r.st==='perr' ? 'NÃO LOCALIZADO NO C6 | ' : '') + 'Prof: '+(l.prof||'—') + (r.st==='psd'?' | Sem confronto C6':'');
-          var cat = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : categoriaPIX(l.prof, r.pac, r.nomeC6);
+          // Tentar pegar procedimento do CR para categoria mais precisa
+          var procCR_pix = '';
+          var crKeyPix = Math.round(l.val*100)+'|'+r.data;
+          if (idxCRValDt && idxCRValDt[crKeyPix] && idxCRValDt[crKeyPix][0]) {
+            procCR_pix = String(idxCRValDt[crKeyPix][0]['Procedimento']||'');
+          }
+          var cat = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:categoriaCartao(procCR_pix||l.prof, r.pac), sub:procCR_pix?'':'Plano consultas'};
           var pacNome = r.pac || 'A Identificar';
           dPix.push([r.data, l.val, pacNome, 'C6 Bank','','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
         });
