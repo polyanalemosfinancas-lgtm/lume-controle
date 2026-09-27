@@ -259,12 +259,12 @@ footer span{color:var(--gold)}
     <input type="file" id="fileOFX" accept=".ofx,.csv,.xlsx,.xls" style="display:none" onchange="carregarArq('ofx',this)">
 
     <div class="upload-grid dois">
-      <div class="upload-card" id="cardMov" onclick="abrirInput('fileMov')">
-        <div class="tag">Feegow — Obrigatório</div>
+      <div class="upload-card" id="cardMov" style="border-style:dashed;opacity:0.6;cursor:default">
+        <div class="tag opc">Não necessário</div>
         <div class="upload-icon">🏥</div>
         <div class="upload-label">Movimentação (Feegow)</div>
-        <div class="upload-hint">Relatório de Movimentação exportado do Feegow. PIX será filtrado automaticamente.</div>
-        <div class="upload-st" id="stMov">✓ Carregado</div>
+        <div class="upload-hint">Os PIX vêm do <strong>Contas a Receber</strong> acima — não é necessário subir a Movimentação.</div>
+        <div class="upload-st" id="stMov" style="display:none"></div>
       </div>
       <div class="upload-card" id="cardOFX" onclick="abrirInput('fileOFX')">
         <div class="tag opc">C6 Bank — Opcional</div>
@@ -559,7 +559,7 @@ function atualizarCard(tipo, nome, total) {
 
 function checarBotoes() {
   document.getElementById('btnAnalisarCC').disabled  = !(dados['cc'] && (dados['inf'] || dados['stone']));
-  document.getElementById('btnAnalisarPix').disabled = !dados['mov'];
+  document.getElementById('btnAnalisarPix').disabled = !dados['cr'];
 }
 
 // ── ANÁLISE CARTÃO ─────────────────────────────────────────────────────────────
@@ -882,21 +882,33 @@ function analisarPix() {
 }
 
 function _analisarPix() {
-  var movRows = dados['mov'].filter(function(r){
-    var f=String(r['Forma de Pagamento (Detalhado)']||'').trim();
-    return f==='PIX' || f.toLowerCase()==='pix';
-  });
-  var c6Rows = dados['ofx'] || []; // Opcional — se não tiver, sem confronto
+  var crRows = dados['cr'] || [];
+  var c6Rows = dados['ofx'] || [];
 
-  // Agrupar Feegow PIX por data+nome
+  // Extrair PIX do Contas a Receber
+  // A forma de pagamento contém "PIX - R$XXX em YYYY-MM-DD"
   var grupFeegow = {};
-  movRows.forEach(function(r) {
-    var data = fmtData(String(r['Data']||''));
-    var pac  = String(r['Pagador']||'').trim();
-    var chave = data+'|'+normNome(pac);
-    if (!grupFeegow[chave]) grupFeegow[chave]={data:data,pac:pac,valor:0,linhas:[]};
-    grupFeegow[chave].valor += num(r['Valor']);
-    grupFeegow[chave].linhas.push({prof:String(r['Profissional']||'').trim(), val:num(r['Valor'])});
+  crRows.forEach(function(r) {
+    if (String(r['Conta']||'').trim() === 'Conta') return;
+    if (String(r['Situação']||'').trim() === 'Situação') return;
+    var fmtPag = String(r['Forma de Pagamento (Detalhado)']||'');
+    var pac    = String(r['Conta']||'').trim();
+    var proc   = String(r['Procedimento']||'').trim();
+    var prof   = String(r['Profissional Solicitante']||'').trim();
+
+    // Extrair cada pagamento PIX da forma de pagamento
+    var rgx = /(\d+)x PIX - R\$([\.\d,]+) em (\d{4}-\d{2}-\d{2})/g;
+    var m;
+    while ((m = rgx.exec(fmtPag)) !== null) {
+      var parcelas = parseInt(m[1]) || 1;
+      var valTotal = num(m[2].replace(',','.'));
+      var dtRaw    = m[3]; // yyyy-mm-dd
+      var data     = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
+      var chave    = data+'|'+normNome(pac);
+      if (!grupFeegow[chave]) grupFeegow[chave]={data:data,pac:pac,valor:0,linhas:[]};
+      grupFeegow[chave].valor += valTotal;
+      grupFeegow[chave].linhas.push({prof:prof, val:valTotal, proc:proc});
+    }
   });
 
   var fgList = Object.values(grupFeegow).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
