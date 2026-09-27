@@ -453,26 +453,39 @@ function carregarArq(tipo, input) {
 }
 
 function parseC6Excel(wb) {
-  // Extrato C6 em Excel: header na linha 8 (índice 8), dados a partir da linha 9
   var sheet = wb.Sheets[wb.SheetNames[0]];
-  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:''});
+  // Ler sem converter datas para preservar formato original
+  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:false});
   var result = [];
-  // Encontrar linha de header
+  // Encontrar linha de header dinamicamente
   var hdrIdx = -1;
   for (var i=0;i<rows.length;i++) {
-    if (String(rows[i][0]||'').indexOf('Data') >= 0 && String(rows[i][4]||'').indexOf('Entrada') >= 0) {
+    var c0 = String(rows[i][0]||'').trim();
+    var c4 = String(rows[i][4]||'').trim();
+    if ((c0.indexOf('Data') >= 0 || c0.indexOf('data') >= 0) &&
+        (c4.indexOf('Entrada') >= 0 || c4.indexOf('entrada') >= 0)) {
       hdrIdx = i; break;
     }
   }
   if (hdrIdx < 0) hdrIdx = 8;
   for (var i=hdrIdx+1;i<rows.length;i++) {
     var r = rows[i];
-    var data = r[0] ? fmtData(String(r[0])) : '';
+    if (!r[0] && !r[2]) continue;
+    // Data — pode vir como string dd/mm/yyyy ou número serial do Excel
+    var dataRaw = String(r[0]||'').trim();
+    var data = fmtData(dataRaw);
+    // Se não conseguiu formatar, tentar como número serial do Excel
+    if (!data && !isNaN(parseFloat(dataRaw))) {
+      var d = new Date(Math.round((parseFloat(dataRaw) - 25569) * 86400 * 1000));
+      data = ('0'+d.getUTCDate()).slice(-2)+'/'+('0'+(d.getUTCMonth()+1)).slice(-2)+'/'+d.getUTCFullYear();
+    }
     var titulo = String(r[2]||'').trim();
     var desc   = String(r[3]||'').trim();
-    var entrada= parseFloat(String(r[4]||'0').replace(',','.')) || 0;
-    var saida  = parseFloat(String(r[5]||'0').replace(',','.')) || 0;
-    if (!data && !titulo) continue;
+    // Entrada pode ser número ou string com vírgula
+    var entRaw = String(r[4]||'0').trim().replace(/\./g,'').replace(',','.');
+    var entrada = parseFloat(entRaw) || 0;
+    var saiRaw  = String(r[5]||'0').trim().replace(/\./g,'').replace(',','.');
+    var saida   = parseFloat(saiRaw) || 0;
     if (entrada > 0) {
       result.push({data:data, valor:entrada, memo:titulo||desc, _xlsx:true});
     }
