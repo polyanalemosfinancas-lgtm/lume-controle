@@ -310,6 +310,8 @@ footer span{color:var(--gold)}
 
 <script>
 var dados = {}, resCC = [], resPix = [];
+var grupFeegow = {}, idxInf = {}, idxStone = {}, idxCR = {}, idxCRValDt = {};
+var stoneRows  = [], infRows = [];
 var filtroCC = 'todos', filtroPix = 'todos';
 var HDR_MD = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
 
@@ -570,21 +572,21 @@ function analisarCartao() {
 
 function _analisarCartao() {
   var ccRows = dados['cc'].filter(function(r){ return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador'; });
-  var infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+  infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
 
   // Indexar Infinite
-  var idxInf = {};
+  idxInf = {};
   infRows.forEach(function(r) {
     var id = normAuthCmp(String(r['Identificador']||'').trim());
     if (id) idxInf[id] = r;
   });
 
   // Stone
-  var stoneRows = (dados['stone']||[]).filter(function(r){
+  stoneRows = (dados['stone']||[]).filter(function(r){
     var status = r['ULTIMO STATUS'] || r['ÚLTIMO STATUS'] || '';
     return String(status).trim().toLowerCase() === 'aprovada';
   });
-  var idxStone = {};
+  idxStone = {};
   var stoneUsados = new Set(); // rastrear Stone já usados no confronto
   stoneRows.forEach(function(r) {
     // Tentar coluna com e sem BOM/acento
@@ -601,8 +603,8 @@ function _analisarCartao() {
 
   // Contas a Receber — indexar por nome E por valor+data (para cruzar com cartão e PIX)
   var crRows = dados['cr'] || [];
-  var idxCR     = {}; // por nome normalizado
-  var idxCRValDt= {}; // por valor+data para match preciso
+  idxCR     = {}; // por nome normalizado
+  idxCRValDt= {}; // por valor+data para match preciso
 
   crRows.forEach(function(r) {
     if (String(r['Conta']||'').trim() === 'Conta') return;
@@ -635,7 +637,7 @@ function _analisarCartao() {
   });
 
   // Feegow — só parcela 1, agrupar por auth+data somando múltiplos procedimentos
-  var grupFeegow = {};
+  grupFeegow = {};
   ccRows.forEach(function(r) {
     var parc = String(r['Parcela']||'').trim();
     if (!parc.startsWith('1 /') && !parc.startsWith('1/')) return;
@@ -904,7 +906,7 @@ function _analisarPix() {
   });
 
   // Agrupar por data+pac (mesmo paciente no mesmo dia = uma linha)
-  var grupFeegow = {};
+  grupFeegow = {};
   pixList.forEach(function(p) {
     var chave = p.data+'|'+normNome(p.pac);
     if (!grupFeegow[chave]) grupFeegow[chave]={data:p.data,pac:p.pac,valor:0,linhas:[]};
@@ -1018,10 +1020,10 @@ function exportarMeuDinheiro() {
   var ccRows = dados['cc'].filter(function(r){
     return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador';
   });
-  var infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+  infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
 
   // Indexar Infinite — taxa e parcelas
-  var idxInf = {};
+  idxInf = {};
   infRows.forEach(function(r){
     var id = normAuth(String(r['Identificador']||'').trim());
     if (id) idxInf[id] = r;
@@ -1033,7 +1035,7 @@ function exportarMeuDinheiro() {
 
   // ── 1. FEEGOW × INFINITE ──────────────────────────────────
   // Agrupar Feegow por auth para pegar paciente, data e valor total
-  var grupFeegow = {};
+  grupFeegow = {};
   ccRows.forEach(function(r) {
     var auth  = normAuthCmp(String(r['Autorização']||'').trim());
     var trans = normAuthCmp(String(r['Transação']||'').trim());
