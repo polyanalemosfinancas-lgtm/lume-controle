@@ -926,12 +926,37 @@ function _analisarPix() {
   resPix = [];
   fgList.forEach(function(fg) {
     var enc = null;
-    // Buscar por valor exato + data exata
+    var pacNorm = normNome(fg.pac); // ex: PAULABOTEL
+
+    // 1. Match por nome + valor + data exata (mais preciso)
     for (var i=0;i<c6Rows.length;i++) {
       if (c6Usado[i]) continue;
-      if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02) { enc=i; break; }
+      var memoNorm = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
+      if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02 &&
+          (memoNorm.indexOf(pacNorm.substring(0,8))>=0 || pacNorm.indexOf(memoNorm.substring(0,8))>=0)) {
+        enc=i; break;
+      }
     }
-    // Buscar por valor exato ± 1 dia
+    // 2. Match por valor + data exata (sem nome)
+    if (enc===null) {
+      for (var i=0;i<c6Rows.length;i++) {
+        if (c6Usado[i]) continue;
+        if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02) { enc=i; break; }
+      }
+    }
+    // 3. Match por nome + valor ± 1 dia
+    if (enc===null) {
+      for (var i=0;i<c6Rows.length;i++) {
+        if (c6Usado[i]) continue;
+        var memoNorm2 = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
+        if (Math.abs(c6Rows[i].valor-fg.valor)<0.02 &&
+            Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000 &&
+            (memoNorm2.indexOf(pacNorm.substring(0,8))>=0 || pacNorm.indexOf(memoNorm2.substring(0,8))>=0)) {
+          enc=i; break;
+        }
+      }
+    }
+    // 4. Match por valor ± 1 dia (sem nome — último recurso)
     if (enc===null) {
       for (var i=0;i<c6Rows.length;i++) {
         if (c6Usado[i]) continue;
