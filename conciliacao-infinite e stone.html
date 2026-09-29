@@ -572,7 +572,7 @@ function analisarCartao() {
 
 function _analisarCartao() {
   var ccRows = dados['cc'].filter(function(r){ return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador'; });
-  infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+  infRows = (dados['inf']||[]).filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
 
   // Indexar Infinite
   idxInf = {};
@@ -1012,16 +1012,16 @@ function renderPix() {
 // ── EXPORTAR MEU DINHEIRO — CARTÃO ────────────────────────────────────────────
 function exportarMeuDinheiro() {
   if (!resCC.length) { alert('Faça a análise primeiro.'); return; }
-  console.log('[MD Export] resCC:', resCC.length, 'dados.cc:', (dados['cc']||[]).length, 'dados.inf:', (dados['inf']||[]).length, 'dados.stone:', (dados['stone']||[]).length);
 
   var wb = XLSX.utils.book_new();
   var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
 
   // Recarregar parcelas do Feegow
+  if (!dados['cc']) { alert('Carregue o arquivo Feegow CartaoCredito primeiro.'); return; }
   var ccRows = dados['cc'].filter(function(r){
     return String(r['Pagador']||'').trim() && String(r['Pagador']||'').trim() !== 'Pagador';
   });
-  infRows = dados['inf'].filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
+  infRows = (dados['inf']||[]).filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
 
   // Indexar Infinite — taxa e parcelas
   idxInf = {};
@@ -1275,7 +1275,6 @@ function exportarMeuDinheiro() {
   // Também exportar completo
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Completo');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias');
-  console.log('[MD Export] dMD:', dMD.length, 'dInfinite:', dInfinite.length, 'dStone:', dStone.length, 'dPend:', dPend.length);
   XLSX.writeFile(wb, 'Lume_MeuDinheiro_Cartao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
   var nInf = dInfinite.length-1, nSt = dStone.length-1;
   alert('✓ Exportado! Infinite: '+nInf+' · Stone: '+nSt+' · Pendências: '+(dPend.length-1));
