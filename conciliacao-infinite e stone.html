@@ -1092,15 +1092,19 @@ function exportarMeuDinheiro() {
       if (st.catEdit) fg.catEdit = st.catEdit;
     }
 
-    // 🔴 Feegow sem Infinite → só pendência
+    // 🔴 Feegow sem Cartão → só pendência (se não foi editado para OK pelo usuário)
     if (!st || st.st === 'err') {
-      if (!jaProc[chave+'_pend']) {
-        jaProc[chave+'_pend'] = true;
-        dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), '—',
-                    '🔴 No Feegow, não no Cartão',
-                    'Verificar se a venda foi processada na maquininha']);
+      // Se usuário editou para OK via botão Editar, não vai para pendência
+      if (st && st.st !== 'err') { /* editado — continua processamento */ }
+      else {
+        if (!jaProc[chave+'_pend']) {
+          jaProc[chave+'_pend'] = true;
+          dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), '—',
+                      '🔴 No Feegow, não no Cartão',
+                      'Verificar se a venda foi processada na maquininha']);
+        }
+        return;
       }
-      return;
     }
 
     // Buscar dados do Infinite
@@ -1126,11 +1130,16 @@ function exportarMeuDinheiro() {
     }
     var forma       = fg.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
 
-    // Divergência → pendência
+    // Divergência → pendência (só se o usuário não editou para OK)
     if (st.st === 'div' && !jaProc[chave+'_div']) {
       jaProc[chave+'_div'] = true;
-      dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), moeda(valInfTotal),
-                  '🟠 Divergência de valor', 'Verificar qual valor está correto']);
+      // Verificar se usuário editou o status para OK
+      var stEditado = null;
+      for (var ix=0;ix<resCC.length;ix++){ if(resCC[ix].auth===chave && resCC[ix].data===fg.dataComp){stEditado=resCC[ix];break;} }
+      if (!stEditado || stEditado.st === 'div') {
+        dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), moeda(valInfTotal),
+                    '🟠 Divergência de valor', 'Verificar qual valor está correto']);
+      }
     }
 
     // ★ Gerar UMA LINHA POR PARCELA baseado no Infinite
@@ -1252,12 +1261,82 @@ function exportarMeuDinheiro() {
       }
     }
 
-    // Pendência
+    // Pendência — só se não foi identificado pelo usuário
     if (!jaProc[id+'_warn']) {
       jaProc[id+'_warn'] = true;
-      dPend.push([dataVenda, 'A Identificar', band, id, '—', moeda(valBruto),
+      // Checar se o usuário editou e identificou o paciente
+      var stInfW = null;
+      for (var iw=0;iw<resCC.length;iw++){ if(resCC[iw].auth===id){stInfW=resCC[iw];break;} }
+      var pacInfW = (stInfW && stInfW.pac && stInfW.pac !== '—') ? stInfW.pac : 'A Identificar';
+      // Se usuário mudou status para OK, não vai para pendência
+      if (!stInfW || stInfW.st === 'warn') {
+        dPend.push([dataVenda, pacInfW, band, id, '—', moeda(valBruto),
+                    '🟡 No Cartão, não no Feegow',
+                    pacInfW === 'A Identificar' ? 'Identificar paciente e lançar no Feegow' : 'Lançar no Feegow']);
+      }
+    }
+  });
+
+  // ── 3. STONE SEM FEEGOW → Meu Dinheiro + Pendência ─────────
+  resCC.forEach(function(r) {
+    if (r.st !== 'warn' || r.origem !== 'Stone') return;
+    var id = r.auth;
+    if (jaProc[id+'_stone_warn']) return;
+    jaProc[id+'_stone_warn'] = true;
+
+    // Buscar dados da Stone
+    var srW = idxStone[normAuthCmp(id)] || null;
+    if (!srW) return;
+
+    var dataVenda = r.data;
+    var valBruto  = r.valI || 0;
+    var valTaxa   = r.taxa || 0;
+    var nParcs    = r.totParc || 1;
+    var forma     = r.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+
+    // Buscar edição do usuário
+    var stW = r;
+    var pacW   = (stW.pac && stW.pac !== '—') ? stW.pac : 'A Identificar';
+    var catW   = stW.catEdit || 'Identificar';
+
+    for (var p = 1; p <= nParcs; p++) {
+      var valP = Math.round(valBruto / nParcs * 100) / 100;
+      var taxP = Math.round(valTaxa  / nParcs * 100) / 100;
+      // Ajuste última parcela
+      if (p === nParcs) {
+        valP = Math.round((valBruto - Math.round(valP*(nParcs-1)*100)/100)*100)/100;
+        taxP = Math.round((valTaxa  - Math.round(taxP*(nParcs-1)*100)/100)*100)/100;
+      }
+      var venc = dataVenda;
+      try {
+        var pts = dataVenda.split('/');
+        var dtW = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
+        if (forma === 'Débito') {
+          dtW.setDate(dtW.getDate()+1);
+          var ds=dtW.getDay(); if(ds===6)dtW.setDate(dtW.getDate()+2); if(ds===0)dtW.setDate(dtW.getDate()+1);
+        } else {
+          dtW.setDate(dtW.getDate() + 37 + 30*(p-1));
+        }
+        venc = dtW.toLocaleDateString('pt-BR');
+      } catch(e){}
+
+      var parcStr = nParcs > 1 ? ' | Parcela '+p+'/'+nParcs : '';
+      var obsW = (stW.obs||'') || ('A IDENTIFICAR | Auth: '+id+parcStr);
+      // C/R
+      dMD.push([venc, valP, pacW, 'Stone','','', catW,'', pacW,'','', forma, id, obsW, dataVenda,'']);
+      // C/P taxa
+      if (taxP > 0) {
+        dMD.push([venc, -taxP, 'Taxa Stone - '+pacW, 'Stone','','',
+                  '06 - Tarifa Bancária','Taxa de Cartão','Stone','','','', id,
+                  'Taxa Stone | '+obsW, dataVenda,'']);
+      }
+    }
+    // Pendência — só se não foi identificado pelo usuário
+    var pacStP = (r.pac && r.pac !== '—') ? r.pac : 'A Identificar';
+    if (r.st === 'warn') { // se usuário editou para OK, não vai para pendência
+      dPend.push([dataVenda, pacStP, r.band, id, '—', moeda(valBruto),
                   '🟡 No Cartão, não no Feegow',
-                  'Identificar paciente e lançar no Feegow']);
+                  pacStP === 'A Identificar' ? 'Identificar paciente e lançar no Feegow' : 'Lançar no Feegow']);
     }
   });
 
