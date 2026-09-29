@@ -1005,6 +1005,66 @@ function _analisarPix() {
     }
   });
 
+  // ── Confronto agrupado: paciente pagou vários PIX num único TED/PIX ──────────
+  // Ex: Tércia tem R$5100+R$1200+R$700 no CR mas pagou R$7000 num único PIX no C6
+  var semMatch = fgList.filter(function(fg){ return !c6Usado['fg_'+fgList.indexOf(fg)]; });
+  // Agrupar sem-match por nome+data
+  var grupSemMatch = {};
+  semMatch.forEach(function(fg, idx) {
+    var key = normNome(fg.pac)+'|'+fg.data;
+    if (!grupSemMatch[key]) grupSemMatch[key]={pac:fg.pac,data:fg.data,total:0,itens:[]};
+    grupSemMatch[key].total += fg.valor;
+    grupSemMatch[key].itens.push(fg);
+  });
+
+  Object.values(grupSemMatch).forEach(function(grp) {
+    var pacNormG = normNome(grp.pac);
+    // Buscar no C6 pelo total do grupo
+    for (var i=0;i<c6Rows.length;i++) {
+      if (c6Usado[i]) continue;
+      var memoNG = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
+      var valDiff = Math.abs(c6Rows[i].valor - grp.total) / Math.max(grp.total,1);
+      var nomeOk  = memoNG.indexOf(pacNormG.substring(0,6))>=0 || pacNormG.indexOf(memoNG.substring(0,6))>=0;
+      var dataOk  = Math.abs(dtMs(c6Rows[i].data)-dtMs(grp.data)) <= 86400000;
+      if (dataOk && nomeOk && valDiff <= 0.02) {
+        // Match exato do total — marcar todos os itens como OK
+        c6Usado[i] = true;
+        var nomeC6G = c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+        grp.itens.forEach(function(fg) {
+          // Encontrar e atualizar o resPix correspondente
+          for (var j=0;j<resPix.length;j++) {
+            if (resPix[j].pac===fg.pac && resPix[j].data===fg.data &&
+                Math.abs(resPix[j].valF-fg.valor)<0.02 && resPix[j].st==='perr') {
+              resPix[j].st     = 'pok';
+              resPix[j].nomeC6 = nomeC6G;
+              resPix[j].valC6  = fg.valor; // proporção do total
+              resPix[j].obs    = '✓ PIX agrupado: '+grp.itens.length+' lançamentos somam '+moeda(grp.total);
+              break;
+            }
+          }
+        });
+        break;
+      } else if (dataOk && nomeOk && valDiff <= 0.20) {
+        // Divergência no total agrupado
+        c6Usado[i] = true;
+        var nomeC6G2 = c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+        grp.itens.forEach(function(fg) {
+          for (var j=0;j<resPix.length;j++) {
+            if (resPix[j].pac===fg.pac && resPix[j].data===fg.data &&
+                Math.abs(resPix[j].valF-fg.valor)<0.02 && resPix[j].st==='perr') {
+              resPix[j].st     = 'pdiv';
+              resPix[j].nomeC6 = nomeC6G2;
+              resPix[j].valC6  = c6Rows[i].valor;
+              resPix[j].obs    = '🟠 Divergência agrupada: Feegow '+moeda(grp.total)+' | C6 '+moeda(c6Rows[i].valor);
+              break;
+            }
+          }
+        });
+        break;
+      }
+    }
+  });
+
   // C6 sem Feegow
   if (c6Rows.length > 0) c6Rows.forEach(function(c6,i) {
     if (c6Usado[i]) return;
