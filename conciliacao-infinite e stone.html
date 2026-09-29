@@ -916,16 +916,17 @@ function _analisarPix() {
     }
   });
 
-  // Agrupar por data+pac (mesmo paciente no mesmo dia = uma linha)
-  grupFeegow = {};
+  // NÃO agrupar — confrontar cada PIX individualmente
+  // Exceto: mesmo paciente, mesmo valor, mesma data = deduplicar
+  var pixDedup = {};
   pixList.forEach(function(p) {
-    var chave = p.data+'|'+normNome(p.pac);
-    if (!grupFeegow[chave]) grupFeegow[chave]={data:p.data,pac:p.pac,valor:0,linhas:[]};
-    grupFeegow[chave].valor += p.valor;
-    grupFeegow[chave].linhas.push({prof:p.prof, val:p.valor, proc:p.proc});
+    var key = p.data+'|'+normNome(p.pac)+'|'+Math.round(p.valor*100);
+    if (!pixDedup[key]) {
+      pixDedup[key] = {data:p.data, pac:p.pac, valor:p.valor,
+                       linhas:[{prof:p.prof, val:p.valor, proc:p.proc}]};
+    }
   });
-
-  var fgList = Object.values(grupFeegow).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
+  var fgList = Object.values(pixDedup).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
   var c6Usado = {};
 
   resPix = [];
