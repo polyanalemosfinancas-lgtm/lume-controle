@@ -410,6 +410,7 @@ function badgeHtml(st) {
   if (st==='perr') return '<span class="badge b-err">🔴 No Feegow, não no C6</span>';
   if (st==='pwarn')return '<span class="badge b-warn">🟡 No C6, não no Feegow</span>';
   if (st==='psd')  return '<span class="badge b-ok">📋 Feegow — sem confronto C6</span>';
+  if (st==='pdiv') return '<span class="badge b-div">🟠 Divergência de valor</span>';
   return st;
 }
 
@@ -903,10 +904,14 @@ function _analisarPix() {
 
     var rgx = /\d+x PIX - R\$([\.\d,]+) em (\d{4}-\d{2}-\d{2})/g;
     var m;
+    var pixVistos = {}; // deduplicar PIX repetidos na mesma linha do CR
     while ((m = rgx.exec(fmtPag)) !== null) {
       var val   = num(m[1].replace(',','.'));
       var dtRaw = m[2];
       var data  = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
+      var pixKey = val + '|' + data;
+      if (pixVistos[pixKey]) continue; // pular duplicatas da mesma linha
+      pixVistos[pixKey] = true;
       pixList.push({data:data, pac:pac, valor:val, proc:proc, prof:prof});
     }
   });
@@ -925,7 +930,7 @@ function _analisarPix() {
 
   resPix = [];
   fgList.forEach(function(fg) {
-    var enc = null;
+    var enc = null; var encDiv = false;
     var pacNorm = normNome(fg.pac); // ex: PAULABOTEL
 
     // 1. Match por nome + valor + data exata (mais preciso)
@@ -963,13 +968,30 @@ function _analisarPix() {
         if (Math.abs(c6Rows[i].valor-fg.valor)<0.02 && Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000) { enc=i; break; }
       }
     }
+    // 5. Match por nome + valor aproximado (±15%) para capturar divergências de valor
+    if (enc===null) {
+      for (var i=0;i<c6Rows.length;i++) {
+        if (c6Usado[i]) continue;
+        var memoNorm5 = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
+        var valDiff   = Math.abs(c6Rows[i].valor - fg.valor) / Math.max(fg.valor, 1);
+        if (valDiff <= 0.20 && // até 20% de diferença
+            Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000 &&
+            (memoNorm5.indexOf(pacNorm.substring(0,6))>=0 || pacNorm.indexOf(memoNorm5.substring(0,6))>=0)) {
+          enc=i; encDiv=true; break; // marcar como divergência de valor
+        }
+      }
+    }
     if (enc !== null) {
       c6Usado[enc]=true;
       var nomeC6 = c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
       var qtd=fg.linhas.length;
+      var stPix = encDiv ? 'pdiv' : 'pok';
+      var obsPix = encDiv
+        ? '🟠 Divergência: Feegow '+moeda(fg.valor)+' | C6 '+moeda(c6Rows[enc].valor)
+        : (qtd>1?'✓ '+qtd+' lançamentos no Feegow somados = '+moeda(fg.valor):'✓ Confirmado no Feegow e no C6');
       resPix.push({data:fg.data,pac:fg.pac,nomeC6:nomeC6,valF:fg.valor,valC6:c6Rows[enc].valor,
-                   linhas:fg.linhas,st:'pok',
-                   obs:qtd>1?'✓ '+qtd+' lançamentos no Feegow somados = '+moeda(fg.valor):'✓ Confirmado no Feegow e no C6'});
+                   linhas:fg.linhas,st:stPix,
+                   obs:obsPix});
     } else if (c6Rows.length === 0) {
       // Sem extrato C6 — lançar direto sem confronto
       resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
@@ -1470,7 +1492,7 @@ function exportarPixMD() {
 
   // ── PIX ───────────────────────────────────────────────────
   resPix.forEach(function(r) {
-    if (r.st === 'pok' || r.st === 'perr' || r.st === 'psd') {
+    if (r.st === 'pok' || r.st === 'perr' || r.st === 'psd' || r.st === 'pdiv') {
       if (r.linhas && r.linhas.length > 0) {
         r.linhas.forEach(function(l) {
           var obs = (r.st==='perr' ? 'NÃO LOCALIZADO NO C6 | ' : '') + 'Prof: '+(l.prof||'—') + (r.st==='psd'?' | Sem confronto C6':'');
@@ -1503,6 +1525,10 @@ function exportarPixMD() {
     if (r.st === 'perr') {
       dPend.push([r.data, r.pac, '—', moeda(r.valF), '—',
                   '🔴 No Feegow, não no C6', 'Verificar se o PIX foi recebido']);
+    }
+    if (r.st === 'pdiv') {
+      dPend.push([r.data, r.pac, r.nomeC6, moeda(r.valF), moeda(r.valC6),
+                  '🟠 Divergência de valor', 'Verificar diferença entre Feegow e C6']);
     }
     if (r.st === 'pwarn') {
       dPend.push([r.data, '—', r.nomeC6, '—', moeda(r.valC6),
