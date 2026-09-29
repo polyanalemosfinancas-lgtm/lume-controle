@@ -1029,10 +1029,10 @@ function exportarMeuDinheiro() {
   });
   infRows = (dados['inf']||[]).filter(function(r){ return String(r['Status']||'').trim().toLowerCase() === 'aprovada'; });
 
-  // Indexar Infinite — taxa e parcelas
+  // Indexar Infinite — taxa e parcelas (usar normAuthCmp para consistência)
   idxInf = {};
   infRows.forEach(function(r){
-    var id = normAuth(String(r['Identificador']||'').trim());
+    var id = normAuthCmp(String(r['Identificador']||'').trim());
     if (id) idxInf[id] = r;
   });
 
@@ -1196,12 +1196,13 @@ function exportarMeuDinheiro() {
 
   // ── 2. INFINITE SEM FEEGOW → Meu Dinheiro + Pendência ────
   infRows.forEach(function(inf) {
-    var id = normAuth(String(inf['Identificador']||'').trim());
+    // Usar normAuthCmp para ser consistente com resCC.auth
+    var id = normAuthCmp(String(inf['Identificador']||'').trim());
     if (!id) return;
     // Verificar se já foi processado pelo Feegow (ok ou div = já está no MD)
     var jaNoMD = false;
     for (var i=0;i<resCC.length;i++){
-      if (resCC[i].auth===id && (resCC[i].st==='ok'||resCC[i].st==='div')){ jaNoMD=true; break; }
+      if (normAuthCmp(resCC[i].auth)===id && (resCC[i].st==='ok'||resCC[i].st==='div'||resCC[i].st==='warn')){ jaNoMD=true; break; }
     }
     if (jaNoMD) return; // já entrou via Feegow, não duplicar
 
