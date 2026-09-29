@@ -840,7 +840,7 @@ function renderCartao() {
       tb.appendChild(tr); diaAnt=r.data;
     }
     var obs='';
-    if (r.st==='ok')   obs='✓ Confirmado no Feegow e no Infinite';
+    if (r.st==='ok')   obs='✓ Confirmado no Feegow e no '+(r.origem==='Stone'?'Stone':r.origem==='—'?'Cartão':'Infinite');
     else if (r.st==='err')  obs='Lançado no Feegow mas NÃO no Cartão. Verificar se passou no cartão.';
     else if (r.st==='warn') obs='Passou no Cartão mas NÃO no Feegow. Verificar se foi registrado.';
     else if (r.st==='div')  obs='Divergência — Feegow: '+moeda(r.valF)+' | Infinite: '+moeda(r.valI);
@@ -1012,6 +1012,7 @@ function renderPix() {
 // ── EXPORTAR MEU DINHEIRO — CARTÃO ────────────────────────────────────────────
 function exportarMeuDinheiro() {
   if (!resCC.length) { alert('Faça a análise primeiro.'); return; }
+  console.log('[MD Export] resCC:', resCC.length, 'dados.cc:', (dados['cc']||[]).length, 'dados.inf:', (dados['inf']||[]).length, 'dados.stone:', (dados['stone']||[]).length);
 
   var wb = XLSX.utils.book_new();
   var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
@@ -1274,6 +1275,7 @@ function exportarMeuDinheiro() {
   // Também exportar completo
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Completo');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias');
+  console.log('[MD Export] dMD:', dMD.length, 'dInfinite:', dInfinite.length, 'dStone:', dStone.length, 'dPend:', dPend.length);
   XLSX.writeFile(wb, 'Lume_MeuDinheiro_Cartao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
   var nInf = dInfinite.length-1, nSt = dStone.length-1;
   alert('✓ Exportado! Infinite: '+nInf+' · Stone: '+nSt+' · Pendências: '+(dPend.length-1));
