@@ -13,13 +13,13 @@
 .tab:hover{color:#fff;background:rgba(255,255,255,.08)}.tab.active{background:var(--bg);color:var(--navy);font-weight:700}
 .content{padding:18px 28px}.panel{display:none}.panel.active{display:block}
 .subtabs{display:flex;gap:6px;margin-bottom:14px}
-.stab{padding:6px 16px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .15s}
+.stab{padding:6px 18px;border-radius:20px;cursor:pointer;font-size:11px;font-weight:600;border:2px solid var(--border);background:var(--card);color:var(--muted);transition:all .15s}
 .stab:hover{border-color:var(--teal);color:var(--teal)}
 .stab.active-m{background:var(--m-lt);color:var(--m);border-color:var(--m)}
 .stab.active-f{background:var(--f-lt);color:var(--f);border-color:var(--f)}
 .subpanel{display:none}.subpanel.active{display:block}
 .kpi-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
-.kpi{flex:1;min-width:125px;background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border)}
+.kpi{flex:1;min-width:140px;background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border)}
 .kpi-lbl{font-size:10px;color:var(--muted);font-weight:500;margin-bottom:3px}.kpi-val{font-size:17px;font-weight:700}
 .kpi-val.pos{color:var(--green)}.kpi-val.neg{color:var(--red)}.kpi-sub{font-size:10px;color:var(--muted);margin-top:2px}
 .tbl-wrap{background:var(--card);border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:14px}
@@ -40,24 +40,25 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 .warn{background:var(--gold-lt);border-left:3px solid var(--gold);padding:8px 12px;border-radius:0 4px 4px 0;margin:8px 0}
 .ok{background:#f0fdf4;border-left:3px solid var(--green);padding:8px 12px;border-radius:0 4px 4px 0;margin:8px 0}
 .note{font-size:10.5px;color:var(--muted);margin-bottom:12px;background:#f8fafc;padding:8px 12px;border-radius:6px;border:1px solid var(--border)}
+sup{font-size:9px;color:var(--muted);cursor:help}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}}
 </style></head><body>
 <div class="hdr"><div><div class="hdr-brand">Lume Finanças · BPO Financeiro · Confidencial</div><div class="hdr-title">Studio Fit <em>360°</em></div></div><div style="font-size:10px;color:#6b7280;text-align:right">Relatório Financeiro<br>Jan–Ago 2026</div></div>
 <div class="tabs">
-  <div class="tab active" onclick="showTab('resumo26')">Resumo 2026</div>
-  <div class="tab" onclick="showTab('resumo25')">Resumo 2025</div>
-  <div class="tab" onclick="showTab('resumo24')">Resumo 2024</div>
+  <div class="tab active" onclick="showTab('r26')">Resumo 2026</div>
+  <div class="tab" onclick="showTab('r25')">Resumo 2025</div>
+  <div class="tab" onclick="showTab('r24')">Resumo 2024</div>
   <div class="tab" onclick="showTab('fat')">Faturamento</div>
-  <div class="tab" onclick="showTab('fluxo26')">Fluxo 2026</div>
-  <div class="tab" onclick="showTab('recorrentes')">Recorrentes</div>
-  <div class="tab" onclick="showTab('impostos')">Impostos</div>
+  <div class="tab" onclick="showTab('flx')">Fluxo 2026</div>
+  <div class="tab" onclick="showTab('rec')">Recorrentes</div>
+  <div class="tab" onclick="showTab('imp')">Impostos</div>
   <div class="tab" onclick="showTab('cp')">Contas a Pagar</div>
-  <div class="tab" onclick="showTab('analise')">Análise</div>
+  <div class="tab" onclick="showTab('ana')">Análise</div>
 </div>
 <div class="content">
 
 <!-- RESUMO 2026 -->
-<div class="panel active" id="resumo26">
+<div class="panel active" id="r26">
   <div class="subtabs">
     <div class="stab active-m" onclick="showSub(this,'26m','26f','active-m','active-f')">Matriz</div>
     <div class="stab" onclick="showSub(this,'26f','26m','active-f','active-m')">Filial</div>
@@ -65,8 +66,8 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
   <div class="subpanel active" id="26m">
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 242,226</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val neg">R$ (16,705)</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
-      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (49,255)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val neg">R$ (16,705)</div><div class="kpi-sub">Acumulado Jan–Ago</div></div>
+      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (49,255)</div><div class="kpi-sub">Custo Jan–Ago</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Matriz (Unid. 1) · 2026 <span class="badge badge-m">Extrato Bancário Jan–Ago</span></div>
     <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
@@ -83,8 +84,8 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
   <div class="subpanel" id="26f">
     <div class="kpi-row">
       <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 314,225</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val pos">R$ 1,008</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
-      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (24,413)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val pos">R$ 1,008</div><div class="kpi-sub">Acumulado Jan–Ago</div></div>
+      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (24,413)</div><div class="kpi-sub">Custo Jan–Ago</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Filial (Unid. 2) · 2026 <span class="badge badge-f">Extrato Bancário Jan–Ago</span></div>
     <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
@@ -101,91 +102,91 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 <!-- RESUMO 2025 -->
-<div class="panel" id="resumo25"><p class="note">Fonte: DFC Gerencial 2025. Faturamento, Despesa e Resultado calculados por unidade a partir do arquivo original.</p>
+<div class="panel" id="r25"><p class="note">Fonte: DFC Gerencial 2025. Receita Caixa = antecipação de recebíveis por unidade. ✱ meses onde o valor individual não estava disponível usam o dado do consolidado.</p>
   <div class="subtabs">
     <div class="stab active-m" onclick="showSub(this,'2025m','2025f','active-m','active-f')">Matriz</div>
     <div class="stab" onclick="showSub(this,'2025f','2025m','active-f','active-m')">Filial</div>
   </div>
   <div class="subpanel active" id="2025m">
     <div class="kpi-row">
-      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Nov</div><div class="kpi-val">R$ 418,976</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado</div><div class="kpi-val pos">R$ 739,216</div><div class="kpi-sub">Resultado Operacional Acumulado</div></div>
+      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Nov</div><div class="kpi-val">R$ 418,976</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado Operacional</div><div class="kpi-val pos">R$ 739,216</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2025 <span class="badge badge-m">Jan–Nov · DFC Gerencial</span></div>
-    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Jan</td><td>47,972</td><td class="neg-cell">10,430</td><td><span class="pos">61,280</span></td></tr>
-<tr><td>Fev</td><td>30,647</td><td class="neg-cell">26,962</td><td><span class="pos">60,674</span></td></tr>
-<tr><td>Mar</td><td>52,475</td><td class="neg-cell">27,347</td><td><span class="pos">81,293</span></td></tr>
-<tr><td>Abr</td><td>23,116</td><td class="neg-cell">25,385</td><td><span class="pos">50,318</span></td></tr>
-<tr><td>Mai</td><td>28,400</td><td class="neg-cell">28,524</td><td><span class="pos">59,937</span></td></tr>
-<tr><td>Jun</td><td>28,478</td><td class="neg-cell">25,098</td><td><span class="pos">55,219</span></td></tr>
-<tr><td>Jul</td><td>29,215</td><td class="neg-cell">29,163</td><td><span class="pos">59,771</span></td></tr>
-<tr><td>Ago</td><td>31,226</td><td class="neg-cell">30,372</td><td><span class="pos">63,245</span></td></tr>
-<tr><td>Set</td><td>65,047</td><td class="neg-cell">32,812</td><td><span class="pos">101,131</span></td></tr>
-<tr><td>Out</td><td>35,918</td><td class="neg-cell">31,062</td><td><span class="pos">69,741</span></td></tr>
-<tr><td>Nov</td><td>46,483</td><td class="neg-cell">28,045</td><td><span class="pos">76,607</span></td></tr>
-<tr class="sub"><td>Total</td><td>418,976</td><td class="neg-cell">295,200</td><td><span class="pos">739,216</span></td></tr></tbody></table></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>47,972</td><td>47,192</td><td class="neg-cell">10,430</td><td><span class="pos">61,280</span></td></tr>
+<tr><td>Fev</td><td>30,647</td><td>29,137</td><td class="neg-cell">26,962</td><td><span class="pos">60,674</span></td></tr>
+<tr><td>Mar</td><td>52,475</td><td>49,895</td><td class="neg-cell">27,347</td><td><span class="pos">81,293</span></td></tr>
+<tr><td>Abr</td><td>23,116</td><td>48,510<sup title="valor consolidado">*</sup></td><td class="neg-cell">25,385</td><td><span class="pos">50,318</span></td></tr>
+<tr><td>Mai</td><td>28,400</td><td>35,602<sup title="valor consolidado">*</sup></td><td class="neg-cell">28,524</td><td><span class="pos">59,937</span></td></tr>
+<tr><td>Jun</td><td>28,478</td><td>39,920<sup title="valor consolidado">*</sup></td><td class="neg-cell">25,098</td><td><span class="pos">55,219</span></td></tr>
+<tr><td>Jul</td><td>29,215</td><td>12,118</td><td class="neg-cell">29,163</td><td><span class="pos">59,771</span></td></tr>
+<tr><td>Ago</td><td>31,226</td><td>8,191</td><td class="neg-cell">30,372</td><td><span class="pos">63,245</span></td></tr>
+<tr><td>Set</td><td>65,047</td><td>53,455<sup title="valor consolidado">*</sup></td><td class="neg-cell">32,812</td><td><span class="pos">101,131</span></td></tr>
+<tr><td>Out</td><td>35,918</td><td>59,116<sup title="valor consolidado">*</sup></td><td class="neg-cell">31,062</td><td><span class="pos">69,741</span></td></tr>
+<tr><td>Nov</td><td>46,483</td><td>31,667<sup title="valor consolidado">*</sup></td><td class="neg-cell">28,045</td><td><span class="pos">76,607</span></td></tr>
+<tr class="sub"><td>Total</td><td>418,976</td><td>414,803</td><td class="neg-cell">295,200</td><td><span class="pos">739,216</span></td></tr></tbody></table></div>
   </div>
   <div class="subpanel" id="2025f">
     <div class="kpi-row">
-      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Nov</div><div class="kpi-val">R$ 534,050</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado</div><div class="kpi-val pos">R$ 872,437</div><div class="kpi-sub">Resultado Operacional Acumulado</div></div>
+      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Nov</div><div class="kpi-val">R$ 534,050</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado Operacional</div><div class="kpi-val pos">R$ 872,437</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2025 <span class="badge badge-f">Jan–Nov · DFC Gerencial</span></div>
-    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Jan</td><td>46,525</td><td class="neg-cell">17,437</td><td><span class="pos">63,962</span></td></tr>
-<tr><td>Fev</td><td>37,489</td><td class="neg-cell">23,121</td><td><span class="pos">63,397</span></td></tr>
-<tr><td>Mar</td><td>43,811</td><td class="neg-cell">24,526</td><td><span class="pos">69,745</span></td></tr>
-<tr><td>Abr</td><td>51,509</td><td class="neg-cell">29,368</td><td><span class="pos">82,434</span></td></tr>
-<tr><td>Mai</td><td>36,654</td><td class="neg-cell">35,048</td><td><span class="pos">72,779</span></td></tr>
-<tr><td>Jun</td><td>40,004</td><td class="neg-cell">22,315</td><td><span class="pos">64,199</span></td></tr>
-<tr><td>Jul</td><td>63,396</td><td class="neg-cell">29,728</td><td><span class="pos">95,373</span></td></tr>
-<tr><td>Ago</td><td>69,345</td><td class="neg-cell">34,162</td><td><span class="pos">104,375</span></td></tr>
-<tr><td>Set</td><td>53,555</td><td class="neg-cell">32,741</td><td><span class="pos">90,307</span></td></tr>
-<tr><td>Out</td><td>59,986</td><td class="neg-cell">34,247</td><td><span class="pos">97,457</span></td></tr>
-<tr><td>Nov</td><td>31,777</td><td class="neg-cell">34,125</td><td><span class="pos">68,410</span></td></tr>
-<tr class="sub"><td>Total</td><td>534,050</td><td class="neg-cell">316,818</td><td><span class="pos">872,437</span></td></tr></tbody></table></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>46,525</td><td>42,777</td><td class="neg-cell">17,437</td><td><span class="pos">63,962</span></td></tr>
+<tr><td>Fev</td><td>37,489</td><td>36,348</td><td class="neg-cell">23,121</td><td><span class="pos">63,397</span></td></tr>
+<tr><td>Mar</td><td>43,811</td><td>43,287</td><td class="neg-cell">24,526</td><td><span class="pos">69,745</span></td></tr>
+<tr><td>Abr</td><td>51,509</td><td>48,510</td><td class="neg-cell">29,368</td><td><span class="pos">82,434</span></td></tr>
+<tr><td>Mai</td><td>36,654</td><td>35,602</td><td class="neg-cell">35,048</td><td><span class="pos">72,779</span></td></tr>
+<tr><td>Jun</td><td>40,004</td><td>39,920</td><td class="neg-cell">22,315</td><td><span class="pos">64,199</span></td></tr>
+<tr><td>Jul</td><td>63,396</td><td>60,417</td><td class="neg-cell">29,728</td><td><span class="pos">95,373</span></td></tr>
+<tr><td>Ago</td><td>69,345</td><td>66,215</td><td class="neg-cell">34,162</td><td><span class="pos">104,375</span></td></tr>
+<tr><td>Set</td><td>53,555</td><td>53,455</td><td class="neg-cell">32,741</td><td><span class="pos">90,307</span></td></tr>
+<tr><td>Out</td><td>59,986</td><td>59,116</td><td class="neg-cell">34,247</td><td><span class="pos">97,457</span></td></tr>
+<tr><td>Nov</td><td>31,777</td><td>31,667</td><td class="neg-cell">34,125</td><td><span class="pos">68,410</span></td></tr>
+<tr class="sub"><td>Total</td><td>534,050</td><td>517,313</td><td class="neg-cell">316,818</td><td><span class="pos">872,437</span></td></tr></tbody></table></div>
   </div></div>
 
 <!-- RESUMO 2024 -->
-<div class="panel" id="resumo24"><p class="note">Fonte: DFC Gerencial 2024. Faturamento, Despesa e Resultado calculados por unidade a partir do arquivo original.</p>
+<div class="panel" id="r24"><p class="note">Fonte: DFC Gerencial 2024. Receita Caixa = antecipação de recebíveis por unidade. ✱ meses onde o valor individual não estava disponível usam o dado do consolidado.</p>
   <div class="subtabs">
     <div class="stab active-m" onclick="showSub(this,'2024m','2024f','active-m','active-f')">Matriz</div>
     <div class="stab" onclick="showSub(this,'2024f','2024m','active-f','active-m')">Filial</div>
   </div>
   <div class="subpanel active" id="2024m">
     <div class="kpi-row">
-      <div class="kpi"><div class="kpi-lbl">Faturamento Mai–Dez</div><div class="kpi-val">R$ 198,983</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado</div><div class="kpi-val pos">R$ 222,474</div><div class="kpi-sub">Resultado Operacional Acumulado</div></div>
+      <div class="kpi"><div class="kpi-lbl">Faturamento Mai–Dez</div><div class="kpi-val">R$ 198,983</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado Operacional</div><div class="kpi-val pos">R$ 222,474</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2024 <span class="badge badge-m">Mai–Dez · DFC Gerencial</span></div>
-    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Mai</td><td>24,605</td><td class="neg-cell">33,533</td><td><span class="pos">22,218</span></td></tr>
-<tr><td>Jun</td><td>20,094</td><td class="neg-cell">23,623</td><td><span class="pos">24,244</span></td></tr>
-<tr><td>Jul</td><td>23,390</td><td class="neg-cell">21,649</td><td><span class="pos">29,355</span></td></tr>
-<tr><td>Ago</td><td>19,514</td><td class="neg-cell">30,621</td><td><span class="pos">12,064</span></td></tr>
-<tr><td>Set</td><td>14,102</td><td class="neg-cell">22,883</td><td><span class="pos">15,228</span></td></tr>
-<tr><td>Out</td><td>15,460</td><td class="neg-cell">18,181</td><td><span class="pos">18,419</span></td></tr>
-<tr><td>Nov</td><td>26,978</td><td class="neg-cell">21,047</td><td><span class="pos">31,050</span></td></tr>
-<tr><td>Dez</td><td>54,838</td><td class="neg-cell">37,156</td><td><span class="pos">69,896</span></td></tr>
-<tr class="sub"><td>Total</td><td>198,983</td><td class="neg-cell">208,693</td><td><span class="pos">222,474</span></td></tr></tbody></table></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Mai</td><td>24,605</td><td>24,605</td><td class="neg-cell">33,533</td><td><span class="pos">22,218</span></td></tr>
+<tr><td>Jun</td><td>20,094</td><td>20,094</td><td class="neg-cell">23,623</td><td><span class="pos">24,244</span></td></tr>
+<tr><td>Jul</td><td>23,390</td><td>23,290</td><td class="neg-cell">21,649</td><td><span class="pos">29,355</span></td></tr>
+<tr><td>Ago</td><td>19,514</td><td>19,414</td><td class="neg-cell">30,621</td><td><span class="pos">12,064</span></td></tr>
+<tr><td>Set</td><td>14,102</td><td>13,952</td><td class="neg-cell">22,883</td><td><span class="pos">15,228</span></td></tr>
+<tr><td>Out</td><td>15,460</td><td>15,160</td><td class="neg-cell">18,181</td><td><span class="pos">18,419</span></td></tr>
+<tr><td>Nov</td><td>26,978</td><td>26,456</td><td class="neg-cell">21,047</td><td><span class="pos">31,050</span></td></tr>
+<tr><td>Dez</td><td>54,838</td><td>52,648</td><td class="neg-cell">37,156</td><td><span class="pos">69,896</span></td></tr>
+<tr class="sub"><td>Total</td><td>198,983</td><td>195,621</td><td class="neg-cell">208,693</td><td><span class="pos">222,474</span></td></tr></tbody></table></div>
   </div>
   <div class="subpanel" id="2024f">
     <div class="kpi-row">
-      <div class="kpi"><div class="kpi-lbl">Faturamento Mai–Dez</div><div class="kpi-val">R$ 190,395</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-      <div class="kpi"><div class="kpi-lbl">Resultado</div><div class="kpi-val pos">R$ 202,110</div><div class="kpi-sub">Resultado Operacional Acumulado</div></div>
+      <div class="kpi"><div class="kpi-lbl">Faturamento Mai–Dez</div><div class="kpi-val">R$ 190,395</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado Operacional</div><div class="kpi-val pos">R$ 202,110</div></div>
     </div>
     <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2024 <span class="badge badge-f">Mai–Dez · DFC Gerencial</span></div>
-    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Mai</td><td>20,386</td><td class="neg-cell">25,305</td><td><span class="pos">22,626</span></td></tr>
-<tr><td>Jun</td><td>19,822</td><td class="neg-cell">23,366</td><td><span class="pos">24,620</span></td></tr>
-<tr><td>Jul</td><td>29,860</td><td class="neg-cell">24,331</td><td><span class="pos">33,155</span></td></tr>
-<tr><td>Ago</td><td>13,747</td><td class="neg-cell">24,089</td><td><span class="pos">13,902</span></td></tr>
-<tr><td>Set</td><td>11,318</td><td class="neg-cell">18,465</td><td><span class="pos">10,192</span></td></tr>
-<tr><td>Out</td><td>15,808</td><td class="neg-cell">19,430</td><td><span class="pos">15,191</span></td></tr>
-<tr><td>Nov</td><td>36,730</td><td class="neg-cell">21,589</td><td><span class="pos">35,817</span></td></tr>
-<tr><td>Dez</td><td>42,725</td><td class="neg-cell">26,464</td><td><span class="pos">46,607</span></td></tr>
-<tr class="sub"><td>Total</td><td>190,395</td><td class="neg-cell">183,039</td><td><span class="pos">202,110</span></td></tr></tbody></table></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Mai</td><td>20,386</td><td>20,386</td><td class="neg-cell">25,305</td><td><span class="pos">22,626</span></td></tr>
+<tr><td>Jun</td><td>19,822</td><td>19,822</td><td class="neg-cell">23,366</td><td><span class="pos">24,620</span></td></tr>
+<tr><td>Jul</td><td>29,860</td><td>29,860</td><td class="neg-cell">24,331</td><td><span class="pos">33,155</span></td></tr>
+<tr><td>Ago</td><td>13,747</td><td>13,747</td><td class="neg-cell">24,089</td><td><span class="pos">13,902</span></td></tr>
+<tr><td>Set</td><td>11,318</td><td>11,318</td><td class="neg-cell">18,465</td><td><span class="pos">10,192</span></td></tr>
+<tr><td>Out</td><td>15,808</td><td>15,808</td><td class="neg-cell">19,430</td><td><span class="pos">15,191</span></td></tr>
+<tr><td>Nov</td><td>36,730</td><td>36,730</td><td class="neg-cell">21,589</td><td><span class="pos">35,817</span></td></tr>
+<tr><td>Dez</td><td>42,725</td><td>41,395</td><td class="neg-cell">26,464</td><td><span class="pos">46,607</span></td></tr>
+<tr class="sub"><td>Total</td><td>190,395</td><td>189,065</td><td class="neg-cell">183,039</td><td><span class="pos">202,110</span></td></tr></tbody></table></div>
   </div></div>
 
 <!-- FATURAMENTO -->
@@ -228,13 +229,13 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 <!-- FLUXO 2026 -->
-<div class="panel" id="fluxo26">
+<div class="panel" id="flx">
   <div class="subtabs">
     <div class="stab active-m" onclick="showSub(this,'f26m','f26f','active-m','active-f')">Matriz</div>
     <div class="stab" onclick="showSub(this,'f26f','f26m','active-f','active-m')">Filial</div>
   </div>
   <div class="subpanel active" id="f26m">
-    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Matriz (Unid. 1) <span class="badge badge-m">Jan–Ago · Extrato Itaú cc 993441</span></div>
+    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Matriz (Unid. 1) <span class="badge badge-m">Jan–Ago · Itaú cc 993441</span></div>
     <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
     <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
 <tr><td class="cn">Antecipação de cartão</td><td>51,904</td><td>48,783</td><td>66,284</td><td>17,124</td><td>71,258</td><td>38,910</td><td>16,806</td><td>15,604</td><td class="tot">326,674</td></tr>
@@ -283,7 +284,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 <tr class="res"><td>Resultado</td><td><span class="neg">(287)</span></td><td><span class="pos">1,422</span></td><td><span class="neg">(12,229)</span></td><td><span class="neg">(6,989)</span></td><td><span class="pos">9,297</span></td><td><span class="neg">(5,233)</span></td><td><span class="neg">(9,167)</span></td><td><span class="pos">6,481</span></td><td class="tot"><span class="neg">(16,705)</span></td></tr></tbody></table></div>
   </div>
   <div class="subpanel" id="f26f">
-    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Filial (Unid. 2) <span class="badge badge-f">Jan–Ago · Extrato Itaú cc 993672</span></div>
+    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Filial (Unid. 2) <span class="badge badge-f">Jan–Ago · Itaú cc 993672</span></div>
     <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
     <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
 <tr><td class="cn">Antecipação de cartão</td><td>49,039</td><td>40,158</td><td>31,023</td><td>33,641</td><td>6,195</td><td>21,311</td><td>29,232</td><td>27,452</td><td class="tot">238,052</td></tr>
@@ -328,7 +329,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 <!-- RECORRENTES -->
-<div class="panel" id="recorrentes">
+<div class="panel" id="rec">
   <div class="kpi-row">
     <div class="kpi"><div class="kpi-lbl">Em aberto Matriz</div><div class="kpi-val neg">R$ 2,041.00</div><div class="kpi-sub">6 alunos · Out/2026</div></div>
     <div class="kpi"><div class="kpi-lbl">Em aberto Filial</div><div class="kpi-val neg">R$ 2,514.20</div><div class="kpi-sub">8 alunos · Out/2026</div></div>
@@ -359,7 +360,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 <!-- IMPOSTOS -->
-<div class="panel" id="impostos">
+<div class="panel" id="imp">
   <div class="kpi-row">
     <div class="kpi"><div class="kpi-lbl">Débitos Federais</div><div class="kpi-val neg">R$ (106,815.14)</div></div>
     <div class="kpi"><div class="kpi-lbl">Parcelamentos Municipais</div><div class="kpi-val neg">R$ (4,567.35)</div></div>
@@ -411,10 +412,9 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 <!-- ANÁLISE -->
-<div class="panel" id="analise">
+<div class="panel" id="ana">
   <div class="analise">
     <h3>Análise Financeira — Studio Fit 360 · Jan–Ago 2026</h3>
-    <p style="color:var(--muted);font-size:10.5px;margin-bottom:10px">Elaborada por Lume Finanças · Extrato Bancário Itaú Matriz cc 993441 / Filial cc 993672 + DFC Gerencial</p>
     <h4>Visão Geral</h4>
     <p>Faturamento consolidado Jan–Ago/2026: <strong>R$ 556,451</strong> (Matriz R$242,226 + Filial R$314,225). A Filial supera a Matriz em 26%. Resultado de caixa acumulado: <strong>Matriz −R$16,705</strong> e <strong>Filial +R$1,008</strong>.</p>
     <div class="warn"><strong>Passivo fiscal:</strong> R$111,382.49 em débitos — PGFN 1 com R$90.498,51 em 60 parcelas é o maior item.</div>
@@ -431,19 +431,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 
 </div>
 <script>
-function showTab(id){
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  event.target.classList.add('active');
-}
-function showSub(btn,showId,hideId,classOn,classOff){
-  document.getElementById(showId).classList.add('active');
-  document.getElementById(hideId).classList.remove('active');
-  btn.classList.add(classOn);
-  btn.parentElement.querySelectorAll('.stab').forEach(s=>{
-    if(s!==btn){s.className='stab';}
-  });
-}
+function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');}
+function showSub(btn,showId,hideId,classOn,classOff){document.getElementById(showId).classList.add('active');document.getElementById(hideId).classList.remove('active');btn.classList.add(classOn);btn.parentElement.querySelectorAll('.stab').forEach(s=>{if(s!==btn)s.className='stab';});}
 </script>
-</body><!-- v20261001221758 --></html>
+</body><!-- v20261001223015 --></html>
