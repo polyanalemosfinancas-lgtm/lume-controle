@@ -9,9 +9,13 @@
 .hdr-brand{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9ca3af}
 .hdr-title{font-family:'Syne',sans-serif;font-size:20px;font-weight:800}.hdr-title em{color:var(--teal)}
 .tabs{display:flex;gap:1px;padding:10px 28px 0;background:var(--navy);overflow-x:auto}
-.tab{padding:7px 12px;border-radius:6px 6px 0 0;cursor:pointer;font-size:11px;font-weight:500;color:#9ca3af;white-space:nowrap}
-.tab:hover{color:#fff;background:rgba(255,255,255,.08)}.tab.active{background:var(--bg);color:var(--navy);font-weight:600}
+.tab{padding:7px 14px;border-radius:6px 6px 0 0;cursor:pointer;font-size:11px;font-weight:500;color:#9ca3af;white-space:nowrap}
+.tab:hover{color:#fff;background:rgba(255,255,255,.08)}.tab.active{background:var(--bg);color:var(--navy);font-weight:700}
 .content{padding:18px 28px}.panel{display:none}.panel.active{display:block}
+.subtabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.stab{padding:6px 14px;border-radius:6px;cursor:pointer;font-size:11px;font-weight:500;border:1px solid var(--border);background:var(--card);color:var(--muted)}
+.stab:hover{border-color:var(--teal);color:var(--teal)}.stab.active{background:var(--teal);color:#fff;border-color:var(--teal)}
+.subpanel{display:none}.subpanel.active{display:block}
 .kpi-row{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
 .kpi{flex:1;min-width:125px;background:var(--card);border-radius:8px;padding:12px;border:1px solid var(--border)}
 .kpi-lbl{font-size:10px;color:var(--muted);font-weight:500;margin-bottom:3px}.kpi-val{font-size:17px;font-weight:700}
@@ -26,27 +30,23 @@ th:not(:first-child){text-align:right}td{padding:5px 9px;border-bottom:1px solid
 td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-child td{border-bottom:none}
 .cn{color:var(--navy)}.sec td{background:#f8fafc;font-size:9px;font-weight:600;color:var(--teal);padding:4px 9px;border-bottom:1px solid #e5e7eb}
 .sub td{background:#f3f4f6;font-weight:600}.res td{background:var(--navy);color:#fff;font-weight:700;font-size:11.5px}
-.rec-row td{background:#f0fdf4}.yr td{background:var(--teal);color:#fff;font-weight:700;font-size:10px}
-.hdr2 th{background:#374151}
-.tot{font-weight:600}.neg{color:var(--red)}.pos{color:var(--green)}.z{color:#d1d5db}
+.yr td{background:var(--teal);color:#fff;font-weight:700;font-size:10px}.hdr2 th{background:#374151}
+.tot{font-weight:600}.neg{color:var(--red)}.neg-cell{color:var(--red);font-weight:500}.pos{color:var(--green)}.z{color:#d1d5db}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
 .analise{background:var(--card);border-radius:8px;border:1px solid var(--border);padding:16px;margin-bottom:14px;line-height:1.7}
 .analise h3{font-size:13px;font-weight:600;margin-bottom:8px}.analise h4{font-size:11.5px;font-weight:600;margin:10px 0 4px;color:var(--teal)}
 .warn{background:var(--gold-lt);border-left:3px solid var(--gold);padding:8px 12px;border-radius:0 4px 4px 0;margin:8px 0}
 .ok{background:#f0fdf4;border-left:3px solid var(--green);padding:8px 12px;border-radius:0 4px 4px 0;margin:8px 0}
+.note{font-size:10.5px;color:var(--muted);margin-bottom:10px;background:#f8fafc;padding:8px 12px;border-radius:6px;border:1px solid var(--border)}
 @media(max-width:700px){.grid2{grid-template-columns:1fr}}
 </style></head><body>
 <div class="hdr"><div><div class="hdr-brand">Lume Finanças · BPO Financeiro · Confidencial</div><div class="hdr-title">Studio Fit <em>360°</em></div></div><div style="font-size:10px;color:#6b7280;text-align:right">Relatório Financeiro<br>Jan–Ago 2026</div></div>
 <div class="tabs">
-  <div class="tab active" onclick="showTab('r26m')">Resumo 2026 Matriz</div>
-  <div class="tab" onclick="showTab('r26f')">Resumo 2026 Filial</div>
-  <div class="tab" onclick="showTab('r25m')">Resumo 2025 Matriz</div>
-  <div class="tab" onclick="showTab('r25f')">Resumo 2025 Filial</div>
-  <div class="tab" onclick="showTab('r24m')">Resumo 2024 Matriz</div>
-  <div class="tab" onclick="showTab('r24f')">Resumo 2024 Filial</div>
+  <div class="tab active" onclick="showTab('resumo26')">Resumo 2026</div>
+  <div class="tab" onclick="showTab('resumo25')">Resumo 2025</div>
+  <div class="tab" onclick="showTab('resumo24')">Resumo 2024</div>
   <div class="tab" onclick="showTab('fat')">Faturamento</div>
-  <div class="tab" onclick="showTab('f26m')">Fluxo 2026 Matriz</div>
-  <div class="tab" onclick="showTab('f26f')">Fluxo 2026 Filial</div>
+  <div class="tab" onclick="showTab('fluxo26')">Fluxo 2026</div>
   <div class="tab" onclick="showTab('recorrentes')">Recorrentes</div>
   <div class="tab" onclick="showTab('impostos')">Impostos</div>
   <div class="tab" onclick="showTab('cp')">Contas a Pagar</div>
@@ -54,72 +54,124 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 <div class="content">
 
-<!-- RESUMO 2026 MATRIZ -->
-<div class="panel active" id="r26m">
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 242,226</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-    <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val neg">R$ (16,705)</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
-    <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (49,255)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+<!-- RESUMO 2026 -->
+<div class="panel active" id="resumo26">
+  <div class="subtabs">
+    <div class="stab active" onclick="showSub('resumo26','s26m')">📍 Matriz</div>
+    <div class="stab" onclick="showSub('resumo26','s26f')">📍 Filial</div>
   </div>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Matriz (Unid. 1) · 2026 <span class="badge badge-m">Extrato Bancário · Jan–Ago</span></div>
-  <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Jan</td><td>50,088</td><td>72,946</td><td class="neg">62,312</td><td><span class="neg">(287)</span></td></tr>
-<tr><td>Fev</td><td>32,327</td><td>66,073</td><td class="neg">56,161</td><td><span class="pos">1,422</span></td></tr>
-<tr><td>Mar</td><td>14,507</td><td>69,248</td><td class="neg">47,057</td><td><span class="neg">(12,229)</span></td></tr>
-<tr><td>Abr</td><td>24,978</td><td>20,773</td><td class="neg">31,922</td><td><span class="neg">(6,989)</span></td></tr>
-<tr><td>Mai</td><td>32,471</td><td>71,258</td><td class="neg">40,962</td><td><span class="pos">9,297</span></td></tr>
-<tr><td>Jun</td><td>32,192</td><td>41,819</td><td class="neg">31,932</td><td><span class="neg">(5,233)</span></td></tr>
-<tr><td>Jul</td><td>28,655</td><td>24,921</td><td class="neg">30,489</td><td><span class="neg">(9,167)</span></td></tr>
-<tr><td>Ago</td><td>27,008</td><td>33,851</td><td class="neg">26,809</td><td><span class="pos">6,481</span></td></tr>
-<tr class="sub"><td>Total</td><td>242,226</td><td>400,890</td><td class="neg">327,644</td><td><span class="neg">(16,705)</span></td></tr></tbody></table></div>
-</div>
-
-<!-- RESUMO 2026 FILIAL -->
-<div class="panel" id="r26f">
-  <div class="kpi-row">
-    <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 314,225</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
-    <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val pos">R$ 1,008</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
-    <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (24,413)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+  <div class="subpanel active" id="s26m">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 242,226</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val neg">R$ (16,705)</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
+      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (49,255)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+    </div>
+    <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Matriz (Unid. 1) <span class="badge badge-m">Extrato Bancário · Jan–Ago 2026</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>50,088</td><td>72,946</td><td class="neg-cell">62,312</td><td><span class="neg">(287)</span></td></tr>
+<tr><td>Fev</td><td>32,327</td><td>66,073</td><td class="neg-cell">56,161</td><td><span class="pos">1,422</span></td></tr>
+<tr><td>Mar</td><td>14,507</td><td>69,248</td><td class="neg-cell">47,057</td><td><span class="neg">(12,229)</span></td></tr>
+<tr><td>Abr</td><td>24,978</td><td>20,773</td><td class="neg-cell">31,922</td><td><span class="neg">(6,989)</span></td></tr>
+<tr><td>Mai</td><td>32,471</td><td>71,258</td><td class="neg-cell">40,962</td><td><span class="pos">9,297</span></td></tr>
+<tr><td>Jun</td><td>32,192</td><td>41,819</td><td class="neg-cell">31,932</td><td><span class="neg">(5,233)</span></td></tr>
+<tr><td>Jul</td><td>28,655</td><td>24,921</td><td class="neg-cell">30,489</td><td><span class="neg">(9,167)</span></td></tr>
+<tr><td>Ago</td><td>27,008</td><td>33,851</td><td class="neg-cell">26,809</td><td><span class="pos">6,481</span></td></tr>
+<tr class="sub"><td>Total</td><td>242,226</td><td>400,890</td><td class="neg-cell">327,644</td><td><span class="neg">(16,705)</span></td></tr></tbody></table></div>
   </div>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Filial (Unid. 2) · 2026 <span class="badge badge-f">Extrato Bancário · Jan–Ago</span></div>
-  <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
-<tr><td>Jan</td><td>51,851</td><td>49,039</td><td class="neg">58,943</td><td><span class="neg">(556)</span></td></tr>
-<tr><td>Fev</td><td>40,201</td><td>40,158</td><td class="neg">46,847</td><td><span class="pos">297</span></td></tr>
-<tr><td>Mar</td><td>38,684</td><td>37,107</td><td class="neg">43,350</td><td><span class="pos">4,628</span></td></tr>
-<tr><td>Abr</td><td>38,608</td><td>33,641</td><td class="neg">28,627</td><td><span class="pos">5,295</span></td></tr>
-<tr><td>Mai</td><td>37,752</td><td>6,195</td><td class="neg">36,954</td><td><span class="neg">(9,758)</span></td></tr>
-<tr><td>Jun</td><td>35,720</td><td>24,640</td><td class="neg">27,494</td><td><span class="pos">156</span></td></tr>
-<tr><td>Jul</td><td>35,584</td><td>32,180</td><td class="neg">28,334</td><td><span class="pos">4,905</span></td></tr>
-<tr><td>Ago</td><td>35,825</td><td>28,400</td><td class="neg">32,919</td><td><span class="neg">(3,958)</span></td></tr>
-<tr class="sub"><td>Total</td><td>314,225</td><td>251,361</td><td class="neg">303,468</td><td><span class="pos">1,008</span></td></tr></tbody></table></div>
+  <div class="subpanel" id="s26f">
+    <div class="kpi-row">
+      <div class="kpi"><div class="kpi-lbl">Faturamento Jan–Ago</div><div class="kpi-val">R$ 314,225</div><div class="kpi-sub">Vendas Painel Pacto</div></div>
+      <div class="kpi"><div class="kpi-lbl">Resultado de Caixa</div><div class="kpi-val pos">R$ 1,008</div><div class="kpi-sub">Acumulado Jan–Ago 2026</div></div>
+      <div class="kpi"><div class="kpi-lbl">Taxa Antecipação</div><div class="kpi-val neg">R$ (24,413)</div><div class="kpi-sub">Custo Jan–Ago 2026</div></div>
+    </div>
+    <div class="tbl-wrap"><div class="tbl-title">Resumo de Caixa — Filial (Unid. 2) <span class="badge badge-f">Extrato Bancário · Jan–Ago 2026</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Faturamento</th><th>Receita Caixa</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>51,851</td><td>49,039</td><td class="neg-cell">58,943</td><td><span class="neg">(556)</span></td></tr>
+<tr><td>Fev</td><td>40,201</td><td>40,158</td><td class="neg-cell">46,847</td><td><span class="pos">297</span></td></tr>
+<tr><td>Mar</td><td>38,684</td><td>37,107</td><td class="neg-cell">43,350</td><td><span class="pos">4,628</span></td></tr>
+<tr><td>Abr</td><td>38,608</td><td>33,641</td><td class="neg-cell">28,627</td><td><span class="pos">5,295</span></td></tr>
+<tr><td>Mai</td><td>37,752</td><td>6,195</td><td class="neg-cell">36,954</td><td><span class="neg">(9,758)</span></td></tr>
+<tr><td>Jun</td><td>35,720</td><td>24,640</td><td class="neg-cell">27,494</td><td><span class="pos">156</span></td></tr>
+<tr><td>Jul</td><td>35,584</td><td>32,180</td><td class="neg-cell">28,334</td><td><span class="pos">4,905</span></td></tr>
+<tr><td>Ago</td><td>35,825</td><td>28,400</td><td class="neg-cell">32,919</td><td><span class="neg">(3,958)</span></td></tr>
+<tr class="sub"><td>Total</td><td>314,225</td><td>251,361</td><td class="neg-cell">303,468</td><td><span class="pos">1,008</span></td></tr></tbody></table></div>
+  </div>
 </div>
 
-<!-- RESUMO 2025 MATRIZ -->
-<div class="panel" id="r25m">
-  <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Fonte: DFC Gerencial 2025 — Matriz. Resultado aproximado calculado pelo sistema.</p>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2025 <span class="badge badge-m">Jan–Nov · DFC Gerencial</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Total</th></tr></thead><tbody><tr class="rec-row"><td class="cn">Faturamento</td><td>47,972</td><td>30,647</td><td>52,475</td><td>23,116</td><td>28,400</td><td>28,478</td><td>29,215</td><td>31,226</td><td>65,047</td><td>35,918</td><td>46,483</td><td class="tot">418,976</td></tr><tr><td class="cn">Cancelamentos</td><td class="neg"><span class="neg">(2,878)</span></td><td class="neg"><span class="neg">(3,065)</span></td><td class="neg"><span class="neg">(1,471)</span></td><td class="neg"><span class="neg">(1,816)</span></td><td class="neg"><span class="neg">(3,014)</span></td><td class="neg"><span class="neg">(1,644)</span></td><td class="neg"><span class="neg">(1,393)</span></td><td class="neg"><span class="neg">(1,647)</span></td><td class="neg"><span class="neg">(3,272)</span></td><td class="neg"><span class="neg">(2,761)</span></td><td class="neg"><span class="neg">(2,080)</span></td><td class="tot neg"><span class="neg">(25,040)</span></td></tr><tr><td class="cn">Salário</td><td class="neg"><span class="neg">(1,934)</span></td><td class="neg"><span class="neg">(12,999)</span></td><td class="neg"><span class="neg">(13,311)</span></td><td class="neg"><span class="neg">(10,753)</span></td><td class="neg"><span class="neg">(11,355)</span></td><td class="neg"><span class="neg">(11,627)</span></td><td class="neg"><span class="neg">(13,019)</span></td><td class="neg"><span class="neg">(12,145)</span></td><td class="neg"><span class="neg">(11,296)</span></td><td class="neg"><span class="neg">(10,110)</span></td><td class="neg"><span class="neg">(7,466)</span></td><td class="tot neg"><span class="neg">(116,015)</span></td></tr><tr><td class="cn">Férias</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(12,207)</span></td><td class="neg"><span class="neg">(11,502)</span></td><td class="neg"><span class="neg">(9,784)</span></td><td class="neg"><span class="neg">(10,364)</span></td><td class="neg"><span class="neg">(10,402)</span></td><td class="neg"><span class="neg">(11,865)</span></td><td class="neg"><span class="neg">(11,175)</span></td><td class="neg"><span class="neg">(9,884)</span></td><td class="neg"><span class="neg">(9,436)</span></td><td class="neg"><span class="neg">(5,978)</span></td><td class="tot neg"><span class="neg">(102,595)</span></td></tr><tr><td class="cn">Alimentação</td><td class="neg"><span class="neg">(799)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(799)</span></td></tr><tr><td class="cn">Plano de Saúde</td><td class="neg"><span class="neg">(197)</span></td><td class="neg"><span class="neg">(167)</span></td><td class="neg"><span class="neg">(177)</span></td><td class="neg"><span class="neg">(184)</span></td><td class="neg"><span class="neg">(207)</span></td><td class="neg"><span class="neg">(216)</span></td><td class="neg"><span class="neg">(216)</span></td><td class="neg"><span class="neg">(233)</span></td><td class="neg"><span class="neg">(134)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(259)</span></td><td class="tot neg"><span class="neg">(1,990)</span></td></tr><tr><td class="cn">Marketing</td><td class="neg"><span class="neg">(173)</span></td><td class="neg"><span class="neg">(232)</span></td><td class="neg"><span class="neg">(426)</span></td><td class="neg"><span class="neg">(981)</span></td><td class="neg"><span class="neg">(533)</span></td><td class="neg"><span class="neg">(496)</span></td><td class="neg"><span class="neg">(51)</span></td><td class="neg"><span class="neg">(843)</span></td><td class="neg"><span class="neg">(300)</span></td><td class="neg"><span class="neg">(802)</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(4,836)</span></td></tr><tr><td class="cn">Eventos/Cursos</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(1,100)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="tot neg"><span class="neg">(2,100)</span></td></tr><tr><td class="cn">Aluguel</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Energia Elétrica</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(82)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(910)</span></td><td class="tot neg"><span class="neg">(992)</span></td></tr><tr><td class="cn">RH/Contabilidade</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(325)</span></td><td class="neg"><span class="neg">(325)</span></td><td class="tot neg"><span class="neg">(1,150)</span></td></tr><tr><td class="cn">Retirada de Sócios</td><td class="neg">nan</td><td class="neg"><span class="neg">(945)</span></td><td class="neg"><span class="neg">(929)</span></td><td class="neg"><span class="neg">(656)</span></td><td class="neg"><span class="neg">(662)</span></td><td class="neg"><span class="neg">(670)</span></td><td class="neg"><span class="neg">(677)</span></td><td class="neg"><span class="neg">(685)</span></td><td class="neg"><span class="neg">(692)</span></td><td class="neg"><span class="neg">(700)</span></td><td class="neg"><span class="neg">(708)</span></td><td class="tot neg">nan</td></tr><tr class="res"><td>Resultado Aprox.</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="tot">—</td></tr></tbody></table></div>
+<!-- RESUMO 2025 -->
+<div class="panel" id="resumo25">
+  <p class="note">Fonte: DFC Gerencial 2025. <strong>Faturamento</strong> = Receita Bruta do sistema (Matriz e Filial separados). <strong>Despesa</strong> e <strong>Resultado</strong> = dados consolidados do DFC — não disponível separado por unidade neste arquivo.</p>
+  <div class="subtabs">
+    <div class="stab active" onclick="showSub('resumo25','s25m')">📍 Matriz</div>
+    <div class="stab" onclick="showSub('resumo25','s25f')">📍 Filial</div>
+  </div>
+  <div class="subpanel active" id="s25m">
+    <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2025 <span class="badge badge-m">Jan–Nov · DFC Gerencial</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Fat. Matriz</th><th>Fat. Filial</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>47,972</td><td>46,525</td><td class="neg-cell">27,867</td><td><span class="pos">125,243</span></td></tr>
+<tr><td>Fev</td><td>30,647</td><td>37,489</td><td class="neg-cell">50,083</td><td><span class="pos">124,071</span></td></tr>
+<tr><td>Mar</td><td>52,475</td><td>43,811</td><td class="neg-cell">51,872</td><td><span class="pos">151,038</span></td></tr>
+<tr><td>Abr</td><td>23,116</td><td>51,509</td><td class="neg-cell">54,754</td><td><span class="pos">132,752</span></td></tr>
+<tr><td>Mai</td><td>28,400</td><td>36,654</td><td class="neg-cell">63,572</td><td><span class="pos">132,716</span></td></tr>
+<tr><td>Jun</td><td>28,478</td><td>40,004</td><td class="neg-cell">47,413</td><td><span class="pos">119,418</span></td></tr>
+<tr><td>Jul</td><td>29,215</td><td>63,396</td><td class="neg-cell">58,891</td><td><span class="pos">155,144</span></td></tr>
+<tr><td>Ago</td><td>31,226</td><td>69,345</td><td class="neg-cell">64,534</td><td><span class="pos">167,620</span></td></tr>
+<tr><td>Set</td><td>65,047</td><td>53,555</td><td class="neg-cell">65,553</td><td><span class="pos">191,438</span></td></tr>
+<tr><td>Out</td><td>35,918</td><td>59,986</td><td class="neg-cell">65,309</td><td><span class="pos">165,038</span></td></tr>
+<tr><td>Nov</td><td>46,483</td><td>31,777</td><td class="neg-cell">61,890</td><td><span class="pos">144,679</span></td></tr>
+<tr class="sub"><td>Total</td><td>418,976</td><td>534,050</td><td class="neg-cell">611,738</td><td><span class="pos">1,609,157</span></td></tr></tbody></table></div>
+  </div>
+  <div class="subpanel" id="s25f">
+    <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2025 <span class="badge badge-f">Jan–Nov · DFC Gerencial</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Fat. Matriz</th><th>Fat. Filial</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Jan</td><td>47,972</td><td>46,525</td><td class="neg-cell">27,867</td><td><span class="pos">125,243</span></td></tr>
+<tr><td>Fev</td><td>30,647</td><td>37,489</td><td class="neg-cell">50,083</td><td><span class="pos">124,071</span></td></tr>
+<tr><td>Mar</td><td>52,475</td><td>43,811</td><td class="neg-cell">51,872</td><td><span class="pos">151,038</span></td></tr>
+<tr><td>Abr</td><td>23,116</td><td>51,509</td><td class="neg-cell">54,754</td><td><span class="pos">132,752</span></td></tr>
+<tr><td>Mai</td><td>28,400</td><td>36,654</td><td class="neg-cell">63,572</td><td><span class="pos">132,716</span></td></tr>
+<tr><td>Jun</td><td>28,478</td><td>40,004</td><td class="neg-cell">47,413</td><td><span class="pos">119,418</span></td></tr>
+<tr><td>Jul</td><td>29,215</td><td>63,396</td><td class="neg-cell">58,891</td><td><span class="pos">155,144</span></td></tr>
+<tr><td>Ago</td><td>31,226</td><td>69,345</td><td class="neg-cell">64,534</td><td><span class="pos">167,620</span></td></tr>
+<tr><td>Set</td><td>65,047</td><td>53,555</td><td class="neg-cell">65,553</td><td><span class="pos">191,438</span></td></tr>
+<tr><td>Out</td><td>35,918</td><td>59,986</td><td class="neg-cell">65,309</td><td><span class="pos">165,038</span></td></tr>
+<tr><td>Nov</td><td>46,483</td><td>31,777</td><td class="neg-cell">61,890</td><td><span class="pos">144,679</span></td></tr>
+<tr class="sub"><td>Total</td><td>418,976</td><td>534,050</td><td class="neg-cell">611,738</td><td><span class="pos">1,609,157</span></td></tr></tbody></table></div>
+  </div>
 </div>
 
-<!-- RESUMO 2025 FILIAL -->
-<div class="panel" id="r25f">
-  <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Fonte: DFC Gerencial 2025 — Filial. Resultado aproximado calculado pelo sistema.</p>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2025 <span class="badge badge-f">Jan–Nov · DFC Gerencial</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Total</th></tr></thead><tbody><tr class="rec-row"><td class="cn">Faturamento</td><td>46,525</td><td>37,489</td><td>43,811</td><td>51,509</td><td>36,654</td><td>40,004</td><td>63,396</td><td>69,345</td><td>53,555</td><td>59,986</td><td>31,777</td><td class="tot">534,050</td></tr><tr><td class="cn">Cancelamentos</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(2,787)</span></td><td class="neg"><span class="neg">(1,409)</span></td><td class="neg"><span class="neg">(1,557)</span></td><td class="neg"><span class="neg">(1,077)</span></td><td class="neg"><span class="neg">(1,880)</span></td><td class="neg"><span class="neg">(2,249)</span></td><td class="neg"><span class="neg">(868)</span></td><td class="neg"><span class="neg">(4,011)</span></td><td class="neg"><span class="neg">(3,223)</span></td><td class="neg"><span class="neg">(2,508)</span></td><td class="tot neg"><span class="neg">(21,569)</span></td></tr><tr><td class="cn">Salário</td><td class="neg"><span class="neg">(4,388)</span></td><td class="neg"><span class="neg">(10,082)</span></td><td class="neg"><span class="neg">(11,796)</span></td><td class="neg"><span class="neg">(12,429)</span></td><td class="neg"><span class="neg">(16,668)</span></td><td class="neg"><span class="neg">(8,543)</span></td><td class="neg"><span class="neg">(12,613)</span></td><td class="neg"><span class="neg">(12,447)</span></td><td class="neg"><span class="neg">(10,770)</span></td><td class="neg"><span class="neg">(14,103)</span></td><td class="neg"><span class="neg">(13,493)</span></td><td class="tot neg"><span class="neg">(127,334)</span></td></tr><tr><td class="cn">Férias</td><td class="neg"><span class="neg">(3,746)</span></td><td class="neg"><span class="neg">(9,482)</span></td><td class="neg"><span class="neg">(11,186)</span></td><td class="neg"><span class="neg">(11,669)</span></td><td class="neg"><span class="neg">(15,009)</span></td><td class="neg"><span class="neg">(5,534)</span></td><td class="neg"><span class="neg">(10,261)</span></td><td class="neg"><span class="neg">(11,291)</span></td><td class="neg"><span class="neg">(9,736)</span></td><td class="neg"><span class="neg">(12,465)</span></td><td class="neg"><span class="neg">(11,876)</span></td><td class="tot neg"><span class="neg">(112,255)</span></td></tr><tr><td class="cn">Plano de Saúde</td><td class="neg"><span class="neg">(80)</span></td><td class="neg"><span class="neg">(100)</span></td><td class="neg"><span class="neg">(110)</span></td><td class="neg"><span class="neg">(100)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(100)</span></td><td class="neg"><span class="neg">(147)</span></td><td class="neg"><span class="neg">(143)</span></td><td class="neg"><span class="neg">(25)</span></td><td class="neg"><span class="neg">(134)</span></td><td class="neg"><span class="neg">(229)</span></td><td class="tot neg"><span class="neg">(1,167)</span></td></tr><tr><td class="cn">Marketing</td><td class="neg"><span class="neg">(200)</span></td><td class="neg"><span class="neg">(233)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(889)</span></td><td class="neg"><span class="neg">(1,924)</span></td><td class="neg"><span class="neg">(150)</span></td><td class="neg"><span class="neg">(1,161)</span></td><td class="neg"><span class="neg">(1,122)</span></td><td class="neg"><span class="neg">(662)</span></td><td class="neg"><span class="neg">(608)</span></td><td class="neg"><span class="neg">(613)</span></td><td class="tot neg"><span class="neg">(7,563)</span></td></tr><tr><td class="cn">Eventos/Cursos</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(1,100)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="tot neg"><span class="neg">(3,100)</span></td></tr><tr><td class="cn">Aluguel</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(230)</span></td><td class="neg"><span class="neg">(213)</span></td><td class="tot neg"><span class="neg">(443)</span></td></tr><tr><td class="cn">BPO Financeiro</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(279)</span></td><td class="tot neg"><span class="neg">(279)</span></td></tr><tr><td class="cn">Energia Elétrica</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(185)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(185)</span></td></tr><tr><td class="cn">RH/Contabilidade</td><td class="neg"><span class="neg">(176)</span></td><td class="neg"><span class="neg">(196)</span></td><td class="neg"><span class="neg">(203)</span></td><td class="neg"><span class="neg">(186)</span></td><td class="neg"><span class="neg">(191)</span></td><td class="neg"><span class="neg">(194)</span></td><td class="neg"><span class="neg">(190)</span></td><td class="neg"><span class="neg">(194)</span></td><td class="neg"><span class="neg">(196)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(1,726)</span></td></tr><tr><td class="cn">Manutenção</td><td class="neg"><span class="neg">(141)</span></td><td class="neg"><span class="neg">(141)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(281)</span></td></tr><tr><td class="cn">Sistemas</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(894)</span></td><td class="neg"><span class="neg">(679)</span></td><td class="neg"><span class="neg">(643)</span></td><td class="neg"><span class="neg">(1,038)</span></td><td class="neg"><span class="neg">(880)</span></td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="z">—</span></td><td class="tot neg"><span class="neg">(4,133)</span></td></tr><tr><td class="cn">Retirada de Sócios</td><td class="neg"><span class="z">—</span></td><td class="neg"><span class="neg">(945)</span></td><td class="neg"><span class="neg">(929)</span></td><td class="neg"><span class="neg">(656)</span></td><td class="neg"><span class="neg">(662)</span></td><td class="neg"><span class="neg">(670)</span></td><td class="neg"><span class="neg">(677)</span></td><td class="neg"><span class="neg">(685)</span></td><td class="neg"><span class="neg">(692)</span></td><td class="neg"><span class="neg">(700)</span></td><td class="neg"><span class="neg">(708)</span></td><td class="tot neg"><span class="neg">(7,323)</span></td></tr><tr class="res"><td>Resultado Aprox.</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="tot">—</td></tr></tbody></table></div>
-</div>
-
-<!-- RESUMO 2024 MATRIZ -->
-<div class="panel" id="r24m">
-  <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Fonte: DFC Gerencial 2024 — Matriz. Dados disponíveis a partir de Maio.</p>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2024 <span class="badge badge-m">Mai–Dez · DFC Gerencial</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Total</th></tr></thead><tbody><tr class="rec-row"><td class="cn">Faturamento</td><td>24,605</td><td>20,094</td><td>23,390</td><td>19,514</td><td>14,102</td><td>15,460</td><td>26,978</td><td>54,838</td><td class="tot">198,983</td></tr><tr><td class="cn">Cancelamentos</td><td class="neg"><span class="neg">(985)</span></td><td class="neg"><span class="neg">(362)</span></td><td class="neg"><span class="neg">(269)</span></td><td class="neg"><span class="neg">(308)</span></td><td class="neg"><span class="neg">(712)</span></td><td class="neg"><span class="neg">(4,186)</span></td><td class="neg"><span class="neg">(718)</span></td><td class="neg"><span class="neg">(624)</span></td><td class="tot neg"><span class="neg">(8,164)</span></td></tr><tr><td class="cn">Salário</td><td class="neg"><span class="neg">(14,029)</span></td><td class="neg"><span class="neg">(12,708)</span></td><td class="neg"><span class="neg">(10,836)</span></td><td class="neg"><span class="neg">(10,502)</span></td><td class="neg"><span class="neg">(10,892)</span></td><td class="neg"><span class="neg">(11,111)</span></td><td class="neg"><span class="neg">(11,322)</span></td><td class="neg"><span class="neg">(24,764)</span></td><td class="tot neg"><span class="neg">(106,165)</span></td></tr><tr><td class="cn">Férias</td><td class="neg"><span class="neg">(1,185)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(1,890)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(525)</span></td><td class="neg"><span class="neg">(525)</span></td><td class="neg"><span class="neg">(525)</span></td><td class="neg"><span class="neg">(525)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Benefícios</td><td class="neg"><span class="neg">(1,000)</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="neg"><span class="neg">(985)</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="neg"><span class="neg">(771)</span></td><td class="neg"><span class="neg">(812)</span></td><td class="neg"><span class="neg">(812)</span></td><td class="neg"><span class="neg">(938)</span></td><td class="tot neg"><span class="neg">(7,318)</span></td></tr><tr><td class="cn">Alimentação</td><td class="neg"><span class="neg">(191)</span></td><td class="neg"><span class="neg">(360)</span></td><td class="neg"><span class="neg">(230)</span></td><td class="neg"><span class="neg">(237)</span></td><td class="neg"><span class="neg">(172)</span></td><td class="neg"><span class="neg">(214)</span></td><td class="neg"><span class="neg">(196)</span></td><td class="neg"><span class="neg">(193)</span></td><td class="tot neg"><span class="neg">(1,793)</span></td></tr><tr><td class="cn">Plano de Saúde</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Marketing</td><td class="neg"><span class="neg">(434)</span></td><td class="neg"><span class="neg">(550)</span></td><td class="neg"><span class="neg">(700)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(1,230)</span></td><td class="neg"><span class="neg">(1,000)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="tot neg"><span class="neg">(5,414)</span></td></tr><tr><td class="cn">Eventos/Cursos</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(1,174)</span></td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(300)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Aluguel</td><td class="neg"><span class="neg">(13,200)</span></td><td class="neg"><span class="neg">(6,000)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(12,000)</span></td><td class="neg"><span class="neg">(6,000)</span></td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">BPO Financeiro</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Energia Elétrica</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">RH/Contabilidade</td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Manutenção</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Sistemas</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Taxa de Cartão</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Retirada de Sócios</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr class="res"><td>Resultado Aprox.</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="tot">—</td></tr></tbody></table></div>
-</div>
-
-<!-- RESUMO 2024 FILIAL -->
-<div class="panel" id="r24f">
-  <p style="font-size:11px;color:var(--muted);margin-bottom:10px">Fonte: DFC Gerencial 2024 — Filial. Dados disponíveis a partir de Maio.</p>
-  <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2024 <span class="badge badge-f">Mai–Dez · DFC Gerencial</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Set</th><th>Out</th><th>Nov</th><th>Dez</th><th>Total</th></tr></thead><tbody><tr class="rec-row"><td class="cn">Faturamento</td><td>20,386</td><td>19,822</td><td>29,860</td><td>13,747</td><td>11,318</td><td>15,808</td><td>36,730</td><td>42,725</td><td class="tot">190,395</td></tr><tr><td class="cn">Cancelamentos</td><td class="neg"><span class="neg">(253)</span></td><td class="neg"><span class="neg">(253)</span></td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(434)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Salário</td><td class="neg"><span class="neg">(13,149)</span></td><td class="neg"><span class="neg">(13,649)</span></td><td class="neg"><span class="neg">(12,871)</span></td><td class="neg"><span class="neg">(11,747)</span></td><td class="neg"><span class="neg">(8,232)</span></td><td class="neg"><span class="neg">(8,552)</span></td><td class="neg"><span class="neg">(9,532)</span></td><td class="neg"><span class="neg">(14,718)</span></td><td class="tot neg"><span class="neg">(92,450)</span></td></tr><tr><td class="cn">Férias</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Benefícios</td><td class="neg"><span class="neg">(750)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(860)</span></td><td class="neg"><span class="neg">(375)</span></td><td class="neg"><span class="neg">(438)</span></td><td class="neg"><span class="neg">(717)</span></td><td class="neg"><span class="neg">(726)</span></td><td class="neg"><span class="neg">(562)</span></td><td class="tot neg"><span class="neg">(4,928)</span></td></tr><tr><td class="cn">Alimentação</td><td class="neg">nan</td><td class="neg"><span class="neg">(60)</span></td><td class="neg"><span class="neg">(82)</span></td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(138)</span></td><td class="neg"><span class="neg">(80)</span></td><td class="neg"><span class="neg">(110)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Plano de Saúde</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Marketing</td><td class="neg"><span class="neg">(350)</span></td><td class="neg"><span class="neg">(350)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(525)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Eventos/Cursos</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Aluguel</td><td class="neg"><span class="neg">(6,205)</span></td><td class="neg"><span class="neg">(6,196)</span></td><td class="neg"><span class="neg">(6,205)</span></td><td class="neg"><span class="neg">(6,209)</span></td><td class="neg"><span class="neg">(6,216)</span></td><td class="neg"><span class="neg">(5,834)</span></td><td class="neg"><span class="neg">(6,155)</span></td><td class="neg"><span class="neg">(5,834)</span></td><td class="tot neg"><span class="neg">(48,854)</span></td></tr><tr><td class="cn">BPO Financeiro</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="tot neg">nan</td></tr><tr><td class="cn">Energia Elétrica</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">RH/Contabilidade</td><td class="neg"><span class="neg">(250)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(250)</span></td><td class="neg"><span class="neg">(250)</span></td><td class="neg">nan</td><td class="neg"><span class="neg">(500)</span></td><td class="neg"><span class="neg">(500)</span></td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Manutenção</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Sistemas</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Taxa de Cartão</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr><td class="cn">Retirada de Sócios</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="neg">nan</td><td class="tot neg">nan</td></tr><tr class="res"><td>Resultado Aprox.</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td class="tot">—</td></tr></tbody></table></div>
+<!-- RESUMO 2024 -->
+<div class="panel" id="resumo24">
+  <p class="note">Fonte: DFC Gerencial 2024 (dados a partir de Maio). <strong>Faturamento</strong> = Receita Bruta do sistema (Matriz e Filial separados). <strong>Despesa</strong> e <strong>Resultado</strong> = dados consolidados do DFC.</p>
+  <div class="subtabs">
+    <div class="stab active" onclick="showSub('resumo24','s24m')">📍 Matriz</div>
+    <div class="stab" onclick="showSub('resumo24','s24f')">📍 Filial</div>
+  </div>
+  <div class="subpanel active" id="s24m">
+    <div class="tbl-wrap"><div class="tbl-title">Resumo — Matriz (Unid. 1) · 2024 <span class="badge badge-m">Mai–Dez · DFC Gerencial</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Fat. Matriz</th><th>Fat. Filial</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Mai</td><td>24,605</td><td>20,386</td><td class="neg-cell">57,268</td><td>—</td></tr>
+<tr><td>Jun</td><td>20,094</td><td>19,822</td><td class="neg-cell">45,474</td><td>—</td></tr>
+<tr><td>Jul</td><td>23,390</td><td>29,860</td><td class="neg-cell">41,212</td><td>—</td></tr>
+<tr><td>Ago</td><td>19,514</td><td>13,747</td><td class="neg-cell">53,045</td><td>—</td></tr>
+<tr><td>Set</td><td>14,102</td><td>11,318</td><td class="neg-cell">40,490</td><td>—</td></tr>
+<tr><td>Out</td><td>15,460</td><td>15,808</td><td class="neg-cell">36,350</td><td>—</td></tr>
+<tr><td>Nov</td><td>26,978</td><td>36,730</td><td class="neg-cell">40,385</td><td>—</td></tr>
+<tr><td>Dez</td><td>54,838</td><td>42,725</td><td class="neg-cell">59,719</td><td>—</td></tr>
+<tr class="sub"><td>Total</td><td>198,983</td><td>190,395</td><td class="neg-cell">373,943</td><td>—</td></tr></tbody></table></div>
+  </div>
+  <div class="subpanel" id="s24f">
+    <div class="tbl-wrap"><div class="tbl-title">Resumo — Filial (Unid. 2) · 2024 <span class="badge badge-f">Mai–Dez · DFC Gerencial</span></div>
+    <table><thead></thead><tbody><tr class="hdr2"><th>Mês</th><th>Fat. Matriz</th><th>Fat. Filial</th><th>Despesa</th><th>Resultado</th></tr>
+<tr><td>Mai</td><td>24,605</td><td>20,386</td><td class="neg-cell">57,268</td><td>—</td></tr>
+<tr><td>Jun</td><td>20,094</td><td>19,822</td><td class="neg-cell">45,474</td><td>—</td></tr>
+<tr><td>Jul</td><td>23,390</td><td>29,860</td><td class="neg-cell">41,212</td><td>—</td></tr>
+<tr><td>Ago</td><td>19,514</td><td>13,747</td><td class="neg-cell">53,045</td><td>—</td></tr>
+<tr><td>Set</td><td>14,102</td><td>11,318</td><td class="neg-cell">40,490</td><td>—</td></tr>
+<tr><td>Out</td><td>15,460</td><td>15,808</td><td class="neg-cell">36,350</td><td>—</td></tr>
+<tr><td>Nov</td><td>26,978</td><td>36,730</td><td class="neg-cell">40,385</td><td>—</td></tr>
+<tr><td>Dez</td><td>54,838</td><td>42,725</td><td class="neg-cell">59,719</td><td>—</td></tr>
+<tr class="sub"><td>Total</td><td>198,983</td><td>190,395</td><td class="neg-cell">373,943</td><td>—</td></tr></tbody></table></div>
+  </div>
 </div>
 
 <!-- FATURAMENTO -->
@@ -161,11 +213,16 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 <tr class="sub"><td>Total Jan–Ago</td><td></td><td></td><td class="tot">556,451</td></tr></tbody></table></div>
 </div>
 
-<!-- FLUXO 2026 MATRIZ -->
-<div class="panel" id="f26m">
-  <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Matriz (Unid. 1) <span class="badge badge-m">Jan–Ago · Extrato Itaú cc 993441</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
-  <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
+<!-- FLUXO 2026 -->
+<div class="panel" id="fluxo26">
+  <div class="subtabs">
+    <div class="stab active" onclick="showSub('fluxo26','f26m')">📍 Matriz</div>
+    <div class="stab" onclick="showSub('fluxo26','f26f')">📍 Filial</div>
+  </div>
+  <div class="subpanel active" id="f26m">
+    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Matriz (Unid. 1) <span class="badge badge-m">Jan–Ago · Extrato Itaú cc 993441</span></div>
+    <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
+    <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
 <tr><td class="cn">Antecipação de cartão</td><td>51,904</td><td>48,783</td><td>66,284</td><td>17,124</td><td>71,258</td><td>38,910</td><td>16,806</td><td>15,604</td><td class="tot">326,674</td></tr>
 <tr><td class="cn">Receita - Pix</td><td>21,041</td><td>17,290</td><td>2,965</td><td>3,650</td><td><span class="z">—</span></td><td>2,909</td><td>8,115</td><td>18,247</td><td class="tot">74,216</td></tr>
 <tr><td class="cn">Rendimento de aplicação financeira</td><td>0</td><td>0</td><td class="neg"><span class="neg">(0)</span></td><td class="neg"><span class="neg">(1)</span></td><td><span class="z">—</span></td><td><span class="z">—</span></td><td>0</td><td>0</td><td class="tot">0</td></tr>
@@ -210,13 +267,11 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 <tr><td class="cn">Emprestimo entre filiais</td><td class="neg"><span class="neg">(10,921)</span></td><td class="neg"><span class="neg">(8,490)</span></td><td class="neg"><span class="neg">(34,420)</span></td><td>4,160</td><td class="neg"><span class="neg">(21,000)</span></td><td class="neg"><span class="neg">(15,120)</span></td><td class="neg"><span class="neg">(3,599)</span></td><td class="neg"><span class="neg">(561)</span></td><td class="tot neg"><span class="neg">(89,952)</span></td></tr>
 <tr class="sub"><td>Total Transf.</td><td class="neg"><span class="neg">(10,921)</span></td><td class="neg"><span class="neg">(8,490)</span></td><td class="neg"><span class="neg">(34,420)</span></td><td>4,160</td><td class="neg"><span class="neg">(21,000)</span></td><td class="neg"><span class="neg">(15,120)</span></td><td class="neg"><span class="neg">(3,599)</span></td><td class="neg"><span class="neg">(561)</span></td><td class="tot neg"><span class="neg">(89,952)</span></td></tr>
 <tr class="res"><td>Resultado</td><td><span class="neg">(287)</span></td><td><span class="pos">1,422</span></td><td><span class="neg">(12,229)</span></td><td><span class="neg">(6,989)</span></td><td><span class="pos">9,297</span></td><td><span class="neg">(5,233)</span></td><td><span class="neg">(9,167)</span></td><td><span class="pos">6,481</span></td><td class="tot"><span class="neg">(16,705)</span></td></tr></tbody></table></div>
-</div>
-
-<!-- FLUXO 2026 FILIAL -->
-<div class="panel" id="f26f">
-  <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Filial (Unid. 2) <span class="badge badge-f">Jan–Ago · Extrato Itaú cc 993672</span></div>
-  <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
-  <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
+  </div>
+  <div class="subpanel" id="f26f">
+    <div class="tbl-wrap"><div class="tbl-title">Fluxo de Caixa 2026 — Filial (Unid. 2) <span class="badge badge-f">Jan–Ago · Extrato Itaú cc 993672</span></div>
+    <table><thead><tr><th style="width:16%">Categoria</th><th>Jan</th><th>Fev</th><th>Mar</th><th>Abr</th><th>Mai</th><th>Jun</th><th>Jul</th><th>Ago</th><th>Total</th></tr></thead>
+    <tbody><tr class="sec"><td colspan="10">Receitas</td></tr>
 <tr><td class="cn">Antecipação de cartão</td><td>49,039</td><td>40,158</td><td>31,023</td><td>33,641</td><td>6,195</td><td>21,311</td><td>29,232</td><td>27,452</td><td class="tot">238,052</td></tr>
 <tr><td class="cn">Receita - Pix</td><td><span class="z">—</span></td><td><span class="z">—</span></td><td>6,084</td><td><span class="z">—</span></td><td><span class="z">—</span></td><td>3,328</td><td>2,948</td><td>948</td><td class="tot">13,308</td></tr>
 <tr><td class="cn">Rendimento de aplicação financeira</td><td>0</td><td>0</td><td>0</td><td>0</td><td><span class="z">—</span></td><td>0</td><td>0</td><td>0</td><td class="tot">1</td></tr>
@@ -255,6 +310,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 <tr><td class="cn">Emprestimo entre filiais</td><td>9,348</td><td>6,986</td><td>10,870</td><td>280</td><td>21,000</td><td>3,011</td><td>1,059</td><td>561</td><td class="tot">53,114</td></tr>
 <tr class="sub"><td>Total Transf.</td><td>9,348</td><td>6,986</td><td>10,870</td><td>280</td><td>21,000</td><td>3,011</td><td>1,059</td><td>561</td><td class="tot">53,114</td></tr>
 <tr class="res"><td>Resultado</td><td><span class="neg">(556)</span></td><td><span class="pos">297</span></td><td><span class="pos">4,628</span></td><td><span class="pos">5,295</span></td><td><span class="neg">(9,758)</span></td><td><span class="pos">156</span></td><td><span class="pos">4,905</span></td><td><span class="neg">(3,958)</span></td><td class="tot"><span class="pos">1,008</span></td></tr></tbody></table></div>
+  </div>
 </div>
 
 <!-- RECORRENTES -->
@@ -262,7 +318,7 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
   <div class="kpi-row">
     <div class="kpi"><div class="kpi-lbl">Em aberto Matriz</div><div class="kpi-val neg">R$ 2,041.00</div><div class="kpi-sub">6 alunos · Out/2026</div></div>
     <div class="kpi"><div class="kpi-lbl">Em aberto Filial</div><div class="kpi-val neg">R$ 2,514.20</div><div class="kpi-sub">8 alunos · Out/2026</div></div>
-    <div class="kpi"><div class="kpi-lbl">Total geral</div><div class="kpi-val neg">R$ 4,555.20</div></div>
+    <div class="kpi"><div class="kpi-lbl">Total</div><div class="kpi-val neg">R$ 4,555.20</div></div>
   </div>
   <div class="grid2">
     <div class="tbl-wrap"><div class="tbl-title">Recorrentes — Matriz <span class="badge badge-m">6 alunos</span></div>
@@ -360,5 +416,19 @@ td:not(:first-child){text-align:right;font-variant-numeric:tabular-nums}tr:last-
 </div>
 
 </div>
-<script>function showTab(id){document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById(id).classList.add('active');event.target.classList.add('active');}</script>
-</body><!-- v20261001212131 --></html>
+<script>
+function showTab(id){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function showSub(panelId,subId){
+  const panel=document.getElementById(panelId);
+  panel.querySelectorAll('.subpanel').forEach(p=>p.classList.remove('active'));
+  panel.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(subId).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body><!-- v20261001215845 --></html>
