@@ -525,49 +525,52 @@ function parseC6Excel(wb) {
 }
 
 function parseBTGExcel(wb) {
-  // BTG Pactual: colunas "Data e hora | Categoria | Transação | Descrição | Valor"
-  // Valor positivo = entrada, negativo = saída. Pode ter linhas duplicadas (extrato em 2 páginas).
+  // BTG Pactual: layout com colunas em posições fixas:
+  // col0=vazio, col1=Data e hora, col2=Categoria, col3=Transação, col6=Descrição, col10=Valor
+  // Valor positivo=entrada, negativo=saída. Extrato pode ter segunda cópia das linhas (dedup).
   var sheet = wb.Sheets[wb.SheetNames[0]];
   var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:true});
   var result = [];
-  var visto  = {};   // deduplicação: data+memo+valor
+  var visto  = {};
+  // Detectar linha de cabeçalho: contém 'Data' em col1 e 'Transa' em col3
   var hdrIdx = -1;
   for (var i=0;i<rows.length;i++) {
-    var c0 = String(rows[i][0]||'').trim().toLowerCase();
-    var c2 = String(rows[i][2]||'').trim().toLowerCase();
-    if (c0.indexOf('data') >= 0 && c2.indexOf('transa') >= 0) { hdrIdx=i; break; }
+    var c1 = String(rows[i][1]||'').trim().toLowerCase();
+    var c3 = String(rows[i][3]||'').trim().toLowerCase();
+    if (c1.indexOf('data') >= 0 && c3.indexOf('transa') >= 0) { hdrIdx=i; break; }
   }
-  if (hdrIdx < 0) hdrIdx = 11; // fallback padrão BTG
+  if (hdrIdx < 0) hdrIdx = 10; // fallback: linha 11 (índice 10)
   for (var i=hdrIdx+1;i<rows.length;i++) {
     var r = rows[i];
-    var dataRaw  = String(r[0]||'').trim();
-    var transacao = String(r[2]||'').trim();
-    var descricao = String(r[3]||'').trim();
-    var valorRaw = r[4];
-    if (!dataRaw || !transacao) continue;
-    // Filtrar linhas de saldo diário, cabeçalhos repetidos e saídas
-    if (transacao.toLowerCase().indexOf('saldo') >= 0) continue;
+    var dataRaw   = String(r[1]||'').trim();
+    var transacao = String(r[3]||'').trim();
+    var descricao = String(r[6]||'').trim();
+    var valorRaw  = r[10];
+    // Pular linhas vazias, saldo diário e cabeçalhos repetidos
+    if (!dataRaw) continue;
     if (dataRaw.toLowerCase().indexOf('data') >= 0) continue;
+    if (descricao.indexOf('Saldo') >= 0 || descricao.indexOf('saldo') >= 0) continue;
+    // Extrair data dd/mm/yyyy do campo "01/10/2026 09:26"
+    var mData = dataRaw.match(/(\d{2}\/\d{2}\/\d{4})/);
+    if (!mData) continue;
+    var data = mData[1];
+    // Valor
     var valor = 0;
     if (typeof valorRaw === 'number') {
       valor = valorRaw;
     } else {
       valor = parseFloat(String(valorRaw||'0').trim().replace(/\./g,'').replace(',','.')) || 0;
     }
-    if (valor <= 0) continue; // ignorar saídas e zeros
-    // Filtrar apenas PIX recebido e entradas relevantes
+    if (valor <= 0) continue; // só entradas
+    // Filtrar saídas nomeadas
     var txLow = transacao.toLowerCase();
     if (txLow.indexOf('pix enviado') >= 0) continue;
     if (txLow.indexOf('transferência enviada') >= 0) continue;
+    if (txLow.indexOf('transferencia enviada') >= 0) continue;
     if (txLow.indexOf('pagamento de boleto') >= 0) continue;
     if (txLow.indexOf('pagamento de conta') >= 0) continue;
-    // Extrair data (dd/mm/yyyy) do campo "01/10/2026 09:26"
-    var data = '';
-    var mData = dataRaw.match(/(\d{2}\/\d{2}\/\d{4})/);
-    if (mData) data = mData[1];
-    if (!data) continue;
     var memo = descricao || transacao;
-    // Deduplicar (extrato BTG repete algumas linhas entre páginas)
+    // Deduplicar
     var chave = data + '|' + memo + '|' + valor;
     if (visto[chave]) continue;
     visto[chave] = true;
@@ -1004,13 +1007,26 @@ function _analisarPix() {
   // ── 4. Helpers ───────────────────────────────────────────────
   function matchNome(pac, memo) {
     var memo2 = memo.replace(/Pix recebido( c6)? de /i,'');
-    var pN = normNome(pac), mN = normNome(memo2);
-    if (pN.indexOf(mN.substring(0,6))>=0 || mN.indexOf(pN.substring(0,6))>=0) return true;
-    var wp=pac.toUpperCase().split(/[^A-ZÁÀÃÂÉÊÍÓÕÔÚÇ]+/).filter(function(w){return w.length>=5;});
-    var wm=memo2.toUpperCase().split(/[^A-ZÁÀÃÂÉÊÍÓÕÔÚÇ]+/).filter(function(w){return w.length>=5;});
+    // Remover acentos para comparação
+    function sem(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase(); }
+    var pS = sem(pac), mS = sem(memo2);
+    // Prefixo de 6 chars
+    var pN = pS.replace(/[^A-Z]/g,'').substring(0,10);
+    var mN = mS.replace(/[^A-Z]/g,'').substring(0,10);
+    if (pN && mN && (pN.indexOf(mN.substring(0,6))>=0 || mN.indexOf(pN.substring(0,6))>=0)) return true;
+    // Palavras com 5+ letras
+    var wp=pS.split(/[^A-Z]+/).filter(function(w){return w.length>=5;});
+    var wm=mS.split(/[^A-Z]+/).filter(function(w){return w.length>=5;});
+    var hits=0;
     for (var i=0;i<wp.length;i++)
       for (var j=0;j<wm.length;j++)
-        if (wp[i].substring(0,5)===wm[j].substring(0,5)) return true;
+        if (wp[i].substring(0,5)===wm[j].substring(0,5)) { hits++; if(hits>=1) return true; }
+    // Sobrenome raro: pega último token longo do CR e verifica no memo
+    var ultP = wp.filter(function(w){return w.length>=6;});
+    if (ultP.length>0) {
+      var ult = ultP[ultP.length-1];
+      if (mS.indexOf(ult.substring(0,6))>=0) return true;
+    }
     return false;
   }
   function diffDias(d1,d2) {
@@ -1052,41 +1068,50 @@ function _analisarPix() {
     // Individual
     itens.forEach(function(fg) {
       var enc=null, div=false;
+      var encSemNome=null; // casamento sem nome (último recurso)
       // N1: nome+valor exato+data exata
       for (var i=0;i<c6Rows.length&&!enc;i++) {
         if (c6Usado[i]||c6Rows[i].data!==fg.data||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
         if (matchNome(pac,c6Rows[i].memo)) enc=i;
       }
-      // N2: valor exato+data exata
-      for (var i=0;i<c6Rows.length&&!enc;i++) {
-        if (!c6Usado[i]&&c6Rows[i].data===fg.data&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) enc=i;
-      }
-      // N3: nome+valor exato ±3 dias
+      // N2: nome+valor exato ±3 dias
       for (var tol=1;tol<=3&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
         if (c6Usado[i]||diffDias(c6Rows[i].data,fg.data)>tol||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
         if (matchNome(pac,c6Rows[i].memo)) enc=i;
       }
-      // N4: valor exato ±3 dias
-      for (var tol=1;tol<=3&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
-        if (!c6Usado[i]&&diffDias(c6Rows[i].data,fg.data)<=tol&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) enc=i;
-      }
-      // N5: nome+divergência ±15% ±1 dia
+      // N3: nome+divergência valor ±15% ±1 dia
       for (var i=0;i<c6Rows.length&&!enc;i++) {
         if (c6Usado[i]) continue;
         var vd=Math.abs(c6Rows[i].valor-fg.valor)/Math.max(fg.valor,1);
         if (vd>0.15||diffDias(c6Rows[i].data,fg.data)>1) continue;
         if (matchNome(pac,c6Rows[i].memo)) { enc=i; div=true; }
       }
+      // N4: ÚLTIMO RECURSO — valor exato+data exata sem nome (gera aviso)
+      if (!enc) for (var i=0;i<c6Rows.length&&!encSemNome;i++) {
+        if (!c6Usado[i]&&c6Rows[i].data===fg.data&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
+      }
+      // N5: valor exato ±3 dias sem nome (último recurso)
+      if (!enc&&!encSemNome) for (var tol=1;tol<=2&&!encSemNome;tol++) for (var i=0;i<c6Rows.length&&!encSemNome;i++) {
+        if (!c6Usado[i]&&diffDias(c6Rows[i].data,fg.data)<=tol&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
+      }
 
-      if (enc!==null) {
-        c6Usado[enc]=true;
-        var nC6=c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-        var bancoEnc = c6Rows[enc]._btg ? 'BTG Pactual PF' : 'C6 Bank';
-        resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6,valF:fg.valor,valC6:c6Rows[enc].valor,
+      var encFinal = enc !== null ? enc : encSemNome;
+      if (encFinal !== null) {
+        c6Usado[encFinal]=true;
+        var nC6=c6Rows[encFinal].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+        var bancoEnc = c6Rows[encFinal]._btg ? 'BTG Pactual PF' : 'C6 Bank';
+        var semNomeMatch = (enc === null && encSemNome !== null);
+        var stFinal = div ? 'pdiv' : (semNomeMatch ? 'pdiv' : 'pok');
+        var obsFinal = div
+          ? '🟠 Divergência: Feegow '+moeda(fg.valor)+' | '+bancoEnc+' '+moeda(c6Rows[encFinal].valor)
+          : semNomeMatch
+            ? '⚠️ Valor igual no banco ('+bancoEnc+') mas nome não confirmado. Verificar se é o mesmo paciente.'
+            : '✓ Confirmado no Feegow e no Banco';
+        resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6,valF:fg.valor,valC6:c6Rows[encFinal].valor,
                      banco:bancoEnc,
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
-                     st:div?'pdiv':'pok',
-                     obs:div?'🟠 Divergência: Feegow '+moeda(fg.valor)+' | '+bancoEnc+' '+moeda(c6Rows[enc].valor):'✓ Confirmado no Feegow e no Banco'});
+                     st:stFinal,
+                     obs:obsFinal});
       } else if (c6Rows.length===0) {
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
                      banco:'',
@@ -1607,20 +1632,20 @@ function exportarPixMD() {
           }
           var cat = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:categoriaCartao(procCR_pix||l.prof, r.pac), sub:procCR_pix?'':'Plano consultas'};
           var pacNome = r.pac || 'A Identificar';
-          dPix.push([r.data, l.val, pacNome, nomeBanco,'','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
+          dPix.push([r.data, l.val, pacNome, r.banco||nomeBanco,'','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
         });
       } else {
         var obs = r.obs || (r.st==='perr' ? 'NÃO LOCALIZADO NO BANCO' : 'OK');
         var cat2 = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : categoriaPIX('', r.pac, r.nomeC6);
         var pacNome2 = r.pac || 'A Identificar';
-        dPix.push([r.data, r.valF||r.valC6, pacNome2, nomeBanco,'','', cat2.cat, cat2.sub, pacNome2,'','','PIX','', obs, r.data,'']);
+        dPix.push([r.data, r.valF||r.valC6, pacNome2, r.banco||nomeBanco,'','', cat2.cat, cat2.sub, pacNome2,'','','PIX','', obs, r.data,'']);
       }
     }
     if (r.st === 'pwarn') {
       // No Banco sem Feegow → Meu Dinheiro como A Identificar
       var cat_ai = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:'Identificar', sub:''};
       var pac_ai = r.pac && r.pac !== '—' ? r.pac : 'A Identificar';
-      dPix.push([r.data, r.valC6, pac_ai, nomeBanco,'','',
+      dPix.push([r.data, r.valC6, pac_ai, r.banco||nomeBanco,'','',
                  cat_ai.cat, cat_ai.sub, pac_ai,'','','PIX','',
                  r.obs||('A IDENTIFICAR | '+r.nomeC6), r.data,'']);
     }
