@@ -257,25 +257,24 @@ footer span{color:var(--gold)}
   <div class="secao" id="sec-pix">
 
     <input type="file" id="fileOFX" accept=".ofx,.csv,.xlsx,.xls" style="display:none" onchange="carregarArq('ofx',this)">
+    <input type="file" id="fileBTG" accept=".xlsx,.xls" style="display:none" onchange="carregarArq('btg',this)">
 
     <div class="upload-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
 
       <div class="upload-card" id="cardOFX" onclick="abrirInput('fileOFX')">
-        <div class="tag opc">Banco — Opcional</div>
-        <div class="upload-icon">🏦</div>
-        <div class="upload-label">Extrato Bancário (C6 ou BTG)</div>
-        <div class="upload-hint">Extrato em OFX (C6 Bank), XLSX (BTG Pactual) ou CSV. Opcional — sem ele, gera Meu Dinheiro direto do Feegow.</div>
+        <div class="tag opc">C6 Bank — Opcional</div>
+        <div class="upload-icon">🔵</div>
+        <div class="upload-label">Extrato C6 Bank</div>
+        <div class="upload-hint">OFX ou Excel exportado do app C6. Carregar se houver PIX recebidos no C6 no período.</div>
         <div class="upload-st" id="stOFX">✓ Carregado</div>
       </div>
 
-      <div class="upload-card info-card" style="cursor:default;background:#f8faff;border:2px dashed #c5cfe0">
-        <div class="tag" style="background:#e8f0fe;color:#254568;position:static;transform:none">Formatos aceitos</div>
-        <div class="upload-icon" style="font-size:18px;margin:8px 0 4px">📄</div>
-        <div class="upload-label" style="font-size:12px;color:#3a4a60;font-weight:600">BTG Pactual</div>
-        <div class="upload-hint" style="font-size:11px;color:#6b7a94">Exportar em <strong>Excel (.xlsx)</strong> no app ou internet banking BTG</div>
-        <div style="border-top:1px solid #dde4f0;margin:8px 0 4px"></div>
-        <div class="upload-label" style="font-size:12px;color:#3a4a60;font-weight:600">C6 Bank</div>
-        <div class="upload-hint" style="font-size:11px;color:#6b7a94">Exportar em <strong>OFX ou Excel</strong> no app C6</div>
+      <div class="upload-card" id="cardBTG" onclick="abrirInput('fileBTG')">
+        <div class="tag opc">BTG Pactual — Opcional</div>
+        <div class="upload-icon">🟢</div>
+        <div class="upload-label">Extrato BTG Pactual</div>
+        <div class="upload-hint">Excel (.xlsx) exportado do app ou internet banking BTG. Carregar se houver PIX recebidos no BTG no período.</div>
+        <div class="upload-st" id="stBTG">✓ Carregado</div>
       </div>
     </div>
 
@@ -425,8 +424,8 @@ function badgeHtml(st) {
 }
 
 // ── Carregar arquivos ──────────────────────────────────────────────────────────
-var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',stone:'cardStone',cr:'cardCRshared'};
-var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',stone:'stStone',cr:'stCRshared'};
+var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',btg:'cardBTG',stone:'cardStone',cr:'cardCRshared'};
+var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',btg:'stBTG',stone:'stStone',cr:'stCRshared'};
 
 function carregarArq(tipo, input) {
   var file = input.files[0]; if (!file) return;
@@ -441,31 +440,26 @@ function carregarArq(tipo, input) {
     };
     // Tentar UTF-8 primeiro, depois Latin-1
     try { reader.readAsText(file, 'UTF-8'); } catch(e) { reader.readAsText(file, 'ISO-8859-1'); }
-  } else if (tipo === 'ofx' && (nome.endsWith('.xlsx') || nome.endsWith('.xls'))) {
-    // C6 ou BTG em formato Excel — detecta automaticamente pelo conteúdo
+  } else if (tipo === 'btg' && (nome.endsWith('.xlsx') || nome.endsWith('.xls'))) {
+    // BTG Pactual em Excel
     reader.onload = function(e) {
       try {
         var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
-        // Detectar BTG: procura "BTG" ou "Transação" no cabeçalho
-        var sheet = wb.Sheets[wb.SheetNames[0]];
-        var preview = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', range:0});
-        var ehBTG = false;
-        for (var pi=0; pi<Math.min(preview.length,15); pi++) {
-          var linha = preview[pi].join('').toLowerCase();
-          if (linha.indexOf('btg') >= 0 || linha.indexOf('transação') >= 0 ||
-              linha.indexOf('transacao') >= 0 || linha.indexOf('pix recebido') >= 0) {
-            ehBTG = true; break;
-          }
-        }
-        if (ehBTG) {
-          dados[tipo] = parseBTGExcel(wb);
-          atualizarCard(tipo, file.name + ' (BTG)', dados[tipo].length);
-        } else {
-          dados[tipo] = parseC6Excel(wb);
-          atualizarCard(tipo, file.name + ' (C6)', dados[tipo].length);
-        }
+        dados['btg'] = parseBTGExcel(wb);
+        atualizarCard('btg', file.name, dados['btg'].length);
         checarBotoes();
-      } catch(err) { alert('Erro Excel extrato: '+err.message); }
+      } catch(err) { alert('Erro Excel BTG: '+err.message); }
+    };
+    reader.readAsArrayBuffer(file);
+  } else if (tipo === 'ofx' && (nome.endsWith('.xlsx') || nome.endsWith('.xls'))) {
+    // C6 em Excel
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
+        dados['ofx'] = parseC6Excel(wb);
+        atualizarCard('ofx', file.name, dados['ofx'].length);
+        checarBotoes();
+      } catch(err) { alert('Erro Excel C6: '+err.message); }
     };
     reader.readAsArrayBuffer(file);
   } else if (nome.endsWith('.csv')) {
@@ -961,10 +955,11 @@ function analisarPix() {
 
 function _analisarPix() {
   var crRows = dados['cr'] || [];
-  var c6Rows = dados['ofx'] || [];
-  // Detectar banco para nomear conta no Meu Dinheiro
-  var nomeBanco = 'C6 Bank';
-  if (c6Rows.length > 0 && c6Rows[0]._btg) nomeBanco = 'BTG Pactual PF';
+  // Mesclar C6 + BTG em uma única lista para confronto
+  var c6Rows = (dados['ofx'] || []).concat((dados['btg'] || []));
+  // Detectar banco para nomear conta no Meu Dinheiro (quando só um banco carregado)
+  var nomeBanco = dados['btg'] && dados['btg'].length > 0 && (!dados['ofx'] || !dados['ofx'].length)
+    ? 'BTG Pactual PF' : 'C6 Bank';
 
   // ── 1. Extrair PIX individuais do CR ─────────────────────────
   var pixList = [];
@@ -1044,8 +1039,10 @@ function _analisarPix() {
     if (encGrp!==null) {
       c6Usado[encGrp]=true;
       var nC6g=c6Rows[encGrp].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+      var bancoGrp = c6Rows[encGrp]._btg ? 'BTG Pactual PF' : 'C6 Bank';
       itens.forEach(function(fg){
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6g,valF:fg.valor,valC6:fg.valor,
+                     banco:bancoGrp,
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
                      st:'pok',obs:'✓ PIX agrupado: '+itens.length+'x somam '+moeda(grp.total)});
       });
@@ -1084,16 +1081,20 @@ function _analisarPix() {
       if (enc!==null) {
         c6Usado[enc]=true;
         var nC6=c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+        var bancoEnc = c6Rows[enc]._btg ? 'BTG Pactual PF' : 'C6 Bank';
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6,valF:fg.valor,valC6:c6Rows[enc].valor,
+                     banco:bancoEnc,
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
                      st:div?'pdiv':'pok',
-                     obs:div?'🟠 Divergência: Feegow '+moeda(fg.valor)+' | C6 '+moeda(c6Rows[enc].valor):'✓ Confirmado no Feegow e no Banco'});
+                     obs:div?'🟠 Divergência: Feegow '+moeda(fg.valor)+' | '+bancoEnc+' '+moeda(c6Rows[enc].valor):'✓ Confirmado no Feegow e no Banco'});
       } else if (c6Rows.length===0) {
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                     banco:'',
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
                      st:'psd',obs:'Sem extrato banco — lançado direto do Feegow'});
       } else {
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                     banco:'',
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
                      st:'perr',obs:'PIX lançado no Feegow mas NÃO localizado no Banco. Verificar.'});
       }
@@ -1106,8 +1107,10 @@ function _analisarPix() {
     var memo=c6.memo||'';
     if (/return|lucro|distribuicao/i.test(memo)) return;
     var nC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
+    var bancoW = c6._btg ? 'BTG Pactual PF' : 'C6 Bank';
     resPix.push({data:c6.data,pac:'—',nomeC6:nC6,valF:null,valC6:c6.valor,
-                 linhas:[],st:'pwarn',obs:'Entrada no Banco mas NÃO lançada no Feegow. Verificar: '+nC6});
+                 banco:bancoW,
+                 linhas:[],st:'pwarn',obs:'Entrada no '+bancoW+' mas NÃO lançada no Feegow. Verificar: '+nC6});
   });
 
   resPix.sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
