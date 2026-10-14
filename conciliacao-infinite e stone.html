@@ -145,7 +145,7 @@ footer span{color:var(--gold)}
     <div class="logo-mark">L</div>
     <div class="logo-text"><h1>Lume Finanças</h1><span>BPO Financeiro</span></div>
   </div>
-  <div class="header-sub">Conciliação <strong>Feegow × Infinite / C6 Bank</strong> &nbsp;·&nbsp; Clínica Médica</div>
+  <div class="header-sub">Conciliação <strong>Feegow × Infinite / Stone / C6 / BTG</strong> &nbsp;·&nbsp; Clínica Médica</div>
 </header>
 
 <main>
@@ -174,7 +174,7 @@ footer span{color:var(--gold)}
     </div>
     <div class="modulo" id="mod-pix" onclick="trocarModulo('pix')">
       <div class="modulo-icon">📱</div>
-      <div class="modulo-nome">PIX — Feegow × C6 Bank</div>
+      <div class="modulo-nome">PIX — Feegow × Extrato Banco</div>
       <div class="modulo-desc">Confronto por data e valor + exporta Meu Dinheiro</div>
     </div>
   </div>
@@ -261,10 +261,10 @@ footer span{color:var(--gold)}
     <div class="upload-grid dois">
 
       <div class="upload-card" id="cardOFX" onclick="abrirInput('fileOFX')">
-        <div class="tag opc">C6 Bank — Opcional</div>
+        <div class="tag opc">Banco — Opcional</div>
         <div class="upload-icon">🏦</div>
-        <div class="upload-label">Extrato C6 Bank</div>
-        <div class="upload-hint">Extrato do C6 Bank em formato OFX, XLSX ou CSV. Opcional — sem ele, gera Meu Dinheiro direto do Feegow.</div>
+        <div class="upload-label">Extrato Bancário (C6 ou BTG)</div>
+        <div class="upload-hint">Extrato em OFX (C6 Bank), XLSX (BTG Pactual) ou CSV. Opcional — sem ele, gera Meu Dinheiro direto do Feegow.</div>
         <div class="upload-st" id="stOFX">✓ Carregado</div>
       </div>
     </div>
@@ -277,8 +277,8 @@ footer span{color:var(--gold)}
 
     <div class="resumo tres" id="resumoPix">
       <div class="rcard ok"><div class="rnum" id="rPok">0</div><div class="rlabel">✅ OK — nos dois</div></div>
-      <div class="rcard err"><div class="rnum" id="rPerr">0</div><div class="rlabel">🔴 No Feegow, não no C6</div></div>
-      <div class="rcard warn"><div class="rnum" id="rPwarn">0</div><div class="rlabel">🟡 No C6, não no Feegow</div></div>
+      <div class="rcard err"><div class="rnum" id="rPerr">0</div><div class="rlabel">🔴 No Feegow, não no Banco</div></div>
+      <div class="rcard warn"><div class="rnum" id="rPwarn">0</div><div class="rlabel">🟡 No Banco, não no Feegow</div></div>
     </div>
 
     <div class="conc-wrap" id="wrapPix" style="display:none">
@@ -290,14 +290,14 @@ footer span{color:var(--gold)}
         <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
         <button class="fbtn active" id="fPix_todos" onclick="filtrarPix('todos')">Todos</button>
         <button class="fbtn" id="fPix_pok" onclick="filtrarPix('pok')">✅ OK</button>
-        <button class="fbtn" id="fPix_perr" onclick="filtrarPix('perr')">🔴 No Feegow s/ C6</button>
-        <button class="fbtn" id="fPix_pwarn" onclick="filtrarPix('pwarn')">🟡 No C6 s/ Feegow</button>
+        <button class="fbtn" id="fPix_perr" onclick="filtrarPix('perr')">🔴 No Feegow s/ Banco</button>
+        <button class="fbtn" id="fPix_pwarn" onclick="filtrarPix('pwarn')">🟡 No Banco s/ Feegow</button>
       </div>
       <div class="tbl-scroll">
         <table>
           <thead><tr>
-            <th>Data</th><th>Paciente (Feegow)</th><th>Nome no C6 Bank</th>
-            <th>Valor Feegow</th><th>Valor C6</th>
+            <th>Data</th><th>Paciente (Feegow)</th><th>Nome no Banco</th>
+            <th>Valor Feegow</th><th>Valor Banco</th>
             <th>STATUS</th><th>Observação</th><th>—</th>
           </tr></thead>
           <tbody id="tbPix"></tbody>
@@ -306,7 +306,7 @@ footer span{color:var(--gold)}
     </div>
   </div>
 </main>
-<footer><span>Lume Finanças</span> · BPO Financeiro · Conciliação Feegow × Infinite / C6 · uso interno</footer>
+<footer><span>Lume Finanças</span> · BPO Financeiro · Conciliação Feegow × Infinite / C6 / BTG · uso interno</footer>
 
 <script>
 var dados = {}, resCC = [], resPix = [];
@@ -369,9 +369,9 @@ function normAuth(v) {
   return s.replace(/^0+([^0])/,'$1') || s;
 }
 
-// Normaliza ambiguidade 0/O e I/1 para comparação entre sistemas
+// Normaliza ambiguidade 0/O, I/1, L/1, Q/0 para comparação entre sistemas
 function normAuthCmp(v) {
-  return normAuth(v).replace(/O/g,'0').replace(/I/g,'1').replace(/L/g,'1');
+  return normAuth(v).replace(/O/g,'0').replace(/Q/g,'0').replace(/I/g,'1').replace(/L/g,'1');
 }
 
 // Distância de Levenshtein para tolerar 1 caractere diferente (ex: A9BQB vs A9BBQB)
@@ -407,9 +407,9 @@ function badgeHtml(st) {
   if (st==='warn') return '<span class="badge b-warn">🟡 No Cartão, não no Feegow</span>';
   if (st==='div')  return '<span class="badge b-div">🟠 Divergência</span>';
   if (st==='pok')  return '<span class="badge b-ok">✅ OK</span>';
-  if (st==='perr') return '<span class="badge b-err">🔴 No Feegow, não no C6</span>';
-  if (st==='pwarn')return '<span class="badge b-warn">🟡 No C6, não no Feegow</span>';
-  if (st==='psd')  return '<span class="badge b-ok">📋 Feegow — sem confronto C6</span>';
+  if (st==='perr') return '<span class="badge b-err">🔴 No Feegow, não no Banco</span>';
+  if (st==='pwarn')return '<span class="badge b-warn">🟡 No Banco, não no Feegow</span>';
+  if (st==='psd')  return '<span class="badge b-ok">📋 Feegow — sem confronto extrato</span>';
   if (st==='pdiv') return '<span class="badge b-div">🟠 Divergência de valor</span>';
   return st;
 }
@@ -432,14 +432,30 @@ function carregarArq(tipo, input) {
     // Tentar UTF-8 primeiro, depois Latin-1
     try { reader.readAsText(file, 'UTF-8'); } catch(e) { reader.readAsText(file, 'ISO-8859-1'); }
   } else if (tipo === 'ofx' && (nome.endsWith('.xlsx') || nome.endsWith('.xls'))) {
-    // C6 em formato Excel
+    // C6 ou BTG em formato Excel — detecta automaticamente pelo conteúdo
     reader.onload = function(e) {
       try {
         var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
-        dados[tipo] = parseC6Excel(wb);
-        atualizarCard(tipo, file.name, dados[tipo].length);
+        // Detectar BTG: procura "BTG" ou "Transação" no cabeçalho
+        var sheet = wb.Sheets[wb.SheetNames[0]];
+        var preview = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', range:0});
+        var ehBTG = false;
+        for (var pi=0; pi<Math.min(preview.length,15); pi++) {
+          var linha = preview[pi].join('').toLowerCase();
+          if (linha.indexOf('btg') >= 0 || linha.indexOf('transação') >= 0 ||
+              linha.indexOf('transacao') >= 0 || linha.indexOf('pix recebido') >= 0) {
+            ehBTG = true; break;
+          }
+        }
+        if (ehBTG) {
+          dados[tipo] = parseBTGExcel(wb);
+          atualizarCard(tipo, file.name + ' (BTG)', dados[tipo].length);
+        } else {
+          dados[tipo] = parseC6Excel(wb);
+          atualizarCard(tipo, file.name + ' (C6)', dados[tipo].length);
+        }
         checarBotoes();
-      } catch(err) { alert('Erro Excel C6: '+err.message); }
+      } catch(err) { alert('Erro Excel extrato: '+err.message); }
     };
     reader.readAsArrayBuffer(file);
   } else if (nome.endsWith('.csv')) {
@@ -500,6 +516,58 @@ function parseC6Excel(wb) {
     if (entrada > 0) {
       result.push({data:data, valor:entrada, memo:titulo||desc, _xlsx:true});
     }
+  }
+  return result;
+}
+
+function parseBTGExcel(wb) {
+  // BTG Pactual: colunas "Data e hora | Categoria | Transação | Descrição | Valor"
+  // Valor positivo = entrada, negativo = saída. Pode ter linhas duplicadas (extrato em 2 páginas).
+  var sheet = wb.Sheets[wb.SheetNames[0]];
+  var rows  = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', raw:true});
+  var result = [];
+  var visto  = {};   // deduplicação: data+memo+valor
+  var hdrIdx = -1;
+  for (var i=0;i<rows.length;i++) {
+    var c0 = String(rows[i][0]||'').trim().toLowerCase();
+    var c2 = String(rows[i][2]||'').trim().toLowerCase();
+    if (c0.indexOf('data') >= 0 && c2.indexOf('transa') >= 0) { hdrIdx=i; break; }
+  }
+  if (hdrIdx < 0) hdrIdx = 11; // fallback padrão BTG
+  for (var i=hdrIdx+1;i<rows.length;i++) {
+    var r = rows[i];
+    var dataRaw  = String(r[0]||'').trim();
+    var transacao = String(r[2]||'').trim();
+    var descricao = String(r[3]||'').trim();
+    var valorRaw = r[4];
+    if (!dataRaw || !transacao) continue;
+    // Filtrar linhas de saldo diário, cabeçalhos repetidos e saídas
+    if (transacao.toLowerCase().indexOf('saldo') >= 0) continue;
+    if (dataRaw.toLowerCase().indexOf('data') >= 0) continue;
+    var valor = 0;
+    if (typeof valorRaw === 'number') {
+      valor = valorRaw;
+    } else {
+      valor = parseFloat(String(valorRaw||'0').trim().replace(/\./g,'').replace(',','.')) || 0;
+    }
+    if (valor <= 0) continue; // ignorar saídas e zeros
+    // Filtrar apenas PIX recebido e entradas relevantes
+    var txLow = transacao.toLowerCase();
+    if (txLow.indexOf('pix enviado') >= 0) continue;
+    if (txLow.indexOf('transferência enviada') >= 0) continue;
+    if (txLow.indexOf('pagamento de boleto') >= 0) continue;
+    if (txLow.indexOf('pagamento de conta') >= 0) continue;
+    // Extrair data (dd/mm/yyyy) do campo "01/10/2026 09:26"
+    var data = '';
+    var mData = dataRaw.match(/(\d{2}\/\d{2}\/\d{4})/);
+    if (mData) data = mData[1];
+    if (!data) continue;
+    var memo = descricao || transacao;
+    // Deduplicar (extrato BTG repete algumas linhas entre páginas)
+    var chave = data + '|' + memo + '|' + valor;
+    if (visto[chave]) continue;
+    visto[chave] = true;
+    result.push({data:data, valor:valor, memo:memo, _btg:true});
   }
   return result;
 }
@@ -726,16 +794,10 @@ function _analisarCartao() {
     if (inf) {
       valInf     = num(inf['Valor (R$)']);
       taxaInfVal = Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0'));
-    } else if (st && st.origem === 'Stone') {
-      // Buscar dados da Stone
-      var srExp2 = idxStone[normAuthCmp(chave)] || null;
-      if (srExp2) {
-        valInf     = num(String(srExp2['VALOR BRUTO']||'0').replace(/\./g,'').replace(',','.'));
-        taxaInfVal = Math.abs(num(String(srExp2['DESCONTO DE MDR']||'0').replace(/\./g,'').replace(',','.')));
-      } else {
-        valInf     = fg.valTotal;
-        taxaInfVal = 0;
-      }
+    } else if (stoneRow) {
+      // Buscar valor e taxa da Stone
+      valInf     = num(String(stoneRow['VALOR BRUTO']||'0').replace(/\./g,'').replace(',','.'));
+      taxaInfVal = Math.abs(num(String(stoneRow['DESCONTO DE MDR']||'0').replace(/\./g,'').replace(',','.')));
     } else {
       valInf = null; taxaInfVal = 0;
     }
@@ -890,10 +952,12 @@ function analisarPix() {
 function _analisarPix() {
   var crRows = dados['cr'] || [];
   var c6Rows = dados['ofx'] || [];
+  // Detectar banco para nomear conta no Meu Dinheiro
+  var nomeBanco = 'C6 Bank';
+  if (c6Rows.length > 0 && c6Rows[0]._btg) nomeBanco = 'BTG Pactual PF';
 
-  // Extrair cada PIX individual do Contas a Receber (sem agrupar)
-  // Cada linha do CR pode ter múltiplos PIX na Forma de Pagamento
-  var pixList = []; // lista de {data, pac, valor, proc, prof}
+  // ── 1. Extrair PIX individuais do CR ─────────────────────────
+  var pixList = [];
   crRows.forEach(function(r) {
     if (String(r['Conta']||'').trim() === 'Conta') return;
     if (String(r['Situação']||'').trim() === 'Situação') return;
@@ -901,184 +965,145 @@ function _analisarPix() {
     var pac    = String(r['Conta']||'').trim();
     var proc   = String(r['Procedimento']||'').trim();
     var prof   = String(r['Profissional Solicitante']||'').trim();
-
+    var vistos = {};
     var rgx = /\d+x PIX - R\$([\.\d,]+) em (\d{4}-\d{2}-\d{2})/g;
     var m;
-    var pixVistos = {}; // deduplicar PIX repetidos na mesma linha do CR
     while ((m = rgx.exec(fmtPag)) !== null) {
       var val   = num(m[1].replace(',','.'));
       var dtRaw = m[2];
       var data  = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
-      var pixKey = val + '|' + data;
-      if (pixVistos[pixKey]) continue; // pular duplicatas da mesma linha
-      pixVistos[pixKey] = true;
+      var vKey  = Math.round(val*100)+'|'+data;
+      if (vistos[vKey]) continue;
+      vistos[vKey] = true;
       pixList.push({data:data, pac:pac, valor:val, proc:proc, prof:prof});
     }
   });
 
-  // NÃO agrupar — confrontar cada PIX individualmente
-  // Exceto: mesmo paciente, mesmo valor, mesma data = deduplicar
+  // ── 2. Deduplicar por pac+data+valor ─────────────────────────
   var pixDedup = {};
   pixList.forEach(function(p) {
     var key = p.data+'|'+normNome(p.pac)+'|'+Math.round(p.valor*100);
-    if (!pixDedup[key]) {
-      pixDedup[key] = {data:p.data, pac:p.pac, valor:p.valor,
-                       linhas:[{prof:p.prof, val:p.valor, proc:p.proc}]};
-    }
+    if (!pixDedup[key]) pixDedup[key] = p;
   });
   var fgList = Object.values(pixDedup).sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
-  var c6Usado = {};
 
-  resPix = [];
+  // ── 3. Agrupar por nome+data ──────────────────────────────────
+  var grupsCR = {};
   fgList.forEach(function(fg) {
-    var enc = null; var encDiv = false;
-    var pacNorm = normNome(fg.pac); // ex: PAULABOTEL
-
-    // 1. Match por nome + valor + data exata (mais preciso)
-    for (var i=0;i<c6Rows.length;i++) {
-      if (c6Usado[i]) continue;
-      var memoNorm = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
-      if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02 &&
-          (memoNorm.indexOf(pacNorm.substring(0,8))>=0 || pacNorm.indexOf(memoNorm.substring(0,8))>=0)) {
-        enc=i; break;
-      }
-    }
-    // 2. Match por valor + data exata (sem nome)
-    if (enc===null) {
-      for (var i=0;i<c6Rows.length;i++) {
-        if (c6Usado[i]) continue;
-        if (c6Rows[i].data===fg.data && Math.abs(c6Rows[i].valor-fg.valor)<0.02) { enc=i; break; }
-      }
-    }
-    // 3. Match por nome + valor ± 1 dia
-    if (enc===null) {
-      for (var i=0;i<c6Rows.length;i++) {
-        if (c6Usado[i]) continue;
-        var memoNorm2 = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
-        if (Math.abs(c6Rows[i].valor-fg.valor)<0.02 &&
-            Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000 &&
-            (memoNorm2.indexOf(pacNorm.substring(0,8))>=0 || pacNorm.indexOf(memoNorm2.substring(0,8))>=0)) {
-          enc=i; break;
-        }
-      }
-    }
-    // 4. Match por valor ± 1 dia (sem nome — último recurso)
-    if (enc===null) {
-      for (var i=0;i<c6Rows.length;i++) {
-        if (c6Usado[i]) continue;
-        if (Math.abs(c6Rows[i].valor-fg.valor)<0.02 && Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000) { enc=i; break; }
-      }
-    }
-    // 5. Match por nome + valor aproximado (±15%) para capturar divergências de valor
-    if (enc===null) {
-      for (var i=0;i<c6Rows.length;i++) {
-        if (c6Usado[i]) continue;
-        var memoNorm5 = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
-        var valDiff   = Math.abs(c6Rows[i].valor - fg.valor) / Math.max(fg.valor, 1);
-        if (valDiff <= 0.20 && // até 20% de diferença
-            Math.abs(dtMs(c6Rows[i].data)-dtMs(fg.data)) <= 86400000 &&
-            (memoNorm5.indexOf(pacNorm.substring(0,6))>=0 || pacNorm.indexOf(memoNorm5.substring(0,6))>=0)) {
-          enc=i; encDiv=true; break; // marcar como divergência de valor
-        }
-      }
-    }
-    if (enc !== null) {
-      c6Usado[enc]=true;
-      var nomeC6 = c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-      var qtd=fg.linhas.length;
-      var stPix = encDiv ? 'pdiv' : 'pok';
-      var obsPix = encDiv
-        ? '🟠 Divergência: Feegow '+moeda(fg.valor)+' | C6 '+moeda(c6Rows[enc].valor)
-        : (qtd>1?'✓ '+qtd+' lançamentos no Feegow somados = '+moeda(fg.valor):'✓ Confirmado no Feegow e no C6');
-      resPix.push({data:fg.data,pac:fg.pac,nomeC6:nomeC6,valF:fg.valor,valC6:c6Rows[enc].valor,
-                   linhas:fg.linhas,st:stPix,
-                   obs:obsPix});
-    } else if (c6Rows.length === 0) {
-      // Sem extrato C6 — lançar direto sem confronto
-      resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
-                   linhas:fg.linhas,st:'psd',
-                   obs:'Sem extrato C6 — lançado direto do Feegow'});
-    } else {
-      resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
-                   linhas:fg.linhas,st:'perr',
-                   obs:'PIX lançado no Feegow mas NÃO localizado no extrato C6. Verificar se o recebimento entrou.'});
-    }
-  });
-
-  // ── Confronto agrupado: paciente pagou vários PIX num único TED/PIX ──────────
-  // Ex: Tércia tem R$5100+R$1200+R$700 no CR mas pagou R$7000 num único PIX no C6
-  var semMatch = fgList.filter(function(fg){ return !c6Usado['fg_'+fgList.indexOf(fg)]; });
-  // Agrupar sem-match por nome+data
-  var grupSemMatch = {};
-  semMatch.forEach(function(fg, idx) {
     var key = normNome(fg.pac)+'|'+fg.data;
-    if (!grupSemMatch[key]) grupSemMatch[key]={pac:fg.pac,data:fg.data,total:0,itens:[]};
-    grupSemMatch[key].total += fg.valor;
-    grupSemMatch[key].itens.push(fg);
+    if (!grupsCR[key]) grupsCR[key] = {pac:fg.pac, data:fg.data, total:0, itens:[]};
+    grupsCR[key].total += fg.valor;
+    grupsCR[key].itens.push(fg);
   });
 
-  Object.values(grupSemMatch).forEach(function(grp) {
-    var pacNormG = normNome(grp.pac);
-    // Buscar no C6 pelo total do grupo
-    for (var i=0;i<c6Rows.length;i++) {
-      if (c6Usado[i]) continue;
-      var memoNG = normNome(c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,''));
-      var valDiff = Math.abs(c6Rows[i].valor - grp.total) / Math.max(grp.total,1);
-      var nomeOk  = memoNG.indexOf(pacNormG.substring(0,6))>=0 || pacNormG.indexOf(memoNG.substring(0,6))>=0;
-      var dataOk  = Math.abs(dtMs(c6Rows[i].data)-dtMs(grp.data)) <= 86400000;
-      if (dataOk && nomeOk && valDiff <= 0.02) {
-        // Match exato do total — marcar todos os itens como OK
-        c6Usado[i] = true;
-        var nomeC6G = c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-        grp.itens.forEach(function(fg) {
-          // Encontrar e atualizar o resPix correspondente
-          for (var j=0;j<resPix.length;j++) {
-            if (resPix[j].pac===fg.pac && resPix[j].data===fg.data &&
-                Math.abs(resPix[j].valF-fg.valor)<0.02 && resPix[j].st==='perr') {
-              resPix[j].st     = 'pok';
-              resPix[j].nomeC6 = nomeC6G;
-              resPix[j].valC6  = fg.valor; // proporção do total
-              resPix[j].obs    = '✓ PIX agrupado: '+grp.itens.length+' lançamentos somam '+moeda(grp.total);
-              break;
-            }
-          }
-        });
-        break;
-      } else if (dataOk && nomeOk && valDiff <= 0.20) {
-        // Divergência no total agrupado
-        c6Usado[i] = true;
-        var nomeC6G2 = c6Rows[i].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-        grp.itens.forEach(function(fg) {
-          for (var j=0;j<resPix.length;j++) {
-            if (resPix[j].pac===fg.pac && resPix[j].data===fg.data &&
-                Math.abs(resPix[j].valF-fg.valor)<0.02 && resPix[j].st==='perr') {
-              resPix[j].st     = 'pdiv';
-              resPix[j].nomeC6 = nomeC6G2;
-              resPix[j].valC6  = c6Rows[i].valor;
-              resPix[j].obs    = '🟠 Divergência agrupada: Feegow '+moeda(grp.total)+' | C6 '+moeda(c6Rows[i].valor);
-              break;
-            }
-          }
-        });
-        break;
+  // ── 4. Helpers ───────────────────────────────────────────────
+  function matchNome(pac, memo) {
+    var memo2 = memo.replace(/Pix recebido( c6)? de /i,'');
+    var pN = normNome(pac), mN = normNome(memo2);
+    if (pN.indexOf(mN.substring(0,6))>=0 || mN.indexOf(pN.substring(0,6))>=0) return true;
+    var wp=pac.toUpperCase().split(/[^A-ZÁÀÃÂÉÊÍÓÕÔÚÇ]+/).filter(function(w){return w.length>=5;});
+    var wm=memo2.toUpperCase().split(/[^A-ZÁÀÃÂÉÊÍÓÕÔÚÇ]+/).filter(function(w){return w.length>=5;});
+    for (var i=0;i<wp.length;i++)
+      for (var j=0;j<wm.length;j++)
+        if (wp[i].substring(0,5)===wm[j].substring(0,5)) return true;
+    return false;
+  }
+  function diffDias(d1,d2) {
+    try { return Math.abs(dtMs(d1)-dtMs(d2))/86400000; } catch(e){ return 999; }
+  }
+
+  // ── 5. Confronto ─────────────────────────────────────────────
+  var c6Usado = {};
+  resPix = [];
+
+  Object.values(grupsCR).forEach(function(grp) {
+    var pac=grp.pac, data=grp.data, itens=grp.itens;
+
+    // Agrupado primeiro (quando múltiplos PIX)
+    var encGrp=null;
+    if (itens.length > 1) {
+      for (var tol=0;tol<=3&&!encGrp;tol++) {
+        for (var i=0;i<c6Rows.length;i++) {
+          if (c6Usado[i]) continue;
+          if (diffDias(c6Rows[i].data,data)>tol) continue;
+          if (!matchNome(pac,c6Rows[i].memo)) continue;
+          if (Math.abs(c6Rows[i].valor-grp.total)/Math.max(grp.total,1)<0.02) { encGrp=i; break; }
+        }
       }
     }
+    if (encGrp!==null) {
+      c6Usado[encGrp]=true;
+      var nC6g=c6Rows[encGrp].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+      itens.forEach(function(fg){
+        resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6g,valF:fg.valor,valC6:fg.valor,
+                     linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
+                     st:'pok',obs:'✓ PIX agrupado: '+itens.length+'x somam '+moeda(grp.total)});
+      });
+      return;
+    }
+
+    // Individual
+    itens.forEach(function(fg) {
+      var enc=null, div=false;
+      // N1: nome+valor exato+data exata
+      for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (c6Usado[i]||c6Rows[i].data!==fg.data||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
+        if (matchNome(pac,c6Rows[i].memo)) enc=i;
+      }
+      // N2: valor exato+data exata
+      for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (!c6Usado[i]&&c6Rows[i].data===fg.data&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) enc=i;
+      }
+      // N3: nome+valor exato ±3 dias
+      for (var tol=1;tol<=3&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (c6Usado[i]||diffDias(c6Rows[i].data,fg.data)>tol||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
+        if (matchNome(pac,c6Rows[i].memo)) enc=i;
+      }
+      // N4: valor exato ±3 dias
+      for (var tol=1;tol<=3&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (!c6Usado[i]&&diffDias(c6Rows[i].data,fg.data)<=tol&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) enc=i;
+      }
+      // N5: nome+divergência ±15% ±1 dia
+      for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (c6Usado[i]) continue;
+        var vd=Math.abs(c6Rows[i].valor-fg.valor)/Math.max(fg.valor,1);
+        if (vd>0.15||diffDias(c6Rows[i].data,fg.data)>1) continue;
+        if (matchNome(pac,c6Rows[i].memo)) { enc=i; div=true; }
+      }
+
+      if (enc!==null) {
+        c6Usado[enc]=true;
+        var nC6=c6Rows[enc].memo.replace(/Pix recebido( c6)? de /i,'').trim();
+        resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6,valF:fg.valor,valC6:c6Rows[enc].valor,
+                     linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
+                     st:div?'pdiv':'pok',
+                     obs:div?'🟠 Divergência: Feegow '+moeda(fg.valor)+' | C6 '+moeda(c6Rows[enc].valor):'✓ Confirmado no Feegow e no Banco'});
+      } else if (c6Rows.length===0) {
+        resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                     linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
+                     st:'psd',obs:'Sem extrato banco — lançado direto do Feegow'});
+      } else {
+        resPix.push({data:fg.data,pac:fg.pac,nomeC6:'—',valF:fg.valor,valC6:null,
+                     linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
+                     st:'perr',obs:'PIX lançado no Feegow mas NÃO localizado no Banco. Verificar.'});
+      }
+    });
   });
 
-  // C6 sem Feegow
-  if (c6Rows.length > 0) c6Rows.forEach(function(c6,i) {
+  // ── 6. Banco sem Feegow ─────────────────────────────────────────
+  if (c6Rows.length>0) c6Rows.forEach(function(c6,i) {
     if (c6Usado[i]) return;
     var memo=c6.memo||'';
-    if (memo.indexOf('Return')>=0||memo.toLowerCase().indexOf('lucro')>=0||memo.toLowerCase().indexOf('distribuicao')>=0) return;
-    var nomeC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
-    resPix.push({data:c6.data,pac:'—',nomeC6:nomeC6,valF:null,valC6:c6.valor,
-                 linhas:[],st:'pwarn',
-                 obs:'Entrada no C6 Bank mas NÃO lançada no Feegow. Verificar: '+nomeC6});
-  }); // fim c6Rows.forEach
+    if (/return|lucro|distribuicao/i.test(memo)) return;
+    var nC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
+    resPix.push({data:c6.data,pac:'—',nomeC6:nC6,valF:null,valC6:c6.valor,
+                 linhas:[],st:'pwarn',obs:'Entrada no Banco mas NÃO lançada no Feegow. Verificar: '+nC6});
+  });
 
   resPix.sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
   renderPix();
 }
+
 
 function renderPix() {
   var cnt={pok:0,perr:0,pwarn:0,psd:0};
@@ -1092,7 +1117,7 @@ function renderPix() {
   datas.sort(function(a,b){return dtMs(a)-dtMs(b);});
   var temC6 = dados['ofx'] && dados['ofx'].length > 0;
   var subTxt = datas.length ? datas[0]+' a '+datas[datas.length-1]+' · '+resPix.length+' itens' : '';
-  if (!temC6) subTxt += ' · Sem confronto C6 (extrato não carregado)';
+  if (!temC6) subTxt += ' · Sem confronto extrato (extrato não carregado)';
   document.getElementById('subPix').textContent = subTxt;
 
   var tb=document.getElementById('tbPix'); tb.innerHTML='';
@@ -1534,12 +1559,16 @@ function categoriaPIX(prof, pac, desc) {
 function exportarPixMD() {
   if (!resPix.length) { alert('Faça a análise PIX primeiro.'); return; }
 
+  // Detectar banco para conta no Meu Dinheiro
+  var c6RowsExp = dados['ofx'] || [];
+  var nomeBanco = (c6RowsExp.length > 0 && c6RowsExp[0]._btg) ? 'BTG Pactual PF' : 'C6 Bank';
+
   var wb = XLSX.utils.book_new();
   var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
 
   var dPix  = [HDR];
   var dDin  = [HDR];
-  var dPend = [['Data','Paciente Feegow','Nome C6','Valor Feegow','Valor C6','STATUS','Observação (preencher)']];
+  var dPend = [['Data','Paciente Feegow','Nome Banco','Valor Feegow','Valor Banco','STATUS','Observação (preencher)']];
 
   // PIX do Feegow (todos)
   var movRows = dados['mov'] ? dados['mov'].filter(function(r){
@@ -1556,7 +1585,7 @@ function exportarPixMD() {
     if (r.st === 'pok' || r.st === 'perr' || r.st === 'psd' || r.st === 'pdiv') {
       if (r.linhas && r.linhas.length > 0) {
         r.linhas.forEach(function(l) {
-          var obs = (r.st==='perr' ? 'NÃO LOCALIZADO NO C6 | ' : '') + 'Prof: '+(l.prof||'—') + (r.st==='psd'?' | Sem confronto C6':'');
+          var obs = (r.st==='perr' ? 'NÃO LOCALIZADO NO BANCO | ' : '') + 'Prof: '+(l.prof||'—') + (r.st==='psd'?' | Sem confronto extrato':'');
           // Tentar pegar procedimento do CR para categoria mais precisa
           var procCR_pix = '';
           var crKeyPix = Math.round(l.val*100)+'|'+r.data;
@@ -1565,35 +1594,35 @@ function exportarPixMD() {
           }
           var cat = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:categoriaCartao(procCR_pix||l.prof, r.pac), sub:procCR_pix?'':'Plano consultas'};
           var pacNome = r.pac || 'A Identificar';
-          dPix.push([r.data, l.val, pacNome, 'C6 Bank','','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
+          dPix.push([r.data, l.val, pacNome, nomeBanco,'','', cat.cat, cat.sub, pacNome,'','','PIX','', r.obs||obs, r.data,'']);
         });
       } else {
-        var obs = r.obs || (r.st==='perr' ? 'NÃO LOCALIZADO NO C6' : 'OK');
+        var obs = r.obs || (r.st==='perr' ? 'NÃO LOCALIZADO NO BANCO' : 'OK');
         var cat2 = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : categoriaPIX('', r.pac, r.nomeC6);
         var pacNome2 = r.pac || 'A Identificar';
-        dPix.push([r.data, r.valF||r.valC6, pacNome2, 'C6 Bank','','', cat2.cat, cat2.sub, pacNome2,'','','PIX','', obs, r.data,'']);
+        dPix.push([r.data, r.valF||r.valC6, pacNome2, nomeBanco,'','', cat2.cat, cat2.sub, pacNome2,'','','PIX','', obs, r.data,'']);
       }
     }
     if (r.st === 'pwarn') {
-      // No C6 sem Feegow → Meu Dinheiro como A Identificar
+      // No Banco sem Feegow → Meu Dinheiro como A Identificar
       var cat_ai = r.catEdit ? {cat:r.catEdit, sub:r.subEdit||''} : {cat:'Identificar', sub:''};
       var pac_ai = r.pac && r.pac !== '—' ? r.pac : 'A Identificar';
-      dPix.push([r.data, r.valC6, pac_ai, 'C6 Bank','','',
+      dPix.push([r.data, r.valC6, pac_ai, nomeBanco,'','',
                  cat_ai.cat, cat_ai.sub, pac_ai,'','','PIX','',
                  r.obs||('A IDENTIFICAR | '+r.nomeC6), r.data,'']);
     }
     // Pendências
     if (r.st === 'perr') {
       dPend.push([r.data, r.pac, '—', moeda(r.valF), '—',
-                  '🔴 No Feegow, não no C6', 'Verificar se o PIX foi recebido']);
+                  '🔴 No Feegow, não no Banco', 'Verificar se o PIX foi recebido']);
     }
     if (r.st === 'pdiv') {
       dPend.push([r.data, r.pac, r.nomeC6, moeda(r.valF), moeda(r.valC6),
-                  '🟠 Divergência de valor', 'Verificar diferença entre Feegow e C6']);
+                  '🟠 Divergência de valor', 'Verificar diferença entre Feegow e Banco']);
     }
     if (r.st === 'pwarn') {
       dPend.push([r.data, '—', r.nomeC6, '—', moeda(r.valC6),
-                  '🟡 No C6, não no Feegow', 'Identificar paciente e lançar no Feegow']);
+                  '🟡 No Banco, não no Feegow', 'Identificar paciente e lançar no Feegow']);
     }
   });
 
@@ -1712,16 +1741,16 @@ function abrirEditPix(idx, btn) {
         '<input id="ef_pix_pac_'+idx+'" value="'+(r.pac||'')+'" style="min-width:200px"></div>'+
       '<div class="edit-field"><label>Valor Feegow</label>'+
         '<input id="ef_pix_valf_'+idx+'" type="number" step="0.01" value="'+(r.valF||'')+'"></div>'+
-      '<div class="edit-field"><label>Valor C6</label>'+
+      '<div class="edit-field"><label>Valor Banco</label>'+
         '<input id="ef_pix_valc_'+idx+'" type="number" step="0.01" value="'+(r.valC6||'')+'"></div>'+
       '<div class="edit-field"><label>Status</label>'+
         '<select id="ef_pix_st_'+idx+'">'+
           '<option value="pok"'+(r.st==='pok'?' selected':'')+'>✅ OK</option>'+
-          '<option value="perr"'+(r.st==='perr'?' selected':'')+'>🔴 Feegow s/ C6</option>'+
-          '<option value="pwarn"'+(r.st==='pwarn'?' selected':'')+'>🟡 C6 s/ Feegow</option>'+
+          '<option value="perr"'+(r.st==='perr'?' selected':'')+'>🔴 Feegow s/ Banco</option>'+
+          '<option value="pwarn"'+(r.st==='pwarn'?' selected':'')+'>🟡 Banco s/ Feegow</option>'+
           '<option value="psd"'+(r.st==='psd'?' selected':'')+'>📋 Sem confronto</option>'+
         '</select></div>'+
-      '<div class="edit-field"><label>Nome no C6</label>'+
+      '<div class="edit-field"><label>Nome no Banco</label>'+
         '<input id="ef_pix_nomec6_'+idx+'" value="'+(r.nomeC6||'')+'" style="min-width:200px"></div>'+
       '<div class="edit-field"><label>Categoria</label>'+
         '<select id="ef_pix_cat_'+idx+'">'+
