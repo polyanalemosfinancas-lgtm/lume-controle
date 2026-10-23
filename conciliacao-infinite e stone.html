@@ -98,6 +98,7 @@ tbody tr:nth-child(even){background:#f9fafb}
 .b-err{background:var(--err-bg);color:var(--err)}
 .b-warn{background:var(--warn-bg);color:var(--warn)}
 .b-div{background:var(--div-bg);color:var(--div)}
+.b-fora{background:#e8eaf6;color:#3949ab}
 
 .money{font-variant-numeric:tabular-nums;font-weight:500;white-space:nowrap;text-align:right}
 .mono{font-family:monospace;font-size:10px;color:#666}
@@ -166,8 +167,18 @@ footer span{color:var(--gold)}
     </div>
   </div>
 
-  <div class="modulos">
-    <div class="modulo ativo" id="mod-cartao" onclick="trocarModulo('cartao')">
+  <div class="modulos" style="grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr">
+    <div class="modulo ativo" id="mod-upload" onclick="trocarModulo('upload')" style="border-color:var(--gold);background:#fffbee">
+      <div class="modulo-icon">📥</div>
+      <div class="modulo-nome" style="color:var(--gold)">Upload Unificado</div>
+      <div class="modulo-desc">Sobe todos os arquivos de uma vez — sistema identifica e separa automaticamente</div>
+    </div>
+    <div class="modulo" id="mod-visao" onclick="trocarModulo('visao')">
+      <div class="modulo-icon">📊</div>
+      <div class="modulo-nome">Visão Geral</div>
+      <div class="modulo-desc">Tabela unificada PIX + Cartão com filtros por operadora, forma e status</div>
+    </div>
+    <div class="modulo" id="mod-cartao" onclick="trocarModulo('cartao')">
       <div class="modulo-icon">💳</div>
       <div class="modulo-nome">Cartão — Feegow × Infinite</div>
       <div class="modulo-desc">Confronto venda a venda por código de autorização + exporta Meu Dinheiro</div>
@@ -177,10 +188,120 @@ footer span{color:var(--gold)}
       <div class="modulo-nome">PIX — Feegow × Extrato Banco</div>
       <div class="modulo-desc">Confronto por data e valor + exporta Meu Dinheiro</div>
     </div>
+    <div class="modulo" id="mod-baixa" onclick="trocarModulo('baixa')">
+      <div class="modulo-icon">🔗</div>
+      <div class="modulo-nome">Conferência de Recebimento</div>
+      <div class="modulo-desc">Confronta Vendas × Recebimento × Extrato — confirma entrada no extrato bancário</div>
+    </div>
+    <div class="modulo" id="mod-analista" onclick="trocarModulo('analista')">
+      <div class="modulo-icon">🧠</div>
+      <div class="modulo-nome">Analista Inteligente</div>
+      <div class="modulo-desc">Visão consolidada de pendências, divergências e alertas de conciliação</div>
+    </div>
+  </div>
+
+  <!-- ═══ UPLOAD UNIFICADO ═══ -->
+  <div class="secao ativa" id="sec-upload">
+    <div style="background:#fffbee;border:2px solid var(--gold);border-radius:14px;padding:24px;margin-bottom:20px">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+        <span style="font-size:2.4rem">📥</span>
+        <div>
+          <div style="font-size:1.15rem;font-weight:700;color:var(--navy)">Upload Unificado Inteligente</div>
+          <div style="font-size:.85rem;color:var(--muted);margin-top:3px">Suba todos os arquivos aqui — o sistema identifica o tipo automaticamente e separa PIX de Cartão, Stone de Infinite</div>
+        </div>
+      </div>
+
+      <!-- Drop zone -->
+      <div id="dropZone" onclick="document.getElementById('fileUnificado').click()"
+           ondragover="event.preventDefault();this.style.borderColor='var(--gold)'"
+           ondragleave="this.style.borderColor='#d1d9e6'"
+           ondrop="event.preventDefault();this.style.borderColor='#d1d9e6';processarDropFiles(event.dataTransfer.files)"
+           style="border:2px dashed #d1d9e6;border-radius:12px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;background:#fff">
+        <div style="font-size:2.5rem;margin-bottom:8px">📂</div>
+        <div style="font-weight:600;color:var(--navy);margin-bottom:4px">Clique ou arraste aqui TODOS os arquivos</div>
+        <div style="font-size:.8rem;color:var(--muted)">Feegow (CC, CR, MOV), Stone (vendas, extrato), Infinite (vendas, extrato), OFX/BTG banco — aceita vários ao mesmo tempo</div>
+        <input type="file" id="fileUnificado" multiple accept=".xlsx,.xls,.csv,.ofx" style="display:none" onchange="processarDropFiles(this.files)">
+      </div>
+
+      <!-- Chips de arquivos detectados -->
+      <div id="arquivosDetectados" style="display:none;margin-top:16px">
+        <div style="font-size:.82rem;font-weight:600;color:var(--navy);margin-bottom:8px">📋 Arquivos detectados:</div>
+        <div id="chipsArquivos" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+      </div>
+
+      <!-- Botões de ação -->
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <button class="btn btn-gold" id="btnProcessarTudo" disabled onclick="processarTudo()" style="font-size:13px;padding:10px 24px">⚡ Processar Tudo — Analisar e Conciliar</button>
+        <button class="btn btn-out" onclick="limparUploadUnificado()">↺ Limpar Tudo</button>
+        <div id="statusProcessamento" style="font-size:.82rem;color:var(--muted);margin-left:6px"></div>
+      </div>
+
+      <!-- Guia de arquivos -->
+      <div style="margin-top:18px;padding:14px;background:rgba(201,168,76,.1);border-radius:10px">
+        <div style="font-size:.8rem;font-weight:600;color:var(--navy);margin-bottom:8px">ℹ️ Quais arquivos subir:</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;font-size:.78rem;color:#444">
+          <div><strong style="color:var(--navy)">Feegow (sistema clínica):</strong><br>• CartaoCredito.xlsx<br>• ContasReceber.xlsx<br>• Movimentacoes.xlsx</div>
+          <div><strong style="color:var(--navy)">Maquininhas (Stone/Infinite):</strong><br>• Relatório de Vendas (Stone/Infinite)<br>• Extrato Stone (.xlsx)<br>• Extrato Infinite (.xlsx)<br>• Recebimento/Parcelas (.csv)</div>
+          <div><strong style="color:var(--navy)">Banco:</strong><br>• Extrato C6 (.ofx ou .xlsx)<br>• Extrato BTG (.xlsx)<br><br><em style="color:var(--muted)">PIX via maquininha é detectado automaticamente no relatório de vendas</em></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ VISÃO GERAL ═══ -->
+  <div class="secao" id="sec-visao">
+    <div style="background:#fff;border-radius:12px;padding:20px;margin-bottom:16px;border:1px solid #e8ecf2">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:16px">
+        <div>
+          <div style="font-size:1.05rem;font-weight:700;color:var(--navy)">📊 Visão Geral — PIX + Cartão Unificados</div>
+          <div style="font-size:.8rem;color:var(--muted);margin-top:2px" id="visaoSub">—</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-navy" onclick="exportarVisaoGeral()">⬇ Exportar Completo</button>
+        </div>
+      </div>
+
+      <!-- KPIs rápidos -->
+      <div id="visaoKpis" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px"></div>
+
+      <!-- Filtros -->
+      <div style="background:#f4f5f7;padding:10px 14px;border-radius:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+        <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
+        <button class="fbtn active" id="vf_tudo"     onclick="filtrarVisao('tudo')">Tudo</button>
+        <button class="fbtn" id="vf_cartao"           onclick="filtrarVisao('cartao')">💳 Cartão</button>
+        <button class="fbtn" id="vf_pix"              onclick="filtrarVisao('pix')">💸 PIX</button>
+        <button class="fbtn" id="vf_dinheiro"         onclick="filtrarVisao('dinheiro')">💵 Dinheiro</button>
+        <button class="fbtn" id="vf_stone"            onclick="filtrarVisao('stone')">🟢 Stone</button>
+        <button class="fbtn" id="vf_infinite"         onclick="filtrarVisao('infinite')">🔵 Infinite</button>
+        <span style="margin-left:8px;font-size:11px;font-weight:600;color:#0D2137">Status:</span>
+        <button class="fbtn" id="vf_ok"               onclick="filtrarVisao('ok')">✅ OK</button>
+        <button class="fbtn" id="vf_pend"             onclick="filtrarVisao('pend')">⏳ Pendente</button>
+        <button class="fbtn" id="vf_diverg"           onclick="filtrarVisao('diverg')">🔴 Divergente</button>
+      </div>
+
+      <div id="visaoVazio" style="text-align:center;padding:48px;color:var(--muted)">
+        <div style="font-size:3rem;margin-bottom:10px">📊</div>
+        <div style="font-weight:600">Nenhum dado carregado ainda</div>
+        <div style="font-size:.85rem;margin-top:6px">Use o <strong>Upload Unificado</strong> para subir os arquivos, ou os módulos individuais de Cartão e PIX</div>
+      </div>
+
+      <div id="visaoTabela" style="display:none">
+        <div class="tbl-scroll">
+          <table>
+            <thead><tr>
+              <th>Data</th><th>Paciente</th><th>Operadora</th><th>Forma</th>
+              <th>Valor Feegow</th><th>Valor Oper.</th><th>Status Oper.</th>
+              <th>Status Extrato</th><th>Categoria</th><th>Obs</th><th>—</th>
+            </tr></thead>
+            <tbody id="tbVisao"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ═══ CARTÃO ═══ -->
-  <div class="secao ativa" id="sec-cartao">
+  <div class="secao" id="sec-cartao">
     <input type="file" id="fileCC"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cc',this)">
     <!-- fileCR movido para área compartilhada -->
     <input type="file" id="fileInf"   accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('inf',this)">
@@ -284,10 +405,11 @@ footer span{color:var(--gold)}
       <button class="btn btn-out" onclick="resetar('pix')">↺ Limpar</button>
     </div>
 
-    <div class="resumo tres" id="resumoPix">
+    <div class="resumo" style="grid-template-columns:repeat(4,1fr)" id="resumoPix">
       <div class="rcard ok"><div class="rnum" id="rPok">0</div><div class="rlabel">✅ OK — nos dois</div></div>
       <div class="rcard err"><div class="rnum" id="rPerr">0</div><div class="rlabel">🔴 No Feegow, não no Banco</div></div>
       <div class="rcard warn"><div class="rnum" id="rPwarn">0</div><div class="rlabel">🟡 No Banco, não no Feegow</div></div>
+      <div class="rcard" style="border-color:#7b1fa2"><div class="rnum" id="rPdin" style="color:#7b1fa2">0</div><div class="rlabel">💵 Dinheiro</div></div>
     </div>
 
     <div class="conc-wrap" id="wrapPix" style="display:none">
@@ -314,6 +436,139 @@ footer span{color:var(--gold)}
       </div>
     </div>
   </div>
+
+  <!-- ═══ BAIXA DE VENDAS STONE ═══ -->
+  <div class="secao" id="sec-baixa">
+    <input type="file" id="fileBaixaVendas"  accept=".xlsx,.xls" style="display:none" onchange="carregarArq('baixa_vendas',this)">
+    <input type="file" id="fileBaixaReceb"   accept=".csv,.xlsx,.xls" style="display:none" onchange="carregarArq('baixa_receb',this)">
+    <input type="file" id="fileBaixaExtrato" accept=".xlsx,.xls" style="display:none" onchange="carregarArq('baixa_extrato',this)">
+
+    <div class="upload-grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="upload-card" id="cardBaixaVendas" onclick="abrirInput('fileBaixaVendas')">
+        <div class="tag">Stone — Obrigatório</div>
+        <div class="upload-icon">🧾</div>
+        <div class="upload-label">Relatório de Vendas (Stone)</div>
+        <div class="upload-hint">Excel Stone · STONE ID, parcelas, valor bruto/líquido/taxa</div>
+        <div class="upload-st" id="stBaixaVendas">✓ Carregado</div>
+      </div>
+      <div class="upload-card" id="cardBaixaReceb" onclick="abrirInput('fileBaixaReceb')">
+        <div class="tag">Stone — Obrigatório</div>
+        <div class="upload-icon">📅</div>
+        <div class="upload-label">Relatório de Recebimento (Stone)</div>
+        <div class="upload-hint">CSV Stone · agenda de parcelas com vencimento por STONE ID</div>
+        <div class="upload-st" id="stBaixaReceb">✓ Carregado</div>
+      </div>
+      <div class="upload-card" id="cardBaixaExtrato" onclick="abrirInput('fileBaixaExtrato')">
+        <div class="tag opc">Stone — Opcional</div>
+        <div class="upload-icon">🏦</div>
+        <div class="upload-label">Extrato Stone</div>
+        <div class="upload-hint">Excel extrato Stone · confirma créditos "Recebível de Cartão" no banco</div>
+        <div class="upload-st" id="stBaixaExtrato">✓ Carregado</div>
+      </div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-gold" id="btnAnalisarBaixa" disabled onclick="analisarBaixa()">⚡ Analisar Baixas</button>
+      <button class="btn btn-navy" id="btnExportBaixa"   disabled onclick="exportarBaixa()">⬇ Exportar Planilha</button>
+      <button class="btn btn-out" onclick="resetar('baixa')">↺ Limpar</button>
+    </div>
+
+    <div class="resumo" id="resumoBaixa" style="display:none">
+      <div class="rcard ok">  <div class="rnum" id="rBok">0</div><div class="rlabel">✅ Parcelas confirmadas no extrato</div></div>
+      <div class="rcard warn"><div class="rnum" id="rBwait">0</div><div class="rlabel">⏳ Aguardando (Agendado/Aberto)</div></div>
+      <div class="rcard err"> <div class="rnum" id="rBerr">0</div><div class="rlabel">🔴 Vencidas não confirmadas</div></div>
+      <div class="rcard div"> <div class="rnum" id="rBdiv">0</div><div class="rlabel">🟠 Divergência de valor</div></div>
+    </div>
+
+    <div class="conc-wrap" id="wrapBaixa" style="display:none">
+      <div class="conc-header">
+        <div class="conc-title">🟢 Baixa de Vendas — Stone</div>
+        <div class="conc-sub" id="subBaixa">—</div>
+      </div>
+      <div style="background:#f4f5f7;padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e0e5ee">
+        <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
+        <button class="fbtn active" id="fB_todos" onclick="filtrarBaixa('todos')">Todos</button>
+        <button class="fbtn" id="fB_ok"   onclick="filtrarBaixa('ok')">✅ Confirmado</button>
+        <button class="fbtn" id="fB_wait" onclick="filtrarBaixa('wait')">⏳ Aguardando</button>
+        <button class="fbtn" id="fB_err"  onclick="filtrarBaixa('err')">🔴 Vencida s/ baixa</button>
+        <button class="fbtn" id="fB_div"  onclick="filtrarBaixa('div')">🟠 Divergência</button>
+      </div>
+      <div class="tbl-scroll">
+        <table>
+          <thead><tr>
+            <th>Vencimento</th><th>Stone ID</th><th>Data Venda</th>
+            <th>Bandeira</th><th>Parcela</th>
+            <th>Val. Parcela</th><th>Líq. Parcela</th>
+            <th>Crédito Extrato</th><th>STATUS</th><th>Observação</th>
+          </tr></thead>
+          <tbody id="tbBaixa"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ ANALISTA INTELIGENTE ═══════════════ -->
+  <div class="secao" id="sec-analista">
+    <div class="upload-grid" style="grid-template-columns:1fr">
+      <div class="upload-card loaded" style="cursor:default;border-color:var(--accent)">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+          <span style="font-size:2rem">🧠</span>
+          <div>
+            <div style="font-weight:700;font-size:1.1rem">Analista Inteligente de Conciliação</div>
+            <div style="font-size:.82rem;color:var(--muted)">Visão consolidada de pendências, divergências e alertas — atualiza com base nos dados já processados</div>
+          </div>
+          <button onclick="analisarTudo()" class="btn" style="margin-left:auto">🔄 Analisar Tudo</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="analistaVazio" style="text-align:center;padding:60px 20px;color:var(--muted)">
+      <div style="font-size:3rem;margin-bottom:12px">📊</div>
+      <div style="font-size:1.1rem;font-weight:600;margin-bottom:8px">Nenhuma análise ainda</div>
+      <div style="font-size:.9rem">Processe os dados nos módulos <strong>Cartão</strong>, <strong>PIX</strong> ou <strong>Baixas</strong> e clique em <strong>Analisar Tudo</strong></div>
+    </div>
+
+    <div id="analistaResultado" style="display:none">
+
+      <!-- KPIs topo -->
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:20px" id="analistaKpis"></div>
+
+      <!-- Alertas críticos -->
+      <div id="secAlertas" style="margin-bottom:20px;display:none">
+        <div class="resumo-titulo" style="color:#e53e3e">🚨 Alertas Críticos</div>
+        <div id="listaAlertas"></div>
+      </div>
+
+      <!-- Pendências por módulo -->
+      <div id="secPendencias" style="margin-bottom:20px">
+        <div class="resumo-titulo">⏳ Pendências por Módulo</div>
+        <div id="listaPendencias" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px"></div>
+      </div>
+
+      <!-- Divergências de valor -->
+      <div id="secDivergencias" style="margin-bottom:20px;display:none">
+        <div class="resumo-titulo" style="color:#d97706">⚠️ Divergências de Valor</div>
+        <div class="tabela-wrap"><table class="tabela" id="tbDivergencias">
+          <thead><tr><th>Fonte</th><th>Auth/ID</th><th>Paciente</th><th>Vlr Feegow</th><th>Vlr Operadora</th><th>Diferença</th><th>Módulo</th></tr></thead>
+          <tbody id="tbodyDivergencias"></tbody>
+        </table></div>
+      </div>
+
+      <!-- Totais consolidados -->
+      <div id="secTotais" style="margin-bottom:20px">
+        <div class="resumo-titulo">💰 Totais Consolidados</div>
+        <div id="listaTotais" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px"></div>
+      </div>
+
+      <!-- Próximas ações -->
+      <div id="secAcoes" style="display:none">
+        <div class="resumo-titulo" style="color:#2b6cb0">📋 Próximas Ações Recomendadas</div>
+        <div id="listaAcoes"></div>
+      </div>
+
+    </div>
+  </div>
+
 </main>
 <footer><span>Lume Finanças</span> · BPO Financeiro · Conciliação Feegow × Infinite / C6 / BTG · uso interno</footer>
 
@@ -323,6 +578,572 @@ var grupFeegow = {}, idxInf = {}, idxStone = {}, idxCR = {}, idxCRValDt = {};
 var stoneRows  = [], infRows = [];
 var filtroCC = 'todos', filtroPix = 'todos';
 var HDR_MD = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
+
+// ── UPLOAD UNIFICADO — variáveis e funções ─────────────────────────────────────
+var arquivosUnificados = []; // [{nome, tipo, rows, enc}]
+var resGeral = []; // resultado unificado [{data,paciente,operadora,forma,valor,auth,status,vFeegow,vOper,statusExtrato,vExtrato,categoria,obs}]
+var filtroVisao = 'tudo';
+
+// Mapa de tipos detectados → label e cor
+var TIPO_INFO = {
+  'feegow_cc':    {label:'Feegow Cartão',     cor:'#6366f1', ico:'🏥'},
+  'feegow_cr':    {label:'Feegow C. Receber', cor:'#8b5cf6', ico:'📋'},
+  'feegow_mov':   {label:'Feegow Movim.',     cor:'#a78bfa', ico:'📊'},
+  'stone_vendas': {label:'Stone Vendas',      cor:'#22c55e', ico:'🟢'},
+  'stone_extrato':{label:'Stone Extrato',     cor:'#16a34a', ico:'🏦'},
+  'stone_receb':  {label:'Stone Recebimento', cor:'#15803d', ico:'📅'},
+  'inf_vendas':   {label:'Infinite Vendas',   cor:'#3b82f6', ico:'🔵'},
+  'inf_extrato':  {label:'Infinite Extrato',  cor:'#1d4ed8', ico:'🏦'},
+  'banco_ofx':    {label:'Extrato C6 (OFX)',  cor:'#f59e0b', ico:'🏛️'},
+  'banco_btg':    {label:'Extrato BTG',       cor:'#d97706', ico:'🏛️'},
+  'banco_c6':     {label:'Extrato C6',        cor:'#b45309', ico:'🏛️'},
+  'desconhecido': {label:'Desconhecido',      cor:'#9ca3af', ico:'❓'}
+};
+
+// Detectar tipo de arquivo pela análise das linhas/colunas
+function detectarTipo(rows, nomeArq) {
+  if (!rows || rows.length < 1) return 'desconhecido';
+  var nomeU = (nomeArq||'').toLowerCase();
+  if (nomeU.endsWith('.ofx') || nomeU.includes('ofx')) return 'banco_ofx';
+  // Dicas pelo nome do arquivo (reforço quando detecção de colunas é ambígua)
+  var _nomeHintInfReceb = nomeU.includes('infinite') && nomeU.includes('receb');
+  var _nomeHintInfVenda = nomeU.includes('infinite') && (nomeU.includes('venda') || nomeU.includes('report'));
+  var _nomeHintStoneReceb = nomeU.includes('stone') && nomeU.includes('receb');
+  var _nomeHintStoneExtrato = nomeU.includes('stone') && (nomeU.includes('extrato') || nomeU.includes('comprovante'));
+  var _nomeHintStoneVenda = nomeU.includes('stone') && nomeU.includes('venda');
+  var _nomeHintBTG = nomeU.includes('btg');
+  var _nomeHintC6 = nomeU.includes('c6') || nomeU.includes('c6bank');
+
+  // Normalizar cabeçalho — remove acentos, maiúscula, trim
+  var hdr = rows[0].map(function(c){
+    return String(c||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+  });
+  var tem = function(sub) { return hdr.some(function(h){ return h.includes(sub); }); };
+  var temEx = function(val) { return hdr.some(function(h){ return h === val; }); };
+
+  // ── DETECÇÃO POR COLUNAS + NOME DO ARQUIVO ───────────────────────────────
+
+  // BANCO BTG/C6 — detectar primeiro pelo nome (evitar falso positivo com outros)
+  if (_nomeHintBTG) return 'banco_btg';
+  if (_nomeHintC6)  return 'banco_c6';
+
+  // BTG por colunas: tem DEBITO + CREDITO
+  if ((tem('DEBITO') || tem('CREDITO')) && (tem('SALDO') || tem('DATA'))) return 'banco_btg';
+  // C6 por colunas: VALOR + MEMO
+  if (temEx('VALOR') && temEx('MEMO')) return 'banco_c6';
+
+  // STONE EXTRATO — pelo nome
+  if (_nomeHintStoneExtrato) return 'stone_extrato';
+  // Stone Extrato por colunas: DATA HORA + TIPO + VALOR (sem IDENTIFICADOR)
+  if ((tem('DATA HORA') || tem('LANCAMENTO') || tem('DESCRICAO')) && temEx('TIPO') && temEx('VALOR') && !tem('IDENTIFICADOR') && !tem('AUTORIZAC')) return 'stone_extrato';
+
+  // STONE RECEBIMENTO
+  if (_nomeHintStoneReceb) return 'stone_receb';
+  if (tem('INFINITE ID') || (tem('AUTORIZAC') && tem('VALOR DA PARCELA'))) return 'stone_receb';
+
+  // STONE VENDAS — pelo nome
+  if (_nomeHintStoneVenda) return 'stone_vendas';
+  // Stone Vendas por colunas: STONE ID ou (IDENTIFICADOR + ULTIMO STATUS sem LIQUIDO)
+  if (tem('STONE ID') || (temEx('IDENTIFICADOR') && (tem('ULTIMO STATUS') || tem('ORIGEM')) && !tem('LIQUID'))) return 'stone_vendas';
+
+  // INFINITE RECEBIMENTO — pelo nome
+  if (_nomeHintInfReceb) return 'stone_receb'; // slot de baixa_receb
+  // Infinite Recebimento por colunas: INFINITE ID (sem STONE ID)
+  if (tem('INFINITE ID') && !tem('STONE ID')) return 'stone_receb';
+
+  // INFINITE EXTRATO
+  if (tem('TIPO DE TRANSAC') || tem('DEPOSITO DE VEND') || tem('SALDO ANTERIOR')) return 'inf_extrato';
+
+  // INFINITE VENDAS — pelo nome
+  if (_nomeHintInfVenda) return 'inf_vendas';
+  // Infinite Vendas por colunas: IDENTIFICADOR + LIQUID (sem STONE ID)
+  if (temEx('IDENTIFICADOR') && tem('LIQUID') && !tem('STONE ID')) return 'inf_vendas';
+
+  // FEEGOW CARTÃO: tem AUTORIZAC + (PAGADOR ou PARCELA ou BANDEIRA)
+  if (tem('AUTORIZ') && (tem('PAGADOR') || tem('PARCELA') || tem('BANDEIRA'))) return 'feegow_cc';
+  // Feegow Cartão fallback: AUTORIZAC sem colunas de operadora
+  if (tem('AUTORIZ') && !tem('STONE') && !tem('INFINITE') && !tem('IDENTIFICADOR')) return 'feegow_cc';
+
+  // FEEGOW CONTAS RECEBER: CONVENIO + VALOR PAGO
+  if (tem('CONVENIO') && tem('VALOR PAGO')) return 'feegow_cr';
+
+  // FEEGOW MOVIMENTACOES: TIPO MOVIMENT ou FORMA DE PAGAMENTO DETALHADO
+  if (tem('TIPO MOVIMENT') || (tem('FORMA DE PAGAMENTO') && tem('DETALH'))) return 'feegow_mov';
+
+  return 'desconhecido';
+}
+
+// Processar upload de múltiplos arquivos
+function processarDropFiles(fileList) {
+  if (!fileList || !fileList.length) return;
+  var pendente = fileList.length;
+  Array.from(fileList).forEach(function(file) {
+    var nome = file.name;
+    var ext  = nome.split('.').pop().toLowerCase();
+    if (ext === 'ofx') {
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var rows = [['OFX_HEADER']];
+        adicionarArquivoDetectado(nome, 'banco_ofx', rows, e.target.result, file);
+        if (--pendente === 0) renderChips();
+      };
+      reader.readAsText(file, 'ISO-8859-1');
+    } else if (ext === 'csv') {
+      var reader2 = new FileReader();
+      reader2.onload = function(e) {
+        var txt = e.target.result;
+        // Tentar detectar Latin-1 para Infinite
+        var rows = parseCSVtoRows(txt);
+        var tipo = detectarTipo(rows, nome);
+        // Debug
+        if (rows && rows[0]) {
+          var colsN = rows[0].map(function(c){ return String(c||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim(); });
+          console.log('[DETECT CSV UTF8] ' + nome + ' → tipo=' + tipo + ' | cols: ' + colsN.join(' | '));
+        }
+        if (tipo === 'desconhecido') {
+          // Re-tentar como Latin-1
+          var r2 = new FileReader();
+          r2.onload = function(e2) {
+            var rows2 = parseCSVtoRows(e2.target.result);
+            var tipo2 = detectarTipo(rows2, nome);
+            if (rows2 && rows2[0]) {
+              var colsN2 = rows2[0].map(function(c){ return String(c||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim(); });
+              console.log('[DETECT CSV LATIN1] ' + nome + ' → tipo=' + tipo2 + ' | cols: ' + colsN2.join(' | '));
+            }
+            adicionarArquivoDetectado(nome, tipo2, rows2, e2.target.result, file);
+            if (--pendente === 0) renderChips();
+          };
+          r2.readAsText(file, 'ISO-8859-1');
+        } else {
+          adicionarArquivoDetectado(nome, tipo, rows, txt, file);
+          if (--pendente === 0) renderChips();
+        }
+      };
+      reader2.readAsText(file, 'UTF-8');
+    } else {
+      var reader3 = new FileReader();
+      reader3.onload = function(e) {
+        try {
+          var wb = XLSX.read(e.target.result, {type:'array', cellDates:true});
+          var sh = wb.SheetNames[0];
+          var rows = XLSX.utils.sheet_to_json(wb.Sheets[sh], {header:1, defval:''});
+          var tipo = detectarTipo(rows, nome);
+          // Debug: log colunas detectadas no console
+          if (rows && rows[0]) {
+            var colsNorm = rows[0].map(function(c){ return String(c||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim(); });
+            console.log('[DETECT] ' + nome + ' → tipo=' + tipo + ' | colunas: ' + colsNorm.join(' | '));
+          }
+          adicionarArquivoDetectado(nome, tipo, rows, null, file, wb);
+        } catch(err) {
+          console.error('[DETECT] Erro lendo ' + nome + ': ' + err.message);
+          adicionarArquivoDetectado(nome, 'desconhecido', [], null, file);
+        }
+        if (--pendente === 0) renderChips();
+      };
+      reader3.readAsArrayBuffer(file);
+    }
+  });
+}
+
+function adicionarArquivoDetectado(nome, tipo, rows, txt, file, wb) {
+  // Remover duplicatas pelo nome
+  arquivosUnificados = arquivosUnificados.filter(function(a){ return a.nome !== nome; });
+  // Guardar colunas normalizadas para diagnóstico
+  var cols = (rows && rows[0]) ? rows[0].map(function(c){
+    return String(c||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim();
+  }).filter(function(c){ return c; }) : [];
+  arquivosUnificados.push({nome:nome, tipo:tipo, rows:rows, txt:txt, file:file, wb:wb, cols:cols});
+}
+
+function renderChips() {
+  var div = document.getElementById('arquivosDetectados');
+  var chips = document.getElementById('chipsArquivos');
+  if (!arquivosUnificados.length) { div.style.display='none'; return; }
+  div.style.display='block';
+
+  // Verificar se há arquivos desconhecidos para mostrar painel de diagnóstico
+  var temDesconhecido = arquivosUnificados.some(function(a){ return a.tipo === 'desconhecido'; });
+  var diagHtml = '';
+  if (temDesconhecido) {
+    diagHtml = '<div style="margin-top:10px;padding:10px;background:#fff3cd;border:1px solid #ffc107;border-radius:8px;font-size:.75rem">'
+      + '<strong>⚠️ Arquivos não reconhecidos — colunas detectadas:</strong><br>';
+    arquivosUnificados.filter(function(a){ return a.tipo === 'desconhecido'; }).forEach(function(a){
+      diagHtml += '<div style="margin-top:6px"><b>'+a.nome+'</b>: '+(a.cols.length ? a.cols.join(' | ') : '(sem colunas lidas)')+'</div>';
+    });
+    diagHtml += '</div>';
+  }
+
+  chips.innerHTML = arquivosUnificados.map(function(a) {
+    var info = TIPO_INFO[a.tipo] || TIPO_INFO['desconhecido'];
+    var colTip = a.cols.length ? ' title="Colunas: '+a.cols.slice(0,8).join(' | ')+'"' : '';
+    return '<div'+colTip+' style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:.78rem;font-weight:600;background:'+info.cor+'22;border:1.5px solid '+info.cor+';color:'+info.cor+'">'
+      + info.ico + ' ' + a.nome.substring(0,30) + (a.nome.length>30?'…':'') + ' <span style="opacity:.7">— '+info.label+'</span>'
+      + '<button onclick="removerArquivoUnif(\''+a.nome.replace(/'/g,"\\'")+'\')" style="background:none;border:none;cursor:pointer;color:'+info.cor+';font-size:12px;padding:0 0 0 4px;line-height:1">✕</button>'
+      + '</div>';
+  }).join('') + diagHtml;
+  document.getElementById('btnProcessarTudo').disabled = false;
+}
+
+function removerArquivoUnif(nome) {
+  arquivosUnificados = arquivosUnificados.filter(function(a){ return a.nome !== nome; });
+  renderChips();
+  if (!arquivosUnificados.length) document.getElementById('btnProcessarTudo').disabled = true;
+}
+
+function limparUploadUnificado() {
+  arquivosUnificados = [];
+  renderChips();
+  document.getElementById('btnProcessarTudo').disabled = true;
+  document.getElementById('statusProcessamento').textContent = '';
+}
+
+// Carregar arquivos detectados nos slots corretos do sistema existente
+function processarTudo() {
+  mostrarOv('Identificando e separando arquivos...');
+  var st = document.getElementById('statusProcessamento');
+  var erros = [];
+
+  // Mapear tipo → slot do sistema existente
+  var mapa = {
+    'feegow_cc':    'cc',
+    'feegow_cr':    'cr',
+    'feegow_mov':   'mov',
+    'stone_vendas': 'stone',
+    'stone_extrato':'baixa_extrato',
+    'stone_receb':  'baixa_receb',
+    'inf_vendas':   'inf',
+    'inf_extrato':  'baixa_extrato',
+    'banco_ofx':    'ofx',
+    'banco_btg':    'btg',
+    'banco_c6':     'ofx'
+  };
+
+  var processados = 0;
+  arquivosUnificados.forEach(function(arq) {
+    var slot = mapa[arq.tipo];
+    if (!slot) { erros.push(arq.nome+' (desconhecido)'); return; }
+    try {
+      if (arq.tipo === 'banco_ofx' && arq.txt) {
+        dados['ofx'] = parseOFX(arq.txt);
+      } else if (arq.tipo === 'banco_btg' && arq.wb) {
+        dados['btg'] = parseBTGExcel(arq.wb);
+      } else if ((arq.tipo === 'banco_c6') && arq.wb) {
+        dados['ofx'] = parseC6Excel(arq.wb);
+      } else if (arq.rows && arq.rows.length > 1) {
+        if (arq.tipo === 'feegow_cc') {
+          dados['cc'] = arq.rows.slice(1).map(function(r){
+            var hdr = arq.rows[0];
+            var obj = {};
+            hdr.forEach(function(k,i){ obj[k] = r[i]; });
+            return obj;
+          });
+        } else if (arq.tipo === 'feegow_cr') {
+          dados['cr'] = arq.rows.slice(1).map(function(r){
+            var hdr = arq.rows[0];
+            var obj = {};
+            hdr.forEach(function(k,i){ obj[k] = r[i]; });
+            return obj;
+          });
+        } else if (arq.tipo === 'feegow_mov') {
+          dados['mov'] = arq.rows.slice(1).map(function(r){
+            var hdr = arq.rows[0];
+            var obj = {};
+            hdr.forEach(function(k,i){ obj[k] = r[i]; });
+            return obj;
+          });
+        } else {
+          // Slots de baixa usam parsers que esperam rows (array de arrays) — não converter
+          var slotsBaixa = ['baixa_receb','baixa_vendas','baixa_extrato'];
+          if (slotsBaixa.indexOf(slot) >= 0) {
+            // Manter formato rows (array de arrays) para parseStoneSalesMap / parseStoneRecebList / parseInfiniteExtratoMap
+            dados[slot] = arq.rows;
+          } else if (arq.rows && arq.rows.length > 1) {
+            // Demais: converter rows em array de objetos usando linha 0 como header
+            var hdrR = arq.rows[0];
+            dados[slot] = arq.rows.slice(1).map(function(r){
+              var obj = {};
+              hdrR.forEach(function(k,i){ obj[String(k||'').trim()] = r[i]; });
+              return obj;
+            });
+          }
+        }
+      }
+      // Atualizar card visual se existir
+      var c = cardMap[slot]; var s = stMap[slot];
+      if (c && document.getElementById(c)) document.getElementById(c).classList.add('loaded');
+      if (s && document.getElementById(s)) document.getElementById(s).textContent = '✓ '+arq.nome;
+      processados++;
+    } catch(e) {
+      erros.push(arq.nome+': '+e.message);
+    }
+  });
+
+  // Checar botões dos módulos individuais
+  checarBotoes();
+
+  // Executar análises automaticamente se tiver dados suficientes
+  var temCC  = dados['cc']  && dados['cc'].length;
+  var temInf = dados['inf'] && dados['inf'].length;
+  var temSt  = dados['stone'] && dados['stone'].length;
+  var temMov = dados['mov'] && dados['mov'].length;
+  var temCR  = dados['cr']  && dados['cr'].length;
+
+  var temOFX = (dados['ofx'] && dados['ofx'].length) || (dados['btg'] && dados['btg'].length);
+  var passos = [];
+  if (temCC || temInf || temSt) passos.push('cartao');
+  if (temMov || temOFX) passos.push('pix');     // roda PIX se tiver banco OU movimentações
+  if (dados['baixa_receb'] || dados['baixa_extrato']) passos.push('baixa');
+
+  var executar = function(idx) {
+    if (idx >= passos.length) {
+      esconderOv();
+      montarResGeral();
+      trocarModulo('visao');
+      var msgs = ['✅ '+processados+' arquivo(s) processado(s)'];
+      if (erros.length) msgs.push('⚠️ Não reconhecidos: '+erros.join(', '));
+      st.textContent = msgs.join(' · ');
+      return;
+    }
+    var passo = passos[idx];
+    var txtOv = passo==='cartao'?'Conciliando Cartão...':passo==='pix'?'Analisando PIX...':'Conferindo Recebimentos...';
+    document.getElementById('overlayTxt').textContent = txtOv;
+    setTimeout(function() {
+      try {
+        if (passo === 'cartao') _analisarCartao();
+        else if (passo === 'pix') _analisarPix();
+        else if (passo === 'baixa') _analisarBaixa();   // versão sem overlay interno
+      } catch(e) { console.error('Erro no passo '+passo+':', e); }
+      executar(idx+1);
+    }, 100);
+  };
+  executar(0);
+}
+
+// Montar resultado unificado a partir de resCC, resPix e resBaixa
+function montarResGeral() {
+  resGeral = [];
+
+  // De resCC (Cartão)
+  resCC.forEach(function(r) {
+    // Determinar operadora: se tem r.origem === 'Stone', é Stone; senão Infinite
+    var oper = (r.origem === 'Stone') ? 'Stone' : 'Infinite';
+    // Determinar se é PIX pelo meio
+    var formaMeio = String(r.meio||'').toLowerCase();
+    var forma = formaMeio === 'pix' ? 'PIX' : 'Cartão';
+    var stMap2 = {ok:'ok', warn:'pend', err:'pend', div:'diverg'};
+    resGeral.push({
+      data: r.data, dataDt: dtMs(r.data),
+      paciente: r.pac || '—',
+      operadora: oper,
+      forma: forma,
+      valor: r.valF || r.valI || 0,
+      auth: r.auth,
+      status: stMap2[r.st] || 'pend',
+      vFeegow: r.valF,
+      vOper: r.valI,
+      statusExtrato: '—',
+      vExtrato: null,
+      categoria: r.catEdit || categoriaCartao(r.proc||'', r.pac||''),
+      obs: r.obs || '',
+      _src: 'cc', _idx: resCC.indexOf(r)
+    });
+  });
+
+  // De resPix (PIX bancário via C6/BTG — cruzado com Feegow CR) + vendas em Dinheiro
+  resPix.forEach(function(r) {
+    var stMap2 = {pok:'ok', pwarn:'pend', perr:'pend', psd:'pend', pdiv:'diverg', pdinheiro:'ok'};
+    var banco = r.banco || 'C6 Bank';
+    var forma = (r.st === 'pdinheiro') ? 'Dinheiro' : 'PIX';
+    var proc = (r.linhas && r.linhas[0]) ? (r.linhas[0].proc||'') : '';
+    resGeral.push({
+      data: r.data, dataDt: dtMs(r.data),
+      paciente: r.pac || '—',
+      operadora: banco,
+      forma: forma,
+      valor: r.valF || r.valC6 || 0,
+      auth: '',
+      status: stMap2[r.st] || 'pend',
+      vFeegow: r.valF,
+      vOper: r.valC6,
+      statusExtrato: r.st==='pok'?'confirmado':r.st==='perr'?'nao_encontrado':r.st==='pdiv'?'divergente':r.st==='pdinheiro'?'caixa':'—',
+      vExtrato: r.valC6,
+      categoria: r.catEdit || (r.st==='pdinheiro' ? categoriaCartao(proc, r.pac||'') : 'Consultas'),
+      obs: r.obs || '',
+      _src: 'pix', _idx: resPix.indexOf(r)
+    });
+  });
+
+  // Lançamentos bancários diretos (C6/BTG) — mostrar mesmo sem cruzamento Feegow
+  if (!resPix.length) {
+    var bancRows = (dados['ofx']||[]).concat(dados['btg']||[]);
+    var nomeBancoD = (dados['btg']&&dados['btg'].length&&!(dados['ofx']&&dados['ofx'].length))?'BTG Pactual':'C6 Bank';
+    bancRows.forEach(function(r) {
+      var val = r.valor || 0;
+      if (val <= 0) return; // só entradas
+      resGeral.push({
+        data: r.data||'—', dataDt: dtMs(r.data||''),
+        paciente: r.memo || r.desc || r.nome || '—',
+        operadora: nomeBancoD,
+        forma: 'PIX',
+        valor: val,
+        auth: '',
+        status: 'pend',
+        vFeegow: null,
+        vOper: val,
+        statusExtrato: 'confirmado',
+        vExtrato: val,
+        categoria: 'A identificar',
+        obs: 'Lançamento bancário sem cruzamento Feegow',
+        _src: 'banco'
+      });
+    });
+  }
+
+  resGeral.sort(function(a,b){ return (a.dataDt||0) - (b.dataDt||0); });
+}
+
+// ── VISÃO GERAL ─────────────────────────────────────────────────────────────────
+function filtrarVisao(f) {
+  filtroVisao = f;
+  // Atualizar botões ativos
+  ['tudo','cartao','pix','dinheiro','stone','infinite','ok','pend','diverg'].forEach(function(k){
+    var btn = document.getElementById('vf_'+k);
+    if (btn) btn.classList.toggle('active', k === f);
+  });
+  renderVisaoGeral();
+}
+
+function renderVisaoGeral() {
+  var kpis = document.getElementById('visaoKpis');
+  var vazio = document.getElementById('visaoVazio');
+  var tabela = document.getElementById('visaoTabela');
+  var sub = document.getElementById('visaoSub');
+
+  if (!resGeral.length) {
+    vazio.style.display='block'; tabela.style.display='none';
+    kpis.innerHTML=''; sub.textContent='—'; return;
+  }
+
+  // KPIs
+  var nCartao  = resGeral.filter(function(r){return r.forma==='Cartão';}).length;
+  var nPix     = resGeral.filter(function(r){return r.forma==='PIX';}).length;
+  var nDinheiro= resGeral.filter(function(r){return r.forma==='Dinheiro';}).length;
+  var nOk      = resGeral.filter(function(r){return r.status==='ok';}).length;
+  var nPend    = resGeral.filter(function(r){return r.status==='pend';}).length;
+  var nDiverg  = resGeral.filter(function(r){return r.status==='diverg';}).length;
+  var totVal   = resGeral.reduce(function(s,r){return s+(r.vFeegow||r.valor||0);},0);
+
+  kpis.innerHTML = [
+    {ico:'📋',lbl:'Total registros',  val:resGeral.length, cor:'#6366f1'},
+    {ico:'💳',lbl:'Cartão',          val:nCartao,          cor:'#8b5cf6'},
+    {ico:'💸',lbl:'PIX',             val:nPix,             cor:'#06b6d4'},
+    {ico:'💵',lbl:'Dinheiro',        val:nDinheiro,        cor:'#7b1fa2'},
+    {ico:'✅',lbl:'OK',              val:nOk,              cor:'#22c55e'},
+    {ico:'⏳',lbl:'Pendente',         val:nPend,            cor:'#f59e0b'},
+    {ico:'💰',lbl:'Total (Feegow)',   val:moeda(totVal),    cor:'#0D2137'}
+  ].map(function(k){
+    return '<div style="background:#fff;border:1px solid #e8ecf2;border-radius:10px;padding:12px;text-align:center">'
+      +'<div style="font-size:1.4rem">'+k.ico+'</div>'
+      +'<div style="font-size:1.2rem;font-weight:800;color:'+k.cor+';margin:4px 0">'+k.val+'</div>'
+      +'<div style="font-size:.72rem;color:var(--muted)">'+k.lbl+'</div></div>';
+  }).join('');
+
+  sub.textContent = resGeral.length+' itens · '+nOk+' OK · '+nPend+' pendentes · '+nDiverg+' divergentes';
+
+  // Filtrar
+  var lista = resGeral.filter(function(r){
+    if (filtroVisao === 'tudo')      return true;
+    if (filtroVisao === 'cartao')    return r.forma === 'Cartão';
+    if (filtroVisao === 'pix')       return r.forma === 'PIX';
+    if (filtroVisao === 'dinheiro')  return r.forma === 'Dinheiro';
+    if (filtroVisao === 'stone')     return r.operadora === 'Stone';
+    if (filtroVisao === 'infinite')  return r.operadora === 'Infinite';
+    if (filtroVisao === 'ok')       return r.status === 'ok';
+    if (filtroVisao === 'pend')     return r.status === 'pend';
+    if (filtroVisao === 'diverg')   return r.status === 'diverg';
+    return true;
+  });
+
+  vazio.style.display = 'none';
+  tabela.style.display = 'block';
+  var tb = document.getElementById('tbVisao');
+  tb.innerHTML = lista.map(function(r) {
+    var stBdg = r.status==='ok'
+      ? '<span class="badge b-ok">✅ OK</span>'
+      : r.status==='diverg'
+        ? '<span class="badge b-div">🟠 Divergente</span>'
+        : '<span class="badge b-warn">⏳ Pendente</span>';
+    var extBdg = r.statusExtrato === 'confirmado'
+      ? '<span class="badge b-ok">✓ Extrato</span>'
+      : r.statusExtrato === 'nao_encontrado'
+        ? '<span class="badge b-err">✗ N/A</span>'
+        : r.statusExtrato === 'divergente'
+          ? '<span class="badge b-div">≠ Div.</span>'
+          : '<span style="color:#999;font-size:10px">—</span>';
+    var operCor = r.operadora==='Stone'?'#22c55e':r.operadora==='Infinite'?'#3b82f6':'#f59e0b';
+    var operBdg = '<span style="display:inline-block;padding:2px 8px;border-radius:12px;font-size:9px;font-weight:700;background:'+operCor+'22;color:'+operCor+';border:1px solid '+operCor+'">'+r.operadora+'</span>';
+    var formaBdg = r.forma==='PIX'
+      ? '<span style="color:#06b6d4;font-weight:700;font-size:10px">💸 PIX</span>'
+      : '<span style="color:#6366f1;font-weight:700;font-size:10px">💳 Cartão</span>';
+    return '<tr>'
+      +'<td>'+r.data+'</td>'
+      +'<td style="max-width:160px;font-size:10px">'+r.paciente+'</td>'
+      +'<td>'+operBdg+'</td>'
+      +'<td>'+formaBdg+'</td>'
+      +'<td class="money">'+(r.vFeegow!=null?moeda(r.vFeegow):'—')+'</td>'
+      +'<td class="money">'+(r.vOper!=null?moeda(r.vOper):'—')+'</td>'
+      +'<td>'+stBdg+'</td>'
+      +'<td>'+extBdg+'</td>'
+      +'<td style="font-size:10px;color:#555;max-width:120px">'+r.categoria+'</td>'
+      +'<td class="obs-cell" style="max-width:200px">'+r.obs+'</td>'
+      +'<td><button class="edit-btn" onclick="irParaOrigem('+resGeral.indexOf(r)+')">→ Detalhe</button></td>'
+      +'</tr>';
+  }).join('');
+}
+
+// Navegar para o módulo de origem de um item da visão geral
+function irParaOrigem(idx) {
+  var r = resGeral[idx];
+  if (!r) return;
+  if (r._src === 'cc') { trocarModulo('cartao'); }
+  else if (r._src === 'pix') { trocarModulo('pix'); }
+}
+
+// Exportar Visão Geral para Excel
+function exportarVisaoGeral() {
+  if (!resGeral.length) { alert('Nenhum dado para exportar.'); return; }
+  var wb = XLSX.utils.book_new();
+  var hdr = ['Data','Paciente','Operadora','Forma','Valor Feegow','Valor Operadora','Status','Status Extrato','Categoria','Observação'];
+  var linhas = [hdr].concat(resGeral.map(function(r){
+    return [r.data, r.paciente, r.operadora, r.forma,
+            r.vFeegow||'', r.vOper||'',
+            r.status==='ok'?'OK':r.status==='diverg'?'Divergente':'Pendente',
+            r.statusExtrato||'',
+            r.categoria, r.obs];
+  }));
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(linhas), 'Visão Geral');
+
+  // Cartão separado
+  var cartao = resGeral.filter(function(r){return r.forma==='Cartão';});
+  if (cartao.length) {
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([hdr].concat(cartao.map(function(r){
+      return [r.data, r.paciente, r.operadora, r.forma, r.vFeegow||'', r.vOper||'',
+              r.status==='ok'?'OK':r.status==='diverg'?'Divergente':'Pendente',
+              r.statusExtrato||'', r.categoria, r.obs];
+    }))), 'Cartão');
+  }
+  // PIX separado
+  var pix = resGeral.filter(function(r){return r.forma==='PIX';});
+  if (pix.length) {
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet([hdr].concat(pix.map(function(r){
+      return [r.data, r.paciente, r.operadora, r.forma, r.vFeegow||'', r.vOper||'',
+              r.status==='ok'?'OK':r.status==='diverg'?'Divergente':'Pendente',
+              r.statusExtrato||'', r.categoria, r.obs];
+    }))), 'PIX');
+  }
+  XLSX.writeFile(wb, 'Lume_VisaoGeral_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+}
+// ── FIM UPLOAD UNIFICADO / VISÃO GERAL ────────────────────────────────────────
 
 // ── Utilitários ────────────────────────────────────────────────────────────────
 function num(v) {
@@ -370,6 +1191,11 @@ function dtMs(s) {
   catch(e){ return 9999999999999; }
 }
 
+function fmtDataMs(ms) {
+  try { var d = new Date(ms); return d.toLocaleDateString('pt-BR'); }
+  catch(e){ return ''; }
+}
+
 function normAuth(v) {
   if (!v || String(v) === 'nan') return '';
   var s = String(v).trim().toUpperCase();
@@ -413,6 +1239,7 @@ function esconderOv() { document.getElementById('overlay').classList.remove('sho
 function badgeHtml(st) {
   if (st==='ok')   return '<span class="badge b-ok">✅ OK</span>';
   if (st==='err')  return '<span class="badge b-err">🔴 No Feegow, não no Cartão</span>';
+  if (st==='fora') return '<span class="badge b-fora">📅 Fora do período Stone</span>';
   if (st==='warn') return '<span class="badge b-warn">🟡 No Cartão, não no Feegow</span>';
   if (st==='div')  return '<span class="badge b-div">🟠 Divergência</span>';
   if (st==='pok')  return '<span class="badge b-ok">✅ OK</span>';
@@ -420,12 +1247,15 @@ function badgeHtml(st) {
   if (st==='pwarn')return '<span class="badge b-warn">🟡 No Banco, não no Feegow</span>';
   if (st==='psd')  return '<span class="badge b-ok">📋 Feegow — sem confronto extrato</span>';
   if (st==='pdiv') return '<span class="badge b-div">🟠 Divergência de valor</span>';
+  if (st==='pdinheiro') return '<span class="badge" style="background:#f3e5f5;color:#7b1fa2">💵 Dinheiro</span>';
   return st;
 }
 
 // ── Carregar arquivos ──────────────────────────────────────────────────────────
-var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',btg:'cardBTG',stone:'cardStone',cr:'cardCRshared'};
-var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',btg:'stBTG',stone:'stStone',cr:'stCRshared'};
+var cardMap = {cc:'cardCC',inf:'cardInf',mov:'cardMov',ofx:'cardOFX',btg:'cardBTG',stone:'cardStone',cr:'cardCRshared',
+               baixa_vendas:'cardBaixaVendas',baixa_receb:'cardBaixaReceb',baixa_extrato:'cardBaixaExtrato'};
+var stMap   = {cc:'stCC',inf:'stInf',mov:'stMov',ofx:'stOFX',btg:'stBTG',stone:'stStone',cr:'stCRshared',
+               baixa_vendas:'stBaixaVendas',baixa_receb:'stBaixaReceb',baixa_extrato:'stBaixaExtrato'};
 
 function carregarArq(tipo, input) {
   var file = input.files[0]; if (!file) return;
@@ -462,14 +1292,53 @@ function carregarArq(tipo, input) {
       } catch(err) { alert('Erro Excel C6: '+err.message); }
     };
     reader.readAsArrayBuffer(file);
+  } else if (nome.endsWith('.csv') && tipo === 'baixa_receb') {
+    // Recebimento Stone em CSV → armazenar como array de arrays (header:1)
+    reader.onload = function(e) {
+      try {
+        var rows = parseCSVtoRows(e.target.result);
+        dados[tipo] = rows;
+      } catch(err) { alert('Erro CSV Recebimento: '+err.message); return; }
+      atualizarCard(tipo, file.name, Math.max(0, dados[tipo].length - 1));
+      checarBotoes();
+    };
+    reader.readAsText(file, 'UTF-8');
   } else if (nome.endsWith('.csv')) {
     reader.onload = function(e) {
-      try { dados[tipo] = parseCSV(e.target.result); }
+      var texto = e.target.result;
+      // Detectar encoding ruim: se tem sequências típicas de Latin-1 mal interpretado como UTF-8
+      var temGarbled = /[^\x00-\x7FÀ-ɏЀ-ӿ]/.test(texto) ||
+                       texto.indexOf('M-CM-') >= 0 || texto.indexOf('�') >= 0;
+      if (temGarbled) {
+        // Recarregar como Latin-1
+        var r2 = new FileReader();
+        r2.onload = function(e2) {
+          try { dados[tipo] = parseCSV(e2.target.result); }
+          catch(err) { alert('Erro CSV Latin-1: '+err.message); return; }
+          atualizarCard(tipo, file.name, dados[tipo].length);
+          checarBotoes();
+        };
+        r2.readAsText(file, 'ISO-8859-1');
+        return;
+      }
+      try { dados[tipo] = parseCSV(texto); }
       catch(err) { alert('Erro CSV: '+err.message); return; }
       atualizarCard(tipo, file.name, dados[tipo].length);
       checarBotoes();
     };
     reader.readAsText(file, 'UTF-8');
+  } else if (tipo === 'baixa_vendas' || tipo === 'baixa_receb' || tipo === 'baixa_extrato') {
+    // Arquivos Stone da aba Baixa → armazenar como array de arrays para parsers próprios
+    reader.onload = function(e) {
+      try {
+        var wb = XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:false});
+        var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]],{header:1, defval:'', raw:true});
+        dados[tipo] = rows;
+      } catch(err) { alert('Erro Excel: '+err.message); return; }
+      atualizarCard(tipo, file.name, Math.max(0, dados[tipo].length - 1));
+      checarBotoes();
+    };
+    reader.readAsArrayBuffer(file);
   } else {
     reader.onload = function(e) {
       try {
@@ -612,6 +1481,21 @@ function parseCSV(txt) {
 
 function splitL(l) { return splitLinha(l,','); }
 
+// Converte CSV para array de arrays (header:1), para uso com os parsers Stone Baixa
+function parseCSVtoRows(txt) {
+  if (txt.charCodeAt(0) === 0xFEFF) txt = txt.slice(1);
+  var primeiraLinha = txt.split('\n')[0];
+  var sep = primeiraLinha.indexOf(';') > primeiraLinha.indexOf(',') &&
+            primeiraLinha.indexOf(';') >= 0 ? ';' : ',';
+  var linhas = txt.split('\n');
+  var rows = [];
+  for (var i=0;i<linhas.length;i++) {
+    var l = linhas[i].trim(); if(!l) continue;
+    rows.push(splitLinha(l, sep));
+  }
+  return rows;
+}
+
 function splitLinha(l, sep) {
   sep = sep || ',';
   var res=[],cur='',inQ=false;
@@ -633,8 +1517,9 @@ function atualizarCard(tipo, nome, total) {
 }
 
 function checarBotoes() {
-  document.getElementById('btnAnalisarCC').disabled  = !(dados['cc'] && (dados['inf'] || dados['stone']));
-  document.getElementById('btnAnalisarPix').disabled = !dados['cr'];
+  document.getElementById('btnAnalisarCC').disabled    = !(dados['cc'] && (dados['inf'] || dados['stone']));
+  document.getElementById('btnAnalisarPix').disabled   = !dados['cr'];
+  document.getElementById('btnAnalisarBaixa').disabled = !(dados['baixa_vendas'] && dados['baixa_receb']);
 }
 
 // ── ANÁLISE CARTÃO ─────────────────────────────────────────────────────────────
@@ -676,6 +1561,15 @@ function _analisarCartao() {
     var id = normAuthCmp(String(authVal||'').trim());
     if (id) idxStone[id] = r;
   });
+
+  // Detectar data máxima do relatório Stone (cutoff)
+  var stoneCutoffMs = 0;
+  if (stoneRows.length) {
+    stoneRows.forEach(function(r) {
+      var dtSt = String(r['DATA DA VENDA']||'').trim().substring(0,10);
+      if (dtSt) { var ms = dtMs(fmtData(dtSt)); if (ms > stoneCutoffMs) stoneCutoffMs = ms; }
+    });
+  }
 
   // Contas a Receber — indexar por nome E por valor+data (para cruzar com cartão e PIX)
   var crRows = dados['cr'] || [];
@@ -839,14 +1733,25 @@ function _analisarCartao() {
     }
 
     var st;
-    if (!inf && !stoneRow) st='err';
-    else if (valInf !== null && Math.abs(fg.valTotal - valInf) > 0.02) st='div';
+    var obsCartao = '';
+    if (!inf && !stoneRow) {
+      // Verificar se a venda é após o cutoff do relatório Stone
+      var dtCompMs = dtMs(fg.dataComp);
+      if (stoneCutoffMs > 0 && dtCompMs > stoneCutoffMs) {
+        st = 'fora';  // fora do período do relatório Stone
+        obsCartao = 'Fora do período do relatório Stone (após ' + fmtDataMs(stoneCutoffMs) + ')';
+      } else {
+        st = 'err';
+      }
+    } else if (valInf !== null && Math.abs(fg.valTotal - valInf) > 0.02) st='div';
     else st='ok';
 
     resCC.push({data:fg.dataComp, pac:fg.pac, band:fg.band, auth:auth,
                 totParc:fg.totParc, valF:fg.valTotal, valI:valInf,
                 taxa:taxa, dataCred:fg.dataCred, st:st,
-                origem:origem||'—', proc:procedimentoCR.trim()});
+                origem:origem||'—', proc:procedimentoCR.trim(),
+                obs: obsCartao,
+                meio: inf ? String(inf['Meio - Meio']||'').trim() : ''});
   });
 
   // Infinite sem Feegow — comparar usando normAuthCmp
@@ -864,7 +1769,8 @@ function _analisarCartao() {
       resCC.push({data:dt, pac:'—', band:String(inf['Meio - Bandeira']||'').trim(),
                   auth:id, totParc:1, valF:null, valI:num(inf['Valor (R$)']),
                   taxa:Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0')),
-                  dataCred:'', st:'warn', origem:'Infinite', proc:''});
+                  dataCred:'', st:'warn', origem:'Infinite', proc:'',
+                  meio:String(inf['Meio - Meio']||'').trim()});
     }
   });
 
@@ -893,10 +1799,10 @@ function _analisarCartao() {
 }
 
 function renderCartao() {
-  var cnt={ok:0,err:0,warn:0,div:0};
-  resCC.forEach(function(r){ cnt[r.st]++; });
+  var cnt={ok:0,err:0,warn:0,div:0,fora:0};
+  resCC.forEach(function(r){ if(cnt[r.st]!==undefined) cnt[r.st]++; });
   document.getElementById('rCCok').textContent   = cnt.ok;
-  document.getElementById('rCCerr').textContent  = cnt.err;
+  document.getElementById('rCCerr').textContent  = cnt.err + cnt.fora;  // agrupar no mesmo card
   document.getElementById('rCCwarn').textContent = cnt.warn;
   document.getElementById('rCCdiv').textContent  = cnt.div;
   document.getElementById('resumoCC').style.display = 'grid';
@@ -907,7 +1813,8 @@ function renderCartao() {
 
   var tb = document.getElementById('tbCC'); tb.innerHTML='';
   var diaAnt='';
-  var listaCC = filtroCC==='todos' ? resCC : resCC.filter(function(r){ return r.st===filtroCC; });
+  // Filtro 'err' inclui também 'fora' (fora do período Stone)
+  var listaCC = filtroCC==='todos' ? resCC : resCC.filter(function(r){ return filtroCC==='err' ? (r.st==='err'||r.st==='fora') : r.st===filtroCC; });
   listaCC.forEach(function(r) {
     try {
     if (r.data && r.data !== diaAnt && r.data !== '—') {
@@ -918,6 +1825,7 @@ function renderCartao() {
     var obs='';
     if (r.st==='ok')   obs='✓ Confirmado no Feegow e no '+(r.origem==='Stone'?'Stone':r.origem==='—'?'Cartão':'Infinite');
     else if (r.st==='err')  obs='Lançado no Feegow mas NÃO no Cartão. Verificar se passou no cartão.';
+    else if (r.st==='fora') obs=r.obs||'Fora do período do relatório Stone';
     else if (r.st==='warn') obs='Passou no Cartão mas NÃO no Feegow. Verificar se foi registrado.';
     else if (r.st==='div')  obs='Divergência — Feegow: '+moeda(r.valF)+' | Infinite: '+moeda(r.valI);
     var parcStr = r.totParc>1 ? '1/'+r.totParc : '1/1';
@@ -1138,17 +2046,55 @@ function _analisarPix() {
                  linhas:[],st:'pwarn',obs:'Entrada no '+bancoW+' mas NÃO lançada no Feegow. Verificar: '+nC6});
   });
 
+  // ── 7. Vendas em Dinheiro (Feegow CR / MOV) ──────────────────────────────
+  var dinhCR = dados['cr'] || [];
+  var dinhMOV = dados['mov'] || [];
+
+  // Do Feegow CR — buscar parcelas pagas em Dinheiro
+  dinhCR.forEach(function(r) {
+    if (String(r['Conta']||'').trim() === 'Conta') return;
+    var fmtPag = String(r['Forma de Pagamento (Detalhado)']||'');
+    var pac    = String(r['Conta']||'').trim();
+    var proc   = String(r['Procedimento']||'').trim();
+    var rgxDin = /(\d+)x Dinheiro - R\$([\d\.,]+) em (\d{4}-\d{2}-\d{2})/g;
+    var mDin;
+    while ((mDin = rgxDin.exec(fmtPag)) !== null) {
+      var val  = num(mDin[2].replace(',','.'));
+      var dtRaw= mDin[3];
+      var data = dtRaw.substring(8,10)+'/'+dtRaw.substring(5,7)+'/'+dtRaw.substring(0,4);
+      if (val <= 0) continue;
+      resPix.push({data:data, pac:pac, nomeC6:'—', valF:val, valC6:null, banco:'Caixa',
+                   linhas:[{prof:'', val:val, proc:proc}],
+                   st:'pdinheiro', obs:'💵 Dinheiro — verificar caixa físico'});
+    }
+  });
+
+  // Do Feegow MOV — buscar movimentações com forma "Dinheiro"
+  dinhMOV.forEach(function(r) {
+    var forma = String(r['Forma de Pagamento']||r['Forma']||'').toLowerCase();
+    if (!forma.includes('dinheiro')) return;
+    var pac  = String(r['Paciente']||r['Cliente']||r['Conta']||'').trim();
+    var val  = num(String(r['Valor']||r['Total']||'0').replace(/\./g,'').replace(',','.'));
+    var data = fmtData(String(r['Data']||r['Data Pagamento']||'').trim());
+    var proc = String(r['Procedimento']||r['Servico']||'').trim();
+    if (val <= 0 || !data) return;
+    resPix.push({data:data, pac:pac, nomeC6:'—', valF:val, valC6:null, banco:'Caixa',
+                 linhas:[{prof:'', val:val, proc:proc}],
+                 st:'pdinheiro', obs:'💵 Dinheiro (MOV) — verificar caixa físico'});
+  });
+
   resPix.sort(function(a,b){return dtMs(a.data)-dtMs(b.data);});
   renderPix();
 }
 
 
 function renderPix() {
-  var cnt={pok:0,perr:0,pwarn:0,psd:0};
+  var cnt={pok:0,perr:0,pwarn:0,psd:0,pdinheiro:0};
   resPix.forEach(function(r){if(cnt[r.st]!==undefined)cnt[r.st]++; else cnt.psd++;});
   document.getElementById('rPok').textContent   = cnt.pok;
   document.getElementById('rPerr').textContent  = cnt.perr;
   document.getElementById('rPwarn').textContent = cnt.pwarn;
+  document.getElementById('rPdin').textContent  = cnt.pdinheiro;
   document.getElementById('resumoPix').style.display='grid';
 
   var datas=resPix.filter(function(r){return r.data&&r.data!=='—';}).map(function(r){return r.data;});
@@ -1263,16 +2209,20 @@ function exportarMeuDinheiro() {
       if (st.catEdit) fg.catEdit = st.catEdit;
     }
 
-    // 🔴 Feegow sem Cartão → só pendência (se não foi editado para OK pelo usuário)
-    if (!st || st.st === 'err') {
-      // Se usuário editou para OK via botão Editar, não vai para pendência
-      if (st && st.st !== 'err') { /* editado — continua processamento */ }
+    // 🔴 Feegow sem Cartão (ou fora do período Stone) → só pendência
+    if (!st || st.st === 'err' || st.st === 'fora') {
+      if (st && st.st !== 'err' && st.st !== 'fora') { /* editado para OK — continua */ }
       else {
         if (!jaProc[chave+'_pend']) {
           jaProc[chave+'_pend'] = true;
+          var motivo = (st && st.st === 'fora')
+            ? '📅 Fora do período do relatório Stone'
+            : '🔴 No Feegow, não no Cartão';
+          var instrucao = (st && st.st === 'fora')
+            ? 'Venda após o corte do relatório Stone — aguardar próximo ciclo'
+            : 'Verificar se a venda foi processada na maquininha';
           dPend.push([fg.dataComp, fg.pac, fg.band, chave, moeda(fg.valTotal), '—',
-                      '🔴 No Feegow, não no Cartão',
-                      'Verificar se a venda foi processada na maquininha']);
+                      motivo, instrucao]);
         }
         return;
       }
@@ -1287,7 +2237,21 @@ function exportarMeuDinheiro() {
     }
 
     var valInfTotal = inf ? num(inf['Valor (R$)']) : fg.valTotal;
-    var taxaTotal   = inf ? Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0')) : 0;
+    // ★ Taxa: buscar do Infinite se disponível, senão buscar da Stone pelo auth
+    var taxaTotal;
+    if (inf) {
+      taxaTotal = Math.abs(num(inf['Taxa Aplicada - Valor(R$)']||'0'));
+    } else if (st && st.origem === 'Stone') {
+      var srTax = idxStone[normAuthCmp(chave)] || null;
+      taxaTotal = srTax ? Math.abs(num(String(srTax['DESCONTO DE MDR']||'0').replace(/\./g,'').replace(',','.'))) : 0;
+      // Se stone tem valBruto, usar valor stone ao invés do Feegow
+      if (srTax) {
+        var valBrutoSt = num(String(srTax['VALOR BRUTO']||'0').replace(/\./g,'').replace(',','.'));
+        if (valBrutoSt > 0) valInfTotal = valBrutoSt;
+      }
+    } else {
+      taxaTotal = 0;
+    }
     // ★ Usar número de parcelas da maquininha (Infinite ou Stone)
     var nParcsInf;
     if (inf) {
@@ -1299,7 +2263,11 @@ function exportarMeuDinheiro() {
     } else {
       nParcsInf = fg.totParc || 1;
     }
-    var forma       = fg.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+    // Detectar Pix: quando o meio de pagamento for Pix na maquininha
+    var meioPag = inf ? String(inf['Meio - Meio']||'').trim() : (st ? String(st.meio||'').trim() : '');
+    var isPix   = meioPag.toLowerCase() === 'pix';
+    var forma   = isPix ? 'Pix'
+                : (fg.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito');
 
     // Divergência → pendência (só se o usuário não editou para OK)
     if (st.st === 'div' && !jaProc[chave+'_div']) {
@@ -1320,17 +2288,19 @@ function exportarMeuDinheiro() {
     var somaVal = Math.round(valParcela * (nParcsInf-1) * 100) / 100;
     var somaTax = Math.round(taxaParcela * (nParcsInf-1) * 100) / 100;
 
-    for (var p = 1; p <= nParcsInf; p++) {
-      var valP = p === nParcsInf ? Math.round((valInfTotal - somaVal)*100)/100 : valParcela;
-      var taxP = p === nParcsInf ? Math.round((taxaTotal   - somaTax)*100)/100 : taxaParcela;
+    // Pix: sempre 1 parcela
+    var nParcsLoop = isPix ? 1 : nParcsInf;
+    for (var p = 1; p <= nParcsLoop; p++) {
+      var valP = p === nParcsLoop ? Math.round((valInfTotal - somaVal)*100)/100 : valParcela;
+      var taxP = p === nParcsLoop ? Math.round((taxaTotal   - somaTax)*100)/100 : taxaParcela;
 
       // Calcular vencimento
       var venc = fg.dataComp;
       try {
         var pts = fg.dataComp.split('/');
         var dtBase = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
-        if (forma === 'Débito') {
-          // +1 dia útil: pular sábado (6) e domingo (0)
+        if (forma === 'Pix' || forma === 'Débito') {
+          // Pix e débito: +1 dia útil
           dtBase.setDate(dtBase.getDate()+1);
           var diaSem = dtBase.getDay();
           if (diaSem === 6) dtBase.setDate(dtBase.getDate()+2); // sáb → seg
@@ -1346,20 +2316,34 @@ function exportarMeuDinheiro() {
       } catch(e) {}
 
       var parcStr = nParcsInf > 1 ? ' | Parcela '+p+'/'+nParcsInf : '';
+      // Incluir STONE ID na obs quando for Stone (para confronto com relatório de recebimento)
+      var stoneIdObs = '';
+      if (st && st.origem === 'Stone') {
+        var srObs = idxStone[normAuthCmp(chave)] || null;
+        var stoneIdVal = srObs ? (String(srObs['STONE ID']||srObs['Stone ID']||'')).trim() : '';
+        if (stoneIdVal) stoneIdObs = ' | Stone ID: '+stoneIdVal;
+      }
       var obsBase = (st.st==='div'?'DIVERGÊNCIA: Feegow '+moeda(fg.valTotal)+' vs Infinite '+moeda(valInfTotal)+' | ':'') +
-                   'Auth: '+chave+parcStr;
+                   'Auth: '+chave+parcStr+stoneIdObs;
 
       // C/R
       var pacMD = fg.pac || 'A Identificar';
       var catMD   = fg.catEdit || categoriaCartao(st ? st.proc : '', fg.pac);
       var contaMD = (st && st.origem==='Stone') ? 'Stone' : 'Infinite';
-      dMD.push([venc, valP, pacMD, contaMD,'','', catMD,'', pacMD,'','', forma, chave, fg.obsEdit||obsBase, fg.dataComp, '']);
+      // N. Documento = STONE ID quando Stone, senão auth code
+      var nDocMD = chave;
+      if (st && st.origem === 'Stone') {
+        var srDoc = idxStone[normAuthCmp(chave)] || null;
+        var stoneIdDoc = srDoc ? (String(srDoc['STONE ID']||srDoc['Stone ID']||'')).trim() : '';
+        if (stoneIdDoc) nDocMD = stoneIdDoc;
+      }
+      dMD.push([venc, valP, pacMD, contaMD,'','', catMD,'', pacMD,'','', forma, nDocMD, fg.obsEdit||obsBase, fg.dataComp, '']);
       // C/P taxa
       if (taxP > 0) {
         var contaTaxa = (st && st.origem==='Stone') ? 'Stone' : 'Infinite';
         var taxaLabel = contaTaxa === 'Stone' ? 'Taxa Stone' : 'Taxa Infinite';
         dMD.push([venc, -taxP, taxaLabel+' - '+(fg.pac||'A Identificar'), contaTaxa,'','',
-                  '06 - Tarifa Bancária','Taxa de Cartão',contaTaxa,'','', '', chave,
+                  '06 - Tarifa Bancária','Taxa de Cartão',contaTaxa,'','', '', nDocMD,
                   taxaLabel+' | '+(fg.obsEdit||obsBase), fg.dataComp, '']);
       }
     }
@@ -1385,7 +2369,12 @@ function exportarMeuDinheiro() {
     var nParcsStr= String(inf['Meio - Parcelas']||'1x');
     var nParcs   = parseInt(nParcsStr.split('x')[0]) || 1;
     var band     = String(inf['Meio - Bandeira']||'').trim();
-    var forma    = String(inf['Tipo']||'').toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+    var meioPagAI= String(inf['Meio - Meio']||'').trim();
+    var isPixAI  = meioPagAI.toLowerCase() === 'pix';
+    var forma    = isPixAI ? 'Pix'
+                 : (String(inf['Tipo']||'').toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito');
+    // Pix: sempre 1 parcela
+    if (isPixAI) nParcs = 1;
 
     // Gerar uma linha por parcela
     for (var p=1; p<=nParcs; p++) {
@@ -1396,7 +2385,7 @@ function exportarMeuDinheiro() {
       try {
         var pts = dataVenda.split('/');
         var dtBase = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
-        if (forma === 'Débito') {
+        if (forma === 'Pix' || forma === 'Débito') {
           dtBase.setDate(dtBase.getDate()+1);
           var diaSem2 = dtBase.getDay();
           if (diaSem2 === 6) dtBase.setDate(dtBase.getDate()+2);
@@ -1464,7 +2453,12 @@ function exportarMeuDinheiro() {
     var valBruto  = r.valI || 0;
     var valTaxa   = r.taxa || 0;
     var nParcs    = r.totParc || 1;
-    var forma     = r.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito';
+    // Detectar Pix via Stone (meio = 'Pix' registrado no relatório de vendas Stone)
+    var meioPagSt = String(r.meio||'').trim();
+    var isPixSt   = meioPagSt.toLowerCase() === 'pix';
+    var forma     = isPixSt ? 'Pix'
+                  : (r.band.toLowerCase().indexOf('bito') >= 0 ? 'Débito' : 'Crédito');
+    if (isPixSt) nParcs = 1; // Pix sempre 1 parcela
 
     // Buscar edição do usuário
     var stW = r;
@@ -1483,7 +2477,7 @@ function exportarMeuDinheiro() {
       try {
         var pts = dataVenda.split('/');
         var dtW = new Date(pts[2]+'-'+pts[1]+'-'+pts[0]);
-        if (forma === 'Débito') {
+        if (forma === 'Pix' || forma === 'Débito') {
           dtW.setDate(dtW.getDate()+1);
           var ds=dtW.getDay(); if(ds===6)dtW.setDate(dtW.getDate()+2); if(ds===0)dtW.setDate(dtW.getDate()+1);
         } else {
@@ -1493,13 +2487,16 @@ function exportarMeuDinheiro() {
       } catch(e){}
 
       var parcStr = nParcs > 1 ? ' | Parcela '+p+'/'+nParcs : '';
-      var obsW = (stW.obs||'') || ('A IDENTIFICAR | Auth: '+id+parcStr);
+      // Stone ID como N. Documento para facilitar baixa
+      var stoneIdW = srW ? (String(srW['STONE ID']||srW['Stone ID']||'')).trim() : '';
+      var nDocW = stoneIdW || id;
+      var obsW = (stW.obs||'') || ('A IDENTIFICAR | Auth: '+id+parcStr+(stoneIdW?' | Stone ID: '+stoneIdW:''));
       // C/R
-      dMD.push([venc, valP, pacW, 'Stone','','', catW,'', pacW,'','', forma, id, obsW, dataVenda,'']);
+      dMD.push([venc, valP, pacW, 'Stone','','', catW,'', pacW,'','', forma, nDocW, obsW, dataVenda,'']);
       // C/P taxa
       if (taxP > 0) {
         dMD.push([venc, -taxP, 'Taxa Stone - '+pacW, 'Stone','','',
-                  '06 - Tarifa Bancária','Taxa de Cartão','Stone','','','', id,
+                  '06 - Tarifa Bancária','Taxa de Cartão','Stone','','','', nDocW,
                   'Taxa Stone | '+obsW, dataVenda,'']);
       }
     }
@@ -1512,6 +2509,30 @@ function exportarMeuDinheiro() {
     }
   });
 
+  // ── 4. VENDAS EM DINHEIRO (Feegow CR / MOV) → Meu Dinheiro + aba Caixa ──────
+  var dCaixa = [HDR]; // aba exclusiva para dinheiro
+  if (typeof resPix !== 'undefined') {
+    resPix.forEach(function(px) {
+      if (px.st !== 'pdinheiro') return;
+      var data = px.data || '';
+      var val  = px.valF || 0;
+      var pac  = px.pac  || 'A Identificar';
+      var proc = (px.linhas && px.linhas[0] && px.linhas[0].proc) ? px.linhas[0].proc : '';
+      if (val <= 0 || !data) return;
+
+      var obs = '💵 Dinheiro | ' + pac + (proc ? ' | ' + proc : '');
+      var cat = categoriaCartao(proc, pac);
+
+      // Vencimento = própria data (dinheiro: recebimento imediato)
+      var venc = data;
+
+      // C/R — linha de recebimento em dinheiro
+      var linhaRow = [venc, val, pac, 'Caixa','','', cat,'', pac,'','', 'Dinheiro', '', obs, data, ''];
+      dMD.push(linhaRow);
+      dCaixa.push(linhaRow);
+    });
+  }
+
   // ── Ordenar Meu Dinheiro por data ─────────────────────────
   var hdrMD = dMD.shift();
   dMD.sort(function(a,b){ return dtMs(a[0]||'')-dtMs(b[0]||''); });
@@ -1523,20 +2544,21 @@ function exportarMeuDinheiro() {
   dPend.unshift(hdrP);
 
   // ── Gerar arquivos ─────────────────────────────────────────
-  // Separar por maquininha
+  // Separar por banco/maquininha (Caixa fica só em MD-Caixa, não em MD-Outros)
   var dInfinite = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]==='Infinite'; }));
   var dStone    = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]==='Stone'; }));
-  var dOutros   = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]!=='Infinite' && r[3]!=='Stone'; }));
+  var dOutros   = [HDR].concat(dMD.slice(1).filter(function(r){ return r[3]!=='Infinite' && r[3]!=='Stone' && r[3]!=='Caixa'; }));
 
   if (dInfinite.length > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dInfinite), 'MD-Infinite');
   if (dStone.length    > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dStone),    'MD-Stone');
   if (dOutros.length   > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dOutros),   'MD-Outros');
-  // Também exportar completo
+  if (dCaixa.length    > 1) XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dCaixa),    'MD-Caixa');
+  // Completo + Pendências — sempre gerar mesmo quando vazia
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dMD),   'MeuDinheiro-Completo');
   XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(dPend), 'Pendencias');
   XLSX.writeFile(wb, 'Lume_MeuDinheiro_Cartao_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
-  var nInf = dInfinite.length-1, nSt = dStone.length-1;
-  alert('✓ Exportado! Infinite: '+nInf+' · Stone: '+nSt+' · Pendências: '+(dPend.length-1));
+  var nInf = dInfinite.length-1, nSt = dStone.length-1, nDin = dCaixa.length-1, nPe = dPend.length-1;
+  alert('✓ Exportado!\n• Infinite: '+nInf+' lançamentos\n• Stone: '+nSt+' lançamentos\n• Caixa (Dinheiro): '+nDin+' lançamentos\n• Pendências: '+nPe+'\n\n⚠️ A aba Dinheiro vem do módulo PIX — certifique-se de ter carregado o Feegow antes de exportar.');
 }
 
 // ── EXPORTAR MEU DINHEIRO — PIX ───────────────────────────────────────────────
@@ -1547,19 +2569,26 @@ function categoriaCartao(proc, pac) {
 
   var palavrasMed   = ['tirzepatida','ferrinject','soro','vitamina','noripurum','morosil',
                        'pellet','implante','hormonal','coenzima','trio metilador','ocitocina',
-                       'embalagem','frasco','medicação','medicamento','oxandrolona','nadh',
+                       'embalagem','frasco','medicacao','medicamento','oxandrolona','nadh',
                        'gestrinona','testosterona','estradiol','thermoativador','tsculptor',
-                       'mmp capilar','intradermo','botox','mounjaro','ozempic'];
-  var palavrasConsulta = ['consulta','bioimpedância','avaliação','ecocardiograma',
-                          'teste hidrogênio','1ª consulta'];
+                       'mmp capilar','intradermo','botox','mounjaro','ozempic','saxenda',
+                       'injetavel','suplemento','hormonio'];
+  var palavrasConsulta = ['consulta','bioimpedancia','avaliacao','ecocardiograma',
+                          'teste hidrogenio','1a consulta','retorno','anamnese'];
 
-  var temMed      = palavrasMed.some(function(p){ return textoL.indexOf(p) >= 0; });
-  var temConsulta = palavrasConsulta.some(function(p){ return textoL.indexOf(p) >= 0; });
+  // Normalizar texto para remover acentos na comparação
+  var textoN = textoL.normalize('NFD').replace(/[̀-ͯ]/g,'');
+
+  var temMed      = palavrasMed.some(function(p){ return textoN.indexOf(p) >= 0; });
+  var temConsulta = palavrasConsulta.some(function(p){ return textoN.indexOf(p) >= 0; });
 
   if (temConsulta && temMed) return 'Plano Consulta e Procedimentos';
   if (temMed)      return 'Procedimentos';
   if (temConsulta) return 'Consultas';
-  return 'Identificar';
+  // Se não tem procedimento mas tem paciente identificado → Consultas (mais provável para clínica médica)
+  if (proc && proc.trim()) return 'Identificar';
+  // Sem procedimento, assumir Consultas se paciente identificado (será corrigido pelo usuário se necessário)
+  return 'Consultas';
 }
 
 function categoriaPIX(prof, pac, desc) {
@@ -1598,8 +2627,10 @@ function exportarPixMD() {
   if (!resPix.length) { alert('Faça a análise PIX primeiro.'); return; }
 
   // Detectar banco para conta no Meu Dinheiro
-  var c6RowsExp = dados['ofx'] || [];
-  var nomeBanco = (c6RowsExp.length > 0 && c6RowsExp[0]._btg) ? 'BTG Pactual PF' : 'C6 Bank';
+  // Prioriza BTG se carregado, senão C6
+  var c6RowsExp = (dados['ofx'] || []).concat(dados['btg'] || []);
+  var nomeBanco = (dados['btg'] && dados['btg'].length > 0 && (!dados['ofx'] || !dados['ofx'].length))
+    ? 'BTG Pactual PF' : 'C6 Bank';
 
   var wb = XLSX.utils.book_new();
   var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
@@ -1852,16 +2883,24 @@ function fecharEdits() {
 
 // ── TROCAR MÓDULO ─────────────────────────────────────────────────────────────
 function trocarModulo(mod) {
-  ['cartao','pix'].forEach(function(m){
-    document.getElementById('mod-'+m).classList.remove('ativo');
-    document.getElementById('sec-'+m).classList.remove('ativa');
+  ['upload','visao','cartao','pix','baixa','analista'].forEach(function(m){
+    var el = document.getElementById('mod-'+m);
+    var se = document.getElementById('sec-'+m);
+    if(el) el.classList.remove('ativo');
+    if(se) se.classList.remove('ativa');
   });
-  document.getElementById('mod-'+mod).classList.add('ativo');
-  document.getElementById('sec-'+mod).classList.add('ativa');
+  var elMod = document.getElementById('mod-'+mod);
+  var elSec = document.getElementById('sec-'+mod);
+  if(elMod) elMod.classList.add('ativo');
+  if(elSec) elSec.classList.add('ativa');
+  if (mod === 'analista') analisarTudo();
+  if (mod === 'visao') { montarResGeral(); renderVisaoGeral(); }
 }
 
 function resetar(mod) {
-  var tipos=mod==='cartao'?['cc','inf','stone','cr']:['mov','ofx'];
+  var tipos = mod==='cartao' ? ['cc','inf','stone','cr']
+            : mod==='pix'    ? ['mov','ofx']
+            :                  ['baixa_vendas','baixa_receb','baixa_extrato'];
   tipos.forEach(function(t){
     dados[t]=null;
     var card=document.getElementById(cardMap[t]);
@@ -1875,12 +2914,705 @@ function resetar(mod) {
     document.getElementById('wrapCC').style.display='none';
     document.getElementById('btnExportMD').disabled=true;
     resCC=[];
-  } else {
+  } else if (mod==='pix') {
     document.getElementById('resumoPix').style.display='none';
     document.getElementById('wrapPix').style.display='none';
     document.getElementById('btnExportPix').disabled=true;
     resPix=[];
+  } else {
+    document.getElementById('resumoBaixa').style.display='none';
+    document.getElementById('wrapBaixa').style.display='none';
+    document.getElementById('btnExportBaixa').disabled=true;
+    resBaixa=[];
   }
+}
+
+// ── BAIXA DE VENDAS STONE ────────────────────────────────────────────────────────
+var resBaixa = [];
+var resBaixaFilt = 'todos';
+
+// Parser: Relatório de Vendas (CSV Infinite/Stone)
+// Colunas: Data e hora | Meio - Meio | Meio - Bandeira | Meio - Parcelas | Identificador | NSU | Valor (R$) | Líquido (R$) | Taxa Aplicada - Valor(R$)
+function parseStoneSalesMap(rows) {
+  var map = {};
+  if (!rows || !rows.length) return map;
+  var hdr = rows[0].map(function(c){ return String(c||'').toUpperCase().trim(); });
+  var iDt   = hdr.findIndex(function(h){ return h.includes('DATA'); });
+  var iMeio = hdr.findIndex(function(h){ return h === 'MEIO - MEIO'; });
+  var iBand = hdr.findIndex(function(h){ return h.includes('BANDEIRA') || h === 'MEIO - BANDEIRA'; });
+  var iNP   = hdr.findIndex(function(h){ return h.includes('PARCELAS') && h.includes('MEIO'); });
+  var iAuth = hdr.findIndex(function(h){ return h === 'IDENTIFICADOR' || h.includes('AUTORIZA'); });
+  var iNSU  = hdr.findIndex(function(h){ return h === 'NSU' || h === 'STONE ID'; });
+  var iVB   = hdr.findIndex(function(h){ return h === 'VALOR (R$)' || (h.includes('VALOR') && h.includes('BRUTO')); });
+  var iVL   = hdr.findIndex(function(h){ return h === 'LÍQUIDO (R$)' || h === 'LIQUIDO (R$)' || (h.includes('LIQUID') && !h.includes('PARC')); });
+  var iTaxa = hdr.findIndex(function(h){ return h.includes('TAXA') && h.includes('VALOR'); });
+  var iSt   = hdr.findIndex(function(h){ return h === 'STATUS'; });
+  var iOrig = hdr.findIndex(function(h){ return h.includes('ORIGEM') && h.includes('TIPO'); });
+  rows.slice(1).forEach(function(r){
+    var auth = String(r[iAuth]||'').trim();
+    if (!auth) return;
+    // Pular transações negadas
+    var statusRow = iSt >= 0 ? String(r[iSt]||'').trim().toLowerCase() : '';
+    if (statusRow === 'negada') return;
+    var taxaStr = String(r[iTaxa]||'0').replace(/'/g,'').replace(/\./g,'').replace(',','.').replace(/[^0-9.\-]/g,'');
+    var taxa = Math.abs(parseFloat(taxaStr)||0);
+    var npStr = String(r[iNP]||'').toLowerCase();
+    var nParcs = npStr.includes('vista') ? 1 : (parseInt(npStr)||1);
+    map[auth] = {
+      dataVenda : String(r[iDt]||'').trim(),
+      bandeira  : String(r[iBand]||'').trim(),
+      nParcs    : nParcs,
+      valBruto  : parseFloat(String(r[iVB]||'0').replace(/\./g,'').replace(',','.'))||0,
+      valLiq    : parseFloat(String(r[iVL]||'0').replace(/\./g,'').replace(',','.'))||0,
+      taxa      : taxa,
+      nsu       : String(r[iNSU]||'').trim(),
+      meio      : String(r[iMeio]||'').trim(),
+      origem    : iOrig >= 0 ? String(r[iOrig]||'').trim() : ''
+    };
+  });
+  return map;
+}
+
+// Parser: Recebimento Infinite (CSV) — retorna lista de parcelas a baixar
+// Colunas: Infinite ID | Autorização | Bandeira | Tipo | Valor (R$) | Total de parcelas | Nº da Parcela | Valor da parcela (R$) | Líquido (R$) | Recebido (R$) | Status | Data do Depósito
+function parseStoneRecebList(rows) {
+  var list = [];
+  if (!rows || !rows.length) return list;
+  var hdr = rows[0].map(function(c){ return String(c||'').toUpperCase().trim(); });
+  var iId   = hdr.findIndex(function(h){ return h.includes('INFINITE ID'); });
+  var iAuth = hdr.findIndex(function(h){ return h.includes('AUTORIZA'); });
+  var iBand = hdr.findIndex(function(h){ return h.includes('BANDEIRA'); });
+  var iTipo = hdr.findIndex(function(h){ return h === 'TIPO'; });
+  var iVT   = hdr.findIndex(function(h){ return h === 'VALOR (R$)'; });
+  var iQtd  = hdr.findIndex(function(h){ return h.includes('TOTAL DE PARCELAS'); });
+  // hdr já está em UPPERCASE — buscar "Nº DA PARCELA" normalizado (remove acentos)
+  var hdrNorm = hdr.map(function(h){ return h.normalize('NFD').replace(/[̀-ͯ]/g,''); });
+  var iNPar = hdrNorm.findIndex(function(h){ return (h.includes('N') && h.includes('DA PARCELA') && !h.includes('TOTAL') && !h.includes('VALOR')); });
+  if (iNPar<0) iNPar = hdr.findIndex(function(h){ return h.includes('PARCELA') && !h.includes('TOTAL') && !h.includes('VALOR') && !h.includes('VALOR DA'); });
+  var iVP   = hdr.findIndex(function(h){ return h.includes('VALOR DA PARCELA'); });
+  var iVL   = hdrNorm.findIndex(function(h){ return h === 'LIQUIDO (R$)' || h.includes('LIQUIDO') && h.includes('R$') && !h.includes('VALOR'); });
+  var iVR   = hdr.findIndex(function(h){ return h.includes('RECEBIDO'); });
+  var iSt   = hdr.findIndex(function(h){ return h === 'STATUS'; });
+  var iDepo = hdr.findIndex(function(h){ return h.includes('DEP'); });
+  rows.slice(1).forEach(function(r){
+    var auth = String(r[iAuth]||'').trim();
+    if (!auth) return;
+    var depoRaw = String(r[iDepo]||'').trim();
+    list.push({
+      infiniteId : String(r[iId]||'').trim(),
+      stoneId    : String(r[iId]||'').trim(), // alias
+      auth       : auth,
+      bandeira   : String(r[iBand]||'').trim(),
+      tipo       : String(r[iTipo]||'').trim(),
+      valTotal   : parseFloat(String(r[iVT]||'0').replace(/\./g,'').replace(',','.'))||0,
+      qtdPar     : parseInt(r[iQtd]||'1')||1,
+      nPar       : parseInt(r[iNPar]||'1')||1,
+      valPar     : parseFloat(String(r[iVP]||'0').replace(/\./g,'').replace(',','.'))||0,
+      valLiq     : parseFloat(String(r[iVL]||'0').replace(/\./g,'').replace(',','.'))||0,
+      valReceb   : parseFloat(String(r[iVR]||'0').replace(/\./g,'').replace(',','.'))||0,
+      status     : String(r[iSt]||'').trim(),
+      depoRaw    : depoRaw,
+      depoKey    : normDate(depoRaw),
+      // compat com parseStoneRecebList antiga
+      vencKey    : normDate(depoRaw),
+      vencRaw    : depoRaw
+    });
+  });
+  return list;
+}
+
+// Parser: Extrato Stone (xlsx) — retorna mapa dataKey → lista de créditos {desc, valor}
+// Estrutura Stone: col0=Movimentação, col1=Tipo, col2=Valor, col6=Data
+function parseStoneExtratoMap(rows) {
+  var map = {};
+  if (!rows || !rows.length) return map;
+  // Normalizar cabeçalho removendo acentos para comparação robusta
+  var hdr = rows[0].map(function(c){
+    return String(c||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase().trim();
+  });
+
+  // Detecta índices pelo cabeçalho
+  var iMov  = hdr.findIndex(function(h){ return h.includes('MOVIMENT'); });
+  var iTipo = hdr.findIndex(function(h){ return h === 'TIPO' || h.includes('LANCAMENTO'); });
+  var iVal  = hdr.findIndex(function(h){ return h === 'VALOR'; });
+  var iDt   = hdr.findIndex(function(h){ return h === 'DATA' || (h.includes('DATA') && !h.includes('DOCUMENT')); });
+
+  // Fallback posições fixas do extrato Stone padrão
+  if (iMov  < 0) iMov  = 0;
+  if (iTipo < 0) iTipo = 1;
+  if (iVal  < 0) iVal  = 2;
+  if (iDt   < 0) iDt   = 6;
+
+  rows.slice(1).forEach(function(r){
+    var tipo = String(r[iTipo]||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+    var mov  = String(r[iMov]||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+    // Só créditos tipo "Recebível de Cartão" (sem acentos: RECEBIVEL DE CARTAO)
+    if (!tipo.includes('RECEB') && !tipo.includes('CARTAO')) return;
+    if (!mov.includes('CR') && mov !== 'CREDITO') return;
+    var dtRaw = String(r[iDt]||'').trim();
+    // Data Stone vem com hora: "21/10/2026 08:12" — pega só a data
+    dtRaw = dtRaw.split(' ')[0];
+    var dtKey = normDate(dtRaw);
+    if (!dtKey) return;
+    var valStr = String(r[iVal]||'0').replace(/[R$\s]/g,'').replace(/\./g,'').replace(',','.');
+    var val = parseFloat(valStr);
+    if (val < 0) val = -val;
+    if (!val) return;
+    if (!map[dtKey]) map[dtKey] = [];
+    map[dtKey].push({ desc: String(r[iTipo]||''), valor: val });
+  });
+  return map;
+}
+
+// Parser: Extrato Infinite (xlsx) — retorna mapa dataKey → lista de créditos {desc, valor}
+// Estrutura Infinite: Data | Hora | Tipo de transação | Nome | Detalhe | Valor
+// Filtra: Tipo de transação = 'Depósito de vendas' (e 'Pix' quando for pix da operadora)
+function parseInfiniteExtratoMap(rows) {
+  var map = {};
+  if (!rows || !rows.length) return map;
+  var hdr = rows[0].map(function(c){ return String(c||'').toUpperCase().trim(); });
+
+  var iDt   = hdr.findIndex(function(h){ return h === 'DATA' || h === 'DATE'; });
+  var iTipo = hdr.findIndex(function(h){ return h.includes('TIPO') || h.includes('TYPE'); });
+  var iVal  = hdr.findIndex(function(h){ return h === 'VALOR' || h === 'VALUE' || h.includes('VALOR'); });
+  var iDet  = hdr.findIndex(function(h){ return h.includes('DETAL') || h.includes('DETAIL') || h.includes('NOME'); });
+
+  // Fallback para índices fixos do extrato Infinite padrão
+  if (iDt   < 0) iDt   = 0;
+  if (iTipo < 0) iTipo = 2;
+  if (iVal  < 0) iVal  = 5;
+  if (iDet  < 0) iDet  = 3;
+
+  // Detecta se é formato Stone Comprovante (tem coluna MOVIMENTAÇÃO ou MOVIMENTACAO)
+  var isStone = hdr.findIndex(function(h){
+    var hu = h.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+    return hu.includes('MOVIMENT');
+  }) >= 0;
+  if (isStone) return parseStoneExtratoMap(rows);
+
+  rows.slice(1).forEach(function(r){
+    var tipo = String(r[iTipo]||'').trim();
+    var tipoU = tipo.toUpperCase();
+    // Aceitar "Depósito de vendas" e variações, e também "Pix" (recebimento via Pix pela operadora)
+    var isDeposito = tipoU.includes('DEP') && (tipoU.includes('VEND') || tipoU.includes('CARD') || tipoU.includes('CARTÃO'));
+    var isPix      = tipoU === 'PIX' || tipoU.includes('PIX');
+    if (!isDeposito && !isPix) return;
+
+    var dtRaw = String(r[iDt]||'').trim();
+    // Data Infinite: "2026-10-21" ou serial Excel
+    var dtKey = normDate(dtRaw);
+    if (!dtKey) return;
+
+    var valRaw = r[iVal];
+    var val;
+    if (typeof valRaw === 'number') {
+      val = Math.abs(valRaw);
+    } else {
+      val = Math.abs(parseFloat(String(valRaw||'0').replace(/[R$\s]/g,'').replace(/\./g,'').replace(',','.')) || 0);
+    }
+    if (!val) return;
+
+    var det = String(r[iDet]||'').trim() || tipo;
+    if (!map[dtKey]) map[dtKey] = [];
+    map[dtKey].push({ desc: det, valor: val, tipo: tipo });
+  });
+  return map;
+}
+
+// Normaliza data para "dd/mm/yyyy" ou "yyyy-mm-dd" → "yyyy-mm-dd" como chave
+function normDate(s) {
+  if (!s) return '';
+  s = String(s).trim();
+  // Se vier como número serial Excel (ex: 45678)
+  if (/^\d{5}$/.test(s)) {
+    var d = new Date(Date.UTC(1899,11,30) + parseInt(s)*86400000);
+    return d.toISOString().slice(0,10);
+  }
+  // dd/mm/yyyy
+  var m = s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return m[3]+'-'+m[2].padStart(2,'0')+'-'+m[1].padStart(2,'0');
+  // yyyy-mm-dd
+  if (/^\d{4}-\d{2}-\d{2}/.test(s)) return s.slice(0,10);
+  // dd-mm-yyyy
+  var m2 = s.match(/^(\d{1,2})-(\d{1,2})-(\d{4})/);
+  if (m2) return m2[3]+'-'+m2[2].padStart(2,'0')+'-'+m2[1].padStart(2,'0');
+  return s.slice(0,10);
+}
+
+function fmtDate(key) {
+  if (!key) return '';
+  var p = key.split('-');
+  if (p.length===3) return p[2]+'/'+p[1]+'/'+p[0];
+  return key;
+}
+
+// Versão interna sem overlay — usada pelo processarTudo()
+function _analisarBaixa() {
+  var recebRows = dados['baixa_receb'];
+  if (!recebRows || !recebRows.length) return;
+  try {
+    var vendasRows  = dados['baixa_vendas'];
+    var extratoRows = dados['baixa_extrato'] || null;
+    var vendasMap  = vendasRows ? parseStoneSalesMap(vendasRows) : {};
+    var recebList  = parseStoneRecebList(recebRows);
+    var extratoMap = extratoRows ? parseInfiniteExtratoMap(extratoRows) : {};
+    var extratoCons = {};
+    Object.keys(extratoMap).forEach(function(k){
+      extratoCons[k] = extratoMap[k].map(function(e){ return {valor:e.valor,restante:e.valor,desc:e.desc}; });
+    });
+    var hoje = new Date(); hoje.setHours(0,0,0,0);
+    resBaixa = recebList.map(function(par){
+      var venda=vendasMap[par.auth]||null;
+      var dataVenda=venda?venda.dataVenda:'';
+      var bandeira=par.bandeira||(venda?venda.bandeira:'');
+      var nParcs=par.qtdPar||(venda?venda.nParcs:1);
+      // valPar = valor da parcela; valBruto/valTotal = valor total da venda inteira
+      // valLiq no Infinite = pode ser líquido TOTAL da venda (não por parcela)
+      var valBrutoPar = par.valPar || par.valBruto || 0;
+      var valTotalVenda = par.valTotal || valBrutoPar;
+      var nParcsCalc  = par.qtdPar || 1;
+      var valLiqTotal = par.valLiq || 0;
+      // valLiq nunca pode ser maior que valTotal (bruto) — se for, é coluna errada
+      // Calcular líquido da parcela = valPar - taxa proporcional
+      var valLiqPar;
+      if (valLiqTotal <= 0 || valLiqTotal > valTotalVenda) {
+        // Coluna líquido está errada — estimar: valPar sem taxa conhecida
+        valLiqPar = valBrutoPar; // melhor aproximação disponível
+      } else {
+        // valLiq pode ser o total da venda — dividir por nParcelas para obter por parcela
+        valLiqPar = (nParcsCalc > 1 && valLiqTotal > valBrutoPar * 1.1)
+                    ? Math.round(valLiqTotal / nParcsCalc * 100) / 100
+                    : valLiqTotal;
+      }
+      var dtKey=par.vencKey||'';
+      var dtDate=dtKey?new Date(dtKey+'T00:00:00'):null;
+      var credExt=null,obs='',statusBaixa='wait';
+      if(extratoMap[par.auth]){
+        var entradas=extratoCons[par.auth]||[];
+        for(var ei=0;ei<entradas.length;ei++){
+          if(entradas[ei].restante>0.01){
+            var diff=Math.abs(entradas[ei].restante-valLiqPar);
+            if(diff<0.02){credExt=entradas[ei].valor;entradas[ei].restante=0;statusBaixa='ok';break;}
+            else if(diff<1){credExt=entradas[ei].valor;entradas[ei].restante=0;statusBaixa='div';obs='Dif R$'+diff.toFixed(2);break;}
+          }
+        }
+        if(!credExt){statusBaixa='div';obs='Auth no extrato mas valor não bate';}
+      } else if(dtDate&&dtDate<hoje){statusBaixa='err';obs='Vencida, não no extrato';}
+      return{vencKey:dtKey,vencFmt:fmtDate(dtKey),stoneId:par.infiniteId||par.stoneId||par.auth,
+        auth:par.auth,dataVenda:String(dataVenda).slice(0,10),bandeira:bandeira,
+        nPar:par.nPar,qtdPar:nParcs,valBruto:valBrutoPar,valLiq:valLiqPar,
+        credExt:credExt,status:statusBaixa,obs:obs};
+    });
+    resBaixa.sort(function(a,b){return a.vencKey<b.vencKey?-1:a.vencKey>b.vencKey?1:0;});
+    renderBaixa('todos');
+    var ok=0,wait=0,err=0,div=0;
+    resBaixa.forEach(function(r){if(r.status==='ok')ok++;else if(r.status==='wait')wait++;else if(r.status==='err')err++;else if(r.status==='div')div++;});
+    try{document.getElementById('rBok').textContent=ok;document.getElementById('rBwait').textContent=wait;document.getElementById('rBerr').textContent=err;document.getElementById('rBdiv').textContent=div;document.getElementById('resumoBaixa').style.display='';document.getElementById('wrapBaixa').style.display='';document.getElementById('subBaixa').textContent=resBaixa.length+' parcelas · '+ok+' confirmadas';document.getElementById('btnExportBaixa').disabled=false;}catch(e){}
+  } catch(e){ console.error('_analisarBaixa:', e); }
+}
+
+function analisarBaixa() {
+  var recebRows = dados['baixa_receb'];
+  if (!recebRows || !recebRows.length) {
+    alert('Carregue o arquivo de Recebimento (Infinite ou Stone) primeiro.');
+    return;
+  }
+  mostrarOv('Analisando baixas...');
+  setTimeout(function(){
+  try {
+  var vendasRows  = dados['baixa_vendas'];
+  var extratoRows = dados['baixa_extrato'] || null;
+
+  var vendasMap  = vendasRows ? parseStoneSalesMap(vendasRows) : {};
+  var recebList  = parseStoneRecebList(recebRows);
+  // Detecta formato extrato: Infinite ou Stone
+  var extratoMap = extratoRows ? parseInfiniteExtratoMap(extratoRows) : {};
+
+  // Clona mapa de extrato para consumo progressivo por parcela
+  var extratoCons = {};
+  Object.keys(extratoMap).forEach(function(k){
+    extratoCons[k] = extratoMap[k].map(function(e){ return {valor: e.valor, restante: e.valor, desc: e.desc}; });
+  });
+
+  var hoje = new Date(); hoje.setHours(0,0,0,0);
+
+  resBaixa = recebList.map(function(par){
+    // Cruzar com vendas pelo auth code
+    var venda    = vendasMap[par.auth] || null;
+    var dataVenda= venda ? venda.dataVenda : '';
+    var bandeira = par.bandeira || (venda ? venda.bandeira : '');
+    var nParcs   = par.qtdPar || (venda ? venda.nParcs : 1);
+    // Valor líquido da parcela (campo conforme recebimento Infinite)
+    // valLiq no Infinite = pode ser líquido TOTAL da venda (não por parcela)
+    var valBrutoPar   = par.valPar || par.valBruto || 0;
+    var valTotalVenda = par.valTotal || valBrutoPar;
+    var nParcsCalc    = par.qtdPar || nParcs || 1;
+    var valLiqTotal   = par.valLiq || 0;
+    // valLiq nunca pode ser maior que valTotal (bruto) — se for, é coluna errada
+    var valLiqPar;
+    if (valLiqTotal <= 0 || valLiqTotal > valTotalVenda) {
+      // Coluna líquido está errada — usar valPar como melhor estimativa
+      valLiqPar = valBrutoPar;
+    } else {
+      // Se valLiq parece ser total da venda (> valPar da parcela), dividir por nParcelas
+      valLiqPar = (nParcsCalc > 1 && valLiqTotal > valBrutoPar * 1.1)
+                  ? Math.round(valLiqTotal / nParcsCalc * 100) / 100
+                  : valLiqTotal;
+    }
+    var credExt  = null;
+
+    // Data de depósito/vencimento
+    var dtKey = par.depoKey || par.vencKey || '';
+
+    // Tenta cruzar com extrato na data de depósito
+    var entrList = dtKey ? (extratoCons[dtKey] || []) : [];
+    var melhor = null, melhorDiff = Infinity;
+    entrList.forEach(function(e){
+      if (e.restante <= 0.005) return;
+      var diff = Math.abs(e.restante - valLiqPar);
+      if (diff < melhorDiff) { melhorDiff = diff; melhor = e; }
+    });
+
+    var statusBaixa;
+    var obs = '';
+    var TOLER = 0.10;
+    var dtVenc = dtKey ? new Date(dtKey+'T00:00:00') : null;
+    var statusLower = (par.status||'').toLowerCase();
+
+    if (!extratoRows) {
+      if (statusLower.includes('deposit') || statusLower.includes('pago') || statusLower.includes('receb')) {
+        statusBaixa = 'ok'; obs = par.status + ' (sem extrato)';
+      } else if (dtVenc && dtVenc < hoje) {
+        statusBaixa = 'err'; obs = 'Vencida · '+par.status;
+      } else {
+        statusBaixa = 'wait'; obs = par.status || 'Pendente';
+      }
+    } else if (melhor && melhorDiff <= TOLER) {
+      credExt = melhor.valor;
+      melhor.restante -= valLiqPar;
+      if (melhor.restante < 0.005) melhor.restante = 0;
+      statusBaixa = 'ok';
+      obs = 'Confirmado no extrato';
+    } else if (melhor && melhorDiff <= valLiqPar * 0.05) {
+      credExt = melhor.restante;
+      melhor.restante = 0;
+      statusBaixa = 'div';
+      obs = 'Extrato: '+moeda(credExt)+' vs esperado: '+moeda(valLiqPar);
+    } else if (statusLower.includes('deposit') || statusLower.includes('pago') || statusLower.includes('receb')) {
+      statusBaixa = 'div';
+      obs = 'Status Depositado · não confirmado no extrato';
+    } else if (dtVenc && dtVenc >= hoje) {
+      statusBaixa = 'wait';
+      obs = par.status || 'Pendente';
+    } else {
+      statusBaixa = 'err';
+      obs = 'Não confirmado · '+par.status;
+    }
+
+    return {
+      vencKey  : dtKey,
+      vencFmt  : fmtDate(dtKey),
+      stoneId  : par.infiniteId || par.stoneId || par.auth,
+      auth     : par.auth,
+      dataVenda: String(dataVenda).slice(0,10),
+      bandeira : bandeira,
+      nPar     : par.nPar,
+      qtdPar   : nParcs,
+      valBruto : valBrutoPar,
+      valLiq   : valLiqPar,
+      credExt  : credExt,
+      status   : statusBaixa,
+      obs      : obs
+    };
+  });
+
+  // Ordena por vencimento
+  resBaixa.sort(function(a,b){ return a.vencKey < b.vencKey ? -1 : a.vencKey > b.vencKey ? 1 : 0; });
+
+  renderBaixa('todos');
+
+  // Resumo
+  var ok=0, wait=0, err=0, div=0;
+  resBaixa.forEach(function(r){
+    if(r.status==='ok')   ok++;
+    else if(r.status==='wait') wait++;
+    else if(r.status==='err')  err++;
+    else if(r.status==='div')  div++;
+  });
+  document.getElementById('rBok').textContent   = ok;
+  document.getElementById('rBwait').textContent  = wait;
+  document.getElementById('rBerr').textContent   = err;
+  document.getElementById('rBdiv').textContent   = div;
+  document.getElementById('resumoBaixa').style.display='';
+  document.getElementById('wrapBaixa').style.display='';
+  document.getElementById('subBaixa').textContent = resBaixa.length+' parcelas · '+ok+' confirmadas · '+(wait+err+div)+' pendentes/divergências';
+  document.getElementById('btnExportBaixa').disabled = false;
+  } catch(e) {
+    console.error('analisarBaixa erro:', e);
+    var st2 = document.getElementById('statusProcessamento');
+    if (st2) st2.textContent = '⚠️ Erro na análise de baixas: ' + e.message;
+  }
+  esconderOv();
+  }, 50);
+}
+
+function renderBaixa(filtro) {
+  resBaixaFilt = filtro;
+  // Botões de filtro
+  ['todos','ok','wait','err','div'].forEach(function(f){
+    var btn = document.getElementById('fB_'+f);
+    if (btn) btn.classList.toggle('active', f===filtro);
+  });
+  var tb = document.getElementById('tbBaixa');
+  tb.innerHTML = '';
+  var lista = resBaixa.filter(function(r){ return filtro==='todos' || r.status===filtro; });
+  if (!lista.length) {
+    tb.innerHTML = '<tr><td colspan="10" style="text-align:center;color:#888;padding:24px">Nenhum registro neste filtro</td></tr>';
+    return;
+  }
+  lista.forEach(function(r){
+    var bdg = r.status==='ok'   ? '<span class="badge b-ok">✅ Confirmado</span>'
+            : r.status==='wait' ? '<span class="badge b-warn">⏳ Aguardando</span>'
+            : r.status==='err'  ? '<span class="badge b-err">🔴 Não confirmado</span>'
+            :                     '<span class="badge b-div">🟠 Divergência</span>';
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td>'+r.vencFmt+'</td>'
+      +'<td style="font-family:monospace;font-size:11px">'+r.stoneId+'</td>'
+      +'<td>'+r.dataVenda+'</td>'
+      +'<td>'+r.bandeira+'</td>'
+      +'<td style="text-align:center">'+r.nPar+'/'+r.qtdPar+'</td>'
+      +'<td class="num">'+moeda(r.valBruto)+'</td>'
+      +'<td class="num">'+moeda(r.valLiq)+'</td>'
+      +'<td class="num">'+(r.credExt!=null ? moeda(r.credExt) : '—')+'</td>'
+      +'<td>'+bdg+'</td>'
+      +'<td style="font-size:11px;color:#555">'+r.obs+'</td>';
+    tb.appendChild(tr);
+  });
+}
+
+function filtrarBaixa(f) {
+  renderBaixa(f);
+}
+
+function exportarBaixa() {
+  if (!resBaixa.length) return;
+  var wb = XLSX.utils.book_new();
+
+  // Aba 1: Baixas completas
+  var hdr = ['Vencimento','Stone ID','Data Venda','Bandeira','Parcela','Qtd Parcelas',
+             'Valor Bruto','Valor Líquido','Crédito Extrato','Status','Observação'];
+  var data = [hdr];
+  resBaixa.forEach(function(r){
+    var st = r.status==='ok' ? 'Confirmado' : r.status==='wait' ? 'Aguardando' : r.status==='err' ? 'Não confirmado' : 'Divergência';
+    data.push([r.vencFmt, r.stoneId, r.dataVenda, r.bandeira, r.nPar, r.qtdPar,
+               r.valBruto, r.valLiq, r.credExt!=null ? r.credExt : '', st, r.obs]);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(data), 'Baixas Stone');
+
+  // Aba 2: Só pendentes/divergências
+  var pend = [hdr];
+  resBaixa.filter(function(r){ return r.status!=='ok'; }).forEach(function(r){
+    var st = r.status==='wait' ? 'Aguardando' : r.status==='err' ? 'Não confirmado' : 'Divergência';
+    pend.push([r.vencFmt, r.stoneId, r.dataVenda, r.bandeira, r.nPar, r.qtdPar,
+               r.valBruto, r.valLiq, r.credExt!=null ? r.credExt : '', st, r.obs]);
+  });
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(pend), 'Pendentes');
+
+  XLSX.writeFile(wb, 'Baixa_Stone_'+new Date().toLocaleDateString('pt-BR').replace(/\//g,'-')+'.xlsx');
+}
+
+// ── ANALISTA INTELIGENTE ──────────────────────────────────────────────────────
+function analisarTudo() {
+  var temDados = resCC.length > 0 || resPix.length > 0 || resBaixa.length > 0;
+  document.getElementById('analistaVazio').style.display = temDados ? 'none' : 'block';
+  document.getElementById('analistaResultado').style.display = temDados ? 'block' : 'none';
+  if (!temDados) return;
+
+  // ─── Coletar métricas ────────────────────────────────────────────────────
+  var ccOk=0, ccPend=0, ccDiverg=0, ccTotal=0;
+  var ccValOk=0, ccValPend=0, ccValDiverg=0;
+  resCC.forEach(function(r){
+    ccTotal++;
+    var st = r.status || '';
+    if (st==='ok')           { ccOk++;     ccValOk     += num(r.vLiq||r.valor||0); }
+    else if (st==='diverg')  { ccDiverg++; ccValDiverg += num(r.vLiq||r.valor||0); }
+    else                     { ccPend++;   ccValPend   += num(r.vLiq||r.valor||0); }
+  });
+
+  var pixOk=0, pixPend=0, pixDiverg=0, pixTotal=0;
+  var pixValOk=0, pixValPend=0;
+  resPix.forEach(function(r){
+    pixTotal++;
+    var st = r.status || '';
+    if (st==='ok')          { pixOk++;    pixValOk   += num(r.vFeegow||r.valor||0); }
+    else if (st==='diverg') { pixDiverg++;                                           }
+    else                    { pixPend++;  pixValPend += num(r.vFeegow||r.valor||0); }
+  });
+
+  var bxOk=0, bxWait=0, bxErr=0, bxDiverg=0, bxTotal=0;
+  var bxValOk=0, bxValPend=0;
+  resBaixa.forEach(function(r){
+    bxTotal++;
+    if (r.status==='ok')       { bxOk++;    bxValOk   += num(r.valLiq||0); }
+    else if (r.status==='wait'){ bxWait++;  bxValPend += num(r.valLiq||0); }
+    else if (r.status==='err') { bxErr++;   bxValPend += num(r.valLiq||0); }
+    else if (r.status==='diverg'){bxDiverg++;bxValPend+= num(r.valLiq||0); }
+    else                       { bxWait++;  bxValPend += num(r.valLiq||0); }
+  });
+
+  var totalPend  = ccPend + ccDiverg + pixPend + pixDiverg + bxWait + bxErr + bxDiverg;
+  var totalOk    = ccOk + pixOk + bxOk;
+  var totalGeral = ccTotal + pixTotal + bxTotal;
+  var pctOk = totalGeral > 0 ? Math.round(totalOk/totalGeral*100) : 0;
+
+  // ─── KPIs ────────────────────────────────────────────────────────────────
+  var kpiEl = document.getElementById('analistaKpis');
+  function kpiCard(ico, label, val, cor) {
+    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center">'
+      + '<div style="font-size:1.6rem">'+ico+'</div>'
+      + '<div style="font-size:1.4rem;font-weight:800;color:'+cor+';margin:4px 0">'+val+'</div>'
+      + '<div style="font-size:.78rem;color:var(--muted)">'+label+'</div>'
+      + '</div>';
+  }
+  kpiEl.innerHTML =
+    kpiCard('✅','Conciliados OK', totalOk, '#22c55e') +
+    kpiCard('⏳','Pendências', totalPend, '#f59e0b') +
+    kpiCard('💳','Cartão OK', ccOk+'/'+ccTotal, '#6366f1') +
+    kpiCard('💸','PIX OK', pixOk+'/'+pixTotal, '#06b6d4') +
+    kpiCard('🔗','Baixas OK', bxOk+'/'+bxTotal, '#8b5cf6') +
+    kpiCard('🎯','Taxa Conciliação', pctOk+'%', pctOk>=90?'#22c55e':pctOk>=70?'#f59e0b':'#ef4444');
+
+  // ─── Alertas críticos ────────────────────────────────────────────────────
+  var alertas = [];
+  if (bxErr > 0)    alertas.push({nivel:'erro',  msg: bxErr  + ' baixa(s) <strong>não confirmadas no extrato</strong> — crédito pode não ter sido recebido.'});
+  if (ccDiverg > 0) alertas.push({nivel:'erro',  msg: ccDiverg + ' transação(ões) de cartão com <strong>divergência de valor</strong>.'});
+  if (pixDiverg > 0)alertas.push({nivel:'aviso', msg: pixDiverg + ' PIX com <strong>divergência de valor</strong>.'});
+  if (bxDiverg > 0) alertas.push({nivel:'aviso', msg: bxDiverg + ' baixa(s) com <strong>valor divergente no extrato</strong>.'});
+  if (ccPend > 10)  alertas.push({nivel:'info',  msg: ccPend  + ' transações de cartão ainda <strong>pendentes</strong>.'});
+  if (bxWait > 10)  alertas.push({nivel:'info',  msg: bxWait  + ' baixa(s) aguardando <strong>crédito no extrato</strong>.'});
+
+  var secAl = document.getElementById('secAlertas');
+  var liAl  = document.getElementById('listaAlertas');
+  if (alertas.length > 0) {
+    secAl.style.display = 'block';
+    liAl.innerHTML = alertas.map(function(a){
+      var bg   = a.nivel==='erro' ? '#fee2e2' : a.nivel==='aviso' ? '#fef3c7' : '#eff6ff';
+      var bord = a.nivel==='erro' ? '#fca5a5' : a.nivel==='aviso' ? '#fcd34d' : '#93c5fd';
+      var col  = a.nivel==='erro' ? '#991b1b' : a.nivel==='aviso' ? '#92400e' : '#1e40af';
+      var ico  = a.nivel==='erro' ? '🚨' : a.nivel==='aviso' ? '⚠️' : 'ℹ️';
+      return '<div style="background:'+bg+';border:1px solid '+bord+';border-radius:8px;padding:12px 16px;margin-bottom:8px;color:'+col+'">'
+        + ico + ' ' + a.msg + '</div>';
+    }).join('');
+  } else {
+    secAl.style.display = 'none';
+  }
+
+  // ─── Pendências por módulo ───────────────────────────────────────────────
+  var pEl = document.getElementById('listaPendencias');
+  function pendCard(ico, titulo, ok, total, valPend, detalhe) {
+    var pct = total > 0 ? Math.round(ok/total*100) : 0;
+    var cor = pct>=90?'#22c55e':pct>=60?'#f59e0b':'#ef4444';
+    var vStr = valPend > 0 ? moeda(valPend)+' pendente' : '';
+    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px">'
+      + '<div style="font-weight:700;margin-bottom:10px">'+ico+' '+titulo+'</div>'
+      + '<div style="background:var(--bg);border-radius:6px;height:8px;margin-bottom:8px;overflow:hidden">'
+      +   '<div style="width:'+pct+'%;height:100%;background:'+cor+';border-radius:6px"></div>'
+      + '</div>'
+      + '<div style="display:flex;justify-content:space-between;font-size:.82rem;color:var(--muted)">'
+      +   '<span>'+ok+' / '+total+' ('+pct+'%)</span>'
+      +   (vStr ? '<span>'+vStr+'</span>' : '')
+      + '</div>'
+      + (detalhe ? '<div style="font-size:.78rem;color:var(--muted);margin-top:6px">'+detalhe+'</div>' : '')
+      + '</div>';
+  }
+  pEl.innerHTML = '';
+  if (ccTotal  > 0) pEl.innerHTML += pendCard('💳','Cartão de Crédito', ccOk, ccTotal, ccValPend+ccValDiverg,
+      ccDiverg>0 ? ccDiverg+' divergência(s) de valor' : '');
+  if (pixTotal > 0) pEl.innerHTML += pendCard('💸','PIX', pixOk, pixTotal, pixValPend,
+      pixDiverg>0 ? pixDiverg+' divergência(s)' : '');
+  if (bxTotal  > 0) pEl.innerHTML += pendCard('🔗','Baixas / Extrato', bxOk, bxTotal, bxValPend,
+      [bxWait>0?bxWait+' aguardando crédito':'', bxErr>0?bxErr+' não confirmados':'', bxDiverg>0?bxDiverg+' divergentes':''].filter(Boolean).join(' · '));
+
+  // ─── Divergências de valor ───────────────────────────────────────────────
+  var divRows = [];
+  resCC.forEach(function(r){
+    if (r.status==='diverg') {
+      var vF = num(r.vFeegow||r.vLiq||0), vO = num(r.vOper||r.vLiq||0);
+      var diff = Math.abs(vF - vO);
+      if (diff > 0.01) divRows.push({fonte:'Feegow/Operadora', id:r.auth||r.id||'', pac:r.pac||r.paciente||'', vFee:vF, vOp:vO, diff:diff, mod:'Cartão'});
+    }
+  });
+  resPix.forEach(function(r){
+    if (r.status==='diverg') {
+      var vF = num(r.vFeegow||0), vO = num(r.vOfx||0);
+      var diff = Math.abs(vF - vO);
+      if (diff > 0.01) divRows.push({fonte:'Feegow/OFX', id:r.id||'', pac:r.pac||'', vFee:vF, vOp:vO, diff:diff, mod:'PIX'});
+    }
+  });
+  resBaixa.forEach(function(r){
+    if (r.status==='diverg' && r.credExt!=null) {
+      var vF = num(r.valLiq||0), vO = num(r.credExt||0);
+      var diff = Math.abs(vF - vO);
+      if (diff > 0.01) divRows.push({fonte:'Stone/Extrato', id:r.stoneId||'', pac:'', vFee:vF, vOp:vO, diff:diff, mod:'Baixa'});
+    }
+  });
+  var secDiv = document.getElementById('secDivergencias');
+  if (divRows.length > 0) {
+    secDiv.style.display = 'block';
+    document.getElementById('tbodyDivergencias').innerHTML = divRows
+      .sort(function(a,b){return b.diff-a.diff;})
+      .map(function(d){
+        return '<tr style="background:#fef9ec">'
+          +'<td>'+d.fonte+'</td>'
+          +'<td style="font-family:monospace;font-size:.8rem">'+d.id+'</td>'
+          +'<td>'+d.pac+'</td>'
+          +'<td style="text-align:right">'+moeda(d.vFee)+'</td>'
+          +'<td style="text-align:right">'+moeda(d.vOp)+'</td>'
+          +'<td style="text-align:right;color:#d97706;font-weight:700">'+moeda(d.diff)+'</td>'
+          +'<td>'+d.mod+'</td>'
+          +'</tr>';
+      }).join('');
+  } else {
+    secDiv.style.display = 'none';
+  }
+
+  // ─── Totais consolidados ─────────────────────────────────────────────────
+  var totEl = document.getElementById('listaTotais');
+  function totCard(label, val, sub) {
+    return '<div style="background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px">'
+      + '<div style="font-size:.8rem;color:var(--muted);margin-bottom:4px">'+label+'</div>'
+      + '<div style="font-size:1.25rem;font-weight:800">'+moeda(val)+'</div>'
+      + (sub ? '<div style="font-size:.75rem;color:var(--muted);margin-top:4px">'+sub+'</div>' : '')
+      + '</div>';
+  }
+  var totalRecebido = ccValOk + pixValOk + bxValOk;
+  var totalEmAberto = ccValPend + ccValDiverg + pixValPend + bxValPend;
+  totEl.innerHTML = '';
+  if (ccTotal  > 0) totEl.innerHTML += totCard('Cartão — Confirmado',  ccValOk,  ccOk +' transações');
+  if (pixTotal > 0) totEl.innerHTML += totCard('PIX — Confirmado',     pixValOk, pixOk+' transações');
+  if (bxTotal  > 0) totEl.innerHTML += totCard('Baixas — Confirmado',  bxValOk,  bxOk +' lançamentos');
+  totEl.innerHTML += totCard('Total Recebido Confirmado', totalRecebido, 'Cartão + PIX + Baixas OK');
+  if (totalEmAberto > 0) totEl.innerHTML += totCard('Em Aberto / Pendente', totalEmAberto, 'Ainda não conciliado');
+
+  // ─── Próximas ações ──────────────────────────────────────────────────────
+  var acoes = [];
+  if (bxErr > 0)    acoes.push({ico:'🔴', txt: 'Verificar '+bxErr+' baixa(s) não confirmadas no extrato Stone/Infinite — possível crédito em atraso.'});
+  if (ccDiverg > 0) acoes.push({ico:'🔴', txt: 'Checar '+ccDiverg+' transação(ões) de cartão com divergência — contatar operadora se necessário.'});
+  if (bxDiverg > 0) acoes.push({ico:'🟡', txt: 'Analisar '+bxDiverg+' baixa(s) com valor diferente no extrato — diferença de tarifas?'});
+  if (pixDiverg > 0)acoes.push({ico:'🟡', txt: 'Revisar '+pixDiverg+' PIX com divergência — confirmar valor no extrato bancário.'});
+  if (bxWait > 5)   acoes.push({ico:'🟡', txt: bxWait+' baixa(s) aguardando crédito — verificar agenda de pagamento Stone/Infinite.'});
+  if (ccPend > 5)   acoes.push({ico:'🟢', txt: ccPend+' transações de cartão pendentes — carregar extrato/vendas mais recente.'});
+  if (pixPend > 5)  acoes.push({ico:'🟢', txt: pixPend+' PIX pendentes — carregar OFX/extrato atualizado.'});
+  if (acoes.length===0) acoes.push({ico:'✅', txt: 'Conciliação completa! Todos os lançamentos estão confirmados.'});
+
+  var secAc = document.getElementById('secAcoes');
+  secAc.style.display = 'block';
+  document.getElementById('listaAcoes').innerHTML = acoes.map(function(a){
+    return '<div style="display:flex;gap:12px;align-items:flex-start;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:8px">'
+      + '<span style="font-size:1.1rem;flex-shrink:0">'+a.ico+'</span>'
+      + '<div style="font-size:.9rem">'+a.txt+'</div>'
+      + '</div>';
+  }).join('');
 }
 </script>
 </body>
