@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Lume Conecta</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;600&family=Marcellus&display=swap">
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<section id="login">
+  <div class="login-card">
+    <img src="/logo.png" alt="Lume Finanças">
+    <h1>Lume Conecta</h1>
+    <form id="fLogin" class="login-form" autocomplete="on">
+      <label for="lEmail">E-mail</label><input type="email" id="lEmail" required autocomplete="username" placeholder="seu@email.com.br">
+      <label for="lPass">Senha</label><input type="password" id="lPass" required autocomplete="current-password" placeholder="••••••••">
+      <p id="lErr" class="login-err" hidden></p>
+      <button class="go" type="submit">Entrar</button>
+      <button class="link" type="button" id="lEsqueci">Esqueci minha senha</button>
+    </form>
+    <div class="login-rod">Acesso restrito à equipe e aos clientes da Lume Finanças</div>
+    <div id="userList" hidden></div>
+  </div>
+</section>
+
+<div id="app" hidden>
+  <aside>
+    <div class="brand"><img src="/marca.png" alt=""><div><b>LUME</b><span>Conecta</span></div><button id="menuTog" class="menutog" type="button" aria-label="Recolher menu" title="Recolher menu">‹</button></div>
+    <nav id="nav"></nav>
+    <div class="side-foot"><div id="whoami"></div><div id="nuvem" class="nuvem">Conectando…</div><button id="recarregar" type="button">Recarregar dados</button><button id="logout" type="button">Sair</button></div>
+  </aside>
+  <main><div class="wrap" id="view"></div></main>
+</div>
+<div id="modal" hidden></div>
+<div class="toast" id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+<script src="/app.js"></script>
+<script src="/mod3.js"></script>
+<script src="/mod4.js"></script>
+<script src="/mod5.js"></script>
+<script type="module" src="/src/main.js"></script>
+</body>
+</html>
