@@ -48,21 +48,27 @@ vMD=function(){const c=C();
  ${st.user.perfil==='master'?`<div class="panel zona"><div class="panel-head"><div><h3>Zerar dados deste cliente</h3><span class="note">Apaga todos os lançamentos, extratos, vendas e regras aprendidas de <b>${esc(nomeEsc(st.scope))}</b> e volta ao cadastro inicial. Use quando subiu arquivos na empresa errada. Não dá para desfazer.</span></div><button class="btn perigo" type="button" id="zerar">Zerar dados</button></div></div>`:''}`;
  bindScope();bindImports(vMD);if($('#zerar'))$('#zerar').onclick=zerarCliente;$('#mdModelo').onclick=modeloImportacao;
  $('#mdExp').onclick=()=>exportarMD(ativos().filter(l=>l.data>=$('#mdI').value&&l.data<=$('#mdF').value),'Lancamentos_'+nomeEsc(st.scope).replace(/\W+/g,'_'));
- bindDrop('dMD',async fs=>{const novos=[],sis=[],nomes=[];let dup=0,ruins=[];const ids=new Set(c.lanc.map(l=>String(l.uid)));
-  for(const f of fs){try{const rows=await lerPlanilha(f);if(!rows.length||!('Tipo' in rows[0])||!('Valor' in rows[0])){ruins.push(f.name);continue}nomes.push(f.name);
+ bindDrop('dMD',async fs=>{const novos=[],sis=[],nomes=[];let dup=0,dupT=0,ruins=[];const ids=new Set(c.lanc.map(l=>String(l.uid)));
+  /* transferência entre duas contas aparece no export de cada conta (com ID diferente): conta uma vez só */
+  const chT=l=>l.data+'|'+Math.abs(l.valor).toFixed(2)+'|'+[l.conta,l.ctr].sort().join('>');const baseT={};ativos().forEach(l=>{if(l.tipo==='Transferência'){const k=chT(l);baseT[k]=(baseT[k]||0)+1}});const porArq={};
+  for(const f of fs){const fi=nomes.length;try{const rows=await lerPlanilha(f);if(!rows.length||!('Tipo' in rows[0])||!('Valor' in rows[0])){ruins.push(f.name);continue}nomes.push(f.name);
    rows.forEach(r=>{const tp=String(r['Tipo']||'').trim();if(/saldo inicial/i.test(tp)){const _k=c.contas.find(x=>x.nome===String(r['Conta']||'').trim());if(_k&&Math.abs((_k.saldoIni||0)-r2(parseNum(r['Valor'])))<.005)return;sis.push({conta:String(r['Conta']||'').trim(),v:r2(parseNum(r['Valor'])),d:toYmd(r['Data'])});return}
     const l=mdParaLanc(r);if(!l)return;mdAjuste(l);if(l.tipo==='Transferência'&&l.valor>0){const t=l.conta;l.conta=l.ctr;l.ctr=t}if(l.tipo==='Transferência')l.valor=Math.abs(l.valor);
-    if(!r['ID Único']&&r['ID Único']!==0)l.uid='lume'+nid();if(ids.has(String(l.uid))){dup++;return}ids.add(String(l.uid));novos.push(l)})}catch(e){console.error(e);ruins.push(f.name)}}
+    if(!r['ID Único']&&r['ID Único']!==0)l.uid='lume'+nid();if(ids.has(String(l.uid))){dup++;return}
+    if(l.tipo==='Transferência'){const k=chT(l);const m=porArq[k]=porArq[k]||{};m[fi]=(m[fi]||0)+1;const outros=Math.max(baseT[k]||0,...Object.entries(m).filter(([x])=>+x!==fi).map(([,n])=>n));if(m[fi]<=outros){dupT++;return}}
+    ids.add(String(l.uid));novos.push(l)})}catch(e){console.error(e);ruins.push(f.name)}}
   if(ruins.length)toast('Não reconheci: '+ruins.join(', ')+'. Use o export de lançamentos do Meu Dinheiro ou o modelo da Lume.');
   if(!novos.length&&!sis.length){if(!ruins.length)toast('Nada novo para importar'+(dup?' · '+dup+' lançamentos já existiam':''));return}
   const contasNovas=[...new Set(novos.flatMap(l=>[l.conta,l.ctr]).filter(n=>n&&!c.contas.some(k=>k.nome===n)))];
   const per=novos.length?fdl(novos.reduce((a,l)=>l.data<a?l.data:a,'9999'))+' a '+fdl(novos.reduce((a,l)=>l.data>a?l.data:a,'0000')):'';
-  if(!await confirmar('Confirmar importação',`<p style="margin:0">Importar <b>${novos.length} lançamentos</b> em <b>${esc(nomeEsc(st.scope))}</b>?</p><div class="kv"><span>Arquivos</span><span>${esc(nomes.join(', '))}</span><span>Período</span><span>${per||'—'}</span>${dup?`<span>Já existiam (ignorados)</span><span>${dup}</span>`:''}${sis.length?`<span>Saldo inicial</span><span>${sis.map(s=>esc(s.conta)+' '+brl(s.v)).join(', ')}</span>`:''}${contasNovas.length?`<span>Contas novas</span><span>${esc(contasNovas.join(', '))}</span>`:''}</div><p class="note" style="margin:0">Se for o cliente errado, cancele e troque o cliente no topo da tela.</p>`,'Importar'))return;
+  if(!await confirmar('Confirmar importação',`<p style="margin:0">Importar <b>${novos.length} lançamentos</b> em <b>${esc(nomeEsc(st.scope))}</b>?</p><div class="kv"><span>Arquivos</span><span>${esc(nomes.join(', '))}</span><span>Período</span><span>${per||'—'}</span>${dup?`<span>Já existiam (ignorados)</span><span>${dup}</span>`:''}${dupT?`<span>Transferências repetidas entre contas (contadas uma vez)</span><span>${dupT}</span>`:''}${sis.length?`<span>Saldo inicial</span><span>${sis.map(s=>esc(s.conta)+' '+brl(s.v)).join(', ')}</span>`:''}${contasNovas.length?`<span>Contas novas</span><span>${esc(contasNovas.join(', '))}</span>`:''}</div><p class="note" style="margin:0">Se for o cliente errado, cancele e troque o cliente no topo da tela.</p>`,'Importar'))return;
   const imp=novaImp('md',nomes,{saldoAnt:{}});
   sis.forEach(s=>{let k=c.contas.find(x=>x.nome===s.conta);if(!k){k={nome:s.conta,tipo:'banco',saldoIni:0};c.contas.push(k)}imp.saldoAnt[s.conta]=k.saldoIni||0;k.saldoIni=s.v;k.saldoData=s.d});
   novos.forEach(l=>{l.imp=imp.id;c.lanc.push(l);[l.conta,l.ctr].forEach(n=>{if(n&&!c.contas.some(k=>k.nome===n)){const cart=/cart[aã]o/i.test(n)||!!l.venc;c.contas.push(cart?{nome:n,tipo:'cartao',saldoIni:0,fecha:9,vence:10,debito:c.contas.find(k=>k.tipo==='banco')?.nome||''}:{nome:n,tipo:'banco',saldoIni:0})}});if(l.cat&&!c.cats.includes(l.cat))c.cats.push(l.cat)});
+  /* conta de dinheiro: se o Meu Dinheiro chama de "Dinheiro" e a padrão está vazia, usa a do Meu Dinheiro */
+  const pd=c.perfil&&c.perfil.padroes;if(pd&&pd.contaDin&&pd.contaDin!=='Dinheiro'&&c.contas.some(k=>k.nome==='Dinheiro')&&!c.lanc.some(l=>l.conta===pd.contaDin||l.ctr===pd.contaDin)){c.contas=c.contas.filter(k=>k.nome!==pd.contaDin);pd.contaDin='Dinheiro'}
   imp.n=novos.length;c.exemplo=false;c.lanc.sort((a,b)=>a.data<b.data?-1:a.data>b.data?1:0);ativos().forEach(aprender);const en=enriquecerCartoes();log('Importação de lançamentos',novos.length+' · '+nomes.join(', '));save();
-  toast(novos.length+' lançamentos importados'+(dup?' · '+dup+' já existiam':'')+(en?' · '+en+' recebíveis ligados à maquininha':''));st.cx.contas=null;vMD()})};
+  toast(novos.length+' lançamentos importados'+(dup?' · '+dup+' já existiam':'')+(dupT?' · '+dupT+' transferências repetidas ignoradas':'')+(en?' · '+en+' recebíveis ligados à maquininha':''));st.cx.contas=null;vMD()})};
 
 /* ---------- extrato: confirmação e registro ---------- */
 const _vConcM3=vConc;

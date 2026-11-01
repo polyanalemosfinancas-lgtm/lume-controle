@@ -186,3 +186,140 @@ function m5CatNova(){if(!pode.cadastro())return;const lb=$('#lbCat');if(!lb)retu
   log('Categoria criada',cat);save();const dl=$('#dlCat');if(dl&&![...dl.options].some(o=>o.value===cat))dl.insertAdjacentHTML('beforeend',`<option value="${esc(cat)}">`);
   $('#mCat').value=cat;$('#catNovaF').hidden=true;$('#cnMn').value='';$('#cnS').value='';if($('#mSug'))$('#mSug').hidden=true;toast('Categoria “'+cat+'” criada')};
  $('#cnOk').onclick=criar;['#cnMn','#cnS'].forEach(q=>$(q).onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();criar()}})}
+
+/* ===================================================================
+ * Processo do cliente: cada cliente tem o seu. O passo a passo da Lívia
+ * (Avec × Sipag × Sicoob) fica só na The Beauty. Os outros começam sem
+ * processo, com opção de partir de um modelo básico e editar.
+ * =================================================================== */
+const PROCESSO_BASICO=[
+ {t:'Documentos do mês',go:'conciliacao',i:['Baixar o extrato de todas as contas do cliente (OFX, PDF ou Excel).','Recolher comprovantes, boletos e notas do período.','Baixar o relatório do sistema do cliente (vendas/recebimentos), se houver.']},
+ {t:'Contas a receber',go:'abertos',i:['Lançar as receitas do mês com competência e vencimento.','Dar baixa no que já foi recebido.']},
+ {t:'Contas a pagar',go:'abertos',i:['Lançar as despesas fixas, parceladas e à vista.','Conferir os vencimentos da semana.']},
+ {t:'Conciliação',go:'conciliacao',i:['Importar o extrato e conciliar com o que já está lançado.','Classificar e lançar o que estiver no extrato e ainda não foi lançado.']},
+ {t:'Fechamento',go:'relatorios',i:['Conferir as pendências do mês.','Aprovar e liberar os relatórios para o cliente.']}
+];
+/* compara só títulos e itens (o banco devolve os campos em outra ordem) */
+const m5ProcSig=ps=>JSON.stringify((ps||[]).map(x=>[x.t,(x.i||[]).join('|')]));
+const m5ProcLivia=p=>m5ProcSig(p.processo)===m5ProcSig(PROCESSO_PADRAO);
+const _seedVazioM5=seedVazio;
+seedVazio=function(k){const d=_seedVazioM5(k);d.perfil.processo=[];return d};
+const _vProcM5=vProcesso;
+vProcesso=function(){const c=C(),p=c.perfil;
+ /* clientes que receberam o passo a passo da Lívia como padrão começam sem processo */
+ if(st.scope!==BEAUTY&&m5ProcLivia(p)){p.processo=[];p.check={};save()}
+ _vProcM5();const pode_=pode.cadastro();
+ if(!p.processo.length){const pn=$('#view .panel');if(pn)pn.outerHTML=`<div class="panel"><h3>Este cliente ainda não tem processo</h3><p class="note" style="margin:0">Monte o passo a passo de como a Lume trabalha este cliente. Ele vira um checklist mensal para a equipe marcar o que já foi feito.</p>
+  ${pode_?`<div class="scope"><button class="btn primary" type="button" id="pModelo">Começar pelo modelo básico</button><button class="btn" type="button" id="pBranco">Escrever do zero</button></div><p class="note" style="margin:0">O modelo básico traz as etapas comuns (documentos, contas a receber, contas a pagar, conciliação e fechamento). Depois é só editar.</p>`:''}</div>`;
+  if($('#pModelo'))$('#pModelo').onclick=()=>{p.processo=JSON.parse(JSON.stringify(PROCESSO_BASICO));p.check={};log('Processo criado','modelo básico');save();toast('Processo criado. Edite como quiser lá embaixo.');vProcesso()};
+  if($('#pBranco'))$('#pBranco').onclick=()=>{const t=$('#pTxt');if(t){t.value='Primeira etapa\n- primeiro item\n- segundo item';t.focus();t.scrollIntoView({block:'center'})}}}
+ /* maquininhas: só mostra o quadro quando o cliente tem */
+ if(!Object.keys(p.estabs||{}).length){const h=[...$$('#view h3')].find(x=>x.textContent==='Maquininhas e prazos');if(h)h.parentElement.innerHTML='<h3>Maquininhas e prazos</h3><p class="note" style="margin:0">Nenhuma maquininha configurada para este cliente.</p>'}
+ /* excluir particularidade */
+ if(pode_){const lis=[...$$('#view .grid2 .panel:first-child li')].filter(li=>!li.classList.contains('note'));lis.forEach((li,i)=>{li.insertAdjacentHTML('beforeend',` <button class="linkbtn" type="button" data-pdel="${i}" aria-label="Excluir particularidade" style="color:var(--muted)">excluir</button>`)});
+  $$('[data-pdel]').forEach(b=>b.onclick=()=>{const i=+b.dataset.pdel;const t=p.partic[i];p.partic.splice(i,1);log('Particularidade excluída',t||'');save();vProcesso()})}};
+
+/* ===================================================================
+ * Versão do cliente no celular
+ * - Portal: números do mês = realizado até hoje; contas vencidas em aberto
+ *   aparecem separadas; taxas de cartão do dia viram uma linha só.
+ * - Relatórios: o cliente abre direto no último mês liberado.
+ * =================================================================== */
+vPortal=function(){const c=C(),m=HOJE.slice(0,7),bancos=contasBanco();
+ const real=ativos().filter(l=>l.data.slice(0,7)===m&&l.data<=HOJE&&m5Real(l));
+ const rec=real.filter(l=>l.tipo==='Receita').reduce((a,l)=>a+l.valor,0),des=real.filter(l=>l.tipo==='Despesa').reduce((a,l)=>a+l.valor,0);
+ const abertos=ativos().filter(l=>l.tipo==='Despesa'&&!m5Real(l));
+ const venc=abertos.filter(l=>l.data<HOJE),prox=abertos.filter(l=>l.data>=HOJE&&dDiff(l.data,HOJE)<=15);
+ const agrupa=ls=>{const out=[],tx={};ls.sort((a,b)=>a.data<b.data?-1:1).forEach(l=>{if(ehTaxaCartao(l)){const g=tx[l.data]||(tx[l.data]={data:l.data,desc:'Taxas de cartão',valor:0,n:0,tx:1});if(!g.n)out.push(g);g.n++;g.valor+=l.valor}else out.push(l)});return out};
+ const linhas=ls=>agrupa(ls).map((l,i)=>`<tr${i>=8?' class="mais"':''}><td class="num note">${fd(l.data).slice(0,5)}</td><td>${esc(l.desc)}${l.tx?` <span class="note">(${l.n})</span>`:''}</td><td class="r num neg">${val(l.valor)}</td></tr>`).join('');
+ const soma=ls=>ls.reduce((a,l)=>a+l.valor,0);const verMais=ls=>{const n=agrupa(ls.slice()).length;return n>8?`<button class="btn ghost vermais" type="button">Ver todas (${n})</button>`:''};
+ const ultAprov=Object.keys(c.aprov||{}).sort().pop();
+ $('#view').innerHTML=`<div class="top"><div><div class="eyebrow">Portal do cliente</div><h2>${esc(nomeEsc(st.scope))}</h2></div><div class="scope">${escopos().length>1?scopeSelect():'<span class="note">Você vê somente os dados da sua empresa</span>'}</div></div>
+ <div class="kpis"><div class="kpi"><span class="l">Saldo em contas hoje</span><span class="v num">${brl(bancos.reduce((a,b)=>a+saldo(b.nome,HOJE,true),0))}</span><span class="s">${bancos.length} conta${bancos.length>1?'s':''}</span></div>
+ <div class="kpi"><span class="l">Receitas de ${MES[+m.slice(5)-1]}</span><span class="v num pos">${brl(rec)}</span><span class="s">recebido até hoje</span></div>
+ <div class="kpi"><span class="l">Despesas de ${MES[+m.slice(5)-1]}</span><span class="v num neg">${brl(des)}</span><span class="s">pago até hoje</span></div>
+ <div class="kpi"><span class="l">Último relatório liberado</span><span class="v" style="font-size:18px">${ultAprov?mNome(ultAprov):'—'}</span><span class="s">${ultAprov?'<button class="btn ghost" type="button" data-go="relatorios" style="padding:0">Ver relatórios</button>':'Em breve'}</span></div></div>
+ <div class="grid2"><div class="panel"><h3>Contas</h3><table class="sumtbl num"><tbody>${bancos.map(b=>`<tr><td>${esc(b.nome)}</td><td class="r">${brl(saldo(b.nome,HOJE,true))}</td></tr>`).join('')}</tbody></table></div>
+ <div class="panel"><div class="panel-head"><h3>A pagar nos próximos 15 dias</h3><b class="num neg">${val(soma(prox))}</b></div><div class="tbl"><table class="ptbl"><tbody>${linhas(prox)||'<tr><td class="note">Nada previsto.</td></tr>'}</tbody></table></div>${verMais(prox)}</div>
+ ${venc.length?`<div class="panel venc-panel"><div class="panel-head"><h3>Vencidas em aberto</h3><b class="num neg">${val(soma(venc))}</b></div><p class="note" style="margin:0">Contas com data passada que ainda não constam como pagas. A Lume confere na conciliação.</p><div class="tbl"><table class="ptbl"><tbody>${linhas(venc)}</tbody></table></div>${verMais(venc)}</div>`:''}</div>`;
+ bindScope();$$('[data-go]').forEach(b=>b.onclick=()=>{st.view=b.dataset.go;render()});
+ $$('.vermais').forEach(b=>b.onclick=()=>{const t=b.parentElement.querySelector('.ptbl');const ab=t.classList.toggle('aberta');b.dataset.t=b.dataset.t||b.textContent;b.textContent=ab?'Mostrar menos':b.dataset.t})};
+
+const _vRelM5=vRel;
+vRel=function(){if(st.user&&st.user.perfil==='cliente'&&st.rel._cli!==st.scope){const a=Object.keys(C().aprov||{}).sort().pop();st.rel._cli=st.scope;
+  if(a){st.rf.ate=a;st.rf.de=mAdd(a,-2);st.rel.mes=a;st.rel.cIni=a+'-01';st.rel.cFim=dAdd(mAdd(a,1)+'-01',-1)}}
+ return _vRelM5.apply(this,arguments)};
+
+/* ===================================================================
+ * Contas a pagar · Lume (painel do escritório, antigo "Fluxo de Pagamentos")
+ * Abre dentro do sistema. Só a Master e quem ela liberar veem.
+ * O menu "Contas a receber e pagar" do cliente sai: está tudo em
+ * Lançamentos de caixa, com os filtros.
+ * =================================================================== */
+const m5PodePagar=()=>!!st.user&&(st.user.perfil==='master'||st.user.pagar===true);
+const _navM5=navItems;
+navItems=function(){let it=_navM5().filter(x=>x[0]!=='abertos');
+ if(st.user.perfil!=='cliente'&&m5PodePagar())it=[['','Escritório Lume'],['pagamentos','Contas a pagar · Lume'],...it];return it};
+function m5Nav(){$('#nav').innerHTML=navItems().map(([k,l])=>k?`<button type="button" data-v="${k}" class="${st.view===k?'on':''}">${l}</button>`:`<div class="grp">${l}</div>`).join('');
+ $('#whoami').innerHTML=`<b>${esc(st.user.nome)}</b><br><span style="color:#9FB0C4">${PERFIL_TXT[st.user.perfil].split(' · ')[0]}</span>`}
+function m5AjustaFrame(){const f=$('#pagFrame');if(!f)return;f.style.height=Math.max(420,innerHeight-f.getBoundingClientRect().top-(innerWidth<=860?0:8))+'px'}
+addEventListener('resize',m5AjustaFrame);
+const _renderM5=render;
+render=function(){if(st.user&&st.view==='pagamentos'){if(!m5PodePagar()){st.view='painel';return _renderM5()}
+  m5Nav();document.body.classList.add('pag-on');
+  if(!$('#pagFrame'))$('#view').innerHTML='<iframe id="pagFrame" class="pagframe" src="/pagamentos.html" title="Contas a pagar · Lume"></iframe>';
+  m5AjustaFrame();return}
+ document.body.classList.remove('pag-on');return _renderM5()};
+
+/* Usuários e acessos: liberar o painel e os compromissos */
+const m5Perm=(u,px)=>`<fieldset class="permbox"><legend>Painéis do escritório</legend>
+ <label><input type="checkbox" id="${px}Pag" ${u&&u.pagar?'checked':''}> Contas a pagar · Lume <small>(agenda de pagamentos de todos os clientes)</small></label>
+ <label><input type="checkbox" id="${px}Ag" ${u&&u.agenda?'checked':''}> Compromissos <small>(agenda pessoal dentro do painel)</small></label></fieldset>`;
+function m5PatchNuvem(){const N=window.LumeNuvem;if(!N||N._m5)return;N._m5=1;
+ const cria=N.criarUsuario,salva=N.salvarUsuario;
+ const extra=px=>{const p=$('#'+px+'Pag'),a=$('#'+px+'Ag');return p?{pagar:p.checked,agenda:!!(a&&a.checked)}:{}};
+ N.criarUsuario=u=>cria.call(N,Object.assign({},u,extra('pm')));
+ N.salvarUsuario=(uid,u)=>salva.call(N,uid,Object.assign({},u,extra('eu')))}
+const _vUsuM5=vUsuariosNuvem;
+vUsuariosNuvem=async function(){await _vUsuM5.apply(this,arguments);if(st.view!=='usuarios')return;m5PatchNuvem();
+ const f=$('#fUser');if(f&&!$('#pmPag')){const bt=f.querySelector('button[type="submit"]');(bt?bt.parentElement:f).insertAdjacentHTML('beforebegin',m5Perm(null,'pm'))}
+ /* marca na lista quem tem o painel */
+ try{(_usuarios||[]).forEach((u,i)=>{const b=$(`[data-eu="${i}"]`);const td=b?b.closest('tr').children[2]:null;if(td&&(u.pagar||u.agenda||u.perfil==='master'))td.insertAdjacentHTML('beforeend',`<br><span class="pill p-n" style="margin-top:4px;display:inline-block">${u.perfil==='master'||u.pagar?'Contas a pagar · Lume':''}${(u.perfil==='master'||u.agenda)&&(u.perfil==='master'||u.pagar)?' + ':''}${u.perfil==='master'||u.agenda?'Compromissos':''}</span>`)})}catch(e){}};
+const _modalUsuM5=modalUsuario;
+modalUsuario=function(u,todos){_modalUsuM5(u,todos);m5PatchNuvem();const a=$('#euA');if(a&&!$('#euPag'))a.closest('label').insertAdjacentHTML('beforebegin',m5Perm(u,'eu'))};
+
+
+/* ===================================================================
+ * Confirmar pagamento/recebimento pela bolinha: pergunta a data real
+ * (e o valor pago, para juros ou desconto). Voltar para em aberto
+ * devolve a data prevista.
+ * =================================================================== */
+const _bindLinhasM5=bindLinhas;
+bindLinhas=function(re){_bindLinhasM5(re);
+ $$('[data-st]').forEach(b=>b.onclick=()=>{const l=C().lanc.find(x=>x.id===b.dataset.st);if(!l)return;
+  if(l.status==='Conciliado'){toast('Lançamento conciliado. Para alterar, desfaça a conciliação na tela de Conciliação.');return}
+  if(m5Real(l))m5ModalReabrir(l,re);else m5ModalBaixa(l,re)})};
+function m5ModalBaixa(l,re){const rec=l.tipo==='Receita',tr=l.tipo==='Transferência'||l.tipo==='Pagamento';const verbo=rec?'recebimento':tr?'transferência':'pagamento';
+ const dPad=l.data<=HOJE?l.data:HOJE;
+ abrirModal(`<div class="mhead"><h3>Confirmar ${verbo}</h3><button class="icobtn" data-close type="button" aria-label="Fechar">${IX}</button></div>
+ <form class="mbody form" id="fBx"><div class="banner" style="display:block"><b style="font-weight:500">${esc(l.desc)}</b><br><span class="note">${esc(l.conta)}${l.ctr?' → '+esc(l.ctr):''} · lançado para ${fd(l.data)} · ${brl(Math.abs(l.valor))}</span></div>
+ <div class="row"><label>Data em que foi ${rec?'recebido':tr?'feita':'pago'}<input type="date" id="bxD" value="${dPad}" required max="${HOJE}"></label>
+ <label>Valor ${rec?'recebido':tr?'transferido':'pago'} (R$)<input type="text" id="bxV" inputmode="decimal" value="${nf(l.valor)}" required></label></div>
+ <div class="chips"><button class="chip" type="button" data-bxd="${l.data}">Data do lançamento (${fd(l.data).slice(0,5)})</button><button class="chip" type="button" data-bxd="${HOJE}">Hoje (${fd(HOJE).slice(0,5)})</button><button class="chip" type="button" data-bxd="${dAdd(HOJE,-1)}">Ontem</button></div>
+ <p class="note" style="margin:0">O lançamento vai para a data que você escolher, que é quando o dinheiro ${rec?'entrou':'saiu'} de fato. Assim o saldo de cada dia bate com o banco. Se o valor for diferente (juros, multa ou desconto), ajuste aqui.</p></form>
+ <div class="mfoot"><span></span><button class="btn primary" type="submit" form="fBx">Confirmar ${verbo}</button></div>`);
+ $$('[data-bxd]').forEach(b=>b.onclick=()=>{$('#bxD').value=b.dataset.bxd});
+ $('#fBx').onsubmit=e=>{e.preventDefault();const d=$('#bxD').value;if(!d){toast('Escolha a data');return}if(d>HOJE){toast('A data não pode ser no futuro. Para pagamento futuro, deixe como agendado.');return}
+  const v=Math.abs(parseNum($('#bxV').value));if(!v){toast('Informe o valor');return}
+  if(d!==l.data){if(!l.dataPrev)l.dataPrev=l.data;l.data=d}
+  const nv=r2(Math.sign(l.valor||(rec?1:-1))*v);if(Math.abs(nv-l.valor)>.004){if(l.valorPrev===undefined)l.valorPrev=l.valor;l.valor=nv}
+  l.status='Confirmado';log('Baixa',l.desc+' · '+fd(d)+' · '+brl(Math.abs(l.valor)));save();fecharModal();
+  toast((rec?'Recebido':tr?'Transferido':'Pago')+' em '+fd(d)+(l.dataPrev&&l.dataPrev!==d?' (estava para '+fd(l.dataPrev)+')':''));re()}}
+function m5ModalReabrir(l,re){const volta=l.dataPrev&&l.dataPrev!==l.data;
+ abrirModal(`<div class="mhead"><h3>Voltar para em aberto?</h3><button class="icobtn" data-close type="button" aria-label="Fechar">${IX}</button></div>
+ <div class="mbody"><p style="margin:0"><b style="font-weight:500">${esc(l.desc)}</b> · ${brl(Math.abs(l.valor))}</p><p class="note" style="margin:0">${volta?`Ele volta para a data prevista, <b>${fd(l.dataPrev)}</b>${l.valorPrev!==undefined?', e para o valor previsto de <b>'+brl(Math.abs(l.valorPrev))+'</b>':''}.`:`Ele continua em ${fd(l.data)}, como ${l.data>HOJE?'agendado':'pendente'}.`}</p></div>
+ <div class="mfoot"><span></span><button class="btn primary" type="button" id="rbOk">Voltar para em aberto</button></div>`);
+ $('#rbOk').onclick=()=>{if(volta){l.data=l.dataPrev}delete l.dataPrev;if(l.valorPrev!==undefined){l.valor=l.valorPrev;delete l.valorPrev}
+  l.status=l.data>HOJE?'Agendado':'Pendente';log('Status',l.desc+' → '+l.status);save();fecharModal();toast('Voltou para em aberto');re()}}
+const _linhaLM5=linhaL;
+linhaL=function(l,sel){const h=_linhaLM5(l,sel);return l.dataPrev&&l.dataPrev!==l.data&&m5Real(l)?h.replace('</b>',`</b><span class="tg" title="Data prevista no lançamento">Previsto ${fd(l.dataPrev).slice(0,5)}</span>`):h};
