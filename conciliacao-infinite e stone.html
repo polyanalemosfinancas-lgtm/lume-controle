@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
+<html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lume Finanças · Conciliação Feegow × Infinite / C6</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&amp;family=DM+Sans:wght@300;400;500;600&amp;display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 :root{
@@ -153,8 +151,7 @@ footer span{color:var(--gold)}
   <!-- ── CONTAS A RECEBER COMPARTILHADO ───────────────────────── -->
   <div style="max-width:960px;margin:0 auto 16px auto;padding:0 20px">
     <input type="file" id="fileCRshared" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cr',this)">
-    <div class="upload-card" id="cardCRshared" onclick="abrirInput('fileCRshared')"
-         style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px">
+    <div class="upload-card" id="cardCRshared" onclick="abrirInput('fileCRshared')" style="display:flex;align-items:center;gap:16px;padding:14px 20px;border-radius:12px">
       <div style="font-size:28px">📋</div>
       <div style="flex:1">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
@@ -212,15 +209,11 @@ footer span{color:var(--gold)}
       </div>
 
       <!-- Drop zone -->
-      <div id="dropZone" onclick="document.getElementById('fileUnificado').click()"
-           ondragover="event.preventDefault();this.style.borderColor='var(--gold)'"
-           ondragleave="this.style.borderColor='#d1d9e6'"
-           ondrop="event.preventDefault();this.style.borderColor='#d1d9e6';processarDropFiles(event.dataTransfer.files)"
-           style="border:2px dashed #d1d9e6;border-radius:12px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;background:#fff">
+      <div id="dropZone" onclick="document.getElementById('fileUnificado').click()" ondragover="event.preventDefault();this.style.borderColor='var(--gold)'" ondragleave="this.style.borderColor='#d1d9e6'" ondrop="event.preventDefault();this.style.borderColor='#d1d9e6';processarDropFiles(event.dataTransfer.files)" style="border:2px dashed #d1d9e6;border-radius:12px;padding:36px;text-align:center;cursor:pointer;transition:all .2s;background:#fff">
         <div style="font-size:2.5rem;margin-bottom:8px">📂</div>
         <div style="font-weight:600;color:var(--navy);margin-bottom:4px">Clique ou arraste aqui TODOS os arquivos</div>
         <div style="font-size:.8rem;color:var(--muted)">Feegow (CC, CR, MOV), Stone (vendas, extrato), Infinite (vendas, extrato), OFX/BTG banco — aceita vários ao mesmo tempo</div>
-        <input type="file" id="fileUnificado" multiple accept=".xlsx,.xls,.csv,.ofx" style="display:none" onchange="processarDropFiles(this.files)">
+        <input type="file" id="fileUnificado" multiple="" accept=".xlsx,.xls,.csv,.ofx" style="display:none" onchange="processarDropFiles(this.files)">
       </div>
 
       <!-- Chips de arquivos detectados -->
@@ -231,7 +224,7 @@ footer span{color:var(--gold)}
 
       <!-- Botões de ação -->
       <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-        <button class="btn btn-gold" id="btnProcessarTudo" disabled onclick="processarTudo()" style="font-size:13px;padding:10px 24px">⚡ Processar Tudo — Analisar e Conciliar</button>
+        <button class="btn btn-gold" id="btnProcessarTudo" disabled="" onclick="processarTudo()" style="font-size:13px;padding:10px 24px">⚡ Processar Tudo — Analisar e Conciliar</button>
         <button class="btn btn-out" onclick="limparUploadUnificado()">↺ Limpar Tudo</button>
         <div id="statusProcessamento" style="font-size:.82rem;color:var(--muted);margin-left:6px"></div>
       </div>
@@ -267,16 +260,16 @@ footer span{color:var(--gold)}
       <!-- Filtros -->
       <div style="background:#f4f5f7;padding:10px 14px;border-radius:10px;display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
         <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
-        <button class="fbtn active" id="vf_tudo"     onclick="filtrarVisao('tudo')">Tudo</button>
-        <button class="fbtn" id="vf_cartao"           onclick="filtrarVisao('cartao')">💳 Cartão</button>
-        <button class="fbtn" id="vf_pix"              onclick="filtrarVisao('pix')">💸 PIX</button>
-        <button class="fbtn" id="vf_dinheiro"         onclick="filtrarVisao('dinheiro')">💵 Dinheiro</button>
-        <button class="fbtn" id="vf_stone"            onclick="filtrarVisao('stone')">🟢 Stone</button>
-        <button class="fbtn" id="vf_infinite"         onclick="filtrarVisao('infinite')">🔵 Infinite</button>
+        <button class="fbtn active" id="vf_tudo" onclick="filtrarVisao('tudo')">Tudo</button>
+        <button class="fbtn" id="vf_cartao" onclick="filtrarVisao('cartao')">💳 Cartão</button>
+        <button class="fbtn" id="vf_pix" onclick="filtrarVisao('pix')">💸 PIX</button>
+        <button class="fbtn" id="vf_dinheiro" onclick="filtrarVisao('dinheiro')">💵 Dinheiro</button>
+        <button class="fbtn" id="vf_stone" onclick="filtrarVisao('stone')">🟢 Stone</button>
+        <button class="fbtn" id="vf_infinite" onclick="filtrarVisao('infinite')">🔵 Infinite</button>
         <span style="margin-left:8px;font-size:11px;font-weight:600;color:#0D2137">Status:</span>
-        <button class="fbtn" id="vf_ok"               onclick="filtrarVisao('ok')">✅ OK</button>
-        <button class="fbtn" id="vf_pend"             onclick="filtrarVisao('pend')">⏳ Pendente</button>
-        <button class="fbtn" id="vf_diverg"           onclick="filtrarVisao('diverg')">🔴 Divergente</button>
+        <button class="fbtn" id="vf_ok" onclick="filtrarVisao('ok')">✅ OK</button>
+        <button class="fbtn" id="vf_pend" onclick="filtrarVisao('pend')">⏳ Pendente</button>
+        <button class="fbtn" id="vf_diverg" onclick="filtrarVisao('diverg')">🔴 Divergente</button>
       </div>
 
       <div id="visaoVazio" style="text-align:center;padding:48px;color:var(--muted)">
@@ -302,9 +295,9 @@ footer span{color:var(--gold)}
 
   <!-- ═══ CARTÃO ═══ -->
   <div class="secao" id="sec-cartao">
-    <input type="file" id="fileCC"    accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cc',this)">
+    <input type="file" id="fileCC" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('cc',this)">
     <!-- fileCR movido para área compartilhada -->
-    <input type="file" id="fileInf"   accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('inf',this)">
+    <input type="file" id="fileInf" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('inf',this)">
     <input type="file" id="fileStone" accept=".xlsx,.xls,.csv" style="display:none" onchange="carregarArq('stone',this)">
 
     <div class="upload-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-bottom:10px">
@@ -335,8 +328,8 @@ footer span{color:var(--gold)}
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-gold" id="btnAnalisarCC" disabled onclick="analisarCartao()">⚡ Confrontar Vendas</button>
-      <button class="btn btn-navy" id="btnExportMD" disabled onclick="exportarMeuDinheiro()">⬇ Exportar Meu Dinheiro</button>
+      <button class="btn btn-gold" id="btnAnalisarCC" disabled="" onclick="analisarCartao()">⚡ Confrontar Vendas</button>
+      <button class="btn btn-navy" id="btnExportMD" disabled="" onclick="exportarMeuDinheiro()">⬇ Exportar Meu Dinheiro</button>
       <button class="btn btn-out" onclick="resetar('cartao')">↺ Limpar</button>
     </div>
 
@@ -400,8 +393,8 @@ footer span{color:var(--gold)}
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-gold" id="btnAnalisarPix" disabled onclick="analisarPix()">⚡ Analisar / Confrontar PIX</button>
-      <button class="btn btn-navy" id="btnExportPix" disabled onclick="exportarPixMD()">⬇ Exportar Meu Dinheiro</button>
+      <button class="btn btn-gold" id="btnAnalisarPix" disabled="" onclick="analisarPix()">⚡ Analisar / Confrontar PIX</button>
+      <button class="btn btn-navy" id="btnExportPix" disabled="" onclick="exportarPixMD()">⬇ Exportar Meu Dinheiro</button>
       <button class="btn btn-out" onclick="resetar('pix')">↺ Limpar</button>
     </div>
 
@@ -439,8 +432,8 @@ footer span{color:var(--gold)}
 
   <!-- ═══ BAIXA DE VENDAS STONE ═══ -->
   <div class="secao" id="sec-baixa">
-    <input type="file" id="fileBaixaVendas"  accept=".xlsx,.xls" style="display:none" onchange="carregarArq('baixa_vendas',this)">
-    <input type="file" id="fileBaixaReceb"   accept=".csv,.xlsx,.xls" style="display:none" onchange="carregarArq('baixa_receb',this)">
+    <input type="file" id="fileBaixaVendas" accept=".xlsx,.xls" style="display:none" onchange="carregarArq('baixa_vendas',this)">
+    <input type="file" id="fileBaixaReceb" accept=".csv,.xlsx,.xls" style="display:none" onchange="carregarArq('baixa_receb',this)">
     <input type="file" id="fileBaixaExtrato" accept=".xlsx,.xls" style="display:none" onchange="carregarArq('baixa_extrato',this)">
 
     <div class="upload-grid" style="grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px">
@@ -468,8 +461,8 @@ footer span{color:var(--gold)}
     </div>
 
     <div class="btn-row">
-      <button class="btn btn-gold" id="btnAnalisarBaixa" disabled onclick="analisarBaixa()">⚡ Analisar Baixas</button>
-      <button class="btn btn-navy" id="btnExportBaixa"   disabled onclick="exportarBaixa()">⬇ Exportar Planilha</button>
+      <button class="btn btn-gold" id="btnAnalisarBaixa" disabled="" onclick="analisarBaixa()">⚡ Analisar Baixas</button>
+      <button class="btn btn-navy" id="btnExportBaixa" disabled="" onclick="exportarBaixa()">⬇ Exportar Planilha</button>
       <button class="btn btn-out" onclick="resetar('baixa')">↺ Limpar</button>
     </div>
 
@@ -488,10 +481,10 @@ footer span{color:var(--gold)}
       <div style="background:#f4f5f7;padding:10px 14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center;border-bottom:1px solid #e0e5ee">
         <span style="font-size:11px;font-weight:600;color:#0D2137">Filtrar:</span>
         <button class="fbtn active" id="fB_todos" onclick="filtrarBaixa('todos')">Todos</button>
-        <button class="fbtn" id="fB_ok"   onclick="filtrarBaixa('ok')">✅ Confirmado</button>
+        <button class="fbtn" id="fB_ok" onclick="filtrarBaixa('ok')">✅ Confirmado</button>
         <button class="fbtn" id="fB_wait" onclick="filtrarBaixa('wait')">⏳ Aguardando</button>
-        <button class="fbtn" id="fB_err"  onclick="filtrarBaixa('err')">🔴 Vencida s/ baixa</button>
-        <button class="fbtn" id="fB_div"  onclick="filtrarBaixa('div')">🟠 Divergência</button>
+        <button class="fbtn" id="fB_err" onclick="filtrarBaixa('err')">🔴 Vencida s/ baixa</button>
+        <button class="fbtn" id="fB_div" onclick="filtrarBaixa('div')">🟠 Divergência</button>
       </div>
       <div class="tbl-scroll">
         <table>
@@ -798,6 +791,35 @@ function limparUploadUnificado() {
 }
 
 // Carregar arquivos detectados nos slots corretos do sistema existente
+
+function parseInfinitePix(rows) {
+  if (!rows || !rows.length) return [];
+  var hdr = rows[0].map(function(c){ return String(c||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toUpperCase().trim(); });
+  var iDt   = hdr.findIndex(function(h){ return h === 'DATA' || h.includes('DATA'); });
+  var iTipo = hdr.findIndex(function(h){ return h.includes('TIPO'); });
+  var iNome = hdr.findIndex(function(h){ return h === 'NOME' || h.includes('NOME') || h.includes('DETALH'); });
+  var iVal  = hdr.findIndex(function(h){ return h === 'VALOR' || h.includes('VALOR'); });
+  if (iDt   < 0) iDt   = 0;
+  if (iTipo < 0) iTipo = 2;
+  if (iNome < 0) iNome = 3;
+  if (iVal  < 0) iVal  = 5;
+  var result = [];
+  rows.slice(1).forEach(function(r){
+    var tipo = String(r[iTipo]||'').trim();
+    var tipoU = tipo.toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+    if (!tipoU.includes('PIX')) return;
+    var valRaw = r[iVal];
+    var val = typeof valRaw === 'number' ? valRaw : parseFloat(String(valRaw||'0').replace(/[R$\s]/g,'').replace(/\./g,'').replace(',','.')) || 0;
+    if (val <= 0) return;
+    var dtRaw = String(r[iDt]||'').trim();
+    var data = normDate(dtRaw);
+    if (!data) return;
+    var dataBR = data.substring(8,10)+'/'+data.substring(5,7)+'/'+data.substring(0,4);
+    var nome = String(r[iNome]||'').trim() || tipo;
+    result.push({data: dataBR, valor: val, memo: nome, _inf: true});
+  });
+  return result;
+}
 function processarTudo() {
   mostrarOv('Identificando e separando arquivos...');
   var st = document.getElementById('statusProcessamento');
@@ -857,6 +879,12 @@ function processarTudo() {
           if (slotsBaixa.indexOf(slot) >= 0) {
             // Manter formato rows (array de arrays) para parseStoneSalesMap / parseStoneRecebList / parseInfiniteExtratoMap
             dados[slot] = arq.rows;
+            if (arq.tipo === 'inf_extrato') {
+              var pixInf = parseInfinitePix(arq.rows);
+              if (pixInf.length > 0) {
+                dados['banco_inf'] = (dados['banco_inf'] || []).concat(pixInf);
+              }
+            }
           } else if (arq.rows && arq.rows.length > 1) {
             // Demais: converter rows em array de objetos usando linha 0 como header
             var hdrR = arq.rows[0];
@@ -888,7 +916,7 @@ function processarTudo() {
   var temMov = dados['mov'] && dados['mov'].length;
   var temCR  = dados['cr']  && dados['cr'].length;
 
-  var temOFX = (dados['ofx'] && dados['ofx'].length) || (dados['btg'] && dados['btg'].length);
+  var temOFX = (dados['ofx'] && dados['ofx'].length) || (dados['btg'] && dados['btg'].length) || (dados['banco_inf'] && dados['banco_inf'].length);
   var passos = [];
   if (temCC || temInf || temSt) passos.push('cartao');
   if (temMov || temOFX) passos.push('pix');     // roda PIX se tiver banco OU movimentações
@@ -1867,10 +1895,13 @@ function analisarPix() {
 function _analisarPix() {
   var crRows = dados['cr'] || [];
   // Mesclar C6 + BTG em uma única lista para confronto
-  var c6Rows = (dados['ofx'] || []).concat((dados['btg'] || []));
+  var c6Rows = (dados['ofx'] || []).concat((dados['btg'] || [])).concat((dados['banco_inf'] || []));
   // Detectar banco para nomear conta no Meu Dinheiro (quando só um banco carregado)
   var nomeBanco = dados['btg'] && dados['btg'].length > 0 && (!dados['ofx'] || !dados['ofx'].length)
-    ? 'BTG Pactual PF' : 'C6 Bank';
+    ? 'BTG Pactual PF'
+    : (dados['banco_inf'] && dados['banco_inf'].length > 0 && (!dados['ofx'] || !dados['ofx'].length) && (!dados['btg'] || !dados['btg'].length))
+      ? 'Infinite Pay'
+      : 'C6 Bank';
 
   // ── 1. Extrair PIX individuais do CR ─────────────────────────
   var pixList = [];
@@ -1963,7 +1994,7 @@ function _analisarPix() {
     if (encGrp!==null) {
       c6Usado[encGrp]=true;
       var nC6g=c6Rows[encGrp].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-      var bancoGrp = c6Rows[encGrp]._btg ? 'BTG Pactual PF' : 'C6 Bank';
+      var bancoGrp = c6Rows[encGrp]._btg ? 'BTG Pactual PF' : (c6Rows[encGrp]._inf ? 'Infinite Pay' : 'C6 Bank');
       itens.forEach(function(fg){
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6g,valF:fg.valor,valC6:fg.valor,
                      banco:bancoGrp,
@@ -2007,7 +2038,7 @@ function _analisarPix() {
       if (encFinal !== null) {
         c6Usado[encFinal]=true;
         var nC6=c6Rows[encFinal].memo.replace(/Pix recebido( c6)? de /i,'').trim();
-        var bancoEnc = c6Rows[encFinal]._btg ? 'BTG Pactual PF' : 'C6 Bank';
+        var bancoEnc = c6Rows[encFinal]._btg ? 'BTG Pactual PF' : (c6Rows[encFinal]._inf ? 'Infinite Pay' : 'C6 Bank');
         var semNomeMatch = (enc === null && encSemNome !== null);
         var stFinal = div ? 'pdiv' : (semNomeMatch ? 'pdiv' : 'pok');
         var obsFinal = div
@@ -2040,7 +2071,7 @@ function _analisarPix() {
     var memo=c6.memo||'';
     if (/return|lucro|distribuicao/i.test(memo)) return;
     var nC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
-    var bancoW = c6._btg ? 'BTG Pactual PF' : 'C6 Bank';
+    var bancoW = c6._btg ? 'BTG Pactual PF' : (c6._inf ? 'Infinite Pay' : 'C6 Bank');
     resPix.push({data:c6.data,pac:'—',nomeC6:nC6,valF:null,valC6:c6.valor,
                  banco:bancoW,
                  linhas:[],st:'pwarn',obs:'Entrada no '+bancoW+' mas NÃO lançada no Feegow. Verificar: '+nC6});
@@ -2628,9 +2659,12 @@ function exportarPixMD() {
 
   // Detectar banco para conta no Meu Dinheiro
   // Prioriza BTG se carregado, senão C6
-  var c6RowsExp = (dados['ofx'] || []).concat(dados['btg'] || []);
+  var c6RowsExp = (dados['ofx'] || []).concat(dados['btg'] || []).concat(dados['banco_inf'] || []);
   var nomeBanco = (dados['btg'] && dados['btg'].length > 0 && (!dados['ofx'] || !dados['ofx'].length))
-    ? 'BTG Pactual PF' : 'C6 Bank';
+    ? 'BTG Pactual PF'
+    : (dados['banco_inf'] && dados['banco_inf'].length > 0 && (!dados['ofx'] || !dados['ofx'].length) && (!dados['btg'] || !dados['btg'].length))
+      ? 'Infinite Pay'
+      : 'C6 Bank';
 
   var wb = XLSX.utils.book_new();
   var HDR = ['Data','Valor','Descrição','Conta','Conta transferência','Cartão','Categoria','Subcategoria','Contato','Centro','Projeto','Forma','N. Documento','Observações','Data Competência','Tags'];
@@ -3615,5 +3649,6 @@ function analisarTudo() {
   }).join('');
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
