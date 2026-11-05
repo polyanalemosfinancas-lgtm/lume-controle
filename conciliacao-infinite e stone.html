@@ -820,11 +820,23 @@ function parseInfinitePix(rows) {
     var valRaw = r[iVal];
     var val = typeof valRaw === 'number' ? valRaw : parseFloat(String(valRaw||'0').replace(/[R$\s]/g,'').replace(/\./g,'').replace(',','.')) || 0;
     if (val <= 0) return;
-    var dtRaw = String(r[iDt]||'').trim();
-    var data = normDate(dtRaw);
-    if (!data) return;
-    var dataBR = data.substring(8,10)+'/'+data.substring(5,7)+'/'+data.substring(0,4);
+    // Tratar data: pode vir como objeto Date (cellDates:true), string ISO ou string BR
+    var dtRaw = r[iDt];
+    var dataBR;
+    if (dtRaw instanceof Date) {
+      var dd = String(dtRaw.getDate()).padStart(2,'0');
+      var mm = String(dtRaw.getMonth()+1).padStart(2,'0');
+      var yyyy = dtRaw.getFullYear();
+      dataBR = dd+'/'+mm+'/'+yyyy;
+    } else {
+      var dtStr = String(dtRaw||'').trim();
+      var data = normDate(dtStr);
+      if (!data) return;
+      dataBR = data.substring(8,10)+'/'+data.substring(5,7)+'/'+data.substring(0,4);
+    }
     var nome = String(r[iNome]||'').trim() || tipo;
+    // Remover prefixo "Pix " do nome (ex: "Pix JOÃO SILVA" → "JOÃO SILVA")
+    nome = nome.replace(/^Pix\s+/i, '').trim();
     result.push({data: dataBR, valor: val, memo: nome, _inf: true});
   });
   return result;
@@ -1371,7 +1383,8 @@ function carregarArq(tipo, input) {
     reader.onload = function(e) {
       try {
         var wb = XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
-        var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:'', raw:false});
+        // raw:true preserva números como estão; cellDates:true já converte datas para objetos Date
+        var rows = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]], {header:1, defval:'', raw:true});
         var pixInf = parseInfinitePix(rows);
         dados['banco_inf'] = pixInf;
         atualizarCard('inf_extrato', file.name, pixInf.length);
