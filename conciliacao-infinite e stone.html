@@ -820,13 +820,22 @@ function parseInfinitePix(rows) {
     var valRaw = r[iVal];
     var val = typeof valRaw === 'number' ? valRaw : parseFloat(String(valRaw||'0').replace(/[R$\s]/g,'').replace(/\./g,'').replace(',','.')) || 0;
     if (val <= 0) return;
-    // Tratar data: pode vir como objeto Date (cellDates:true), string ISO ou string BR
+    // Tratar data: pode vir como objeto Date (cellDates:true), número serial Excel, string ISO ou string BR
     var dtRaw = r[iDt];
     var dataBR;
     if (dtRaw instanceof Date) {
-      var dd = String(dtRaw.getDate()).padStart(2,'0');
-      var mm = String(dtRaw.getMonth()+1).padStart(2,'0');
-      var yyyy = dtRaw.getFullYear();
+      // Usar UTC para evitar erro de timezone (SheetJS cria datas em UTC)
+      var dd = String(dtRaw.getUTCDate()).padStart(2,'0');
+      var mm = String(dtRaw.getUTCMonth()+1).padStart(2,'0');
+      var yyyy = dtRaw.getUTCFullYear();
+      dataBR = dd+'/'+mm+'/'+yyyy;
+    } else if (typeof dtRaw === 'number' && dtRaw > 40000) {
+      // Número serial do Excel → converter para data (base: 1 jan 1900 = serial 1)
+      var excelEpoch = new Date(Date.UTC(1899,11,30));
+      var d = new Date(excelEpoch.getTime() + dtRaw * 86400000);
+      var dd = String(d.getUTCDate()).padStart(2,'0');
+      var mm = String(d.getUTCMonth()+1).padStart(2,'0');
+      var yyyy = d.getUTCFullYear();
       dataBR = dd+'/'+mm+'/'+yyyy;
     } else {
       var dtStr = String(dtRaw||'').trim();
