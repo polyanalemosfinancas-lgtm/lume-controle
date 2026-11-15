@@ -2094,30 +2094,46 @@ function _analisarPix() {
     itens.forEach(function(fg) {
       var enc=null, div=false;
       var encSemNome=null; // casamento sem nome (último recurso)
-      // N1: nome+valor exato+data exata
+      // N0: PIX Infinite/Stone via maquininha — casa SOMENTE por valor+data (nome no relatório é quem pagou, não o paciente)
       for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (!c6Rows[i]._inf) continue; // só para entradas do Infinite
+        if (c6Usado[i]||c6Rows[i].data!==fg.data||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
+        enc=i; // valor+data exatos = OK, independente do nome
+      }
+      // N0b: Infinite ±1 dia (repasse pode cair no dia seguinte)
+      for (var tol=1;tol<=1&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (!c6Rows[i]._inf) continue;
+        if (c6Usado[i]||diffDias(c6Rows[i].data,fg.data)>tol||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
+        enc=i;
+      }
+      // N1: nome+valor exato+data exata (BTG/C6 — casamento por nome)
+      for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (c6Rows[i]._inf) continue; // Infinite já tratado acima
         if (c6Usado[i]||c6Rows[i].data!==fg.data||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
         if (matchNome(pac,c6Rows[i].memo)) enc=i;
       }
-      // N2: nome+valor exato ±3 dias
+      // N2: nome+valor exato ±3 dias (BTG/C6)
       for (var tol=1;tol<=3&&!enc;tol++) for (var i=0;i<c6Rows.length&&!enc;i++) {
+        if (c6Rows[i]._inf) continue;
         if (c6Usado[i]||diffDias(c6Rows[i].data,fg.data)>tol||Math.abs(c6Rows[i].valor-fg.valor)>=0.02) continue;
         if (matchNome(pac,c6Rows[i].memo)) enc=i;
       }
-      // N3: nome+divergência valor ±15% ±1 dia
+      // N3: nome+divergência valor ±15% ±1 dia (BTG/C6)
       for (var i=0;i<c6Rows.length&&!enc;i++) {
-        if (c6Usado[i]) continue;
+        if (c6Rows[i]._inf||c6Usado[i]) continue;
         var vd=Math.abs(c6Rows[i].valor-fg.valor)/Math.max(fg.valor,1);
         if (vd>0.15||diffDias(c6Rows[i].data,fg.data)>1) continue;
         if (matchNome(pac,c6Rows[i].memo)) { enc=i; div=true; }
       }
-      // N4: ÚLTIMO RECURSO — valor exato+data exata sem nome (gera aviso)
+      // N4: ÚLTIMO RECURSO — valor exato+data exata sem nome, apenas BTG/C6 (gera aviso)
       if (!enc) for (var i=0;i<c6Rows.length&&!encSemNome;i++) {
-        if (!c6Usado[i]&&c6Rows[i].data===fg.data&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
+        if (c6Rows[i]._inf||c6Usado[i]) continue;
+        if (c6Rows[i].data===fg.data&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
       }
-      // N5: valor exato ±3 dias sem nome (último recurso)
+      // N5: valor exato ±3 dias sem nome, apenas BTG/C6
       if (!enc&&!encSemNome) for (var tol=1;tol<=2&&!encSemNome;tol++) for (var i=0;i<c6Rows.length&&!encSemNome;i++) {
-        if (!c6Usado[i]&&diffDias(c6Rows[i].data,fg.data)<=tol&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
+        if (c6Rows[i]._inf||c6Usado[i]) continue;
+        if (diffDias(c6Rows[i].data,fg.data)<=tol&&Math.abs(c6Rows[i].valor-fg.valor)<0.02) encSemNome=i;
       }
 
       var encFinal = enc !== null ? enc : encSemNome;
@@ -2131,7 +2147,9 @@ function _analisarPix() {
           ? '🟠 Divergência: Feegow '+moeda(fg.valor)+' | '+bancoEnc+' '+moeda(c6Rows[encFinal].valor)
           : semNomeMatch
             ? '⚠️ Valor igual no banco ('+bancoEnc+') mas nome não confirmado. Verificar se é o mesmo paciente.'
-            : '✓ Confirmado no Feegow e no Banco';
+            : c6Rows[encFinal]._inf
+              ? '✓ Confirmado no Feegow e no Infinite Pay (valor+data)'
+              : '✓ Confirmado no Feegow e no Banco';
         resPix.push({data:fg.data,pac:fg.pac,nomeC6:nC6,valF:fg.valor,valC6:c6Rows[encFinal].valor,
                      banco:bancoEnc,
                      linhas:[{prof:fg.prof,val:fg.valor,proc:fg.proc}],
@@ -2158,9 +2176,12 @@ function _analisarPix() {
     if (/return|lucro|distribuicao/i.test(memo)) return;
     var nC6=memo.replace(/Pix recebido( c6)? de /i,'').trim();
     var bancoW = c6._btg ? 'BTG Pactual PF' : (c6._inf ? 'Infinite Pay' : 'C6 Bank');
+    var obsW = c6._inf
+      ? '⚠️ PIX no Infinite Pay sem correspondência no Feegow. Verificar se foi lançado: '+nC6
+      : 'Entrada no '+bancoW+' mas NÃO lançada no Feegow. Verificar: '+nC6;
     resPix.push({data:c6.data,pac:'—',nomeC6:nC6,valF:null,valC6:c6.valor,
                  banco:bancoW,
-                 linhas:[],st:'pwarn',obs:'Entrada no '+bancoW+' mas NÃO lançada no Feegow. Verificar: '+nC6});
+                 linhas:[],st:'pwarn',obs:obsW});
   });
 
   // ── 7. Vendas em Dinheiro (Feegow CR / MOV) ──────────────────────────────
