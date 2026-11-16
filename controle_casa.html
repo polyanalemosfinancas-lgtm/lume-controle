@@ -858,7 +858,7 @@ window.addEventListener('hashchange',()=>{const h=location.hash.slice(1);if(TABS
 const TABS=['lancar','resumo','pagar','fluxo','ajustes'];
 
 // ================= dados =================
-function dbErr(e){if(e&&e.code==='revoked'){setStatus('Acesso aos dados encerrado nesta tela.','bad');return}setStatus('Problema ao carregar os dados. Feche e abra o app de novo.','bad')}
+function dbErr(e){if(e&&e.code==='revoked'){setStatus('Acesso aos dados encerrado nesta tela.','bad');return}const c=e&&e.code||'';setStatus(/permission/.test(c)?'Sem permissão para ver os dados ('+(usuario||'sem login')+'). Confira o e-mail nas regras do Firebase.':'Problema ao carregar os dados'+(c?' ('+c+')':'')+'. Feche e abra o app de novo.','bad')}
 function subLanc(){
   if(!db)return;unL&&unL();
   unL=db.collection('lanc').where('mesRef','>=',boundL).onSnapshot(s=>{lancsAll=s.docs.map(d=>({id:d.id,...d.data()}));renderDados()},dbErr);
@@ -872,17 +872,18 @@ async function conectar(){
     await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js');
     await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js');
     await loadScript('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js');
-    if(!firebase.apps.length)firebase.initializeApp(FIREBASE_CONFIG);
-    const auth=firebase.auth();
+    // app separado ("casa"): sessão de login própria, sem misturar com o login anônimo dos outros painéis
+    const app=firebase.apps.find(a=>a.name==='casa')||firebase.initializeApp(FIREBASE_CONFIG,'casa');
+    const auth=app.auth();appCasa=app;
     let user=await new Promise(r=>{const u=auth.onAuthStateChanged(x=>{u();r(x)})});
-    if(!user)user=await pedirLogin(auth);
+    if(!user||user.isAnonymous||!user.email){if(user)try{await auth.signOut()}catch(e){}user=await pedirLogin(auth)}
     usuario=user.email||'';
-    const fs=firebase.firestore();try{await fs.enablePersistence({synchronizeTabs:true})}catch(e){}
+    const fs=app.firestore();try{await fs.enablePersistence({synchronizeTabs:true})}catch(e){}
     const P='casa_';backend='firebase';
     return{doc:p=>fs.doc(P+p),collection:p=>fs.collection(P+p)};
   }catch(e){return null}
 }
-let usuario='';
+let usuario='',appCasa=null;
 function pedirLogin(auth){
   return new Promise(ok=>{
     const L=$('#login'),err=$('#lgErr'),btn=$('#lgBtn');L.classList.add('on');
@@ -894,7 +895,7 @@ function pedirLogin(auth){
       try{await auth.sendPasswordResetEmail(em);err.textContent='Enviamos um link para redefinir a senha no seu e-mail.'}catch(e){err.textContent='Não consegui enviar. Confira o e-mail.'}};
   });
 }
-async function sair(){try{await firebase.auth().signOut()}catch(e){}location.reload()}
+async function sair(){try{await appCasa.auth().signOut()}catch(e){}location.reload()}
 async function aplicarSeed(){
   if(!db||!SEED)return;
   confirmar('Carregar contas fixas, receitas e pagamentos de novembro?','Carregar',async()=>{
