@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Todas as coleções continuam como hoje (abertas),
+    // EXCETO as da casa (casa_...), que só abrem para os dois e-mails abaixo, logados.
+    match /{colecao}/{doc=**} {
+      allow read, write: if !colecao.matches('casa_.*')
+        || (request.auth != null
+            && request.auth.token.email in ['EMAIL_DA_POLYANA', 'EMAIL_DO_RODRIGO']);
+    }
+  }
+}
