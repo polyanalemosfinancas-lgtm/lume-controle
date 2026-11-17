@@ -410,7 +410,15 @@ function renderUltimos(){
 }
 
 // ================= RESUMO =================
-function lancsResumo(){return resumoModo==='compra'?lancsAll.filter(l=>String(l.data).slice(0,7)===mes):lancsMes(mes)}
+let filtroForma='todas';
+const passaForma=l=>filtroForma==='todas'||(filtroForma==='cartao'?l.forma==='cartao':filtroForma.startsWith('k:')?l.forma==='cartao'&&l.cartao===filtroForma.slice(2):l.forma===filtroForma);
+function lancsResumoTodos(){return resumoModo==='compra'?lancsAll.filter(l=>String(l.data).slice(0,7)===mes):lancsMes(mes)}
+function lancsResumo(){return lancsResumoTodos().filter(passaForma)}
+function cardPorForma(){
+  const T=lancsResumoTodos();if(!T.length)return'';const tot=sum(T,l=>l.valor)||1;
+  const linhas=[['💳 Cartão (todos)','cartao',T.filter(l=>l.forma==='cartao')],...cfg.cartoes.map(c=>['· '+c.nome,'k:'+c.id,T.filter(l=>l.forma==='cartao'&&l.cartao===c.id)]),['⚡ Pix / Débito','pix',T.filter(l=>l.forma==='pix')],['💵 Dinheiro','dinheiro',T.filter(l=>l.forma==='dinheiro')]];
+  return `<div class="card"><p class="lbl">Por forma de pagamento</p>${linhas.filter(([n,k,a])=>a.length||!k.startsWith('k:')).map(([n,k,a])=>{const v=sum(a,l=>l.valor);const sub=k.startsWith('k:');return `<div class="brow" data-act="fforma" data-v="${esc(k)}" style="cursor:pointer${sub?';padding:5px 0 5px 12px':''}"><div class="top"><b style="${sub?'font-weight:500;font-size:13px':''}">${esc(n)}</b><span>${brl(v)} <span class="hint">${Math.round(v/tot*100)}%</span></span></div>${sub?'':`<div class="bar"><div style="width:${Math.max(0,v/tot*100)}%"></div></div>`}</div>`}).join('')}<div class="hint">Toque para filtrar o resumo por essa forma.</div></div>`;
+}
 function renderResumo(){
   const el=$('#tab-resumo');
   const L=lancsResumo(),casa=L.filter(l=>!isTerc(l)),terc=L.filter(isTerc);
@@ -420,6 +428,10 @@ function renderResumo(){
   const renda=sum(entradasDoMes(),e=>valorEntrada(e));
   const total=dia+fxTot,sobra=renda-total;
   let h=`<div class="seg" style="margin-bottom:12px"><button class="${resumoModo==='compra'?'on':''}" data-act="modo" data-v="compra">Pela data da compra</button><button class="${resumoModo==='pagamento'?'on':''}" data-act="modo" data-v="pagamento">Pelo mês que paga</button></div>`;
+  const nomesF={todas:'Todas',cartao:'💳 Cartões'};cfg.cartoes.forEach(c=>nomesF['k:'+c.id]=c.nome);nomesF.pix='⚡ Pix/Débito';nomesF.dinheiro='💵 Dinheiro';
+  if(!nomesF[filtroForma])filtroForma='todas';
+  h+=`<div class="chips" style="flex-wrap:nowrap;overflow-x:auto;margin-bottom:12px;padding-bottom:2px">${Object.entries(nomesF).map(([k,n])=>`<button class="chip sm${k===filtroForma?' on':''}" data-act="fforma" data-v="${esc(k)}">${esc(n)}</button>`).join('')}</div>`;
+  if(filtroForma!=='todas')h+=`<div class="box" style="margin:0 0 12px">Mostrando só <b>${esc(nomesF[filtroForma])}</b> no dia a dia, quem gastou, categorias e lista. <a data-act="fforma" data-v="todas" style="text-decoration:underline;cursor:pointer">Ver todas</a></div>`;
   h+=`<div class="card"><p class="lbl">${mesLabel(mes,true)}</p>`;
   if(renda>0){
     h+=`<div class="big ${sobra>=0?'pos':'neg'}">${brl(sobra)}</div><div class="hint" style="margin-top:2px">${sobra>=0?'sobra prevista no mês':'acima das entradas do mês'}</div>
@@ -436,6 +448,7 @@ function renderResumo(){
   if(tercFat)h+=`<div class="hint">Inclui ${brl(tercFat)} de terceiros (reembolso).</div>`;
   if(!mc)h+=`<div class="hint">Defina uma meta para o total das faturas em <b>Ajustes</b>.</div>`;
   h+='</div>';
+  h+=cardPorForma();
   // por pessoa
   const pessoas=[...new Set([...cfg.pessoas,...casa.map(l=>l.quem)])];
   const porP=pessoas.map((p,i)=>({p,v:sum(casa.filter(l=>l.quem===p),l=>l.valor),cor:CORES[i%CORES.length]})).sort((a,b)=>b.v-a.v);
@@ -918,6 +931,7 @@ document.addEventListener('click',e=>{
     case'fd':form.data=v==='ontem'?ontem():hoje();renderLancar();break;
     case'el':abrirLanc(id);break;
     case'modo':resumoModo=v;store.set('modo',v);renderResumo();break;
+    case'fforma':filtroForma=v;renderResumo();try{window.scrollTo(0,0)}catch(e){}break;
     case'filtro':filtroQuem=v;renderResumo();break;
     case'exportar':exportar();break;
     case'tg':toggleItem(k);break;
@@ -1097,18 +1111,20 @@ function restaurar(){
 async function init(){
   const h=location.hash.slice(1);
   renderAll();goTab(TABS.includes(h)?h:'lancar');
-  const timer=setTimeout(()=>setStatus('Ainda conectando aos dados… verifique a internet.','warn'),10000);
+  let recebeu=false;
+  const timer=setTimeout(()=>{if(!recebeu)setStatus('Ainda conectando aos dados… verifique a internet.','warn')},10000);
+  const chegou=()=>{if(recebeu)return;recebeu=true;clearTimeout(timer);if($('#status').classList.contains('warn'))setStatus('')};
   db=await conectar();
   if(!db){clearTimeout(timer);setStatus(FIREBASE_CONFIG?'Não consegui conectar ao banco de dados. Verifique a internet.':'Abra este app pelo link do Claude, logado na sua conta, para salvar e sincronizar.','bad');return}
   db.doc('config/geral').onSnapshot(s=>{
-    if(!s.metadata.fromCache){clearTimeout(timer);setStatus('')}
+    chegou();
     cfg=s.exists?mergeCfg(s.data()):JSON.parse(JSON.stringify(DEF_CFG));
     const ae=document.activeElement;
     if(ae&&$('#tab-ajustes').contains(ae))ajustesSujo=true;else renderAjustes();
     if(!(ae&&$('#tab-lancar').contains(ae)&&ae.tagName==='INPUT'))renderLancar();
     renderDados();
   },e=>{clearTimeout(timer);dbErr(e)});
-  db.collection('fixas').onSnapshot(s=>{fixas=s.docs.map(d=>({id:d.id,...d.data()}));renderDados()},dbErr);
+  db.collection('fixas').onSnapshot(s=>{chegou();fixas=s.docs.map(d=>({id:d.id,...d.data()}));renderDados()},dbErr);
   db.collection('entradas').onSnapshot(s=>{entradas=s.docs.map(d=>({id:d.id,...d.data()}));renderDados()},dbErr);
   db.collection('checks').onSnapshot(s=>{const o={};s.docs.forEach(d=>o[d.id]=d.data());checksAll=o;renderDados()},dbErr);
   boundL=addMes(hojeMes(),-12);subLanc();
