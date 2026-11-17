@@ -537,7 +537,7 @@ function renderPagar(){
     noCartao.forEach(f=>{h+=`<div class="item" data-act="efx" data-id="${esc(f.id)}"><div class="ico">${esc(catOf(f.cat).emoji)}</div><div class="it"><b>${esc(f.nome)}</b><small>${esc((cardOf(f.cartao)||{nome:'cartão?'}).nome)} · ${esc(f.quem||'Família')}</small></div><div class="iv">${brl(valorBase(f))}</div></div>`});
     h+='</div>';
   }
-  h+=`<button class="btn" data-act="nfx">+ Nova conta fixa</button>`;
+  h+=`<button class="btn" data-act="nfx">+ Nova conta fixa</button><button class="btn ghost" style="margin-top:8px" data-act="importar">📥 Importar planilha da fatura</button>`;
   if(!fixas.length&&SEED&&backend==='firebase')h+=`<button class="btn" style="margin-top:8px;background:var(--blue)" data-act="seed">⬇️ Carregar dados de novembro</button>`;
   if(!fixas.length)h+=`<button class="btn ghost" style="margin-top:8px" data-act="modelo">Adicionar lista modelo (aluguel, luz, água…)</button>`;
   h+=`<p class="hint" style="text-align:center">Círculo = marcar como pago. Toque no nome para ajustar o valor pago ou ver o detalhe da fatura. Fatura de mês sem lançamentos no app: toque e informe o valor.</p>`;
@@ -836,6 +836,7 @@ function renderAjustes(){
   </div>
   <div class="card"><h3>Como usar a dois</h3><p class="hint" style="margin-top:0">Os dados ficam salvos online e aparecem igual nos dois celulares. ${backend==='firebase'?'Mande o link para o Rodrigo e adicionem à tela inicial do celular (Compartilhar → Adicionar à Tela de Início).':'Para o Rodrigo lançar também, compartilhe este app com ele como <b>Editor</b> (botão Compartilhar do Claude).'}</p></div>
   ${backend==='firebase'?`<div class="card"><h3>Conta</h3><div class="row"><div class="grow hint" style="margin-top:0">Conectado como <b>${esc(usuario)}</b></div><button class="chip" data-act="sair">Sair</button></div></div>`:''}
+  <div class="card"><h3>Importar fatura</h3><p class="hint" style="margin-top:0">Planilha (.xlsx ou .csv) com as colunas <b>Data, Descrição/Histórico, Valor, Categoria, Quem gastou, Parcela</b> (ex.: 2/7) e, se quiser, <b>Terceiro</b>. Parcelas futuras são criadas automaticamente.</p><button class="btn sm" data-act="importar">📥 Importar planilha da fatura</button></div>
   <div class="card"><h3>Backup</h3><div class="btns" style="margin-top:0"><button class="btn ghost sm" data-act="backup">📋 Copiar backup</button><button class="btn ghost sm" data-act="restore">⬆️ Restaurar</button></div><p class="hint">Use para guardar uma cópia ou levar os dados de uma versão do app para outra.</p></div>`;
   el.querySelectorAll('[data-cfg]').forEach(i=>i.onchange=()=>{cfg[i.dataset.cfg]=parseBR(i.value);saveCfg();renderResumo()});
   el.querySelectorAll('[data-meta]').forEach(i=>i.onchange=()=>{const v=parseBR(i.value);const m={...cfg.metas};if(v>0)m[i.dataset.meta]=v;else delete m[i.dataset.meta];cfg.metas=m;saveCfg();renderResumo()});
@@ -906,6 +907,7 @@ document.addEventListener('click',e=>{
     case'seed':aplicarSeed();break;
     case'sair':sair();break;
     case'xlsx':baixarFluxo();break;
+    case'importar':abrirImportar();break;
     case'backup':backup();break;
     case'restore':restaurar();break;
     case'ecard':editarCartao(id);break;
@@ -958,6 +960,89 @@ function pedirLogin(auth){
   });
 }
 async function sair(){try{await appCasa.auth().signOut()}catch(e){}location.reload()}
+// ================= IMPORTAR FATURA (planilha) =================
+const norm=s=>String(s??'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const SINON={'supermercado':'mercado','mercado':'mercado','lanche cafe':'lanche','lanche':'lanche','restaurante':'lanche','lanche restaurante':'lanche','suplementos':'suplemento','suplemento':'suplemento','shopee':'online','estorno shopee':'online','compras online':'online','amazon':'online','mercado livre':'online','delivery ifood':'delivery','delivery':'delivery','ifood':'delivery','presente':'presentes','presentes':'presentes','acougue':'acougue','farmacia':'farmacia','combustivel':'combustivel','gasolina':'combustivel','uber':'transporte','corte de cabelo':'beleza','cabelo':'beleza','salao':'beleza','roupas calcados':'roupas','roupas':'roupas','academia':'academia','academia poly':'academia','escola':'educacao','livraria papelaria':'educacao','papelaria':'educacao','outros':'outros','farmacia drogaria':'farmacia','pet':'outros'};
+const EMOJI_NOVA=[['padaria','🥖'],['estacion','🅿️'],['aniversa','🎂'],['festa','🎂'],['pneu','🔧'],['manuten','🔧'],['carro','🚙'],['cabelo','💈'],['viagem','✈️'],['bebida','🍺'],['lazer','🎉']];
+function hashStr(s){let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)}
+function lerData(v){
+  if(typeof v==='number'&&window.XLSX){const d=XLSX.SSF.parse_date_code(v);if(d)return d.y+'-'+pad(d.m)+'-'+pad(d.d)}
+  const s=String(v??'').trim();let m=s.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);if(m)return (m[3].length===2?'20'+m[3]:m[3])+'-'+pad(m[2])+'-'+pad(m[1]);
+  m=s.match(/^(\d{4})-(\d{2})-(\d{2})/);if(m)return m[1]+'-'+m[2]+'-'+m[3];return null;
+}
+const lerValor=v=>typeof v==='number'?r2(v):(()=>{let s=String(v??'').trim().replace(/[R$\s]/g,'');if(!s)return NaN;const neg=/^-|-$|^\(/.test(s);s=s.replace(/[()\-]/g,'');if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');const n=parseFloat(s);return isNaN(n)?NaN:r2(neg?-n:n)})();
+function mapQuem(v){const n=norm(v);if(!n)return{quem:cfg.pessoas.includes('Família')?'Família':cfg.pessoas[0]};if(n.startsWith('terceir'))return{quem:TERC};const p=cfg.pessoas.find(x=>norm(x)===n||norm(x).startsWith(n)||n.startsWith(norm(x)));return{quem:p||(cfg.pessoas.includes('Família')?'Família':cfg.pessoas[0])}}
+function abrirImportar(){
+  if(!db){toast('Sem conexão com os dados',true);return}
+  const inp=document.createElement('input');inp.type='file';inp.accept='.xlsx,.xls,.csv';
+  inp.onchange=async()=>{const f=inp.files[0];if(!f)return;toast('Lendo planilha…');
+    try{if(!window.XLSX)await loadScript('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js');
+      const wb=XLSX.read(await f.arrayBuffer(),{type:'array'});
+      const nome=wb.SheetNames.find(n=>/lan[cç]/i.test(n))||wb.SheetNames[0];
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[nome],{header:1,raw:true,defval:''});
+      prepararImport(rows,f.name);
+    }catch(e){toast('Não consegui ler a planilha.',true)}};
+  inp.click();
+}
+function prepararImport(rows,arq){
+  const hi=rows.findIndex(r=>r.some(c=>/^data/i.test(String(c).trim()))&&r.some(c=>/valor/i.test(String(c))));
+  if(hi<0){toast('Não achei as colunas Data e Valor na planilha',true);return}
+  const H=rows[hi].map(c=>norm(c)),col=re=>H.findIndex(x=>re.test(x));
+  const C={data:col(/^data/),desc:col(/descri|hist|estabelec/),valor:col(/valor/),cat:col(/categ/),quem:col(/quem/),terc:col(/terceiro/),parc:col(/parcela/)};
+  const itens=[],ign=[];
+  rows.slice(hi+1).forEach(r=>{
+    const data=lerData(r[C.data]),valor=lerValor(r[C.valor]),desc=String(C.desc>=0?r[C.desc]:'').trim();
+    if(!data||isNaN(valor)||!valor){if(desc&&!/total/i.test(desc))ign.push(desc);return}
+    let k=1,N=1;const pm=String(C.parc>=0?r[C.parc]:'').match(/(\d+)\s*\/\s*(\d+)/);if(pm){k=+pm[1];N=+pm[2];if(k>N||N>48)N=k}
+    const q=mapQuem(C.quem>=0?r[C.quem]:'');
+    itens.push({data,valor,desc,catNome:String(C.cat>=0?r[C.cat]:'').trim(),quem:q.quem,terc:C.terc>=0?String(r[C.terc]).trim():'',k,N,pinv:!!pm&&+pm[1]>+pm[2]});
+  });
+  if(!itens.length){toast('Nenhum lançamento encontrado',true);return}
+  // categorias
+  const novas={};
+  itens.forEach(it=>{const n=norm(it.catNome);let id=null;
+    const c=cfg.cats.find(x=>norm(x.nome)===n||norm(x.nome).split(' ').includes(n));if(c)id=c.id;
+    else if(SINON[n])id=SINON[n];else if(!n)id='outros';
+    if(!id){const key=n;if(!novas[key])novas[key]={id:'c'+hashStr(key),nome:it.catNome.replace(/\s+/g,' ').replace(/^./,x=>x.toUpperCase()),emoji:(EMOJI_NOVA.find(([w])=>key.includes(w))||[,'🔖'])[1]};id=novas[key].id}
+    it.cat=id;});
+  const sugCard=cfg.cartoes.find(c=>norm(arq).includes(norm(c.nome).split(' ')[0]))||cardOf(store.get('impCard'))||cfg.cartoes[0];
+  let cardId=sugCard?sugCard.id:'',fatM='';
+  const candidatos=()=>{const c=cardOf(cardId);if(!c)return[];const ms=itens.map(it=>addMes(faturaDe(c,it.data),it.k-1));const mx=ms.sort().slice(-1)[0];return[addMes(mx,-1),mx,addMes(mx,1)]};
+  const terceiros=itens.filter(i=>i.quem===TERC&&!i.terc).length;
+  const optF=()=>{const c=cardOf(cardId);const cs=candidatos();if(!cs.includes(fatM))fatM=cs[1];return cs.map(m=>`<option value="${m}"${m===fatM?' selected':''}>Vence ${dd(dueDate(c,m))}/${m.slice(0,4)}</option>`).join('')};
+  const resumo=()=>{const fut=sum(itens,it=>it.N-it.k);const atual=fatM?faturaCalc(cardOf(cardId),fatM).ls.filter(l=>!String(l.id).startsWith('imp_')).length:0;
+    return `<div class="fl"><span>Itens nesta fatura</span><b>${itens.length} · ${brl(sum(itens,i=>i.valor))}</b></div><div class="fl"><span>Parcelas futuras que serão criadas</span><b>${fut}</b></div>${atual?`<p class="hint">⚠️ Esta fatura já tem ${atual} lançamento(s) feitos à mão no app. Se forem as mesmas compras, apague-os depois para não somar duas vezes.</p>`:''}`};
+  const optK=cfg.cartoes.map(c=>`<option value="${esc(c.id)}"${c.id===cardId?' selected':''}>${esc(c.nome)}</option>`).join('');
+  sheet(`<h3>Importar ${itens.length} lançamentos</h3>
+   <div class="fld"><label>Cartão desta planilha</label><select class="inp" id="imK">${optK}</select></div>
+   <div class="fld"><label>Fatura (vencimento)</label><select class="inp" id="imF">${optF()}</select></div>
+   <div class="card" style="background:var(--bg);border:0" id="imRes">${resumo()}</div>
+   <div class="fl tot"><span>Total da planilha</span><span>${brl(sum(itens,i=>i.valor))}</span></div>
+   ${Object.keys(novas).length?`<p class="hint">Categorias novas que serão criadas: <b>${Object.values(novas).map(x=>esc(x.emoji+' '+x.nome)).join(', ')}</b></p>`:''}
+   ${terceiros?`<p class="hint">⚠️ ${terceiros} compra(s) de terceiro sem nome: vão como “A definir” — depois edite e coloque o nome.</p>`:''}
+   ${itens.some(i=>i.pinv)?`<p class="hint">⚠️ Parcela inválida em: ${itens.filter(i=>i.pinv).map(i=>esc(i.desc)).join(', ')} — importada só a parcela desta fatura.</p>`:''}
+   ${ign.length?`<p class="hint">Ignoradas (sem data ou valor): ${ign.slice(0,5).map(esc).join(', ')}${ign.length>5?'…':''}</p>`:''}
+   <p class="hint">Importar de novo a mesma compra não duplica: o app reconhece e só atualiza.</p>
+   <div class="btns"><button class="btn ghost" data-act="fechar">Cancelar</button><button class="btn" id="imOk">Importar</button></div>`,b=>{
+    b.querySelector('#imK').onchange=e=>{cardId=e.target.value;b.querySelector('#imF').innerHTML=optF();b.querySelector('#imRes').innerHTML=resumo()};
+    b.querySelector('#imF').onchange=e=>{fatM=e.target.value;b.querySelector('#imRes').innerHTML=resumo()};
+    b.querySelector('#imOk').onclick=async()=>{
+      const c=cardOf(cardId);if(!c||!fatM)return;fecharSheet();toast('Importando…');store.set('impCard',cardId);
+      try{
+        if(Object.keys(novas).length){cfg.cats=[...cfg.cats.filter(x=>x.id!=='outros'),...Object.values(novas),...cfg.cats.filter(x=>x.id==='outros')];saveCfg()}
+        const vistos={};let n=0;
+        for(const it of itens){
+          const base=[c.id,it.data,norm(it.desc),Math.round(it.valor*100),it.N].join('|');vistos[base]=(vistos[base]||0)+1;
+          const hk=hashStr(base+'#'+vistos[base]),ref1=fatM;
+          for(let i=it.k;i<=it.N;i++){
+            await db.doc('lanc/imp_'+hk+'_'+i).set({valor:it.valor,quem:it.quem,terceiro:it.quem===TERC?(it.terc||'A definir'):null,reemb:false,cat:it.cat,forma:'cartao',cartao:c.id,data:it.data,desc:it.desc,mesRef:addMes(ref1,i-it.k),parc:i,parcN:it.N,grupo:it.N>1?'g'+hk:null,total:r2(it.valor*it.N),criadoEm:Date.now(),importado:true});n++;
+          }
+        }
+        toast(`✓ ${n} lançamentos importados`);
+      }catch(e){toast(errMsg(e),true)}
+    };
+  });
+}
 async function aplicarSeed(){
   if(!db||!SEED)return;
   confirmar('Carregar contas fixas, receitas e pagamentos de novembro?','Carregar',async()=>{
