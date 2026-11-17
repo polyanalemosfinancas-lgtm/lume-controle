@@ -41,6 +41,7 @@ section.tab.on{display:block}
 h3{margin:0 0 10px;font-size:16px}
 .valor-wrap{display:flex;align-items:baseline;gap:6px;border-bottom:2px solid var(--line);padding:4px 2px 6px}
 .valor-wrap:focus-within{border-color:var(--pri)}
+.estorno .valor-wrap span::before{content:'−'}.estorno .valor-wrap input,.estorno .valor-wrap span{color:var(--ok)}
 .valor-wrap span{font-size:22px;font-weight:700;color:var(--mut)}
 .valor-wrap input{border:0;outline:0;background:none;font-size:38px;font-weight:800;width:100%;letter-spacing:-1px;padding:0}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
@@ -139,6 +140,7 @@ table.fx th:first-child,table.fx td:first-child{position:sticky;left:0;z-index:1
 table.fx th:first-child{background:#faf8f3;z-index:2}
 table.fx td.cur,table.fx th.cur{background:#f3f8f5}
 table.fx td.pv{color:var(--mut);font-style:italic}
+table.fx td.clk{cursor:pointer}table.fx td.clk:active{background:var(--pri2)}
 table.fx tr.sec td{background:var(--bg)!important;font-size:11px;font-weight:800;letter-spacing:.5px;color:var(--mut);text-align:left}
 table.fx tr.tt td{font-weight:800}
 table.fx td.pos{color:var(--ok)}table.fx td.neg{color:var(--bad)}
@@ -247,7 +249,7 @@ let cfg=JSON.parse(JSON.stringify(DEF_CFG));
 let db=null,lancsAll=[],fixas=[],entradas=[],checksAll={},mes=hojeMes(),tab='lancar',filtroQuem='Todos';
 let resumoModo=store.get('modo')||'compra';
 let unL=null,boundL=null,ajustesSujo=false;
-const form={cents:0,quem:store.get('quem')||'Polyana',terceiro:'',cat:null,forma:store.get('forma')||'cartao',cartao:store.get('cartao')||'',data:hoje(),desc:'',parc:1};
+const form={estorno:false,cents:0,quem:store.get('quem')||'Polyana',terceiro:'',cat:null,forma:store.get('forma')||'cartao',cartao:store.get('cartao')||'',data:hoje(),desc:'',parc:1};
 
 // ================= regras =================
 const catOf=id=>cfg.cats.find(c=>c.id===id)||{id,emoji:'🔖',nome:'Outros'};
@@ -326,7 +328,7 @@ function renderLancar(){
   const formas=Object.entries(FORMAS).map(([k,v])=>`<button class="${k===form.forma?'on':''}" data-act="ff" data-v="${k}">${v}</button>`).join('');
   const cartoes=cfg.cartoes.map(c=>`<button class="chip sm${c.id===form.cartao?' on':''}" data-act="fk" data-v="${esc(c.id)}">${esc(c.nome)}</button>`).join('');
   el.innerHTML=`
-  <div class="card"><p class="lbl">Valor</p>${valorField('fValor',form.cents,true)}</div>
+  <div class="card${form.estorno?' estorno':''}" id="valCard"><div class="row" style="justify-content:space-between"><p class="lbl" style="margin:0">${form.estorno?'Valor do estorno / devolução':'Valor'}</p><button class="chip sm${form.estorno?' on':''}" data-act="festorno" style="${form.estorno?'background:var(--ok);border-color:var(--ok)':''}">↩️ Estorno</button></div>${valorField('fValor',form.cents,true)}${form.estorno?'<div class="hint" style="color:var(--ok)">Entra <b>negativo</b>: diminui a fatura do cartão e o gasto da categoria.</div>':''}</div>
   <div class="card"><p class="lbl">Quem gastou</p><div class="chips">${pessoas}</div>
     <div id="tercBox" class="box" style="${form.quem===TERC?'':'display:none'}">
       <input class="inp" id="fTerc" list="dlTerc" placeholder="Nome de quem usou o cartão" value="${esc(form.terceiro)}" maxlength="40">
@@ -369,6 +371,7 @@ function atualizaInfo(){
   if(form.forma!=='cartao'){pi.innerHTML=`Sai do caixa em <b>${mesLabel(form.data.slice(0,7))}</b>`;return}
   const c=cardOf(form.cartao);if(!c){pi.textContent='';return}
   const ref=faturaDe(c,form.data);
+  if(form.estorno){pi.innerHTML=`Abate da fatura ${esc(c.nome)} que vence <b>${dd(dueDate(c,ref))}/${ref.slice(2,4)}</b>`;return}
   if(form.parc>1)pi.innerHTML=`${form.parc}x de <b>${brl(form.cents/100/form.parc)}</b> · 1ª na fatura ${esc(c.nome)} de <b>${dd(dueDate(c,ref))}</b>, última em ${mesLabel(addMes(ref,form.parc-1))}`;
   else pi.innerHTML=`Fatura ${esc(c.nome)} · vence <b>${dd(dueDate(c,ref))}/${ref.slice(2,4)}</b> (fecha ${dd(closeDate(c,ref))})`;
 }
@@ -379,14 +382,14 @@ async function salvarLanc(){
   if(form.forma==='cartao'&&!cardOf(form.cartao)){toast('Escolha o cartão',true);return}
   if(!db){toast('Sem conexão com os dados',true);return}
   const b=$('#fSalvar');b.disabled=true;b.textContent='Salvando…';
-  const N=form.forma==='cartao'?form.parc:1,base=mesRefDe(form.data,form.forma,form.cartao),grupo=N>1?'g'+uid():null;
+  const N=form.forma==='cartao'&&!form.estorno?form.parc:1,sinal=form.estorno?-1:1,base=mesRefDe(form.data,form.forma,form.cartao),grupo=N>1?'g'+uid():null;
   const per=Math.floor(form.cents/N),resto=form.cents-per*N;
   const terc=form.quem===TERC?form.terceiro.trim():null;
   try{
     for(let i=0;i<N;i++){
-      await db.collection('lanc').add({valor:(per+(i===0?resto:0))/100,quem:form.quem,terceiro:terc,reemb:false,cat:form.cat,forma:form.forma,cartao:form.forma==='cartao'?form.cartao:null,data:form.data,desc:form.desc.trim(),mesRef:addMes(base,i),parc:i+1,parcN:N,grupo,total:form.cents/100,criadoEm:Date.now()});
+      await db.collection('lanc').add({valor:sinal*(per+(i===0?resto:0))/100,estorno:form.estorno||null,quem:form.quem,terceiro:terc,reemb:false,cat:form.cat,forma:form.forma,cartao:form.forma==='cartao'?form.cartao:null,data:form.data,desc:form.desc.trim(),mesRef:addMes(base,i),parc:i+1,parcN:N,grupo,total:form.cents/100,criadoEm:Date.now()});
     }
-    toast(`✓ ${brl(form.cents/100)} lançado${N>1?` em ${N}x`:''}`);
+    toast(form.estorno?`✓ Estorno de ${brl(form.cents/100)} lançado`:`✓ ${brl(form.cents/100)} lançado${N>1?` em ${N}x`:''}`);form.estorno=false;
     if(form.quem!==TERC)store.set('quem',form.quem);store.set('forma',form.forma);if(form.cartao)store.set('cartao',form.cartao);
     form.cents=0;form.desc='';form.parc=1;form.cat=null;form.data=hoje();if(form.quem===TERC){form.quem=store.get('quem')||cfg.pessoas[0];form.terceiro=''}
     renderLancar();try{window.scrollTo(0,0)}catch(e){}
@@ -396,7 +399,7 @@ function itemLanc(l,opt={}){
   const c=catOf(l.cat),k=cardOf(l.cartao);
   const pg=l.forma==='cartao'?(k?k.nome:'Cartão'):(FORMAS[l.forma]||'').slice(2).trim();
   const sub=[esc(quemTxt(l)),esc(pg),l.parcN>1?`${l.parc}/${l.parcN}`:''].filter(Boolean).join(' · ');
-  const tg=isTerc(l)?(l.reemb?'<span class="tag ok">reembolsado</span>':'<span class="tag blue">a receber</span>'):'';
+  const tg=(l.valor<0?'<span class="tag ok">estorno</span>':'')+(isTerc(l)?(l.reemb?'<span class="tag ok">reembolsado</span>':'<span class="tag blue">a receber</span>'):'');
   return `<div class="item" data-act="el" data-id="${esc(l.id)}"><div class="ico">${esc(c.emoji)}</div><div class="it"><b>${esc(l.desc||c.nome)}</b><small>${sub}</small>${tg}</div><div class="iv">${brl(l.valor)}<small>${opt.ref?'fat. '+mesLabel(l.mesRef):dd(l.data)}</small></div></div>`;
 }
 function renderUltimos(){
@@ -473,7 +476,7 @@ function renderResumo(){
 }
 function abrirLanc(id){
   const l=lancsAll.find(x=>x.id===id);if(!l)return;
-  let cents=Math.round(l.valor*100);
+  let cents=Math.abs(Math.round(l.valor*100)),estorno=l.valor<0;
   const optP=[...new Set([...cfg.pessoas,...(isTerc(l)?[]:[l.quem])])].map(p=>`<option${p===l.quem?' selected':''}>${esc(p)}</option>`).join('')+`<option value="${TERC}"${isTerc(l)?' selected':''}>👤 Terceiro</option>`;
   const optC=[...cfg.cats,...(cfg.cats.some(c=>c.id===l.cat)?[]:[catOf(l.cat)])].map(c=>`<option value="${esc(c.id)}"${c.id===l.cat?' selected':''}>${esc(c.emoji+' '+c.nome)}</option>`).join('');
   const optF=Object.entries(FORMAS).map(([k,v])=>`<option value="${k}"${k===l.forma?' selected':''}>${v}</option>`).join('');
@@ -481,7 +484,7 @@ function abrirLanc(id){
   const parc=l.parcN>1;
   sheet(`<h3>Editar lançamento${parc?` · parcela ${l.parc}/${l.parcN}`:''}</h3>
    ${isTerc(l)?`<div class="box" style="margin:0 0 12px"><div class="row"><div class="grow"><b>${esc(l.terceiro||'Terceiro')}</b><div class="hint" style="margin-top:2px">${l.reemb?'Reembolso recebido'+(l.reembEm?' em '+dd(l.reembEm):''):'Reembolso pendente'}</div></div><button class="chip ${l.reemb?'':'on'}" id="eRb">${l.reemb?'Desfazer':'✓ Recebi'}</button></div></div>`:''}
-   <div class="fld"><label>Valor${parc?' desta parcela':''}</label>${valorField('eV',cents,true)}</div>
+   <div class="fld"><label>Valor${parc?' desta parcela':''}</label>${valorField('eV',cents,true)}<label style="display:flex;gap:8px;align-items:center;margin-top:8px;color:var(--ink)"><input type="checkbox" id="eEst"${estorno?' checked':''}> ↩️ É estorno / devolução (abate da fatura)</label></div>
    <div class="fld"><label>Quem</label><select class="inp" id="eQ">${optP}</select></div>
    <div class="fld" id="eTB" style="${isTerc(l)?'':'display:none'}"><label>Nome do terceiro</label><input class="inp" id="eT" list="dlTerc" value="${esc(l.terceiro||'')}" maxlength="40"></div>
    <div class="fld"><label>Categoria</label><select class="inp" id="eC">${optC}</select></div>
@@ -495,7 +498,7 @@ function abrirLanc(id){
     b.querySelector('#eOk').onclick=async()=>{
       if(!cents){toast('Valor inválido',true);return}
       const q=b.querySelector('#eQ').value;
-      const up={valor:cents/100,quem:q,terceiro:q===TERC?(b.querySelector('#eT').value.trim()||'Terceiro'):null,cat:b.querySelector('#eC').value,desc:b.querySelector('#eDs').value.trim()};
+      const neg=b.querySelector('#eEst').checked;const up={valor:(neg?-1:1)*cents/100,estorno:neg||null,quem:q,terceiro:q===TERC?(b.querySelector('#eT').value.trim()||'Terceiro'):null,cat:b.querySelector('#eC').value,desc:b.querySelector('#eDs').value.trim()};
       if(!parc){up.forma=b.querySelector('#eF').value;up.cartao=up.forma==='cartao'?b.querySelector('#eK').value:null;up.data=b.querySelector('#eD').value||l.data;up.mesRef=mesRefDe(up.data,up.forma,up.cartao)}
       fecharSheet();
       try{await db.doc('lanc/'+l.id).update(up);toast(up.mesRef&&up.mesRef!==l.mesRef?`Movido para ${mesLabel(up.mesRef)}`:'✓ Atualizado')}catch(e){toast(errMsg(e),true)}
@@ -632,33 +635,55 @@ async function addModelo(){
 let fluxoModo=store.get('fluxo')||'tudo';
 const ROW_TERC='__terc',ROW_REEMB='__reemb';
 function splitFatura(card,m,v,cb){
-  if(!card){cb('outros',v);return}
+  if(!card){cb('outros',v,{k:'nada',nome:'Fatura de cartão removido'});return}
   const fc=faturaCalc(card,m);let s=0;
-  fc.ls.forEach(l=>{cb(isTerc(l)?ROW_TERC:l.cat,+l.valor);s+=+l.valor});
-  fc.fx.forEach(f=>{const vv=valorBase(f,m);cb(f.cat,vv);s+=vv});
-  const res=r2(v-s);if(Math.abs(res)>=0.01)cb('outros',res); // fatura sem detalhe → Outros
+  fc.ls.forEach(l=>{cb(isTerc(l)?ROW_TERC:l.cat,+l.valor,{k:'lanc',id:l.id,via:card.nome});s+=+l.valor});
+  fc.fx.forEach(f=>{const vv=valorBase(f,m);cb(f.cat,vv,{k:'fixa',id:f.id,via:card.nome});s+=vv});
+  const res=r2(v-s);if(Math.abs(res)>=0.01)cb('outros',res,{k:'fatura',card:card.id,m,nome:'Fatura '+card.nome+' — parte não detalhada'}); // fatura sem detalhe → Outros
 }
 function caixa(){
   const hm=hojeMes(),M={};
-  const add=(m,g,row,v,prev)=>{v=+v||0;if(!v)return;const o=(M[m]=M[m]||{ent:{},sai:{}})[g];const c=o[row]=o[row]||{r:0,p:0};c[prev?'p':'r']+=v};
+  const add=(m,g,row,v,prev,it)=>{v=+v||0;if(!v)return;const o=(M[m]=M[m]||{ent:{},sai:{}})[g];const c=o[row]=o[row]||{r:0,p:0,its:[]};c[prev?'p':'r']+=v;c.its.push({...(it||{}),v:r2(v),prev:!!prev})};
   for(const [cm,ck] of Object.entries(checksAll)){
     for(const [k,c] of Object.entries(ck||{})){
       if(!c||!c.pago)continue;
       const m=String(c.em||cm).slice(0,7);
-      if(k.startsWith('in_')){const e=entradas.find(x=>x.id===k.slice(3));add(m,'ent',e?e.nome:'Outras entradas',c.valor!=null?c.valor:(e?e.valor:0))}
-      else if(k.startsWith('card_')){const card=cardOf(k.slice(5));const v=c.valor!=null?+c.valor:(card?faturaCalc(card,cm).total:0);splitFatura(card,cm,v,(row,val)=>add(m,'sai',row,val))}
-      else{const f=fixas.find(x=>x.id===k);add(m,'sai',f?f.cat:'outros',c.valor!=null?c.valor:(f?valorBase(f,cm):0))}
+      if(k.startsWith('in_')){const e=entradas.find(x=>x.id===k.slice(3));add(m,'ent',e?e.nome:'Outras entradas',c.valor!=null?c.valor:(e?e.valor:0),0,{k:'entrada',id:e&&e.id,cm,em:c.em})}
+      else if(k.startsWith('card_')){const card=cardOf(k.slice(5));const v=c.valor!=null?+c.valor:(card?faturaCalc(card,cm).total:0);splitFatura(card,cm,v,(row,val,it)=>add(m,'sai',row,val,0,{...it,em:c.em}))}
+      else{const f=fixas.find(x=>x.id===k);add(m,'sai',f?f.cat:'outros',c.valor!=null?c.valor:(f?valorBase(f,cm):0),0,{k:'fixa',id:f&&f.id,cm,em:c.em})}
     }
   }
-  lancsAll.forEach(l=>{if(l.forma!=='cartao')add(String(l.data).slice(0,7),'sai',isTerc(l)?ROW_TERC:l.cat,l.valor);if(isTerc(l)&&l.reemb)add(String(l.reembEm||l.data).slice(0,7),'ent',ROW_REEMB,l.valor)});
+  lancsAll.forEach(l=>{if(l.forma!=='cartao')add(String(l.data).slice(0,7),'sai',isTerc(l)?ROW_TERC:l.cat,l.valor,0,{k:'lanc',id:l.id,em:l.data});if(isTerc(l)&&l.reemb)add(String(l.reembEm||l.data).slice(0,7),'ent',ROW_REEMB,l.valor,0,{k:'lanc',id:l.id,em:l.reembEm})});
   for(let i=0;i<=11;i++){const m=addMes(hm,i);
-    fixasDoMes(m).filter(f=>f.forma!=='cartao'&&!isPago(m,f.id)).forEach(f=>add(m,'sai',f.cat,valorFixa(f,m),1));
-    cfg.cartoes.forEach(c=>{if(!isPago(m,'card_'+c.id))splitFatura(c,m,faturaValor(c,m),(row,v)=>add(m,'sai',row,v,1))});
-    entradasDoMes(m).filter(e=>!isPago(m,'in_'+e.id)).forEach(e=>add(m,'ent',e.nome,valorEntrada(e,m),1));
+    fixasDoMes(m).filter(f=>f.forma!=='cartao'&&!isPago(m,f.id)).forEach(f=>add(m,'sai',f.cat,valorFixa(f,m),1,{k:'fixa',id:f.id,cm:m}));
+    cfg.cartoes.forEach(c=>{if(!isPago(m,'card_'+c.id))splitFatura(c,m,faturaValor(c,m),(row,v,it)=>add(m,'sai',row,v,1,it))});
+    entradasDoMes(m).filter(e=>!isPago(m,'in_'+e.id)).forEach(e=>add(m,'ent',e.nome,valorEntrada(e,m),1,{k:'entrada',id:e.id,cm:m}));
   }
-  lancsAll.forEach(l=>{if(isTerc(l)&&!l.reemb)add(l.mesRef<hm?hm:l.mesRef,'ent',ROW_REEMB,l.valor,1)});
+  lancsAll.forEach(l=>{if(isTerc(l)&&!l.reemb)add(l.mesRef<hm?hm:l.mesRef,'ent',ROW_REEMB,l.valor,1,{k:'lanc',id:l.id})});
   return M;
 }
+let fluxoCache=null;
+function abrirCelula(m,g,r){
+  const c=fluxoCache&&fluxoCache[m]&&fluxoCache[m][g][r];if(!c)return;
+  const real=fluxoModo==='real';const its=c.its.filter(i=>!(real&&i.prev)).sort((a,b)=>a.prev-b.prev||Math.abs(b.v)-Math.abs(a.v));
+  const titulo=g==='ent'?(r===ROW_REEMB?'↩️ Reembolsos de terceiros':'💰 '+r):(r===ROW_TERC?'👤 Terceiros (cartão)':catOf(r).emoji+' '+catOf(r).nome);
+  const linha=(it,i)=>{let nome='',sub=[];
+    if(it.k==='lanc'){const l=lancsAll.find(x=>x.id===it.id);if(l){nome=l.desc||catOf(l.cat).nome;sub=[quemTxt(l),it.via||(FORMAS[l.forma]||'').slice(2).trim(),'compra '+dd(l.data),l.parcN>1?l.parc+'/'+l.parcN:'']}}
+    else if(it.k==='fixa'){const f=fixas.find(x=>x.id===it.id);if(f){nome=f.nome;sub=['conta fixa',it.via?'no '+it.via:'',f.quem||'']}}
+    else if(it.k==='entrada'){const e=entradas.find(x=>x.id===it.id);if(e){nome=e.nome;sub=[e.tipo==='fixa'?'todo mês':'avulsa']}}
+    else nome=it.nome||'—';
+    if(it.k==='fatura')sub=['sem lançamentos detalhados no app'];
+    sub.push(it.prev?'previsto':it.em?'pago/recebido '+dd(it.em):'realizado');
+    return `<div class="item" data-act="fit" data-i="${i}"><div class="it"><b>${esc(nome)}</b><small>${esc(sub.filter(Boolean).join(' · '))}</small></div><div class="iv ${it.v<0?'pos':''}">${brl(it.v)}</div></div>`};
+  sheet(`<h3>${esc(titulo)} · ${mesLabel(m)}</h3><p class="hint" style="margin-top:-6px">Toque em um item para editar (categoria, valor, quem…).</p>${its.map(linha).join('')||'<div class="empty">Nada aqui.</div>'}<div class="fl tot"><span>Total</span><span>${brl(sum(its,i=>i.v))}</span></div><div class="btns"><button class="btn ghost" data-act="fechar">Fechar</button></div>`,b=>{
+    b.querySelectorAll('[data-act="fit"]').forEach(x=>x.onclick=ev=>{ev.stopPropagation();const it=its[+x.dataset.i];
+      if(it.k==='lanc')abrirLanc(it.id);
+      else if(it.k==='fixa'){irMes(it.cm||m);editarFixa(it.id)}
+      else if(it.k==='entrada'){irMes(it.cm||m);editarEntrada(it.id)}
+      else if(it.k==='fatura'){irMes(it.m);abrirPagamento('card_'+it.card)}});
+  });
+}
+function irMes(m){if(m&&m!==mes){mes=m;$('#mesLbl').textContent=mesLabel(mes);garanteLimite();renderDados()}}
 const fmtN=v=>v?(v<0?'−':'')+Math.abs(v).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'–';
 function montarFluxo(real){
   const hm=hojeMes(),M=caixa();
@@ -732,14 +757,15 @@ function renderFluxo(){
   const rowsSai=[...new Set(cols.flatMap(m=>Object.keys((M[m]||{sai:{}}).sai)))].filter(r=>cols.some(m=>val(m,'sai',r).v)).sort((a,b)=>{const ia=catOrder.indexOf(a),ib=catOrder.indexOf(b);return (ia<0?999:ia)-(ib<0?999:ib)});
   const nomeRow=(g,r)=>g==='ent'?(r===ROW_REEMB?'↩️ Reembolsos terceiros':'💰 '+esc(r)):(r===ROW_TERC?'👤 Terceiros (cartão)':esc(catOf(r).emoji+' '+catOf(r).nome));
   const tot=(m,g)=>{let v=0,p=false;(g==='ent'?rowsEnt:rowsSai).forEach(r=>{const x=val(m,g,r);v+=x.v;p=p||x.p});return{v:r2(v),p}};
-  const cell=(x,cls='')=>`<td class="${cls}${x.p?' pv':''}">${fmtN(x.v)}</td>`;
+  fluxoCache=M;
+  const cell=(x,cls='',g,r,m)=>`<td class="${cls}${x.p?' pv':''}${g&&x.v?' clk':''}"${g&&x.v?` data-act="fcell" data-g="${g}" data-r="${esc(r)}" data-m="${m}"`:''}>${fmtN(x.v)}</td>`;
   const curc=m=>m===hm?'cur':'';
   let t=`<table class="fx"><thead><tr><th>${real?'Realizado':'Realizado + previsto'}</th>${cols.map(m=>`<th class="${curc(m)}">${mesLabel(m)}${m===hm?'<br><small>atual</small>':m>hm?'<br><small>previsto</small>':''}</th>`).join('')}</tr></thead><tbody>`;
   t+=`<tr class="sec"><td colspan="${cols.length+1}">ENTRADAS</td></tr>`;
-  rowsEnt.forEach(r=>{t+=`<tr><td>${nomeRow('ent',r)}</td>${cols.map(m=>cell(val(m,'ent',r),curc(m))).join('')}</tr>`});
+  rowsEnt.forEach(r=>{t+=`<tr><td>${nomeRow('ent',r)}</td>${cols.map(m=>cell(val(m,'ent',r),curc(m),'ent',r,m)).join('')}</tr>`});
   t+=`<tr class="tt"><td>Total entradas</td>${cols.map(m=>cell(tot(m,'ent'),curc(m)+' pos')).join('')}</tr>`;
   t+=`<tr class="sec"><td colspan="${cols.length+1}">SAÍDAS POR CATEGORIA</td></tr>`;
-  rowsSai.forEach(r=>{t+=`<tr><td>${nomeRow('sai',r)}</td>${cols.map(m=>cell(val(m,'sai',r),curc(m))).join('')}</tr>`});
+  rowsSai.forEach(r=>{t+=`<tr><td>${nomeRow('sai',r)}</td>${cols.map(m=>cell(val(m,'sai',r),curc(m),'sai',r,m)).join('')}</tr>`});
   t+=`<tr class="tt"><td>Total saídas</td>${cols.map(m=>cell(tot(m,'sai'),curc(m)+' neg')).join('')}</tr>`;
   t+=`<tr class="tt"><td>Resultado do mês</td>${cols.map(m=>{const e=tot(m,'ent'),s=tot(m,'sai'),v=r2(e.v-s.v);return cell({v,p:e.p||s.p},curc(m)+(v>=0?' pos':' neg'))}).join('')}</tr>`;
   if(!real&&cfg.saldoConta!=null){
@@ -883,11 +909,12 @@ document.addEventListener('click',e=>{
   switch(a){
     case'fechar':fecharSheet();break;
     case'mes':mes=addMes(mes,+t.dataset.n);$('#mesLbl').textContent=mesLabel(mes);garanteLimite();renderDados();break;
+    case'festorno':form.estorno=!form.estorno;if(form.estorno)form.parc=1;renderLancar();break;
     case'fq':form.quem=v;t.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===t));$('#tercBox').style.display=v===TERC?'':'none';if(v===TERC)$('#fTerc').focus();break;
     case'fc':form.cat=v;t.parentNode.querySelectorAll('.cat').forEach(x=>x.classList.toggle('on',x===t));break;
     case'ff':form.forma=v;if(v!=='cartao')form.parc=1;t.parentNode.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x===t));$('#cardBox').style.display=v==='cartao'?'':'none';$('#parcN').textContent=form.parc+'x';atualizaInfo();break;
     case'fk':form.cartao=v;t.parentNode.querySelectorAll('.chip').forEach(x=>x.classList.toggle('on',x===t));atualizaInfo();break;
-    case'parc':form.parc=Math.min(24,Math.max(1,form.parc+ +t.dataset.n));$('#parcN').textContent=form.parc+'x';atualizaInfo();break;
+    case'parc':if(form.estorno){toast('Estorno é sempre à vista',true);break}form.parc=Math.min(24,Math.max(1,form.parc+ +t.dataset.n));$('#parcN').textContent=form.parc+'x';atualizaInfo();break;
     case'fd':form.data=v==='ontem'?ontem():hoje();renderLancar();break;
     case'el':abrirLanc(id);break;
     case'modo':resumoModo=v;store.set('modo',v);renderResumo();break;
@@ -907,6 +934,7 @@ document.addEventListener('click',e=>{
     case'seed':aplicarSeed();break;
     case'sair':sair();break;
     case'xlsx':baixarFluxo();break;
+    case'fcell':abrirCelula(t.dataset.m,t.dataset.g,t.dataset.r);break;
     case'importar':abrirImportar();break;
     case'backup':backup();break;
     case'restore':restaurar();break;
