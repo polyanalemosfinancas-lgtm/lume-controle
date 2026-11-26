@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dentatech – Relatório Abr–Out 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0D1B3E;--navy2:#1A3A6B;--navy3:#0a1428;--gold:#C9A84C;--gold2:#e8c97a;--red:#8B2020;--green:#1A5C2A;--white:#FFFFFF;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white);min-height:100vh;}
+.header{background:var(--navy);border-bottom:3px solid var(--gold);position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 80% 50%,rgba(201,168,76,.08) 0%,transparent 70%);}
+.header-inner{max-width:1340px;margin:0 auto;padding:26px 40px 18px;display:flex;align-items:flex-end;justify-content:space-between;position:relative;}
+.header-brand{display:flex;align-items:center;gap:14px;}
+.header-icon{width:46px;height:46px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;background:rgba(201,168,76,.08);}
+.header-titles h1{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:700;color:var(--white);}
+.header-titles p{font-size:.7rem;color:rgba(201,168,76,.65);letter-spacing:.12em;text-transform:uppercase;margin-top:4px;}
+.header-meta .periodo{font-family:'Cormorant Garamond',serif;font-size:1.3rem;font-weight:600;color:var(--gold);}
+.nav-tabs{background:var(--navy);border-bottom:1px solid rgba(201,168,76,.2);display:flex;justify-content:center;position:sticky;top:0;z-index:100;flex-wrap:wrap;}
+.tab-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:500;color:rgba(255,255,255,.42);padding:11px 18px;letter-spacing:.08em;text-transform:uppercase;border-bottom:2px solid transparent;transition:all .25s;}
+.tab-btn:hover{color:var(--gold2);}
+.tab-btn.active{color:var(--gold);border-bottom-color:var(--gold);background:rgba(201,168,76,.04);}
+.main{max-width:1340px;margin:0 auto;padding:30px 40px 60px;}
+.section{display:none;animation:fadeIn .3s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.section-label{font-size:.65rem;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:5px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:1.75rem;font-weight:600;color:var(--white);margin-bottom:22px;border-bottom:1px solid rgba(201,168,76,.18);padding-bottom:11px;}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:22px;}
+.kpi-grid-3{grid-template-columns:repeat(3,1fr);}
+.kpi-grid-2{grid-template-columns:repeat(2,1fr);}
+.kpi{background:var(--navy);border:1px solid rgba(201,168,76,.14);border-radius:8px;padding:17px;position:relative;overflow:hidden;}
+.kpi::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.kpi.cg::after{background:var(--gold);}.kpi.cr::after{background:var(--red);}.kpi.cgr::after{background:var(--green);}.kpi.cb::after{background:var(--navy2);}.kpi.cp::after{background:#9B59B6;}
+.kpi-label{font-size:.64rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.38);margin-bottom:7px;}
+.kpi-value{font-family:'Arial',sans-serif;font-size:1.35rem;font-weight:700;line-height:1;}
+.kpi-sub{font-size:.66rem;color:rgba(255,255,255,.28);margin-top:4px;}
+.table-wrap{background:var(--navy);border:1px solid rgba(201,168,76,.14);border-radius:8px;overflow:hidden;overflow-x:auto;margin-bottom:22px;}
+.twh{padding:10px 15px;background:rgba(201,168,76,.05);border-bottom:1px solid rgba(201,168,76,.13);font-size:.67rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.42);}
+.dt{width:100%;border-collapse:collapse;min-width:600px;}
+.dt th{background:var(--navy2);color:var(--gold);font-size:.61rem;font-weight:600;letter-spacing:.09em;text-transform:uppercase;padding:9px 11px;text-align:left;white-space:nowrap;}
+.dt th:not(:first-child){text-align:right;}
+.dt td{padding:8px 11px;font-size:.8rem;color:rgba(255,255,255,.76);border-bottom:1px solid rgba(255,255,255,.04);white-space:nowrap;}
+.dt td:not(:first-child){text-align:right;font-family:'Arial',sans-serif;font-size:.8rem;}
+.dt tr:hover td{background:rgba(201,168,76,.03);}
+.dt .tr-total td{background:rgba(201,168,76,.08);border-top:1px solid rgba(201,168,76,.22);color:var(--gold);font-weight:700;}
+.dt .tr-group td{background:rgba(255,255,255,.025);color:rgba(255,255,255,.3);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;padding:5px 11px;border-top:1px solid rgba(201,168,76,.1);}
+.dt .tr-sub td:first-child{padding-left:20px;color:rgba(255,255,255,.62);}
+.dt .tr-subtot td{background:rgba(13,27,62,.7);border-top:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.5);font-size:.76rem;}
+.dt .tr-subtot td:first-child{color:rgba(255,255,255,.35);font-size:.68rem;text-transform:uppercase;}
+.dt .tr-mes-h th{background:rgba(26,58,107,.7);color:var(--gold2);font-size:.59rem;border-top:1px solid rgba(201,168,76,.15);}
+.br{border-right:1px solid rgba(201,168,76,.15)!important;}
+.ec-box{background:var(--navy);border:1px solid rgba(201,168,76,.22);border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.ec-header{background:linear-gradient(135deg,#1a3a6b 0%,#0d1b3e 100%);border-bottom:2px solid var(--gold);padding:13px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ec-header h3{font-family:'Cormorant Garamond',serif;font-size:1.08rem;color:var(--white);}
+.badge{background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.32);color:var(--gold);font-size:.64rem;font-weight:500;letter-spacing:.1em;padding:3px 10px;border-radius:20px;text-transform:uppercase;}
+.badge-info{background:rgba(26,58,107,.4);border:1px solid rgba(100,150,255,.3);color:rgba(150,190,255,.9);font-size:.64rem;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.1em;}
+.badge-warn{background:rgba(180,120,0,.2);border:1px solid rgba(255,180,0,.35);color:rgba(255,200,80,.9);font-size:.64rem;padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:.1em;}
+.ec-row{display:flex;align-items:center;padding:10px 20px;border-bottom:1px solid rgba(255,255,255,.05);gap:13px;}
+.ec-num{width:21px;height:21px;border-radius:50%;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.28);display:flex;align-items:center;justify-content:center;font-size:.66rem;font-weight:700;color:var(--gold);flex-shrink:0;}
+.ec-txt{flex:1;}
+.ec-txt .et{font-size:.8rem;font-weight:500;color:var(--white);}
+.ec-txt .ed{font-size:.7rem;color:rgba(255,255,255,.36);margin-top:2px;}
+.ec-sign{font-size:.88rem;color:rgba(255,255,255,.22);min-width:14px;text-align:center;}
+.ec-val{font-family:'Arial',sans-serif;font-size:.9rem;font-weight:700;text-align:right;min-width:135px;}
+.ec-result{background:linear-gradient(135deg,rgba(139,32,32,.22) 0%,rgba(13,27,62,.8) 100%);border-top:2px solid var(--red);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ec-result-blue{background:linear-gradient(135deg,rgba(26,58,107,.35) 0%,rgba(13,27,62,.8) 100%);border-top:2px solid rgba(100,150,255,.5);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ec-result-green{background:linear-gradient(135deg,rgba(26,92,42,.22) 0%,rgba(13,27,62,.8) 100%);border-top:2px solid var(--green);padding:14px 20px;display:flex;justify-content:space-between;align-items:center;}
+.ec-result .rl,.ec-result-blue .rl,.ec-result-green .rl{font-size:.72rem;color:rgba(255,255,255,.52);text-transform:uppercase;letter-spacing:.1em;}
+.ec-result .rs,.ec-result-blue .rs,.ec-result-green .rs{font-size:.67rem;color:rgba(255,255,255,.22);margin-top:3px;}
+.ec-result .rv,.ec-result-blue .rv,.ec-result-green .rv{font-family:'Arial',sans-serif;font-size:1.5rem;font-weight:700;}
+.info-card{background:rgba(26,58,107,.25);border:1px solid rgba(100,150,255,.2);border-left:4px solid rgba(100,150,255,.5);border-radius:0 8px 8px 0;padding:13px 17px;margin-bottom:22px;}
+.info-card p{font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.7;margin-bottom:4px;}
+.info-card p:last-child{margin-bottom:0;}
+.info-card strong{color:rgba(150,190,255,.9);}
+.warn-card{background:rgba(180,120,0,.12);border:1px solid rgba(255,180,0,.25);border-left:4px solid rgba(255,180,0,.6);border-radius:0 8px 8px 0;padding:13px 17px;margin-bottom:22px;}
+.warn-card p{font-size:.82rem;color:rgba(255,220,120,.8);line-height:1.7;margin-bottom:4px;}
+.warn-card strong{color:rgba(255,220,80,.95);}
+.ctx-card{background:var(--navy);border:1px solid rgba(201,168,76,.13);border-left:4px solid var(--gold);border-radius:0 8px 8px 0;padding:13px 17px;margin-bottom:22px;}
+.ctx-card p{font-size:.81rem;color:rgba(255,255,255,.66);line-height:1.7;margin-bottom:5px;}
+.ctx-card strong{color:var(--gold2);}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
+.sum-box{background:var(--navy);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:20px 24px;}
+.sum-box-red{background:linear-gradient(135deg,rgba(139,32,32,.18) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(235,87,87,.3);border-radius:10px;padding:20px 24px;}
+.sum-box-blue{background:linear-gradient(135deg,rgba(26,58,107,.35) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(100,150,255,.3);border-radius:10px;padding:20px 24px;}
+.sum-box-green{background:linear-gradient(135deg,rgba(26,92,42,.22) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(80,200,120,.3);border-radius:10px;padding:20px 24px;}
+.sum-label{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
+.sum-label.red{color:rgba(235,87,87,.7);}
+.sum-label.blue{color:rgba(150,190,255,.65);}
+.sum-label.green{color:rgba(80,200,120,.7);}
+.sum-label.gold{color:rgba(201,168,76,.7);}
+.sum-val{font-family:'Arial',sans-serif;font-size:1.8rem;font-weight:700;line-height:1;}
+.sum-sub{font-size:.72rem;color:rgba(255,255,255,.32);margin-top:7px;}
+.pos{color:#6fcf97;}.neg{color:#eb5757;}.gld{color:var(--gold);}.dim{color:rgba(255,255,255,.25);}.azul{color:rgba(150,190,255,.9);}.warn{color:rgba(255,220,80,.9);}
+.page-footer{border-top:1px solid rgba(201,168,76,.1);padding:13px 40px;max-width:1340px;margin:0 auto;display:flex;justify-content:space-between;}
+.page-footer span{font-size:.67rem;color:rgba(255,255,255,.2);letter-spacing:.08em;}
+.page-footer .lume{color:var(--gold);font-weight:500;}
+@media(max-width:900px){
+  .kpi-grid,.kpi-grid-3{grid-template-columns:1fr 1fr;}
+  .grid2{grid-template-columns:1fr;}
+  .nav-tabs{flex-wrap:wrap;}
+  .main{padding:16px 12px 48px;}
+}
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <div class="header-icon">🦷</div>
+      <div class="header-titles">
+        <h1>DENTATECH</h1>
+        <p>Relatório Financeiro · Lume Finanças BPO</p>
+      </div>
+    </div>
+    <div class="header-meta"><div class="periodo">Abril – Outubro 2026</div></div>
+  </div>
+</header>
+
+<nav class="nav-tabs">
+  <button class="tab-btn active" onclick="showTab('geral',this)">Visão Geral</button>
+  <button class="tab-btn" onclick="showTab('dentatech',this)">Dentatech</button>
+  <button class="tab-btn" onclick="showTab('cisos',this)">Cisos</button>
+  <button class="tab-btn" onclick="showTab('renan',this)">Renan</button>
+  <button class="tab-btn" onclick="showTab('espec',this)">Especialização</button>
+  <button class="tab-btn" onclick="showTab('encontro',this)">Encontro de Contas</button>
+</nav>
+
+<div class="main">
+
+<!-- ══ VISÃO GERAL ══ -->
+<section class="section active" id="tab-geral">
+  <div class="section-label">Resumo consolidado</div>
+  <div class="section-title">Visão Geral — Abr a Out 2026</div>
+
+  <div class="kpi-grid">
+    <div class="kpi cg"><div class="kpi-label">Total Cisos → Dentatech</div><div class="kpi-value neg">R$ 202.038,59</div><div class="kpi-sub">Saldo devedor acumulado</div></div>
+    <div class="kpi cr"><div class="kpi-label">Renan deve à Dentatech</div><div class="kpi-value neg">R$ 21.673,25</div><div class="kpi-sub">Após pgto R$ 25.000 em Out</div></div>
+    <div class="kpi cb"><div class="kpi-label">Invest. Especialização</div><div class="kpi-value warn">R$ 93.603,34</div><div class="kpi-sub">Total pago pela Cisos Ago–Out</div></div>
+    <div class="kpi cgr"><div class="kpi-label">Entradas Especialização</div><div class="kpi-value pos">R$ 20.800,00</div><div class="kpi-sub">Set + Out · 8 dentistas</div></div>
+  </div>
+
+  <!-- Painel geral intercompany -->
+  <div class="warn-card">
+    <p><strong>Especialização não entra no encontro de contas Cisos–Dentatech.</strong> A Cisos está financiando 100% das obras e investimentos do projeto (R$ 93.603,34), mas metade (50%) é por conta do Renan. Esse adiantamento ao Renan é tratado separadamente na aba Especialização e não reduz o saldo que a Cisos deve à Dentatech.</p>
+  </div>
+
+  <!-- Resultado por empresa -->
+  <div class="table-wrap">
+    <div class="twh">Resultado por empresa — Abr a Out 2026</div>
+    <table class="dt">
+      <thead>
+        <tr>
+          <th rowspan="2">Empresa</th>
+          <th colspan="3" style="text-align:center;" class="br">Abr</th>
+          <th colspan="3" style="text-align:center;" class="br">Mai</th>
+          <th colspan="3" style="text-align:center;" class="br">Jun</th>
+          <th colspan="3" style="text-align:center;" class="br">Jul</th>
+          <th colspan="3" style="text-align:center;" class="br">Ago</th>
+          <th colspan="3" style="text-align:center;" class="br">Set</th>
+          <th colspan="3" style="text-align:center;">Out</th>
+        </tr>
+        <tr class="tr-mes-h">
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th class="br">Saldo</th>
+          <th>Rec</th><th>Desp</th><th>Saldo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Dentatech</td>
+          <td class="pos">28.840,83</td><td class="neg">31.874,94</td><td class="neg br">-3.034,11</td>
+          <td class="pos">50.685,00</td><td class="neg">30.968,74</td><td class="pos br">19.716,26</td>
+          <td class="pos">52.189,94</td><td class="neg">32.662,62</td><td class="pos br">19.527,32</td>
+          <td class="pos">46.839,26</td><td class="neg">50.191,94</td><td class="neg br">-3.352,68</td>
+          <td class="pos">47.155,68</td><td class="neg">60.505,13</td><td class="neg br">-13.349,45</td>
+          <td class="pos">59.010,89</td><td class="neg">68.836,55</td><td class="neg br">-9.825,66</td>
+          <td class="pos">46.052,06</td><td class="neg">78.895,90</td><td class="neg">-32.843,84</td>
+        </tr>
+        <tr>
+          <td>Cisos</td>
+          <td class="pos">110.139,20</td><td class="neg">103.157,40</td><td class="pos br">6.981,80</td>
+          <td class="pos">107.620,16</td><td class="neg">95.200,70</td><td class="pos br">12.419,46</td>
+          <td class="pos">97.150,10</td><td class="neg">103.336,44</td><td class="neg br">-6.186,34</td>
+          <td class="pos">118.712,30</td><td class="neg">70.042,03</td><td class="pos br">48.670,27</td>
+          <td class="pos">110.189,06</td><td class="neg">126.412,79</td><td class="neg br">-16.223,73</td>
+          <td class="pos">108.453,80</td><td class="neg">88.551,43</td><td class="pos br">19.902,37</td>
+          <td class="pos">94.522,08</td><td class="neg">78.343,46</td><td class="pos">16.178,62</td>
+        </tr>
+        <tr>
+          <td>Renan</td>
+          <td class="dim">—</td><td class="neg">48,00</td><td class="neg br">-48,00</td>
+          <td class="pos">1.198,80</td><td class="neg">935,16</td><td class="pos br">263,64</td>
+          <td class="pos">90,72</td><td class="neg">1.228,64</td><td class="neg br">-1.137,92</td>
+          <td class="pos">340,40</td><td class="neg">650,10</td><td class="neg br">-309,70</td>
+          <td class="pos">227,00</td><td class="neg">648,00</td><td class="neg br">-421,00</td>
+          <td class="dim">—</td><td class="neg">858,77</td><td class="neg br">-858,77</td>
+          <td class="dim">—</td><td class="neg">863,00</td><td class="neg">-863,00</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Painel Cisos — o que pagou -->
+  <div class="table-wrap">
+    <div class="twh">Cisos — Total pago à / por conta da Dentatech (Abr–Out 2026)</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Item</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr class="tr-sub"><td>Despesas operacionais (Abr–Out)</td><td class="neg">R$ 658.090,25</td></tr>
+        <tr class="tr-sub"><td>Pgto. direto Dentatech (Abr, Mai, Set)</td><td class="neg">R$ 24.930,00</td></tr>
+        <tr class="tr-sub"><td>Investimento Especialização (Ago–Out)</td><td class="neg">R$ 93.603,34</td></tr>
+        <tr class="tr-total"><td>Total desembolsado pela Cisos</td><td class="neg">R$ 776.623,59</td></tr>
+        <tr><td>Total de trabalhos executados (Cisos)</td><td class="pos">R$ 749.072,38</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ DENTATECH ══ -->
+<section class="section" id="tab-dentatech">
+  <div class="section-label">Contas bancárias — Itaú · BB · Asaas</div>
+  <div class="section-title">Dentatech — Set e Out 2026</div>
+  <div class="kpi-grid kpi-grid-3">
+    <div class="kpi cg"><div class="kpi-label">Receitas Set</div><div class="kpi-value gld">R$ 59.010,89</div><div class="kpi-sub">Serviços R$ 39.010,89 + Aporte R$ 20.000,00</div></div>
+    <div class="kpi cr"><div class="kpi-label">Receitas Out</div><div class="kpi-value gld">R$ 46.052,06</div><div class="kpi-sub">Serviços R$ 36.052,06 + Aporte R$ 10.000,00</div></div>
+    <div class="kpi cb"><div class="kpi-label">Pgto ao Renan — Out</div><div class="kpi-value neg">R$ 25.000,00</div><div class="kpi-sub">Para abater dívida da Cisos</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
+    <table class="dt" style="min-width:600px;">
+      <thead><tr><th>Mês</th><th>Rec. Serviços</th><th>Aporte Cisos</th><th>Total Receitas</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+      <tbody>
+        <tr><td>Abril 2026</td><td class="pos">21.540,83</td><td class="pos">7.300,00</td><td class="pos">28.840,83</td><td class="neg">31.874,94</td><td class="neg">-3.034,11</td><td class="neg">-3.034,11</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">47.305,00</td><td class="pos">3.380,00</td><td class="pos">50.685,00</td><td class="neg">30.968,74</td><td class="pos">19.716,26</td><td class="pos">16.682,15</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">52.189,94</td><td class="dim">—</td><td class="pos">52.189,94</td><td class="neg">32.662,62</td><td class="pos">19.527,32</td><td class="pos">36.209,47</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">46.839,26</td><td class="dim">—</td><td class="pos">46.839,26</td><td class="neg">50.191,94</td><td class="neg">-3.352,68</td><td class="pos">32.856,79</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">40.155,68</td><td class="pos">7.000,00</td><td class="pos">47.155,68</td><td class="neg">60.505,13</td><td class="neg">-13.349,45</td><td class="pos">19.507,34</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">39.010,89</td><td class="pos">20.000,00</td><td class="pos">59.010,89</td><td class="neg">68.836,55</td><td class="neg">-9.825,66</td><td class="pos">9.681,68</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">36.052,06</td><td class="pos">10.000,00</td><td class="pos">46.052,06</td><td class="neg">78.895,90</td><td class="neg">-32.843,84</td><td class="neg">-23.162,16</td></tr>
+        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">283.093,66</td><td class="pos">47.680,00</td><td class="pos">330.773,66</td><td class="neg">354.935,82</td><td class="neg">-24.162,16</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="warn-card">
+    <p><strong>Outubro negativo — R$ 32.843,84:</strong> além das despesas operacionais (R$ 53.895,90), a Dentatech pagou <strong>R$ 25.000,00 ao Renan</strong> para abater a dívida da Cisos. Esse valor não é despesa operacional do laboratório — é uma transferência financeira intercompany.</p>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Despesas Dentatech — Set e Out 2026 por categoria</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Categoria</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
+      <tbody>
+        <tr class="tr-group"><td colspan="4">Pessoal</td></tr>
+        <tr class="tr-sub"><td>Salário</td><td class="neg">15.358,00</td><td class="neg">15.048,00</td><td class="neg">30.406,00</td></tr>
+        <tr class="tr-sub"><td>FGTS</td><td class="neg">1.547,57</td><td class="neg">1.467,01</td><td class="neg">3.014,58</td></tr>
+        <tr class="tr-sub"><td>INSS</td><td class="neg">2.961,29</td><td class="neg">3.041,63</td><td class="neg">6.002,92</td></tr>
+        <tr class="tr-sub"><td>Vale Transporte</td><td class="neg">771,93</td><td class="neg">903,73</td><td class="neg">1.675,66</td></tr>
+        <tr class="tr-sub"><td>Sesc</td><td class="neg">278,00</td><td class="neg">110,00</td><td class="neg">388,00</td></tr>
+        <tr class="tr-sub"><td>Transfacil</td><td class="neg">7,72</td><td class="neg">9,29</td><td class="neg">17,01</td></tr>
+        <tr class="tr-group"><td colspan="4">Fixos</td></tr>
+        <tr class="tr-sub"><td>Simples Nacional</td><td class="neg">2.415,39</td><td class="neg">2.375,74</td><td class="neg">4.791,13</td></tr>
+        <tr class="tr-sub"><td>Contabilidade</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">1.580,00</td></tr>
+        <tr class="tr-group"><td colspan="4">Operacional</td></tr>
+        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">12.361,52</td><td class="neg">5.231,00</td><td class="neg">17.592,52</td></tr>
+        <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">16.074,00</td><td class="neg">16.749,38</td><td class="neg">32.823,38</td></tr>
+        <tr class="tr-sub"><td>Manutenção Equipamentos</td><td class="neg">1.749,00</td><td class="dim">—</td><td class="neg">1.749,00</td></tr>
+        <tr class="tr-sub"><td>Equipamentos</td><td class="dim">—</td><td class="neg">3.900,00</td><td class="neg">3.900,00</td></tr>
+        <tr class="tr-group"><td colspan="4">Variável</td></tr>
+        <tr class="tr-sub"><td>Empréstimo (BB)</td><td class="neg">13.000,20</td><td class="dim">—</td><td class="neg">13.000,20</td></tr>
+        <tr class="tr-sub"><td>Pgto ao Renan (intercompany)</td><td class="dim">—</td><td class="neg">25.000,00</td><td class="neg">25.000,00</td></tr>
+        <tr class="tr-sub"><td>Tarifa Banco / IOF</td><td class="neg">497,67</td><td class="neg">480,88</td><td class="neg">978,55</td></tr>
+        <tr class="tr-sub"><td>Sindicato / Detetização / Outros</td><td class="neg">1.023,24</td><td class="neg">260,00</td><td class="neg">1.283,24</td></tr>
+        <tr class="tr-total"><td>TOTAL DESPESAS</td><td class="neg">68.836,55</td><td class="neg">78.895,90</td><td class="neg">147.732,45</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ CISOS ══ -->
+<section class="section" id="tab-cisos">
+  <div class="section-label">Sócia — Cynthia</div>
+  <div class="section-title">Cisos — Set e Out 2026</div>
+  <div class="kpi-grid kpi-grid-3">
+    <div class="kpi cg"><div class="kpi-label">Trabalhos Set</div><div class="kpi-value gld">R$ 108.453,80</div><div class="kpi-sub">Implante R$ 76.854,80 + Clínico R$ 31.599,00</div></div>
+    <div class="kpi cg"><div class="kpi-label">Trabalhos Out</div><div class="kpi-value gld">R$ 94.522,08</div><div class="kpi-sub">Implante R$ 64.808,08 + Clínico R$ 29.714,00</div></div>
+    <div class="kpi cb"><div class="kpi-label">Pgto direto Set</div><div class="kpi-value neg">R$ 15.000,00</div><div class="kpi-sub">Transferência Tarcísio → Dentatech</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
+    <table class="dt" style="min-width:500px;">
+      <thead><tr><th>Mês</th><th>Trabalhos</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+      <tbody>
+        <tr><td>Abril 2026</td><td class="pos">110.139,20</td><td class="neg">103.157,40</td><td class="pos">6.981,80</td><td class="pos">6.981,80</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">107.620,16</td><td class="neg">95.200,70</td><td class="pos">12.419,46</td><td class="pos">19.401,26</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">97.150,10</td><td class="neg">103.336,44</td><td class="neg">-6.186,34</td><td class="pos">13.214,92</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">118.712,30</td><td class="neg">70.042,03</td><td class="pos">48.670,27</td><td class="pos">61.885,19</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">110.189,06</td><td class="neg">126.412,79</td><td class="neg">-16.223,73</td><td class="pos">45.661,46</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">108.453,80</td><td class="neg">88.551,43</td><td class="pos">19.902,37</td><td class="pos">65.563,83</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">94.522,08</td><td class="neg">78.343,46</td><td class="pos">16.178,62</td><td class="pos">81.742,45</td></tr>
+        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">746.786,70</td><td class="neg">665.044,25</td><td class="pos">81.742,45</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Despesas Cisos — Set e Out 2026 por categoria</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Categoria</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
+      <tbody>
+        <tr class="tr-group"><td colspan="4">Fixos</td></tr>
+        <tr class="tr-sub"><td>Aluguel</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">5.003,50</td></tr>
+        <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">1.285,95</td><td class="neg">1.282,95</td><td class="neg">2.568,90</td></tr>
+        <tr class="tr-sub"><td>IPTU</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">533,34</td></tr>
+        <tr class="tr-sub"><td>Cemig</td><td class="neg">1.521,89</td><td class="neg">1.566,82</td><td class="neg">3.088,71</td></tr>
+        <tr class="tr-sub"><td>Telefonia / Internet</td><td class="neg">309,66</td><td class="neg">628,00</td><td class="neg">937,66</td></tr>
+        <tr class="tr-sub"><td>Emive</td><td class="dim">—</td><td class="neg">634,52</td><td class="neg">634,52</td></tr>
+        <tr class="tr-group"><td colspan="4">Pessoal</td></tr>
+        <tr class="tr-sub"><td>Comissão / Comissão Áurea</td><td class="neg">12.750,00</td><td class="neg">10.601,20</td><td class="neg">23.351,20</td></tr>
+        <tr class="tr-sub"><td>Terceiros (Kaiky/Wallace/Faxineira)</td><td class="neg">14.714,55</td><td class="neg">19.577,46</td><td class="neg">34.291,01</td></tr>
+        <tr class="tr-sub"><td>Prest. Serviço Financeiro</td><td class="neg">1.390,00</td><td class="neg">1.390,00</td><td class="neg">2.780,00</td></tr>
+        <tr class="tr-group"><td colspan="4">Operacional</td></tr>
+        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">14.750,89</td><td class="neg">15.812,24</td><td class="neg">30.563,13</td></tr>
+        <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">7.336,08</td><td class="neg">11.262,12</td><td class="neg">18.598,20</td></tr>
+        <tr class="tr-sub"><td>Entrega / Frete</td><td class="neg">3.321,40</td><td class="neg">2.742,60</td><td class="neg">6.064,00</td></tr>
+        <tr class="tr-sub"><td>Curso</td><td class="neg">4.735,00</td><td class="dim">—</td><td class="neg">4.735,00</td></tr>
+        <tr class="tr-group"><td colspan="4">Variável</td></tr>
+        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">3.696,11</td><td class="neg">5.299,49</td><td class="neg">8.995,60</td></tr>
+        <tr class="tr-sub"><td>Pgto. direto → Dentatech</td><td class="neg">15.000,00</td><td class="dim">—</td><td class="neg">15.000,00</td></tr>
+        <tr class="tr-sub"><td>Equipamentos / Sistema</td><td class="neg">1.489,19</td><td class="neg">2.544,73</td><td class="neg">4.033,92</td></tr>
+        <tr class="tr-sub"><td>Taxa Fiscalização / Outros</td><td class="neg">3.281,29</td><td class="neg">2.782,91</td><td class="neg">6.064,20</td></tr>
+        <tr class="tr-total"><td>TOTAL DESPESAS CISOS</td><td class="neg">88.351,43</td><td class="neg">78.893,46</td><td class="neg">167.244,89</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ RENAN ══ -->
+<section class="section" id="tab-renan">
+  <div class="section-label">Sócio — Renan</div>
+  <div class="section-title">Renan — Set e Out 2026</div>
+  <div class="kpi-grid kpi-grid-3">
+    <div class="kpi cr"><div class="kpi-label">Despesas Set</div><div class="kpi-value neg">R$ 858,77</div><div class="kpi-sub">Vivo + Hotel treinamento</div></div>
+    <div class="kpi cr"><div class="kpi-label">Despesas Out</div><div class="kpi-value neg">R$ 863,00</div><div class="kpi-sub">Frete + Vivo + Material lab</div></div>
+    <div class="kpi cgr"><div class="kpi-label">Recebido da Dentatech — Out</div><div class="kpi-value pos">R$ 25.000,00</div><td><div class="kpi-sub">Pgto para abater dívida com Dentatech</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
+    <table class="dt" style="min-width:500px;">
+      <thead><tr><th>Mês</th><th>Receitas</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+      <tbody>
+        <tr><td>Abril 2026</td><td class="dim">—</td><td class="neg">48,00</td><td class="neg">-48,00</td><td class="dim">R$ 0,00 *</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">1.198,80</td><td class="neg">935,16</td><td class="pos">263,64</td><td class="pos">263,64</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">90,72</td><td class="neg">1.228,64</td><td class="neg">-1.137,92</td><td class="neg">-874,28</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">340,40</td><td class="neg">650,10</td><td class="neg">-309,70</td><td class="neg">-1.183,98</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">227,00</td><td class="neg">648,00</td><td class="neg">-421,00</td><td class="neg">-1.604,98</td></tr>
+        <tr><td>Setembro 2026</td><td class="dim">—</td><td class="neg">858,77</td><td class="neg">-858,77</td><td class="neg">-2.463,75</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">25.000,00</td><td class="neg">863,00</td><td class="pos">24.137,00</td><td class="pos">21.673,25</td></tr>
+        <tr class="tr-total"><td>Saldo Final</td><td></td><td></td><td></td><td class="neg">R$ 21.673,25 (deve)</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin:-16px 0 18px 4px;">* Abr zerado na compensação Mar/Abr — acumulado parte de R$ 0,00 a partir de Maio.</div>
+
+  <div class="table-wrap">
+    <div class="twh">Despesas Renan — Set e Out 2026</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr class="tr-group"><td colspan="4">Setembro 2026</td></tr>
+        <tr class="tr-sub"><td>15/09</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">R$ 48,00</td></tr>
+        <tr class="tr-sub"><td>24/09</td><td>Hotel professores - treinamento</td><td class="dim">Curso</td><td class="neg">R$ 810,77</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Total Set</td><td class="neg">R$ 858,77</td></tr>
+        <tr class="tr-group"><td colspan="4">Outubro 2026</td></tr>
+        <tr class="tr-sub"><td>13/10</td><td>Frete</td><td class="dim">Entrega / Frete</td><td class="neg">R$ 240,00</td></tr>
+        <tr class="tr-sub"><td>15/10</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">R$ 48,00</td></tr>
+        <tr class="tr-sub"><td>15/10</td><td>Frete</td><td class="dim">Entrega / Frete</td><td class="neg">R$ 20,00</td></tr>
+        <tr class="tr-sub"><td>20/10</td><td>Bloco de cera</td><td class="dim">Material Lab</td><td class="neg">R$ 390,00</td></tr>
+        <tr class="tr-sub"><td>20/10</td><td>Componentes</td><td class="dim">Material Lab</td><td class="neg">R$ 165,00</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Total Out</td><td class="neg">R$ 863,00</td></tr>
+        <tr class="tr-total"><td colspan="3">Total Set+Out</td><td class="neg">R$ 1.721,77</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ ESPECIALIZAÇÃO ══ -->
+<section class="section" id="tab-espec">
+  <div class="section-label">Novo projeto — 8 dentistas · 24 parcelas</div>
+  <div class="section-title">Especialização Dentatech</div>
+
+  <div class="ctx-card">
+    <p><strong>Projeto 50/50 entre Cisos (Cynthia) e Renan.</strong> A Cisos está financiando 100% das obras e investimentos. As entradas mensais dos dentistas também são 50/50. O adiantamento da parte do Renan é registrado aqui e não entra no encontro de contas Cisos–Dentatech.</p>
+    <p><strong>Contrato:</strong> 8 dentistas × 24 parcelas × R$ 1.300,00 = <strong>R$ 249.600,00 total</strong> · 1ª parcela: Set/2026</p>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi cr"><div class="kpi-label">Total investido (Cisos)</div><div class="kpi-value neg">R$ 93.603,34</div><div class="kpi-sub">Ago + Set + Out · obra, móveis, material</div></div>
+    <div class="kpi cgr"><div class="kpi-label">Entradas recebidas</div><div class="kpi-value pos">R$ 20.800,00</div><div class="kpi-sub">Set R$ 10.400 + Out R$ 10.400</div></div>
+    <div class="kpi cb"><div class="kpi-label">Adiant. ao Renan (50%)</div><div class="kpi-value warn">R$ 37.576,67</div><div class="kpi-sub">Cisos pagou a parte do Renan no investimento</div></div>
+    <div class="kpi cp"><div class="kpi-label">Saldo do projeto</div><div class="kpi-value neg">-R$ 72.803,34</div><div class="kpi-sub">Projeto ainda em fase de obras</div></div>
+  </div>
+
+  <div class="table-wrap">
+    <div class="twh">Movimentação por mês — Especialização</div>
+    <table class="dt" style="min-width:600px;">
+      <thead><tr><th>Mês</th><th>Entradas (dentistas)</th><th>Investimento obra/equip</th><th>Repasse ao Renan</th><th>Saldo mês</th><th>Acumulado</th></tr></thead>
+      <tbody>
+        <tr><td>Agosto 2026</td><td class="dim">—</td><td class="neg">30.511,01</td><td class="dim">—</td><td class="neg">-30.511,01</td><td class="neg">-30.511,01</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">10.400,00</td><td class="neg">28.671,38</td><td class="neg">9.225,00</td><td class="neg">-27.496,38</td><td class="neg">-58.007,39</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">10.400,00</td><td class="neg">25.195,95</td><td class="dim">—</td><td class="neg">-14.795,95</td><td class="neg">-72.803,34</td></tr>
+        <tr class="tr-total"><td>Total</td><td class="pos">20.800,00</td><td class="neg">84.378,34</td><td class="neg">9.225,00</td><td class="neg">-72.803,34</td><td></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Divisão 50/50 -->
+  <div class="warn-card">
+    <p><strong>Como fica a divisão 50/50:</strong></p>
+    <p>• Total investido pela Cisos: R$ 93.603,34 → parte da Cisos: R$ 46.801,67 · parte do Renan: R$ 46.801,67</p>
+    <p>• Já repassado ao Renan: R$ 9.225,00 · Ainda a repassar/compensar: <strong>R$ 37.576,67</strong></p>
+    <p>• Entradas 50% Cisos: R$ 10.400,00 · Entradas 50% Renan: R$ 10.400,00</p>
+  </div>
+
+  <!-- Entradas Set -->
+  <div class="grid2">
+    <div class="table-wrap" style="margin-bottom:0;">
+      <div class="twh">Setembro 2026 — 1ª parcela (8 dentistas)</div>
+      <table class="dt" style="min-width:280px;">
+        <thead><tr><th>Dentista</th><th>Tipo</th><th>Parcela</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr class="tr-group"><td colspan="4">Internos — via grupo</td></tr>
+          <tr class="tr-sub"><td>Camila</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Luana</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Gabriela</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Wallace</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Ana Flávia</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Rafaela</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-group"><td colspan="4">Externos — via boleto</td></tr>
+          <tr class="tr-sub"><td>Thafny Geordany Mota</td><td class="dim">Externo</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Vinicius Augusto Medina</td><td class="dim">Externo</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-total"><td colspan="3">Total Set</td><td class="pos">R$ 10.400,00</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-wrap" style="margin-bottom:0;">
+      <div class="twh">Outubro 2026 — 2ª parcela</div>
+      <table class="dt" style="min-width:280px;">
+        <thead><tr><th>Dentista</th><th>Tipo</th><th>Parcela</th><th>Valor</th></tr></thead>
+        <tbody>
+          <tr class="tr-group"><td colspan="4">Internos</td></tr>
+          <tr class="tr-sub"><td>Camila</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Luana</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Gabriela</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Wallace</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Ana Flávia</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Rafaela</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-group"><td colspan="4">Externos</td></tr>
+          <tr class="tr-sub"><td>Thafny Geordany Mota</td><td class="dim">Externo</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-sub"><td>Vinicius Augusto Medina</td><td class="dim">Externo</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
+          <tr class="tr-total"><td colspan="3">Total Out</td><td class="pos">R$ 10.400,00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="table-wrap" style="margin-top:16px;">
+    <div class="twh">Projeção do contrato — 24 parcelas</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Item</th><th>Valor</th></tr></thead>
+      <tbody>
+        <tr class="tr-sub"><td>Total contrato (8 × 24 × R$ 1.300,00)</td><td class="pos">R$ 249.600,00</td></tr>
+        <tr class="tr-sub"><td>Já recebido (Set + Out · 2/24)</td><td class="pos">R$ 20.800,00</td></tr>
+        <tr class="tr-sub"><td>A receber (Nov/26 a Ago/28 · 22 parcelas)</td><td class="pos">R$ 228.800,00</td></tr>
+        <tr class="tr-sub"><td>Total investido em obras (Ago–Out)</td><td class="neg">-R$ 93.603,34</td></tr>
+        <tr class="tr-total"><td>Resultado líquido projetado</td><td class="pos">R$ 155.996,66</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ ENCONTRO DE CONTAS ══ -->
+<section class="section" id="tab-encontro">
+  <div class="section-label">Acerto mensal acumulado</div>
+  <div class="section-title">Encontro de Contas — Atualização Outubro 2026</div>
+
+  <!-- CISOS -->
+  <div class="ec-box">
+    <div class="ec-header"><h3>Cisos — Cynthia</h3><div class="badge">Out/2026</div></div>
+    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Saldo inicial (fechamento Mar/Abr 2026)</div><div class="ed">Acumulado até o fechamento anterior</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 145.296,14</div></div>
+    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Abril 2026</div><div class="ed">Rec R$ 110.139,20 − Desp R$ 103.157,40</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 6.981,80</div></div>
+    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Maio 2026</div><div class="ed">Rec R$ 107.620,16 − Desp R$ 95.200,70</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 12.419,46</div></div>
+    <div class="ec-row"><div class="ec-num">4</div><div class="ec-txt"><div class="et">Junho 2026</div><div class="ed">Rec R$ 97.150,10 − Desp R$ 103.336,44</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 6.186,34</div></div>
+    <div class="ec-row"><div class="ec-num">5</div><div class="ec-txt"><div class="et">Julho 2026</div><div class="ed">Rec R$ 118.712,30 − Desp R$ 70.042,03</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 48.670,27</div></div>
+    <div class="ec-row"><div class="ec-num">6</div><div class="ec-txt"><div class="et">Agosto 2026</div><div class="ed">Rec R$ 110.189,06 − Desp R$ 67.901,78 − Obra R$ 30.511,01 − Fresadora R$ 28.000,00</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 42.287,28</div></div>
+    <div class="ec-row"><div class="ec-num" style="background:rgba(139,32,32,.2);border-color:rgba(235,87,87,.3);color:#eb5757;">–</div><div class="ec-txt"><div class="et">Ago — Obra Especialização</div><div class="ed">Investimento pago pela Cisos — desconta do saldo devedor</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 30.511,01</div></div>
+    <div class="ec-row"><div class="ec-num" style="background:rgba(139,32,32,.2);border-color:rgba(235,87,87,.3);color:#eb5757;">–</div><div class="ec-txt"><div class="et">Ago — Equipamento Fresadora</div><div class="ed">Investimento pago pela Cisos — desconta do saldo devedor</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 28.000,00</div></div>
+    <div class="ec-row"><div class="ec-num">7</div><div class="ec-txt"><div class="et">Setembro 2026</div><div class="ed">Rec R$ 108.453,80 − Desp R$ 73.551,43 − Pgto R$ 15.000,00</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 19.902,37</div></div>
+    <div class="ec-row"><div class="ec-num">8</div><div class="ec-txt"><div class="et">Outubro 2026</div><div class="ed">Rec R$ 94.522,08 − Desp R$ 78.343,46</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 16.178,62</div></div>
+    <div class="ec-row"><div class="ec-num" style="background:rgba(26,92,42,.2);border-color:rgba(80,200,120,.3);color:#6fcf97;">–</div><div class="ec-txt"><div class="et">Out — Pgto ao Renan (Dentatech → Renan)</div><div class="ed">Pagamento via Dentatech para abater dívida da Cisos</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 25.000,00</div></div>
+    <div class="ec-result">
+      <div><div class="rl">Saldo Devedor Acumulado — Cisos → Dentatech</div><div class="rs">190.957,60 + 19.902,37 + 16.178,62 – 25.000,00</div></div>
+      <div class="rv neg">R$ 202.038,59</div>
+    </div>
+  </div>
+
+  <!-- RENAN -->
+  <div class="ec-box">
+    <div class="ec-header"><h3>Renan</h3><div class="badge-warn">Deve à Dentatech</div></div>
+    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Saldo acumulado até Ago/2026</div><div class="ed">Crédito acumulado (saldo negativo)</div></div><div class="ec-sign"></div><div class="ec-val azul">-R$ 1.604,98</div></div>
+    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Setembro 2026</div><div class="ed">Desp R$ 858,77 (Vivo + Hotel treinamento)</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 858,77</div></div>
+    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Outubro 2026 — Despesas</div><div class="ed">Desp R$ 863,00 (Frete + Vivo + Material lab)</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 863,00</div></div>
+    <div class="ec-row"><div class="ec-num">4</div><div class="ec-txt"><div class="et">Outubro 2026 — Pgto recebido da Dentatech</div><div class="ed">R$ 20.000 (BB) + R$ 5.000 (Asaas) — para abater dívida com grupo</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 25.000,00</div></div>
+    <div class="ec-result">
+      <div><div class="rl">Saldo Renan — Deve à Dentatech</div><div class="rs">-1.604,98 – 858,77 – 863,00 + 25.000,00</div></div>
+      <div class="rv neg">R$ 21.673,25</div>
+    </div>
+  </div>
+
+  <!-- TABELA RESUMO -->
+  <div class="table-wrap">
+    <div class="twh">Resumo consolidado — Encontro de Contas (Abr–Out 2026)</div>
+    <table class="dt" style="min-width:500px;">
+      <thead><tr><th>Mês / Evento</th><th>Cisos — Saldo mês</th><th>Cisos — Acumulado</th><th>Renan — Saldo mês</th><th>Renan — Acumulado</th></tr></thead>
+      <tbody>
+        <tr><td>Saldo inicial</td><td class="dim">—</td><td class="neg">R$ 145.296,14</td><td class="dim">—</td><td class="gld">R$ 0,00</td></tr>
+        <tr><td>Abril 2026</td><td class="pos">R$ 6.981,80</td><td class="neg">R$ 152.277,94</td><td class="neg">-R$ 48,00</td><td class="dim">R$ 0,00</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">R$ 12.419,46</td><td class="neg">R$ 164.697,40</td><td class="pos">R$ 263,64</td><td class="pos">R$ 263,64</td></tr>
+        <tr><td>Junho 2026</td><td class="neg">-R$ 6.186,34</td><td class="neg">R$ 158.511,06</td><td class="neg">-R$ 1.137,92</td><td class="neg">-R$ 874,28</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">R$ 48.670,27</td><td class="neg">R$ 207.181,33</td><td class="neg">-R$ 309,70</td><td class="neg">-R$ 1.183,98</td></tr>
+        <tr><td>Agosto — Trabalhos</td><td class="pos">R$ 42.287,28</td><td class="neg">R$ 249.468,61</td><td class="neg">-R$ 421,00</td><td class="neg">-R$ 1.604,98</td></tr>
+        <tr><td>Ago — Obra Especializ.</td><td class="neg">-R$ 30.511,01</td><td class="neg">R$ 218.957,60</td><td class="dim">—</td><td class="dim">—</td></tr>
+        <tr><td>Ago — Fresadora</td><td class="neg">-R$ 28.000,00</td><td class="neg">R$ 190.957,60</td><td class="dim">—</td><td class="dim">—</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">R$ 19.902,37</td><td class="neg">R$ 210.859,97</td><td class="neg">-R$ 858,77</td><td class="neg">-R$ 2.463,75</td></tr>
+        <tr><td>Out — Trabalhos</td><td class="pos">R$ 16.178,62</td><td class="neg">R$ 227.038,59</td><td class="neg">-R$ 863,00</td><td class="neg">-R$ 3.326,75</td></tr>
+        <tr><td>Out — Pgto ao Renan</td><td class="neg">-R$ 25.000,00</td><td class="neg">R$ 202.038,59</td><td class="pos">R$ 25.000,00</td><td class="neg">R$ 21.673,25</td></tr>
+        <tr class="tr-total"><td>SALDO FINAL</td><td></td><td class="neg">R$ 202.038,59</td><td></td><td class="neg">R$ 21.673,25</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- CARDS FINAIS -->
+  <div class="grid2">
+    <div class="sum-box-red">
+      <div class="sum-label red">Cisos deve à Dentatech</div>
+      <div class="sum-val neg">R$ 202.038,59</div>
+      <div class="sum-sub">Saldo devedor acumulado — Abr a Out 2026</div>
+    </div>
+    <div class="sum-box-red">
+      <div class="sum-label red">Renan deve à Dentatech</div>
+      <div class="sum-val neg">R$ 21.673,25</div>
+      <div class="sum-sub">Após receber R$ 25.000 em Out/2026</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<footer class="page-footer">
+  <span>Dentatech · Relatório Financeiro Abr–Out 2026</span>
+  <span>Preparado por <span class="lume">Lume Finanças</span> · BPO Financeiro</span>
+</footer>
+
+<script>
+function showTab(name,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
