@@ -45,11 +45,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 .dt td:not(:first-child){text-align:right;font-family:'Arial',sans-serif;font-size:.8rem;}
 .dt tr:hover td{background:rgba(201,168,76,.03);}
 .dt .tr-total td{background:rgba(201,168,76,.08);border-top:1px solid rgba(201,168,76,.22);color:var(--gold);font-weight:700;}
-.dt .tr-group td{background:rgba(255,255,255,.025);color:rgba(255,255,255,.3);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;padding:5px 11px;border-top:1px solid rgba(201,168,76,.1);}
-.dt .tr-sub td:first-child{padding-left:20px;color:rgba(255,255,255,.62);}
 .dt .tr-subtot td{background:rgba(13,27,62,.7);border-top:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.5);font-size:.76rem;}
 .dt .tr-subtot td:first-child{color:rgba(255,255,255,.35);font-size:.68rem;text-transform:uppercase;}
+.dt .tr-group td{background:rgba(255,255,255,.025);color:rgba(255,255,255,.3);font-size:.6rem;letter-spacing:.13em;text-transform:uppercase;padding:5px 11px;border-top:1px solid rgba(201,168,76,.1);}
+.dt .tr-sub td:first-child{padding-left:20px;color:rgba(255,255,255,.62);}
 .dt .tr-mes-h th{background:rgba(26,58,107,.7);color:var(--gold2);font-size:.59rem;border-top:1px solid rgba(201,168,76,.15);}
+.dt .tr-sep td{background:rgba(201,168,76,.05);border-top:1px solid rgba(201,168,76,.2);color:var(--gold2);font-size:.72rem;font-style:italic;padding:7px 11px;}
+.dt .tr-obs td{background:rgba(0,0,0,.2);color:rgba(255,220,80,.7);font-size:.72rem;font-style:italic;padding:6px 11px;}
 .br{border-right:1px solid rgba(201,168,76,.15)!important;}
 .ec-box{background:var(--navy);border:1px solid rgba(201,168,76,.22);border-radius:10px;overflow:hidden;margin-bottom:18px;}
 .ec-header{background:linear-gradient(135deg,#1a3a6b 0%,#0d1b3e 100%);border-bottom:2px solid var(--gold);padding:13px 20px;display:flex;justify-content:space-between;align-items:center;}
@@ -70,10 +72,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 .ec-result .rl,.ec-result-blue .rl,.ec-result-green .rl{font-size:.72rem;color:rgba(255,255,255,.52);text-transform:uppercase;letter-spacing:.1em;}
 .ec-result .rs,.ec-result-blue .rs,.ec-result-green .rs{font-size:.67rem;color:rgba(255,255,255,.22);margin-top:3px;}
 .ec-result .rv,.ec-result-blue .rv,.ec-result-green .rv{font-family:'Arial',sans-serif;font-size:1.5rem;font-weight:700;}
-.info-card{background:rgba(26,58,107,.25);border:1px solid rgba(100,150,255,.2);border-left:4px solid rgba(100,150,255,.5);border-radius:0 8px 8px 0;padding:13px 17px;margin-bottom:22px;}
-.info-card p{font-size:.82rem;color:rgba(255,255,255,.68);line-height:1.7;margin-bottom:4px;}
-.info-card p:last-child{margin-bottom:0;}
-.info-card strong{color:rgba(150,190,255,.9);}
 .warn-card{background:rgba(180,120,0,.12);border:1px solid rgba(255,180,0,.25);border-left:4px solid rgba(255,180,0,.6);border-radius:0 8px 8px 0;padding:13px 17px;margin-bottom:22px;}
 .warn-card p{font-size:.82rem;color:rgba(255,220,120,.8);line-height:1.7;margin-bottom:4px;}
 .warn-card strong{color:rgba(255,220,80,.95);}
@@ -81,27 +79,19 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 .ctx-card p{font-size:.81rem;color:rgba(255,255,255,.66);line-height:1.7;margin-bottom:5px;}
 .ctx-card strong{color:var(--gold2);}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:22px;}
-.sum-box{background:var(--navy);border:1px solid rgba(201,168,76,.18);border-radius:10px;padding:20px 24px;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:22px;}
 .sum-box-red{background:linear-gradient(135deg,rgba(139,32,32,.18) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(235,87,87,.3);border-radius:10px;padding:20px 24px;}
 .sum-box-blue{background:linear-gradient(135deg,rgba(26,58,107,.35) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(100,150,255,.3);border-radius:10px;padding:20px 24px;}
-.sum-box-green{background:linear-gradient(135deg,rgba(26,92,42,.22) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(80,200,120,.3);border-radius:10px;padding:20px 24px;}
+.sum-box-gold{background:linear-gradient(135deg,rgba(201,168,76,.1) 0%,rgba(13,27,62,.9) 100%);border:1px solid rgba(201,168,76,.4);border-radius:10px;padding:20px 24px;}
 .sum-label{font-size:.65rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;}
-.sum-label.red{color:rgba(235,87,87,.7);}
-.sum-label.blue{color:rgba(150,190,255,.65);}
-.sum-label.green{color:rgba(80,200,120,.7);}
-.sum-label.gold{color:rgba(201,168,76,.7);}
+.sum-label.red{color:rgba(235,87,87,.7);}.sum-label.blue{color:rgba(150,190,255,.65);}.sum-label.gold{color:rgba(201,168,76,.7);}.sum-label.green{color:rgba(80,200,120,.7);}
 .sum-val{font-family:'Arial',sans-serif;font-size:1.8rem;font-weight:700;line-height:1;}
 .sum-sub{font-size:.72rem;color:rgba(255,255,255,.32);margin-top:7px;}
 .pos{color:#6fcf97;}.neg{color:#eb5757;}.gld{color:var(--gold);}.dim{color:rgba(255,255,255,.25);}.azul{color:rgba(150,190,255,.9);}.warn{color:rgba(255,220,80,.9);}
 .page-footer{border-top:1px solid rgba(201,168,76,.1);padding:13px 40px;max-width:1340px;margin:0 auto;display:flex;justify-content:space-between;}
 .page-footer span{font-size:.67rem;color:rgba(255,255,255,.2);letter-spacing:.08em;}
 .page-footer .lume{color:var(--gold);font-weight:500;}
-@media(max-width:900px){
-  .kpi-grid,.kpi-grid-3{grid-template-columns:1fr 1fr;}
-  .grid2{grid-template-columns:1fr;}
-  .nav-tabs{flex-wrap:wrap;}
-  .main{padding:16px 12px 48px;}
-}
+@media(max-width:900px){.kpi-grid,.kpi-grid-3{grid-template-columns:1fr 1fr;}.grid2,.grid3{grid-template-columns:1fr;}.nav-tabs{flex-wrap:wrap;}.main{padding:16px 12px 48px;}}
 </style>
 </head>
 <body>
@@ -109,15 +99,11 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
   <div class="header-inner">
     <div class="header-brand">
       <div class="header-icon">🦷</div>
-      <div class="header-titles">
-        <h1>DENTATECH</h1>
-        <p>Relatório Financeiro · Lume Finanças BPO</p>
-      </div>
+      <div class="header-titles"><h1>DENTATECH</h1><p>Relatório Financeiro · Lume Finanças BPO</p></div>
     </div>
     <div class="header-meta"><div class="periodo">Abril – Outubro 2026</div></div>
   </div>
 </header>
-
 <nav class="nav-tabs">
   <button class="tab-btn active" onclick="showTab('geral',this)">Visão Geral</button>
   <button class="tab-btn" onclick="showTab('dentatech',this)">Dentatech</button>
@@ -126,29 +112,57 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
   <button class="tab-btn" onclick="showTab('espec',this)">Especialização</button>
   <button class="tab-btn" onclick="showTab('encontro',this)">Encontro de Contas</button>
 </nav>
-
 <div class="main">
 
 <!-- ══ VISÃO GERAL ══ -->
 <section class="section active" id="tab-geral">
   <div class="section-label">Resumo consolidado</div>
   <div class="section-title">Visão Geral — Abr a Out 2026</div>
-
   <div class="kpi-grid">
-    <div class="kpi cg"><div class="kpi-label">Total Cisos → Dentatech</div><div class="kpi-value neg">R$ 202.038,59</div><div class="kpi-sub">Saldo devedor acumulado</div></div>
-    <div class="kpi cb"><div class="kpi-label">Renan — crédito a receber</div><div class="kpi-value azul">R$ 15.298,29</div><div class="kpi-sub">Após trabalhos + empréstimos + pgto R$ 25k</div></div>
-    <div class="kpi cb"><div class="kpi-label">Invest. Especialização</div><div class="kpi-value warn">R$ 93.603,34</div><div class="kpi-sub">Total pago pela Cisos Ago–Out</div></div>
-    <div class="kpi cgr"><div class="kpi-label">Entradas Especialização</div><div class="kpi-value pos">R$ 20.800,00</div><div class="kpi-sub">Set + Out · 8 dentistas</div></div>
+    <div class="kpi cg"><div class="kpi-label">Receitas totais</div><div class="kpi-value pos">R$ 1.456.336,54</div><div class="kpi-sub">Dentatech + Cisos + Renan</div></div>
+    <div class="kpi cr"><div class="kpi-label">Despesas totais</div><div class="kpi-value neg">R$ 1.148.063,96</div><div class="kpi-sub">Excluindo Especialização</div></div>
+    <div class="kpi cb"><div class="kpi-label">EC Cisos → Dentatech</div><div class="kpi-value warn">R$ 180.503,83</div><div class="kpi-sub">Saldo devedor acumulado Out/2026</div></div>
+    <div class="kpi cgr"><div class="kpi-label">EC Renan — Crédito</div><div class="kpi-value azul">R$ 34.309,63</div><div class="kpi-sub">A receber da Dentatech</div></div>
   </div>
-
-  <!-- Painel geral intercompany -->
-  <div class="warn-card">
-    <p><strong>Especialização não entra no encontro de contas Cisos–Dentatech.</strong> A Cisos está financiando 100% das obras e investimentos do projeto (R$ 93.603,34), mas metade (50%) é por conta do Renan. Esse adiantamento ao Renan é tratado separadamente na aba Especialização e não reduz o saldo que a Cisos deve à Dentatech.</p>
-  </div>
-
-  <!-- Resultado por empresa -->
+  <!-- Fluxo de caixa horizontal consolidado -->
   <div class="table-wrap">
-    <div class="twh">Resultado por empresa — Abr a Out 2026</div>
+    <div class="twh">Fluxo de Caixa — Despesas consolidadas por categoria (Abr–Out 2026)</div>
+    <table class="dt">
+      <thead><tr><th>Categoria</th><th>Abr/26</th><th>Mai/26</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
+      <tbody>
+        <tr class="tr-group"><td colspan="9">Custos Fixos</td></tr>
+        <tr class="tr-sub"><td>Aluguel</td><td class="neg">2.501,75</td><td class="dim">—</td><td class="neg">5.003,50</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">17.512,25</td></tr>
+        <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">2.487,89</td><td class="neg">1.149,25</td><td class="neg">1.149,25</td><td class="neg">1.282,95</td><td class="neg">1.282,95</td><td class="neg">1.285,95</td><td class="neg">1.282,95</td><td class="neg">9.921,19</td></tr>
+        <tr class="tr-sub"><td>IPTU</td><td class="neg">544,01</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">2.144,03</td></tr>
+        <tr class="tr-sub"><td>Cemig</td><td class="neg">1.372,61</td><td class="neg">1.372,61</td><td class="neg">1.515,92</td><td class="neg">1.362,52</td><td class="neg">1.370,92</td><td class="neg">1.521,89</td><td class="neg">1.566,82</td><td class="neg">10.083,29</td></tr>
+        <tr class="tr-sub"><td>Telefonia / Internet</td><td class="neg">268,18</td><td class="neg">341,54</td><td class="neg">355,00</td><td class="neg">355,00</td><td class="neg">355,00</td><td class="neg">357,66</td><td class="neg">676,00</td><td class="neg">2.708,38</td></tr>
+        <tr class="tr-sub"><td>Emive</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="dim">—</td><td class="neg">634,52</td><td class="neg">2.208,57</td></tr>
+        <tr class="tr-sub"><td>Contabilidade</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">5.530,00</td></tr>
+        <tr class="tr-sub"><td>Simples Nacional</td><td class="neg">1.433,91</td><td class="neg">1.679,72</td><td class="neg">2.136,22</td><td class="neg">2.444,19</td><td class="neg">2.180,84</td><td class="neg">2.415,39</td><td class="neg">2.375,74</td><td class="neg">14.666,01</td></tr>
+        <tr class="tr-group"><td colspan="9">Pessoal</td></tr>
+        <tr class="tr-sub"><td>Salário</td><td class="neg">13.194,00</td><td class="neg">11.928,00</td><td class="neg">13.837,00</td><td class="neg">15.024,00</td><td class="neg">14.823,00</td><td class="neg">15.358,00</td><td class="neg">15.048,00</td><td class="neg">99.212,00</td></tr>
+        <tr class="tr-sub"><td>FGTS + INSS</td><td class="neg">3.444,14</td><td class="neg">3.577,65</td><td class="neg">3.744,15</td><td class="neg">3.721,16</td><td class="neg">4.439,58</td><td class="neg">4.508,86</td><td class="neg">4.508,64</td><td class="neg">27.944,18</td></tr>
+        <tr class="tr-sub"><td>Vale Transporte / Transfacil</td><td class="neg">821,44</td><td class="neg">1.835,04</td><td class="neg">1.337,18</td><td class="neg">902,34</td><td class="neg">786,22</td><td class="neg">779,65</td><td class="neg">913,02</td><td class="neg">7.374,89</td></tr>
+        <tr class="tr-sub"><td>Terceiros / Comissão</td><td class="neg">26.950,73</td><td class="neg">37.007,91</td><td class="neg">29.827,18</td><td class="neg">14.319,01</td><td class="neg">19.303,16</td><td class="neg">27.464,55</td><td class="neg">30.178,66</td><td class="neg">185.051,20</td></tr>
+        <tr class="tr-sub"><td>Prest. Serviço Financeiro / Sesc</td><td class="neg">1.628,00</td><td class="neg">1.499,00</td><td class="neg">1.499,00</td><td class="neg">1.692,00</td><td class="neg">1.499,00</td><td class="neg">1.668,00</td><td class="neg">1.500,00</td><td class="neg">10.985,00</td></tr>
+        <tr class="tr-group"><td colspan="9">Operacional</td></tr>
+        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">28.654,46</td><td class="neg">31.456,78</td><td class="neg">28.984,39</td><td class="neg">23.063,21</td><td class="neg">16.271,72</td><td class="neg">27.112,41</td><td class="neg">21.043,24</td><td class="neg">176.586,21</td></tr>
+        <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">8.250,27</td><td class="neg">2.725,13</td><td class="neg">9.985,96</td><td class="neg">19.553,59</td><td class="neg">34.919,35</td><td class="neg">23.410,08</td><td class="neg">28.011,50</td><td class="neg">126.855,88</td></tr>
+        <tr class="tr-sub"><td>Entrega / Frete</td><td class="neg">2.767,30</td><td class="neg">3.085,08</td><td class="neg">2.821,60</td><td class="neg">3.126,60</td><td class="neg">2.719,00</td><td class="neg">3.321,40</td><td class="neg">3.002,60</td><td class="neg">20.843,58</td></tr>
+        <tr class="tr-sub"><td>Curso / Equipamentos / Outros</td><td class="neg">1.826,00</td><td class="neg">5.179,26</td><td class="neg">2.000,00</td><td class="neg">8.511,90</td><td class="neg">9.657,84</td><td class="neg">10.513,43</td><td class="neg">9.459,34</td><td class="neg">47.147,77</td></tr>
+        <tr class="tr-group"><td colspan="9">Variável</td></tr>
+        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">22.730,65</td><td class="neg">13.208,58</td><td class="neg">28.141,46</td><td class="neg">20.081,99</td><td class="neg">16.672,78</td><td class="neg">16.696,31</td><td class="neg">22.238,96</td><td class="neg">139.770,73</td></tr>
+        <tr class="tr-sub"><td>Pgto. intercompany / Renan</td><td class="neg">6.550,00</td><td class="neg">3.380,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">15.000,00</td><td class="neg">25.000,00</td><td class="neg">49.930,00</td></tr>
+        <tr class="tr-sub"><td>Tarifa / IOF / Outros</td><td class="neg">525,57</td><td class="neg">1.305,96</td><td class="neg">1.052,21</td><td class="neg">700,54</td><td class="neg">737,04</td><td class="neg">503,54</td><td class="neg">625,36</td><td class="neg">5.450,22</td></tr>
+        <tr class="tr-obs"><td colspan="9">⚠ Excluídas despesas GURU NF24 Especialização: Ago R$2.568 · Set R$3.014,61 · Out R$3.014,61 — total R$8.597,22. Registradas na aba Especialização.</td></tr>
+        <tr class="tr-total"><td>TOTAL DESPESAS</td><td class="neg">122.855,72</td><td class="neg">121.903,99</td><td class="neg">134.761,50</td><td class="neg">119.814,23</td><td class="neg">130.891,63</td><td class="neg">155.275,54</td><td class="neg">171.723,77</td><td class="neg">957.226,38</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Tabela horizontal por empresa -->
+  <div class="table-wrap">
+    <div class="twh">Resultado por empresa — fluxo horizontal Abr a Out 2026</div>
     <table class="dt">
       <thead>
         <tr>
@@ -180,17 +194,18 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
           <td class="pos">46.839,26</td><td class="neg">50.191,94</td><td class="neg br">-3.352,68</td>
           <td class="pos">47.155,68</td><td class="neg">57.937,13</td><td class="neg br">-10.781,45</td>
           <td class="pos">59.010,89</td><td class="neg">65.821,94</td><td class="neg br">-6.811,05</td>
-          <td class="pos">46.052,06</td><td class="neg">75.881,29</td><td class="neg">-29.829,23</td>
+          <td class="pos">46.052,06</td><td class="neg">79.344,92</td><td class="neg">-33.292,86</td>
         </tr>
+        <tr class="tr-obs"><td colspan="22">⚠ Dentatech: excluídas despesas GURU NF24 (Especialização): Ago R$2.568,00 · Set R$3.014,61 · Out R$3.014,61 — total R$8.597,22. Essas despesas constam na aba Especialização.</td></tr>
         <tr>
           <td>Cisos</td>
           <td class="pos">110.139,20</td><td class="neg">103.157,40</td><td class="pos br">6.981,80</td>
           <td class="pos">107.620,16</td><td class="neg">95.200,70</td><td class="pos br">12.419,46</td>
           <td class="pos">97.150,10</td><td class="neg">103.336,44</td><td class="neg br">-6.186,34</td>
           <td class="pos">118.712,30</td><td class="neg">70.042,03</td><td class="pos br">48.670,27</td>
-          <td class="pos">110.189,06</td><td class="neg">126.412,79</td><td class="neg br">-16.223,73</td>
-          <td class="pos">108.453,80</td><td class="neg">88.551,43</td><td class="pos br">19.902,37</td>
-          <td class="pos">94.522,08</td><td class="neg">78.343,46</td><td class="pos">16.178,62</td>
+          <td class="pos">110.189,06</td><td class="neg">67.901,78</td><td class="pos br">42.287,28</td>
+          <td class="pos">108.453,80</td><td class="neg">92.052,54</td><td class="pos br">16.401,26</td>
+          <td class="pos">94.522,08</td><td class="neg">91.795,79</td><td class="pos">2.726,29</td>
         </tr>
         <tr>
           <td>Renan</td>
@@ -205,60 +220,6 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
       </tbody>
     </table>
   </div>
-
-  <!-- Fluxo geral consolidado -->
-  <div class="table-wrap">
-    <div class="twh">Fluxo de Caixa Geral — Despesas consolidadas por categoria (Abr–Out 2026)</div>
-    <table class="dt">
-      <thead><tr><th>Categoria</th><th>Abr/26</th><th>Mai/26</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
-      <tbody>
-        <tr class="tr-group"><td colspan="9">Custos Fixos</td></tr>
-        <tr class="tr-sub"><td>Aluguel</td><td class="neg">2.501,75</td><td class="dim">—</td><td class="neg">5.003,50</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">17.512,25</td></tr>
-        <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">2.487,89</td><td class="neg">1.149,25</td><td class="neg">1.149,25</td><td class="neg">1.282,95</td><td class="neg">1.282,95</td><td class="neg">1.285,95</td><td class="neg">1.282,95</td><td class="neg">9.921,19</td></tr>
-        <tr class="tr-sub"><td>IPTU</td><td class="neg">544,01</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">2.144,03</td></tr>
-        <tr class="tr-sub"><td>Cemig</td><td class="neg">1.372,61</td><td class="neg">1.372,61</td><td class="neg">1.515,92</td><td class="neg">1.362,52</td><td class="neg">1.370,92</td><td class="neg">1.521,89</td><td class="neg">1.566,82</td><td class="neg">10.083,29</td></tr>
-        <tr class="tr-sub"><td>Telefonia / Internet</td><td class="neg">268,18</td><td class="neg">341,54</td><td class="neg">355,00</td><td class="neg">355,00</td><td class="neg">355,00</td><td class="neg">357,66</td><td class="neg">676,00</td><td class="neg">2.708,38</td></tr>
-        <tr class="tr-sub"><td>Emive</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="dim">—</td><td class="neg">634,52</td><td class="neg">2.208,57</td></tr>
-        <tr class="tr-sub"><td>Contabilidade</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">5.530,00</td></tr>
-        <tr class="tr-sub"><td>Simples Nacional</td><td class="neg">1.433,91</td><td class="neg">1.679,72</td><td class="neg">2.136,22</td><td class="neg">2.444,19</td><td class="neg">2.180,84</td><td class="neg">2.415,39</td><td class="neg">2.375,74</td><td class="neg">14.666,01</td></tr>
-        <tr class="tr-group"><td colspan="9">Despesas com Pessoal</td></tr>
-        <tr class="tr-sub"><td>Salário</td><td class="neg">13.194,00</td><td class="neg">11.928,00</td><td class="neg">13.837,00</td><td class="neg">15.024,00</td><td class="neg">14.823,00</td><td class="neg">15.358,00</td><td class="neg">15.048,00</td><td class="neg">99.212,00</td></tr>
-        <tr class="tr-sub"><td>FGTS</td><td class="neg">1.249,77</td><td class="neg">1.357,87</td><td class="neg">1.319,47</td><td class="neg">1.327,64</td><td class="neg">1.514,43</td><td class="neg">1.547,57</td><td class="neg">1.467,01</td><td class="neg">9.783,76</td></tr>
-        <tr class="tr-sub"><td>INSS</td><td class="neg">2.194,37</td><td class="neg">2.219,78</td><td class="neg">2.424,68</td><td class="neg">2.393,52</td><td class="neg">2.925,15</td><td class="neg">2.961,29</td><td class="neg">3.041,63</td><td class="neg">18.160,42</td></tr>
-        <tr class="tr-sub"><td>Vale Transporte</td><td class="neg">473,97</td><td class="neg">1.278,18</td><td class="neg">1.327,80</td><td class="neg">893,40</td><td class="neg">778,43</td><td class="neg">771,93</td><td class="neg">903,73</td><td class="neg">6.427,44</td></tr>
-        <tr class="tr-sub"><td>Terceiros / Comissão</td><td class="neg">26.950,73</td><td class="neg">37.007,91</td><td class="neg">29.827,18</td><td class="neg">14.319,01</td><td class="neg">19.303,16</td><td class="neg">27.464,55</td><td class="neg">30.178,66</td><td class="neg">185.051,20</td></tr>
-        <tr class="tr-sub"><td>Prest. Serviço Financeiro</td><td class="neg">1.392,00</td><td class="neg">1.389,00</td><td class="neg">1.389,00</td><td class="neg">1.398,00</td><td class="neg">1.389,00</td><td class="neg">1.390,00</td><td class="neg">1.390,00</td><td class="neg">9.737,00</td></tr>
-        <tr class="tr-sub"><td>Sesc / Transfacil</td><td class="neg">239,41</td><td class="neg">826,86</td><td class="neg">9,38</td><td class="neg">8,94</td><td class="neg">7,79</td><td class="neg">7,72</td><td class="neg">9,29</td><td class="neg">1.109,39</td></tr>
-        <tr class="tr-group"><td colspan="9">Despesas Operacionais</td></tr>
-        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">28.654,46</td><td class="neg">31.456,78</td><td class="neg">28.984,39</td><td class="neg">23.063,21</td><td class="neg">16.271,72</td><td class="neg">27.112,41</td><td class="neg">21.043,24</td><td class="neg">176.586,21</td></tr>
-        <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">8.250,27</td><td class="neg">2.725,13</td><td class="neg">9.985,96</td><td class="neg">19.553,59</td><td class="neg">34.919,35</td><td class="neg">23.410,08</td><td class="neg">28.011,50</td><td class="neg">126.855,88</td></tr>
-        <tr class="tr-sub"><td>Entrega / Frete</td><td class="neg">2.767,30</td><td class="neg">3.085,08</td><td class="neg">2.821,60</td><td class="neg">3.126,60</td><td class="neg">2.719,00</td><td class="neg">3.321,40</td><td class="neg">3.002,60</td><td class="neg">20.843,58</td></tr>
-        <tr class="tr-sub"><td>Curso</td><td class="dim">—</td><td class="neg">2.551,66</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.860,02</td><td class="neg">5.545,77</td><td class="dim">—</td><td class="neg">9.957,45</td></tr>
-        <tr class="tr-group"><td colspan="9">Despesas Variáveis</td></tr>
-        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">22.730,65</td><td class="neg">13.208,58</td><td class="neg">28.141,46</td><td class="neg">20.081,99</td><td class="neg">16.672,78</td><td class="neg">16.696,31</td><td class="neg">5.299,49</td><td class="neg">122.831,26</td></tr>
-        <tr class="tr-sub"><td>Equipamentos / Manutenção</td><td class="neg">1.826,00</td><td class="neg">2.627,60</td><td class="neg">2.000,00</td><td class="neg">8.367,00</td><td class="neg">3.937,80</td><td class="neg">3.238,19</td><td class="neg">6.444,73</td><td class="neg">28.441,32</td></tr>
-        <tr class="tr-sub"><td>Obra Especialização</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">30.511,01</td><td class="dim">—</td><td class="dim">—</td><td class="neg">30.511,01</td></tr>
-        <tr class="tr-sub"><td>Pgto. Intercompany / Renan</td><td class="neg">6.550,00</td><td class="neg">3.380,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">15.000,00</td><td class="neg">25.000,00</td><td class="neg">49.930,00</td></tr>
-        <tr class="tr-sub"><td>Tarifa / IOF / Outros</td><td class="neg">525,57</td><td class="neg">1.305,96</td><td class="neg">1.052,21</td><td class="neg">700,54</td><td class="neg">737,04</td><td class="neg">3.778,96</td><td class="neg">3.262,91</td><td class="neg">11.363,19</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS</td><td class="neg">135.916,66</td><td class="neg">122.286,51</td><td class="neg">136.650,10</td><td class="neg">119.374,93</td><td class="neg">157.231,82</td><td class="neg">157.542,32</td><td class="neg">154.236,44</td><td class="neg">983.238,78</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Painel Cisos — o que pagou -->
-  <div class="table-wrap">
-    <div class="twh">Cisos — Total pago à / por conta da Dentatech (Abr–Out 2026)</div>
-    <table class="dt" style="min-width:400px;">
-      <thead><tr><th>Item</th><th>Valor</th></tr></thead>
-      <tbody>
-        <tr class="tr-sub"><td>Despesas operacionais (Abr–Out)</td><td class="neg">R$ 658.090,25</td></tr>
-        <tr class="tr-sub"><td>Pgto. direto Dentatech (Abr, Mai, Set)</td><td class="neg">R$ 24.930,00</td></tr>
-        <tr class="tr-sub"><td>Investimento Especialização (Ago–Out)</td><td class="neg">R$ 93.603,34</td></tr>
-        <tr class="tr-total"><td>Total desembolsado pela Cisos</td><td class="neg">R$ 776.623,59</td></tr>
-        <tr><td>Total de trabalhos executados (Cisos)</td><td class="pos">R$ 749.072,38</td></tr>
-      </tbody>
-    </table>
-  </div>
 </section>
 
 <!-- ══ DENTATECH ══ -->
@@ -266,74 +227,29 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
   <div class="section-label">Contas bancárias — Itaú · BB · Asaas</div>
   <div class="section-title">Dentatech — Abr a Out 2026</div>
   <div class="kpi-grid kpi-grid-3">
-    <div class="kpi cg"><div class="kpi-label">Receitas Set</div><div class="kpi-value gld">R$ 59.010,89</div><div class="kpi-sub">Serviços R$ 39.010,89 + Aporte R$ 20.000,00</div></div>
-    <div class="kpi cg"><div class="kpi-label">Receitas Out</div><div class="kpi-value gld">R$ 46.052,06</div><div class="kpi-sub">Serviços R$ 36.052,06 + Aporte R$ 10.000,00</div></div>
-    <div class="kpi cb"><div class="kpi-label">GURU NF 24 — Especialização</div><div class="kpi-value warn">R$ 8.597,22</div><div class="kpi-sub">3 parcelas fixas transferidas para Especialização</div></div>
-    <div class="kpi cr"><div class="kpi-label">Pgto ao Renan — Out</div><div class="kpi-value neg">R$ 25.000,00</div><div class="kpi-sub">Para abater dívida da Cisos</div></div>
+    <div class="kpi cg"><div class="kpi-label">Receitas Set</div><div class="kpi-value gld">R$ 59.010,89</div><div class="kpi-sub">Serviços R$39.010,89 + Aporte R$20.000,00</div></div>
+    <div class="kpi cr"><div class="kpi-label">Despesas Op. Set</div><div class="kpi-value neg">R$ 65.821,94</div><div class="kpi-sub">Excl. GURU R$3.014,61 (Especialização)</div></div>
+    <div class="kpi cr"><div class="kpi-label">Despesas Op. Out</div><div class="kpi-value neg">R$ 79.344,92</div><div class="kpi-sub">Excl. GURU R$3.014,61 (Especialização)</div></div>
   </div>
-
   <div class="table-wrap">
     <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
     <table class="dt" style="min-width:600px;">
-      <thead><tr><th>Mês</th><th>Rec. Serviços</th><th>Aporte Cisos</th><th>Total Receitas</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+      <thead><tr><th>Mês</th><th>Rec. Serviços</th><th>Aporte Cisos</th><th>Total Receitas</th><th>Despesas Op.</th><th>GURU Espec.</th><th>Saldo Op.</th><th>Saldo acumulado</th></tr></thead>
       <tbody>
-        <tr><td>Abril 2026</td><td class="pos">21.540,83</td><td class="pos">7.300,00</td><td class="pos">28.840,83</td><td class="neg">31.874,94</td><td class="neg">-3.034,11</td><td class="neg">-3.034,11</td></tr>
-        <tr><td>Maio 2026</td><td class="pos">47.305,00</td><td class="pos">3.380,00</td><td class="pos">50.685,00</td><td class="neg">30.968,74</td><td class="pos">19.716,26</td><td class="pos">16.682,15</td></tr>
-        <tr><td>Junho 2026</td><td class="pos">52.189,94</td><td class="dim">—</td><td class="pos">52.189,94</td><td class="neg">32.662,62</td><td class="pos">19.527,32</td><td class="pos">36.209,47</td></tr>
-        <tr><td>Julho 2026</td><td class="pos">46.839,26</td><td class="dim">—</td><td class="pos">46.839,26</td><td class="neg">50.191,94</td><td class="neg">-3.352,68</td><td class="pos">32.856,79</td></tr>
-        <tr><td>Agosto 2026</td><td class="pos">40.155,68</td><td class="pos">7.000,00</td><td class="pos">47.155,68</td><td class="neg">57.937,13</td><td class="neg">-10.781,45</td><td class="pos">28.075,34</td></tr>
-        <tr><td>Setembro 2026</td><td class="pos">39.010,89</td><td class="pos">20.000,00</td><td class="pos">59.010,89</td><td class="neg">65.821,94</td><td class="neg">-6.811,05</td><td class="pos">21.264,29</td></tr>
-        <tr><td>Outubro 2026</td><td class="pos">36.052,06</td><td class="pos">10.000,00</td><td class="pos">46.052,06</td><td class="neg">75.881,29</td><td class="neg">-29.829,23</td><td class="neg">-8.564,94</td></tr>
-        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">283.093,66</td><td class="pos">47.680,00</td><td class="pos">330.773,66</td><td class="neg">345.338,60</td><td class="neg">-14.564,94</td><td></td></tr>
+        <tr><td>Abril 2026</td><td class="pos">21.540,83</td><td class="pos">7.300,00</td><td class="pos">28.840,83</td><td class="neg">31.874,94</td><td class="dim">—</td><td class="neg">-3.034,11</td><td class="neg">-3.034,11</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">47.305,00</td><td class="pos">3.380,00</td><td class="pos">50.685,00</td><td class="neg">30.968,74</td><td class="dim">—</td><td class="pos">19.716,26</td><td class="pos">16.682,15</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">52.189,94</td><td class="dim">—</td><td class="pos">52.189,94</td><td class="neg">32.662,62</td><td class="dim">—</td><td class="pos">19.527,32</td><td class="pos">36.209,47</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">46.839,26</td><td class="dim">—</td><td class="pos">46.839,26</td><td class="neg">50.191,94</td><td class="dim">—</td><td class="neg">-3.352,68</td><td class="pos">32.856,79</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">40.155,68</td><td class="pos">7.000,00</td><td class="pos">47.155,68</td><td class="neg">57.937,13</td><td class="neg">2.568,00</td><td class="neg">-10.781,45</td><td class="pos">22.075,34</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">39.010,89</td><td class="pos">20.000,00</td><td class="pos">59.010,89</td><td class="neg">65.821,94</td><td class="neg">3.014,61</td><td class="neg">-6.811,05</td><td class="pos">15.264,29</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">36.052,06</td><td class="pos">10.000,00</td><td class="pos">46.052,06</td><td class="neg">79.344,92</td><td class="neg">3.014,61</td><td class="neg">-33.292,86</td><td class="neg">-18.028,57</td></tr>
+        <tr class="tr-obs"><td colspan="8">⚠ GURU NF24 (Parc.01 Ago · Parc.02 Set · Parc.03 Out) — total R$8.597,22 — são despesas da Especialização, lançadas na conta Dentatech. Registradas na aba Especialização.</td></tr>
+        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">283.093,66</td><td class="pos">47.680,00</td><td class="pos">330.773,66</td><td class="neg">349.001,33</td><td class="neg">8.597,22</td><td></td><td></td></tr>
       </tbody>
     </table>
   </div>
-
-  <div class="warn-card">
-    <p><strong>Outubro negativo — R$ 29.829,23:</strong> além das despesas operacionais, a Dentatech pagou <strong>R$ 25.000,00 ao Renan</strong> (transferência intercompany) e <strong>R$ 3.014,61 GURU NF 24 Parc. 03</strong> (despesa da Especialização). As parcelas GURU são fixas mensais e constam na aba Especialização.</p>
-  </div>
-
   <div class="table-wrap">
-    <div class="twh">Fluxo de Caixa — Dentatech (Abr–Out 2026)</div>
-    <table class="dt">
-      <thead><tr><th>Categoria</th><th>Abr/26</th><th>Mai/26</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
-      <tbody>
-        <tr class="tr-group"><td colspan="9">Pessoal</td></tr>
-        <tr class="tr-sub"><td>Salário</td><td class="neg">13.194,00</td><td class="neg">11.928,00</td><td class="neg">13.837,00</td><td class="neg">15.024,00</td><td class="neg">14.823,00</td><td class="neg">15.358,00</td><td class="neg">15.048,00</td><td class="neg">99.212,00</td></tr>
-        <tr class="tr-sub"><td>INSS</td><td class="neg">2.194,37</td><td class="neg">2.219,78</td><td class="neg">2.424,68</td><td class="neg">2.393,52</td><td class="neg">2.925,15</td><td class="neg">2.961,29</td><td class="neg">3.041,63</td><td class="neg">18.160,42</td></tr>
-        <tr class="tr-sub"><td>FGTS</td><td class="neg">1.249,77</td><td class="neg">1.357,87</td><td class="neg">1.319,47</td><td class="neg">1.327,64</td><td class="neg">1.514,43</td><td class="neg">1.547,57</td><td class="neg">1.467,01</td><td class="neg">9.783,76</td></tr>
-        <tr class="tr-sub"><td>Vale Transporte</td><td class="neg">473,97</td><td class="neg">818,18</td><td class="neg">937,80</td><td class="neg">893,40</td><td class="neg">778,43</td><td class="neg">771,93</td><td class="neg">903,73</td><td class="neg">5.577,44</td></tr>
-        <tr class="tr-sub"><td>Prest. Serviço Financeiro</td><td class="dim">—</td><td class="neg">1.389,00</td><td class="neg">1.389,00</td><td class="dim">—</td><td class="neg">1.389,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">4.167,00</td></tr>
-        <tr class="tr-sub"><td>Comissão</td><td class="neg">3.017,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">3.017,00</td></tr>
-        <tr class="tr-sub"><td>Terceiros</td><td class="dim">—</td><td class="neg">3.380,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">3.380,00</td></tr>
-        <tr class="tr-sub"><td>Férias</td><td class="neg">4.477,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">4.477,00</td></tr>
-        <tr class="tr-sub"><td>Sesc</td><td class="neg">236,00</td><td class="neg">110,00</td><td class="neg">110,00</td><td class="neg">294,00</td><td class="neg">110,00</td><td class="neg">278,00</td><td class="neg">110,00</td><td class="neg">1.248,00</td></tr>
-        <tr class="tr-sub"><td>Transfacil</td><td class="neg">3,41</td><td class="neg">8,68</td><td class="neg">9,38</td><td class="neg">8,94</td><td class="neg">7,79</td><td class="neg">7,72</td><td class="neg">9,29</td><td class="neg">55,21</td></tr>
-        <tr class="tr-group"><td colspan="9">Fixos</td></tr>
-        <tr class="tr-sub"><td>Simples Nacional</td><td class="neg">1.433,91</td><td class="neg">1.679,72</td><td class="neg">2.136,22</td><td class="neg">2.444,19</td><td class="neg">2.180,84</td><td class="neg">2.415,39</td><td class="neg">2.375,74</td><td class="neg">14.666,01</td></tr>
-        <tr class="tr-sub"><td>Contabilidade</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">790,00</td><td class="neg">5.530,00</td></tr>
-        <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">1.338,94</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.338,94</td></tr>
-        <tr class="tr-group"><td colspan="9">Operacional</td></tr>
-        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">2.139,36</td><td class="neg">2.139,36</td><td class="neg">5.328,99</td><td class="neg">5.897,20</td><td class="neg">5.105,75</td><td class="neg">12.361,52</td><td class="neg">5.231,00</td><td class="neg">38.203,18</td></tr>
-        <tr class="tr-sub"><td>Material de Laboratório</td><td class="dim">—</td><td class="dim">—</td><td class="neg">2.721,68</td><td class="neg">11.301,23</td><td class="neg">27.149,07</td><td class="neg">16.074,00</td><td class="neg">16.749,38</td><td class="neg">73.995,36</td></tr>
-        <tr class="tr-sub"><td>Manutenção Equipamentos</td><td class="dim">—</td><td class="neg">949,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.546,00</td><td class="neg">1.749,00</td><td class="dim">—</td><td class="neg">4.244,00</td></tr>
-        <tr class="tr-sub"><td>Equipamentos</td><td class="dim">—</td><td class="neg">595,00</td><td class="dim">—</td><td class="neg">6.992,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">3.900,00</td><td class="neg">11.487,00</td></tr>
-        <tr class="tr-sub"><td>Entrega / Frete</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">2.450,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">2.450,00</td></tr>
-        <tr class="tr-sub"><td>Curso</td><td class="dim">—</td><td class="neg">2.551,66</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.860,02</td><td class="dim">—</td><td class="dim">—</td><td class="neg">4.411,68</td></tr>
-        <tr class="tr-group"><td colspan="9">Variável</td></tr>
-        <tr class="tr-sub"><td>Empréstimo (BB)</td><td class="neg">1.062,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">13.000,20</td><td class="dim">—</td><td class="neg">14.062,20</td></tr>
-        <tr class="tr-sub"><td>Pgto ao Renan (intercompany)</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">25.000,00</td><td class="neg">25.000,00</td></tr>
-        <tr class="tr-sub"><td>GURU NF 24 — Especialização (fixo)</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">2.568,00</td><td class="neg">3.014,61</td><td class="neg">3.014,61</td><td class="neg">8.597,22</td></tr>
-        <tr class="tr-sub"><td>Tarifa Banco / IOF</td><td class="neg">265,21</td><td class="neg">343,51</td><td class="neg">460,54</td><td class="neg">375,82</td><td class="neg">325,65</td><td class="neg">497,67</td><td class="neg">480,88</td><td class="neg">2.749,28</td></tr>
-        <tr class="tr-sub"><td>Imposto / Taxa / Outros</td><td class="dim">—</td><td class="neg">708,98</td><td class="neg">957,86</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.023,24</td><td class="neg">260,00</td><td class="neg">2.950,08</td></tr>
-        <tr class="tr-sub"><td>Material de Escritório</td><td class="dim">—</td><td class="dim">—</td><td class="neg">240,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">240,00</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS DENTATECH</td><td class="neg">31.874,94</td><td class="neg">30.968,74</td><td class="neg">32.662,62</td><td class="neg">50.191,94</td><td class="neg">57.937,13</td><td class="neg">65.821,94</td><td class="neg">75.881,29</td><td class="neg">345.338,60</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="table-wrap">
-    <div class="twh">Despesas Dentatech — Set e Out 2026 por categoria</div>
+    <div class="twh">Fluxo de Caixa Dentatech — Set e Out 2026 (despesas operacionais)</div>
     <table class="dt" style="min-width:400px;">
       <thead><tr><th>Categoria</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
       <tbody>
@@ -353,11 +269,13 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
         <tr class="tr-sub"><td>Manutenção Equipamentos</td><td class="neg">1.749,00</td><td class="dim">—</td><td class="neg">1.749,00</td></tr>
         <tr class="tr-sub"><td>Equipamentos</td><td class="dim">—</td><td class="neg">3.900,00</td><td class="neg">3.900,00</td></tr>
         <tr class="tr-group"><td colspan="4">Variável</td></tr>
-        <tr class="tr-sub"><td>Empréstimo (BB)</td><td class="neg">13.000,20</td><td class="dim">—</td><td class="neg">13.000,20</td></tr>
+        <tr class="tr-sub"><td>Empréstimo (BB / Carijos / São Paulo)</td><td class="neg">13.000,20</td><td class="neg">9.786,34</td><td class="neg">22.786,54</td></tr>
         <tr class="tr-sub"><td>Pgto ao Renan (intercompany)</td><td class="dim">—</td><td class="neg">25.000,00</td><td class="neg">25.000,00</td></tr>
         <tr class="tr-sub"><td>Tarifa Banco / IOF</td><td class="neg">497,67</td><td class="neg">480,88</td><td class="neg">978,55</td></tr>
-        <tr class="tr-sub"><td>Sindicato / Detetização / Outros</td><td class="neg">1.023,24</td><td class="neg">260,00</td><td class="neg">1.283,24</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS</td><td class="neg">68.836,55</td><td class="neg">78.895,90</td><td class="neg">147.732,45</td></tr>
+        <tr class="tr-sub"><td>Outros</td><td class="neg">1.023,24</td><td class="neg">260,00</td><td class="neg">1.283,24</td></tr>
+        <tr class="tr-sep"><td colspan="4">↓ Lançado na conta Dentatech — pertence à Especialização</td></tr>
+        <tr class="tr-sub"><td>GURU NF 24 Especialização (fixo mensal)</td><td class="neg">3.014,61</td><td class="neg">3.014,61</td><td class="neg">6.029,22</td></tr>
+        <tr class="tr-total"><td>TOTAL (incluindo GURU)</td><td class="neg">68.836,55</td><td class="neg">82.359,53</td><td class="neg">151.196,08</td></tr>
       </tbody>
     </table>
   </div>
@@ -368,70 +286,28 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
   <div class="section-label">Sócia — Cynthia</div>
   <div class="section-title">Cisos — Abr a Out 2026</div>
   <div class="kpi-grid kpi-grid-3">
-    <div class="kpi cg"><div class="kpi-label">Trabalhos Set</div><div class="kpi-value gld">R$ 108.453,80</div><div class="kpi-sub">Implante R$ 76.854,80 + Clínico R$ 31.599,00</div></div>
-    <div class="kpi cg"><div class="kpi-label">Trabalhos Out</div><div class="kpi-value gld">R$ 94.522,08</div><div class="kpi-sub">Implante R$ 64.808,08 + Clínico R$ 29.714,00</div></div>
+    <div class="kpi cg"><div class="kpi-label">Trabalhos Set</div><div class="kpi-value gld">R$ 108.453,80</div><div class="kpi-sub">Implante R$76.854,80 + Clínico R$31.599,00</div></div>
+    <div class="kpi cg"><div class="kpi-label">Trabalhos Out</div><div class="kpi-value gld">R$ 94.522,08</div><div class="kpi-sub">Implante R$64.808,08 + Clínico R$29.714,00</div></div>
     <div class="kpi cb"><div class="kpi-label">Pgto direto Set</div><div class="kpi-value neg">R$ 15.000,00</div><div class="kpi-sub">Transferência Tarcísio → Dentatech</div></div>
   </div>
-
   <div class="table-wrap">
     <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
-    <table class="dt" style="min-width:500px;">
-      <thead><tr><th>Mês</th><th>Trabalhos</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+    <table class="dt" style="min-width:600px;">
+      <thead><tr><th>Mês</th><th>Trabalhos</th><th>Desp. Op.</th><th>Pgto Dentatech</th><th>Empréstimo</th><th>Total Desp.</th><th>Saldo mês</th><th>Saldo acumulado</th></tr></thead>
       <tbody>
-        <tr><td>Abril 2026</td><td class="pos">110.139,20</td><td class="neg">103.157,40</td><td class="pos">6.981,80</td><td class="pos">6.981,80</td></tr>
-        <tr><td>Maio 2026</td><td class="pos">107.620,16</td><td class="neg">95.200,70</td><td class="pos">12.419,46</td><td class="pos">19.401,26</td></tr>
-        <tr><td>Junho 2026</td><td class="pos">97.150,10</td><td class="neg">103.336,44</td><td class="neg">-6.186,34</td><td class="pos">13.214,92</td></tr>
-        <tr><td>Julho 2026</td><td class="pos">118.712,30</td><td class="neg">70.042,03</td><td class="pos">48.670,27</td><td class="pos">61.885,19</td></tr>
-        <tr><td>Agosto 2026</td><td class="pos">110.189,06</td><td class="neg">126.412,79</td><td class="neg">-16.223,73</td><td class="pos">45.661,46</td></tr>
-        <tr><td>Setembro 2026</td><td class="pos">108.453,80</td><td class="neg">88.551,43</td><td class="pos">19.902,37</td><td class="pos">65.563,83</td></tr>
-        <tr><td>Outubro 2026</td><td class="pos">94.522,08</td><td class="neg">78.343,46</td><td class="pos">16.178,62</td><td class="pos">81.742,45</td></tr>
-        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">746.786,70</td><td class="neg">665.044,25</td><td class="pos">81.742,45</td><td></td></tr>
+        <tr><td>Abril 2026</td><td class="pos">110.139,20</td><td class="neg">96.607,40</td><td class="neg">6.550,00</td><td class="neg">21.668,65</td><td class="neg">124.826,05</td><td class="neg">-14.686,85</td><td class="neg">-14.686,85</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">107.620,16</td><td class="neg">78.142,12</td><td class="neg">3.380,00</td><td class="neg">13.208,58</td><td class="neg">94.730,70</td><td class="pos">12.889,46</td><td class="neg">-1.797,39</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">97.150,10</td><td class="neg">75.195,00</td><td class="dim">—</td><td class="neg">28.141,44</td><td class="neg">103.336,44</td><td class="neg">-6.186,34</td><td class="neg">-7.983,73</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">118.712,30</td><td class="neg">49.960,04</td><td class="dim">—</td><td class="neg">20.081,99</td><td class="neg">70.042,03</td><td class="pos">48.670,27</td><td class="pos">40.686,54</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">110.189,06</td><td class="neg">51.228,91</td><td class="dim">—</td><td class="neg">16.672,78</td><td class="neg">67.901,69</td><td class="pos">42.287,37</td><td class="pos">82.973,91</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">108.453,80</td><td class="neg">73.356,43</td><td class="neg">15.000,00</td><td class="neg">3.696,11</td><td class="neg">92.052,54</td><td class="pos">16.401,26</td><td class="pos">99.375,17</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">94.522,08</td><td class="neg">78.343,46</td><td class="dim">—</td><td class="neg">13.452,33</td><td class="neg">91.795,79</td><td class="pos">2.726,29</td><td class="pos">102.101,46</td></tr>
+        <tr class="tr-total"><td>Total Abr–Out</td><td class="pos">746.786,70</td><td class="neg">502.833,36</td><td class="neg">24.930,00</td><td class="neg">116.921,88</td><td class="neg">644.685,24</td><td class="pos">102.101,46</td><td></td></tr>
       </tbody>
     </table>
   </div>
-
   <div class="table-wrap">
-    <div class="twh">Fluxo de Caixa — Cisos (Abr–Out 2026)</div>
-    <table class="dt">
-      <thead><tr><th>Categoria</th><th>Abr/26</th><th>Mai/26</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
-      <tbody>
-        <tr class="tr-group"><td colspan="9">Custos Fixos</td></tr>
-        <tr class="tr-sub"><td>Aluguel</td><td class="neg">2.501,75</td><td class="dim">—</td><td class="neg">5.003,50</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">2.501,75</td><td class="neg">17.512,25</td></tr>
-        <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">1.148,95</td><td class="neg">1.149,25</td><td class="neg">1.149,25</td><td class="neg">1.282,95</td><td class="neg">1.282,95</td><td class="neg">1.285,95</td><td class="neg">1.282,95</td><td class="neg">8.582,25</td></tr>
-        <tr class="tr-sub"><td>IPTU</td><td class="neg">544,01</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">2.144,03</td></tr>
-        <tr class="tr-sub"><td>Cemig</td><td class="neg">1.372,61</td><td class="neg">1.372,61</td><td class="neg">1.515,92</td><td class="neg">1.362,52</td><td class="neg">1.370,92</td><td class="neg">1.521,89</td><td class="neg">1.566,82</td><td class="neg">10.083,29</td></tr>
-        <tr class="tr-sub"><td>Telefonia / Internet</td><td class="neg">220,18</td><td class="neg">293,54</td><td class="neg">307,00</td><td class="neg">307,00</td><td class="neg">307,00</td><td class="neg">309,66</td><td class="neg">628,00</td><td class="neg">2.372,38</td></tr>
-        <tr class="tr-sub"><td>Emive</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="neg">314,81</td><td class="dim">—</td><td class="neg">634,52</td><td class="neg">2.208,57</td></tr>
-        <tr class="tr-sub"><td>Site</td><td class="dim">—</td><td class="neg">289,80</td><td class="dim">—</td><td class="neg">144,90</td><td class="neg">289,80</td><td class="dim">—</td><td class="dim">—</td><td class="neg">724,50</td></tr>
-        <tr class="tr-group"><td colspan="9">Pessoal</td></tr>
-        <tr class="tr-sub"><td>Terceiros (Kaiky/Wallace/Faxineira)</td><td class="neg">22.345,73</td><td class="neg">28.160,65</td><td class="neg">20.092,02</td><td class="neg">8.186,01</td><td class="neg">13.996,16</td><td class="neg">14.714,55</td><td class="neg">19.577,46</td><td class="neg">127.072,58</td></tr>
-        <tr class="tr-sub"><td>Comissão / Comissão Áurea</td><td class="neg">4.605,00</td><td class="neg">8.847,26</td><td class="neg">9.735,16</td><td class="neg">6.133,00</td><td class="neg">5.307,00</td><td class="neg">12.750,00</td><td class="neg">10.601,20</td><td class="neg">57.978,62</td></tr>
-        <tr class="tr-sub"><td>Prest. Serviço Financeiro</td><td class="neg">1.392,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.398,00</td><td class="dim">—</td><td class="neg">1.390,00</td><td class="neg">1.390,00</td><td class="neg">5.570,00</td></tr>
-        <tr class="tr-sub"><td>Faxineira / Limpeza</td><td class="neg">449,78</td><td class="neg">260,00</td><td class="neg">540,00</td><td class="neg">430,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.679,78</td></tr>
-        <tr class="tr-sub"><td>Vale Transporte</td><td class="dim">—</td><td class="neg">460,00</td><td class="neg">390,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">850,00</td></tr>
-        <tr class="tr-group"><td colspan="9">Operacional</td></tr>
-        <tr class="tr-sub"><td>Dental / Insumos</td><td class="neg">26.515,10</td><td class="neg">29.317,42</td><td class="neg">23.655,40</td><td class="neg">17.166,01</td><td class="neg">11.165,97</td><td class="neg">14.750,89</td><td class="neg">15.812,24</td><td class="neg">138.383,03</td></tr>
-        <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">8.250,27</td><td class="neg">2.167,05</td><td class="neg">7.105,34</td><td class="neg">7.890,26</td><td class="neg">7.770,28</td><td class="neg">7.336,08</td><td class="neg">11.262,12</td><td class="neg">51.781,40</td></tr>
-        <tr class="tr-sub"><td>Entrega / Frete</td><td class="neg">2.767,30</td><td class="neg">2.696,00</td><td class="neg">2.564,80</td><td class="neg">436,60</td><td class="neg">2.539,00</td><td class="neg">3.321,40</td><td class="neg">2.742,60</td><td class="neg">17.067,70</td></tr>
-        <tr class="tr-sub"><td>Curso</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">4.735,00</td><td class="dim">—</td><td class="neg">4.735,00</td></tr>
-        <tr class="tr-group"><td colspan="9">Variável</td></tr>
-        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">21.668,65</td><td class="neg">13.208,58</td><td class="neg">28.141,46</td><td class="neg">20.081,99</td><td class="neg">16.672,78</td><td class="neg">3.696,11</td><td class="neg">5.299,49</td><td class="neg">108.769,06</td></tr>
-        <tr class="tr-sub"><td>Equipamentos / Sistema</td><td class="neg">1.326,00</td><td class="neg">1.183,60</td><td class="neg">2.000,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.489,19</td><td class="neg">2.544,73</td><td class="neg">8.543,52</td></tr>
-        <tr class="tr-sub"><td>Manutenção Equipamentos</td><td class="neg">500,00</td><td class="neg">900,00</td><td class="dim">—</td><td class="neg">1.375,00</td><td class="neg">2.391,80</td><td class="dim">—</td><td class="dim">—</td><td class="neg">5.166,80</td></tr>
-        <tr class="tr-sub"><td>Reforma / Melhorias</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.000,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.000,00</td></tr>
-        <tr class="tr-sub"><td>Pgto. direto → Dentatech</td><td class="neg">6.550,00</td><td class="neg">3.380,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">15.000,00</td><td class="dim">—</td><td class="neg">24.930,00</td></tr>
-        <tr class="tr-sub"><td>Obra Especialização</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">30.511,01</td><td class="dim">—</td><td class="dim">—</td><td class="neg">30.511,01</td></tr>
-        <tr class="tr-sub"><td>Equipamento Fresadora</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">28.000,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">28.000,00</td></tr>
-        <tr class="tr-sub"><td>Tarifa Banco / IOF</td><td class="neg">253,02</td><td class="neg">253,02</td><td class="neg">253,02</td><td class="neg">253,02</td><td class="neg">271,85</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.283,93</td></tr>
-        <tr class="tr-sub"><td>Imposto RPA</td><td class="dim">—</td><td class="neg">669,44</td><td class="neg">89,33</td><td class="neg">330,00</td><td class="neg">330,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.418,77</td></tr>
-        <tr class="tr-sub"><td>Taxa Fiscalização / Outros</td><td class="dim">—</td><td class="dim">—</td><td class="neg">251,00</td><td class="neg">172,00</td><td class="neg">109,80</td><td class="neg">3.281,29</td><td class="neg">2.782,91</td><td class="neg">6.597,00</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS CISOS</td><td class="neg">103.157,40</td><td class="neg">95.200,70</td><td class="neg">103.336,44</td><td class="neg">70.042,03</td><td class="neg">126.412,79</td><td class="neg">88.351,43</td><td class="neg">78.343,46</td><td class="neg">665.044,25</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="table-wrap">
-    <div class="twh">Despesas Cisos — Set e Out 2026 por categoria</div>
+    <div class="twh">Fluxo de Caixa Cisos — Set e Out 2026</div>
     <table class="dt" style="min-width:400px;">
       <thead><tr><th>Categoria</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
       <tbody>
@@ -440,7 +316,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
         <tr class="tr-sub"><td>Aluguel Carol</td><td class="neg">1.285,95</td><td class="neg">1.282,95</td><td class="neg">2.568,90</td></tr>
         <tr class="tr-sub"><td>IPTU</td><td class="neg">266,67</td><td class="neg">266,67</td><td class="neg">533,34</td></tr>
         <tr class="tr-sub"><td>Cemig</td><td class="neg">1.521,89</td><td class="neg">1.566,82</td><td class="neg">3.088,71</td></tr>
-        <tr class="tr-sub"><td>Telefonia / Internet</td><td class="neg">309,66</td><td class="neg">628,00</td><td class="neg">937,66</td></tr>
+        <tr class="tr-sub"><td>Telefonia / Internet (Claro)</td><td class="neg">309,66</td><td class="neg">628,00</td><td class="neg">937,66</td></tr>
         <tr class="tr-sub"><td>Emive</td><td class="dim">—</td><td class="neg">634,52</td><td class="neg">634,52</td></tr>
         <tr class="tr-group"><td colspan="4">Pessoal</td></tr>
         <tr class="tr-sub"><td>Comissão / Comissão Áurea</td><td class="neg">12.750,00</td><td class="neg">10.601,20</td><td class="neg">23.351,20</td></tr>
@@ -451,12 +327,12 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
         <tr class="tr-sub"><td>Material de Laboratório</td><td class="neg">7.336,08</td><td class="neg">11.262,12</td><td class="neg">18.598,20</td></tr>
         <tr class="tr-sub"><td>Entrega / Frete</td><td class="neg">3.321,40</td><td class="neg">2.742,60</td><td class="neg">6.064,00</td></tr>
         <tr class="tr-sub"><td>Curso</td><td class="neg">4.735,00</td><td class="dim">—</td><td class="neg">4.735,00</td></tr>
-        <tr class="tr-group"><td colspan="4">Variável</td></tr>
-        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">3.696,11</td><td class="neg">5.299,49</td><td class="neg">8.995,60</td></tr>
-        <tr class="tr-sub"><td>Pgto. direto → Dentatech</td><td class="neg">15.000,00</td><td class="dim">—</td><td class="neg">15.000,00</td></tr>
         <tr class="tr-sub"><td>Equipamentos / Sistema</td><td class="neg">1.489,19</td><td class="neg">2.544,73</td><td class="neg">4.033,92</td></tr>
         <tr class="tr-sub"><td>Taxa Fiscalização / Outros</td><td class="neg">3.281,29</td><td class="neg">2.782,91</td><td class="neg">6.064,20</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS CISOS</td><td class="neg">88.351,43</td><td class="neg">78.893,46</td><td class="neg">167.244,89</td></tr>
+        <tr class="tr-group"><td colspan="4">Variável</td></tr>
+        <tr class="tr-sub"><td>Empréstimo</td><td class="neg">3.696,11</td><td class="neg">13.452,33</td><td class="neg">17.148,44</td></tr>
+        <tr class="tr-sub"><td>Pgto. direto → Dentatech</td><td class="neg">15.000,00</td><td class="dim">—</td><td class="neg">15.000,00</td></tr>
+        <tr class="tr-total"><td>TOTAL DESPESAS CISOS</td><td class="neg">92.052,54</td><td class="neg">91.795,79</td><td class="neg">183.848,33</td></tr>
       </tbody>
     </table>
   </div>
@@ -465,71 +341,60 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 <!-- ══ RENAN ══ -->
 <section class="section" id="tab-renan">
   <div class="section-label">Sócio — Renan</div>
-  <div class="section-title">Renan — Set e Out 2026</div>
+  <div class="section-title">Renan — Abr a Out 2026</div>
   <div class="kpi-grid">
     <div class="kpi cg"><div class="kpi-label">Trabalhos Set</div><div class="kpi-value pos">R$ 1.327,80</div><div class="kpi-sub">5 serviços — Fatura 989</div></div>
     <div class="kpi cg"><div class="kpi-label">Trabalhos Out</div><div class="kpi-value pos">R$ 2.083,58</div><div class="kpi-sub">9 serviços — Fatura 990</div></div>
-    <div class="kpi cr"><div class="kpi-label">Despesas Out</div><div class="kpi-value neg">R$ 863,00</div><div class="kpi-sub">Frete + Vivo + Material lab</div></div>
-    <div class="kpi cgr"><div class="kpi-label">Recebido da Dentatech — Out</div><div class="kpi-value pos">R$ 25.000,00</div><div class="kpi-sub">Pgto para abater dívida com Dentatech</div></div>
+    <div class="kpi cgr"><div class="kpi-label">Recebido da Dentatech</div><div class="kpi-value pos">R$ 25.000,00</div><div class="kpi-sub">Out/2026 — abate dívida com grupo</div></div>
+    <div class="kpi cb"><div class="kpi-label">Repasse Especialização</div><div class="kpi-value azul">R$ 11.225,00</div><div class="kpi-sub">R$9.000 boleto (23/09) + R$2.225 pix (29/09)</div></div>
   </div>
-
   <div class="table-wrap">
     <div class="twh">Resultado mensal acumulado — Abr a Out 2026</div>
-    <table class="dt" style="min-width:500px;">
-      <thead><tr><th>Mês</th><th>Receitas</th><th>Despesas</th><th>Saldo do mês</th><th>Saldo acumulado</th></tr></thead>
+    <table class="dt" style="min-width:600px;">
+      <thead><tr><th>Mês</th><th>Trabalhos</th><th>Pgto recebido</th><th>Rep. Espec.</th><th>Despesas</th><th>Saldo mês</th><th>Saldo acumulado</th></tr></thead>
       <tbody>
-        <tr><td>Abril 2026</td><td class="dim">—</td><td class="neg">48,00</td><td class="neg">-48,00</td><td class="dim">R$ 0,00 *</td></tr>
-        <tr><td>Maio 2026</td><td class="pos">1.198,80</td><td class="neg">935,16</td><td class="pos">263,64</td><td class="pos">263,64</td></tr>
-        <tr><td>Junho 2026</td><td class="pos">90,72</td><td class="neg">1.228,64</td><td class="neg">-1.137,92</td><td class="neg">-874,28</td></tr>
-        <tr><td>Julho 2026</td><td class="pos">340,40</td><td class="neg">650,10</td><td class="neg">-309,70</td><td class="neg">-1.183,98</td></tr>
-        <tr><td>Agosto 2026</td><td class="pos">227,00</td><td class="neg">648,00</td><td class="neg">-421,00</td><td class="neg">-1.604,98</td></tr>
-        <tr><td>Setembro 2026</td><td class="pos">1.327,80</td><td class="neg">858,77</td><td class="pos">469,03</td><td class="neg">-1.994,72</td></tr>
-        <tr><td>Outubro 2026</td><td class="pos">27.083,58</td><td class="neg">863,00</td><td class="pos">26.220,58</td><td class="pos">25.084,63</td></tr>
-        <tr class="tr-total"><td>Saldo Final</td><td></td><td></td><td></td><td class="pos azul">R$ 25.084,63 (crédito)</td></tr>
+        <tr><td>Abril 2026</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">48,00</td><td class="neg">-48,00</td><td class="dim">R$0,00 *</td></tr>
+        <tr><td>Maio 2026</td><td class="pos">1.198,80</td><td class="dim">—</td><td class="dim">—</td><td class="neg">935,16</td><td class="pos">263,64</td><td class="pos">263,64</td></tr>
+        <tr><td>Junho 2026</td><td class="pos">90,72</td><td class="dim">—</td><td class="dim">—</td><td class="neg">1.228,64</td><td class="neg">-1.137,92</td><td class="neg">-874,28</td></tr>
+        <tr><td>Julho 2026</td><td class="pos">340,40</td><td class="dim">—</td><td class="dim">—</td><td class="neg">650,10</td><td class="neg">-309,70</td><td class="neg">-1.183,98</td></tr>
+        <tr><td>Agosto 2026</td><td class="pos">227,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">648,00</td><td class="neg">-421,00</td><td class="neg">-1.604,98</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">1.327,80</td><td class="dim">—</td><td class="pos">9.225,00</td><td class="neg">858,77</td><td class="pos">10.694,03</td><td class="pos">9.089,05</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">2.083,58</td><td class="pos">25.000,00</td><td class="dim">—</td><td class="neg">863,00</td><td class="pos">26.220,58</td><td class="pos">35.309,63</td></tr>
+        <tr class="tr-total"><td>Saldo final</td><td></td><td></td><td></td><td></td><td></td><td class="pos azul">R$ 35.309,63 (crédito)</td></tr>
       </tbody>
     </table>
   </div>
   <div style="font-size:.7rem;color:rgba(255,255,255,.3);margin:-16px 0 18px 4px;">* Abr zerado na compensação Mar/Abr — acumulado parte de R$ 0,00 a partir de Maio.</div>
-
   <div class="table-wrap">
-    <div class="twh">Fluxo de Caixa — Renan (Abr–Out 2026)</div>
-    <table class="dt">
-      <thead><tr><th>Categoria</th><th>Abr/26</th><th>Mai/26</th><th>Jun/26</th><th>Jul/26</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
-      <tbody>
-        <tr class="tr-group"><td colspan="9">Fixos</td></tr>
-        <tr class="tr-sub"><td>Telefonia / Internet (Vivo)</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">48,00</td><td class="neg">336,00</td></tr>
-        <tr class="tr-group"><td colspan="9">Operacional</td></tr>
-        <tr class="tr-sub"><td>Material de Laboratório</td><td class="dim">—</td><td class="neg">558,08</td><td class="neg">158,94</td><td class="neg">362,10</td><td class="dim">—</td><td class="dim">—</td><td class="neg">555,00</td><td class="neg">1.634,12</td></tr>
-        <tr class="tr-sub"><td>Entrega / Frete</td><td class="dim">—</td><td class="neg">329,08</td><td class="neg">256,80</td><td class="neg">240,00</td><td class="neg">180,00</td><td class="dim">—</td><td class="neg">260,00</td><td class="neg">1.265,88</td></tr>
-        <tr class="tr-sub"><td>Curso / Hotel treinamento</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">810,77</td><td class="dim">—</td><td class="neg">810,77</td></tr>
-        <tr class="tr-group"><td colspan="9">Variável</td></tr>
-        <tr class="tr-sub"><td>Móveis / Eletrônicos</td><td class="dim">—</td><td class="dim">—</td><td class="neg">550,90</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">550,90</td></tr>
-        <tr class="tr-sub"><td>Material de Limpeza</td><td class="dim">—</td><td class="dim">—</td><td class="neg">214,00</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">214,00</td></tr>
-        <tr class="tr-sub"><td>Marketing</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">420,00</td><td class="dim">—</td><td class="dim">—</td><td class="neg">420,00</td></tr>
-        <tr class="tr-sub"><td>Empréstimo Carijos</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">3.463,63</td><td class="neg">3.463,63</td></tr>
-        <tr class="tr-sub"><td>Empréstimo São Paulo</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">6.322,71</td><td class="neg">6.322,71</td></tr>
-        <tr class="tr-total"><td>TOTAL DESPESAS RENAN</td><td class="neg">48,00</td><td class="neg">935,16</td><td class="neg">1.228,64</td><td class="neg">650,10</td><td class="neg">648,00</td><td class="neg">858,77</td><td class="neg">10.649,34</td><td class="neg">15.018,01</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="table-wrap">
-    <div class="twh">Despesas Renan — Set e Out 2026</div>
+    <div class="twh">Fluxo de Caixa Renan — Set e Out 2026</div>
     <table class="dt" style="min-width:400px;">
       <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead>
       <tbody>
-        <tr class="tr-group"><td colspan="4">Setembro 2026</td></tr>
-        <tr class="tr-sub"><td>15/09</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">R$ 48,00</td></tr>
-        <tr class="tr-sub"><td>24/09</td><td>Hotel professores - treinamento</td><td class="dim">Curso</td><td class="neg">R$ 810,77</td></tr>
-        <tr class="tr-subtot"><td colspan="3">Total Set</td><td class="neg">R$ 858,77</td></tr>
-        <tr class="tr-group"><td colspan="4">Outubro 2026</td></tr>
-        <tr class="tr-sub"><td>13/10</td><td>Frete</td><td class="dim">Entrega / Frete</td><td class="neg">R$ 240,00</td></tr>
-        <tr class="tr-sub"><td>15/10</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">R$ 48,00</td></tr>
-        <tr class="tr-sub"><td>15/10</td><td>Frete</td><td class="dim">Entrega / Frete</td><td class="neg">R$ 20,00</td></tr>
-        <tr class="tr-sub"><td>20/10</td><td>Bloco de cera</td><td class="dim">Material Lab</td><td class="neg">R$ 390,00</td></tr>
-        <tr class="tr-sub"><td>20/10</td><td>Componentes</td><td class="dim">Material Lab</td><td class="neg">R$ 165,00</td></tr>
-        <tr class="tr-subtot"><td colspan="3">Total Out</td><td class="neg">R$ 863,00</td></tr>
-        <tr class="tr-total"><td colspan="3">Total Set+Out</td><td class="neg">R$ 1.721,77</td></tr>
+        <tr class="tr-group"><td colspan="4">Setembro 2026 — Trabalhos</td></tr>
+        <tr class="tr-sub"><td>08/09</td><td>Coroa sobre dente em zircônia - Solange Valadao (OS 15561)</td><td class="dim">Trabalhos</td><td class="pos">R$ 227,00</td></tr>
+        <tr class="tr-sub"><td>08/09</td><td>Coroa sobre implante em zircônia - Solange Valadao (OS 15561)</td><td class="dim">Trabalhos</td><td class="pos">R$ 227,00</td></tr>
+        <tr class="tr-sub"><td>30/09</td><td>Protocolo PMMA fresado - Evanio Moura (OS 15972)</td><td class="dim">Trabalhos</td><td class="pos">R$ 420,00</td></tr>
+        <tr class="tr-sub"><td>30/09</td><td>Coroa Provisória PMMA - Tulio Marcio (OS 15980)</td><td class="dim">Trabalhos</td><td class="pos">R$ 226,80</td></tr>
+        <tr class="tr-sub"><td>30/09</td><td>Coroa sobre implante - Elenice Faria (OS 15999)</td><td class="dim">Trabalhos</td><td class="pos">R$ 227,00</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Subtotal trabalhos Set</td><td class="pos">R$ 1.327,80</td></tr>
+        <tr class="tr-group"><td colspan="4">Setembro 2026 — Despesas</td></tr>
+        <tr class="tr-sub"><td>15/09</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">-R$ 48,00</td></tr>
+        <tr class="tr-sub"><td>24/09</td><td>Hotel professores - treinamento</td><td class="dim">Curso</td><td class="neg">-R$ 810,77</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Subtotal despesas Set</td><td class="neg">-R$ 858,77</td></tr>
+        <tr class="tr-group"><td colspan="4">Outubro 2026 — Trabalhos</td></tr>
+        <tr class="tr-sub"><td>30/10</td><td>Guia Cirúrgico + Protocolo Imediato (OS 16517)</td><td class="dim">Trabalhos</td><td class="pos">R$ 517,86</td></tr>
+        <tr class="tr-sub"><td>30/10</td><td>Coroa Provisória PMMA - Sergio Nunes (OS 16531)</td><td class="dim">Trabalhos</td><td class="pos">R$ 340,20</td></tr>
+        <tr class="tr-sub"><td>30/10</td><td>Coroa implante - Selma Valadao (OS 16556)</td><td class="dim">Trabalhos</td><td class="pos">R$ 227,00</td></tr>
+        <tr class="tr-sub"><td>30/10</td><td>Guias Cirúrgicos p/ Alunos (OS 16564 + 16566)</td><td class="dim">Trabalhos</td><td class="pos">R$ 317,52</td></tr>
+        <tr class="tr-sub"><td>31/10</td><td>Coroas implante - Eduardo, Francis, Euzimar (OS 16581/96/01)</td><td class="dim">Trabalhos</td><td class="pos">R$ 681,00</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Subtotal trabalhos Out</td><td class="pos">R$ 2.083,58</td></tr>
+        <tr class="tr-group"><td colspan="4">Outubro 2026 — Despesas</td></tr>
+        <tr class="tr-sub"><td>13/10</td><td>Frete</td><td class="dim">Entrega</td><td class="neg">-R$ 240,00</td></tr>
+        <tr class="tr-sub"><td>15/10</td><td>Vivo - Financeiro</td><td class="dim">Telefonia</td><td class="neg">-R$ 48,00</td></tr>
+        <tr class="tr-sub"><td>15/10</td><td>Frete</td><td class="dim">Entrega</td><td class="neg">-R$ 20,00</td></tr>
+        <tr class="tr-sub"><td>20/10</td><td>Bloco de cera</td><td class="dim">Material Lab</td><td class="neg">-R$ 390,00</td></tr>
+        <tr class="tr-sub"><td>20/10</td><td>Componentes</td><td class="dim">Material Lab</td><td class="neg">-R$ 165,00</td></tr>
+        <tr class="tr-subtot"><td colspan="3">Subtotal despesas Out</td><td class="neg">-R$ 863,00</td></tr>
       </tbody>
     </table>
   </div>
@@ -537,116 +402,75 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 
 <!-- ══ ESPECIALIZAÇÃO ══ -->
 <section class="section" id="tab-espec">
-  <div class="section-label">Novo projeto — 8 dentistas · 24 parcelas</div>
+  <div class="section-label">Projeto conjunto — 50% Cisos · 50% Renan</div>
   <div class="section-title">Especialização Dentatech</div>
-
   <div class="ctx-card">
-    <p><strong>Projeto 50/50 entre Cisos (Cynthia) e Renan.</strong> A Cisos está financiando 100% das obras e investimentos. As entradas mensais dos dentistas também são 50/50. O adiantamento da parte do Renan é registrado aqui e não entra no encontro de contas Cisos–Dentatech.</p>
-    <p><strong>Contrato:</strong> 8 dentistas × 24 parcelas × R$ 1.300,00 = <strong>R$ 249.600,00 total</strong> · 1ª parcela: Set/2026</p>
+    <p><strong>Contrato:</strong> 8 dentistas × 24 parcelas × R$ 1.300,00 = <strong>R$ 249.600,00 total</strong> · 1ª parcela Set/2026</p>
+    <p><strong>Projeto 50/50:</strong> Cisos financia as obras e investimentos. GURU NF24 é pago pela Dentatech (R$ 8.597,22). Os repasses ao Renan são tratados como pagamento — não adiantamento.</p>
   </div>
-
   <div class="kpi-grid">
-    <div class="kpi cr"><div class="kpi-label">Total investido (Cisos)</div><div class="kpi-value neg">R$ 93.603,34</div><div class="kpi-sub">Ago + Set + Out · obra, móveis, material</div></div>
-    <div class="kpi cb"><div class="kpi-label">GURU NF 24 (Dentatech)</div><div class="kpi-value neg">R$ 8.597,22</div><div class="kpi-sub">3 parcelas fixas · Ago R$2.568 · Set/Out R$3.014,61</div></div>
-    <div class="kpi cgr"><div class="kpi-label">Entradas recebidas</div><div class="kpi-value pos">R$ 20.800,00</div><div class="kpi-sub">Set R$ 10.400 + Out R$ 10.400</div></div>
-    <div class="kpi cp"><div class="kpi-label">Saldo do projeto</div><div class="kpi-value neg">-R$ 81.400,56</div><div class="kpi-sub">Cisos R$93.603,34 + Dentatech R$8.597,22 − Entradas R$20.800</div></div>
+    <div class="kpi cr"><div class="kpi-label">Invest. Cisos (Ago–Out)</div><div class="kpi-value neg">R$ 84.378,34</div><div class="kpi-sub">Ago R$30.511,01 · Set R$28.671,38 · Out R$25.195,95</div></div>
+    <div class="kpi cb"><div class="kpi-label">GURU NF24 (Dentatech)</div><div class="kpi-value neg">R$ 8.597,22</div><div class="kpi-sub">Ago R$2.568 · Set R$3.014,61 · Out R$3.014,61</div></div>
+    <div class="kpi cgr"><div class="kpi-label">Entradas recebidas</div><div class="kpi-value pos">R$ 20.800,00</div><div class="kpi-sub">Set R$10.400 + Out R$10.400</div></div>
+    <div class="kpi cp"><div class="kpi-label">Pgto ao Renan (Cisos)</div><div class="kpi-value warn">R$ 11.225,00</div><div class="kpi-sub">R$9.000 boleto (23/09) + R$2.225 pix (29/09)</div></div>
   </div>
-
   <div class="table-wrap">
-    <div class="twh">Movimentação por mês — Especialização</div>
+    <div class="twh">Movimentação mensal — Especialização (Ago–Out 2026)</div>
     <table class="dt" style="min-width:600px;">
-      <thead><tr><th>Mês</th><th>Entradas (dentistas)</th><th>Invest. Cisos (obra/equip)</th><th>GURU NF 24 (Dentatech)</th><th>Repasse ao Renan</th><th>Saldo mês</th><th>Acumulado</th></tr></thead>
+      <thead><tr><th>Mês</th><th>Entradas</th><th>Invest. Cisos</th><th>GURU (Dentatech)</th><th>Pgto Renan (Cisos)</th><th>Total saídas</th><th>Saldo mês</th><th>Acumulado</th></tr></thead>
       <tbody>
-        <tr><td>Agosto 2026</td><td class="dim">—</td><td class="neg">30.511,01</td><td class="neg">2.568,00</td><td class="dim">—</td><td class="neg">-33.079,01</td><td class="neg">-33.079,01</td></tr>
-        <tr><td>Setembro 2026</td><td class="pos">10.400,00</td><td class="neg">28.671,38</td><td class="neg">3.014,61</td><td class="neg">9.225,00</td><td class="neg">-30.511,00</td><td class="neg">-63.590,01</td></tr>
-        <tr><td>Outubro 2026</td><td class="pos">10.400,00</td><td class="neg">25.195,95</td><td class="neg">3.014,61</td><td class="dim">—</td><td class="neg">-17.810,56</td><td class="neg">-81.400,57</td></tr>
-        <tr class="tr-total"><td>Total</td><td class="pos">20.800,00</td><td class="neg">84.378,34</td><td class="neg">8.597,22</td><td class="neg">9.225,00</td><td class="neg">-81.400,57</td><td></td></tr>
+        <tr><td>Agosto 2026</td><td class="dim">—</td><td class="neg">30.511,01</td><td class="neg">2.568,00</td><td class="dim">—</td><td class="neg">33.079,01</td><td class="neg">-33.079,01</td><td class="neg">-33.079,01</td></tr>
+        <tr><td>Setembro 2026</td><td class="pos">10.400,00</td><td class="neg">28.671,38</td><td class="neg">3.014,61</td><td class="neg">11.225,00</td><td class="neg">42.910,99</td><td class="neg">-32.510,99</td><td class="neg">-65.590,00</td></tr>
+        <tr><td>Outubro 2026</td><td class="pos">10.400,00</td><td class="neg">25.195,95</td><td class="neg">3.014,61</td><td class="dim">—</td><td class="neg">28.210,56</td><td class="neg">-17.810,56</td><td class="neg">-81.400,56</td></tr>
+        <tr class="tr-total"><td>Total</td><td class="pos">20.800,00</td><td class="neg">84.378,34</td><td class="neg">8.597,22</td><td class="neg">11.225,00</td><td class="neg">104.200,56</td><td class="neg">-83.400,56</td><td></td></tr>
       </tbody>
     </table>
   </div>
-
-  <!-- Divisão 50/50 -->
-  <div class="warn-card">
-    <p><strong>Como fica a divisão 50/50:</strong></p>
-    <p>• Invest. Cisos: R$ 93.603,34 → 50% Cisos: R$ 46.801,67 · 50% Renan: R$ 46.801,67</p>
-    <p>• GURU NF 24 (Dentatech): R$ 8.597,22 → 50% Cisos: R$ 4.298,61 · 50% Renan: R$ 4.298,61 — acerto no EC da Especialização</p>
-    <p>• Já repassado ao Renan: R$ 9.225,00 · Ainda a compensar: <strong>R$ 37.576,67</strong> (parte Cisos adiantou do Renan)</p>
-    <p>• Entradas 50% Cisos: R$ 10.400,00 · Entradas 50% Renan: R$ 10.400,00</p>
-  </div>
-
-  <!-- Entradas Set -->
-  <div class="grid2">
-    <div class="table-wrap" style="margin-bottom:0;">
-      <div class="twh">Setembro 2026 — 1ª parcela (8 dentistas)</div>
-      <table class="dt" style="min-width:280px;">
-        <thead><tr><th>Dentista</th><th>Tipo</th><th>Parcela</th><th>Valor</th></tr></thead>
-        <tbody>
-          <tr class="tr-group"><td colspan="4">Internos — via grupo</td></tr>
-          <tr class="tr-sub"><td>Camila</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Luana</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Gabriela</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Wallace</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Ana Flávia</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Rafaela</td><td class="dim">Interno</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-group"><td colspan="4">Externos — via boleto</td></tr>
-          <tr class="tr-sub"><td>Thafny Geordany Mota</td><td class="dim">Externo</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Vinicius Augusto Medina</td><td class="dim">Externo</td><td class="dim">1/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-total"><td colspan="3">Total Set</td><td class="pos">R$ 10.400,00</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="table-wrap" style="margin-bottom:0;">
-      <div class="twh">Outubro 2026 — 2ª parcela</div>
-      <table class="dt" style="min-width:280px;">
-        <thead><tr><th>Dentista</th><th>Tipo</th><th>Parcela</th><th>Valor</th></tr></thead>
-        <tbody>
-          <tr class="tr-group"><td colspan="4">Internos</td></tr>
-          <tr class="tr-sub"><td>Camila</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Luana</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Gabriela</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Wallace</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Ana Flávia</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Rafaela</td><td class="dim">Interno</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-group"><td colspan="4">Externos</td></tr>
-          <tr class="tr-sub"><td>Thafny Geordany Mota</td><td class="dim">Externo</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-sub"><td>Vinicius Augusto Medina</td><td class="dim">Externo</td><td class="dim">2/24</td><td class="pos">R$ 1.300,00</td></tr>
-          <tr class="tr-total"><td colspan="3">Total Out</td><td class="pos">R$ 10.400,00</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="table-wrap" style="margin-top:16px;">
-    <div class="twh">Fluxo de Caixa — Especialização (Ago–Out 2026)</div>
-    <table class="dt" style="min-width:500px;">
-      <thead><tr><th>Categoria</th><th>Ago/26</th><th>Set/26</th><th>Out/26</th><th>Total</th></tr></thead>
+  <div class="table-wrap">
+    <div class="twh">Detalhe investimento Cisos — Set e Out 2026</div>
+    <table class="dt" style="min-width:400px;">
+      <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Pago por</th><th>Valor</th></tr></thead>
       <tbody>
-        <tr class="tr-group"><td colspan="5">Entradas (dentistas)</td></tr>
-        <tr class="tr-sub"><td>Internos (6 × R$ 1.300)</td><td class="dim">—</td><td class="pos">7.800,00</td><td class="pos">7.800,00</td><td class="pos">15.600,00</td></tr>
-        <tr class="tr-sub"><td>Externos — Thafny</td><td class="dim">—</td><td class="pos">1.300,00</td><td class="pos">1.300,00</td><td class="pos">2.600,00</td></tr>
-        <tr class="tr-sub"><td>Externos — Vinicius</td><td class="dim">—</td><td class="pos">1.300,00</td><td class="pos">1.300,00</td><td class="pos">2.600,00</td></tr>
-        <tr class="tr-subtot"><td>Subtotal entradas</td><td class="dim">—</td><td class="pos">10.400,00</td><td class="pos">10.400,00</td><td class="pos">20.800,00</td></tr>
-        <tr class="tr-group"><td colspan="5">Investimento (pago pela Cisos)</td></tr>
-        <tr class="tr-sub"><td>Obra / Materiais</td><td class="neg">30.511,01</td><td class="neg">16.971,38</td><td class="neg">12.195,95</td><td class="neg">59.678,34</td></tr>
-        <tr class="tr-sub"><td>Equipamento Fresadora</td><td class="neg">—</td><td class="dim">—</td><td class="dim">—</td><td class="neg">—</td></tr>
-        <tr class="tr-sub"><td>Repasse ao Renan (50%)</td><td class="dim">—</td><td class="neg">9.225,00</td><td class="dim">—</td><td class="neg">9.225,00</td></tr>
-        <tr class="tr-sub"><td>Outros invest. Set</td><td class="dim">—</td><td class="neg">2.475,00</td><td class="neg">13.000,00</td><td class="neg">15.475,00</td></tr>
-        <tr class="tr-subtot"><td>Subtotal investimento</td><td class="neg">30.511,01</td><td class="neg">28.671,38</td><td class="neg">25.195,95</td><td class="neg">84.378,34</td></tr>
-        <tr class="tr-total"><td>Saldo do período</td><td class="neg">-30.511,01</td><td class="neg">-18.271,38</td><td class="neg">-14.795,95</td><td class="neg">-63.578,34</td></tr>
+        <tr class="tr-group"><td colspan="5">Setembro 2026</td></tr>
+        <tr class="tr-sub"><td>04/09</td><td>Mão de Obra</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">4.000,00</td></tr>
+        <tr class="tr-sub"><td>08/09</td><td>Piso Especialização</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">2.617,00</td></tr>
+        <tr class="tr-sub"><td>10/09</td><td>Vander - Especialização</td><td class="dim">Manutenção</td><td class="dim">Cisos</td><td class="neg">364,00</td></tr>
+        <tr class="tr-sub"><td>10/09</td><td>GURU NF 24 PARC. 02</td><td class="dim">Instituição</td><td class="warn">Dentatech</td><td class="neg">3.014,61</td></tr>
+        <tr class="tr-sub"><td>11/09</td><td>Mão de Obra Especialização</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">4.000,00</td></tr>
+        <tr class="tr-sub"><td>14/09</td><td>Secador de mão</td><td class="dim">Equipamento</td><td class="dim">Cisos</td><td class="neg">620,40</td></tr>
+        <tr class="tr-sub"><td>18/09</td><td>Piso Especialização</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">2.999,42</td></tr>
+        <tr class="tr-sub"><td>18/09</td><td>Vander - Manutenção</td><td class="dim">Manutenção</td><td class="dim">Cisos</td><td class="neg">3.595,00</td></tr>
+        <tr class="tr-sub"><td>19–24/09</td><td>Piso (3 parcelas)</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">2.207,55</td></tr>
+        <tr class="tr-sub"><td>21/09</td><td>Bancada</td><td class="dim">Móveis</td><td class="dim">Cisos</td><td class="neg">68,89</td></tr>
+        <tr class="tr-sub"><td>23/09</td><td>Materiais + Tintas</td><td class="dim">Material</td><td class="dim">Cisos</td><td class="neg">2.795,27</td></tr>
+        <tr class="tr-sub"><td>23/09</td><td>Renan — Valor pago por boleto</td><td class="dim">Pgto Renan</td><td class="dim">Cisos</td><td class="neg">9.000,00</td></tr>
+        <tr class="tr-sub"><td>28/09</td><td>Lanche (2x) + Suporte TV + AR + Granito</td><td class="dim">Móveis/Lanche</td><td class="dim">Cisos</td><td class="neg">4.763,17</td></tr>
+        <tr class="tr-sub"><td>29/09</td><td>Renan (Repasse pix cliente)</td><td class="dim">Pgto Renan</td><td class="dim">Cisos</td><td class="neg">2.225,00</td></tr>
+        <tr class="tr-subtot"><td colspan="4">Total Set (Cisos invest. + GURU)</td><td class="neg">R$ 37.896,00</td></tr>
+        <tr class="tr-group"><td colspan="5">Outubro 2026</td></tr>
+        <tr class="tr-sub"><td>02/10</td><td>Carreto + Obra + Material Vander</td><td class="dim">Obra/Material</td><td class="dim">Cisos</td><td class="neg">5.564,80</td></tr>
+        <tr class="tr-sub"><td>06–07/10</td><td>Pedal de água + Cadeiras (3x)</td><td class="dim">Móveis</td><td class="dim">Cisos</td><td class="neg">4.449,25</td></tr>
+        <tr class="tr-sub"><td>09/10</td><td>Obras (5 lançamentos)</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">4.045,40</td></tr>
+        <tr class="tr-sub"><td>13/10</td><td>GURU NF 24 PARC. 03</td><td class="dim">Instituição</td><td class="warn">Dentatech</td><td class="neg">3.014,61</td></tr>
+        <tr class="tr-sub"><td>14/10</td><td>Tintas</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">454,00</td></tr>
+        <tr class="tr-sub"><td>16/10</td><td>Obra E318</td><td class="dim">Obra</td><td class="dim">Cisos</td><td class="neg">2.567,71</td></tr>
+        <tr class="tr-sub"><td>28/10</td><td>Lanche + TV Parc.3 + AR</td><td class="dim">Móveis/Lanche</td><td class="dim">Cisos</td><td class="neg">1.683,92</td></tr>
+        <tr class="tr-sub"><td>30/10</td><td>Mão de Obra Especialistas</td><td class="dim">Especialistas</td><td class="dim">Cisos</td><td class="neg">6.430,00</td></tr>
+        <tr class="tr-subtot"><td colspan="4">Total Out (Cisos invest. + GURU)</td><td class="neg">R$ 28.210,56</td></tr>
       </tbody>
     </table>
   </div>
-
-  <div class="table-wrap" style="margin-top:0;">
-    <div class="twh">Projeção do contrato — 24 parcelas</div>
+  <div class="table-wrap">
+    <div class="twh">Projeção — 24 parcelas</div>
     <table class="dt" style="min-width:400px;">
       <thead><tr><th>Item</th><th>Valor</th></tr></thead>
       <tbody>
         <tr class="tr-sub"><td>Total contrato (8 × 24 × R$ 1.300,00)</td><td class="pos">R$ 249.600,00</td></tr>
         <tr class="tr-sub"><td>Já recebido (Set + Out · 2/24)</td><td class="pos">R$ 20.800,00</td></tr>
-        <tr class="tr-sub"><td>A receber (Nov/26 a Ago/28 · 22 parcelas)</td><td class="pos">R$ 228.800,00</td></tr>
-        <tr class="tr-sub"><td>Invest. Cisos (obras/equip Ago–Out)</td><td class="neg">-R$ 93.603,34</td></tr>
-        <tr class="tr-sub"><td>GURU NF 24 pago Dentatech (Ago–Out)</td><td class="neg">-R$ 8.597,22</td></tr>
+        <tr class="tr-sub"><td>A receber (Nov/26–Ago/28 · 22 parcelas)</td><td class="pos">R$ 228.800,00</td></tr>
+        <tr class="tr-sub"><td>Total investido Cisos (Ago–Out)</td><td class="neg">-R$ 84.378,34</td></tr>
+        <tr class="tr-sub"><td>Total GURU pago Dentatech (Ago–Out)</td><td class="neg">-R$ 8.597,22</td></tr>
+        <tr class="tr-sub"><td>Pgto ao Renan (Cisos)</td><td class="neg">-R$ 9.225,00</td></tr>
         <tr class="tr-total"><td>Resultado líquido projetado</td><td class="pos">R$ 147.399,44</td></tr>
       </tbody>
     </table>
@@ -656,94 +480,70 @@ body{font-family:'DM Sans',sans-serif;background:var(--navy3);color:var(--white)
 <!-- ══ ENCONTRO DE CONTAS ══ -->
 <section class="section" id="tab-encontro">
   <div class="section-label">Acerto mensal acumulado</div>
-  <div class="section-title">Encontro de Contas — Atualização Outubro 2026</div>
+  <div class="section-title">Encontro de Contas — Out 2026</div>
 
-  <!-- CISOS -->
+  <div class="warn-card" style="margin-bottom:18px;">
+    <p><strong>Como ler:</strong> a Cisos não transfere dinheiro à Dentatech — ela paga as contas do laboratório no lugar. Cada mês: <strong>trabalhos realizados (vermelho = deve)</strong> somam à dívida; <strong>despesas pagas acima dos trabalhos (verde = abate)</strong> reduzem. As obras da Especialização também abatam pois foram pagas pela Cisos.</p>
+  </div>
+
+  <!-- CISOS EC -->
   <div class="ec-box">
     <div class="ec-header"><h3>Cisos — Cynthia</h3><div class="badge">Out/2026</div></div>
-    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Saldo inicial (fechamento Mar/Abr 2026)</div><div class="ed">Acumulado até o fechamento anterior</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 145.296,14</div></div>
-    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Abril 2026</div><div class="ed">Rec R$ 110.139,20 − Desp R$ 103.157,40</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 6.981,80</div></div>
-    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Maio 2026</div><div class="ed">Rec R$ 107.620,16 − Desp R$ 95.200,70</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 12.419,46</div></div>
-    <div class="ec-row"><div class="ec-num">4</div><div class="ec-txt"><div class="et">Junho 2026</div><div class="ed">Rec R$ 97.150,10 − Desp R$ 103.336,44</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 6.186,34</div></div>
-    <div class="ec-row"><div class="ec-num">5</div><div class="ec-txt"><div class="et">Julho 2026</div><div class="ed">Rec R$ 118.712,30 − Desp R$ 70.042,03</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 48.670,27</div></div>
-    <div class="ec-row"><div class="ec-num">6</div><div class="ec-txt"><div class="et">Agosto 2026</div><div class="ed">Rec R$ 110.189,06 − Desp R$ 67.901,78 − Obra R$ 30.511,01 − Fresadora R$ 28.000,00</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 42.287,28</div></div>
-    <div class="ec-row"><div class="ec-num" style="background:rgba(139,32,32,.2);border-color:rgba(235,87,87,.3);color:#eb5757;">–</div><div class="ec-txt"><div class="et">Ago — Obra Especialização</div><div class="ed">Investimento pago pela Cisos — desconta do saldo devedor</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 30.511,01</div></div>
-    <div class="ec-row"><div class="ec-num" style="background:rgba(139,32,32,.2);border-color:rgba(235,87,87,.3);color:#eb5757;">–</div><div class="ec-txt"><div class="et">Ago — Equipamento Fresadora</div><div class="ed">Investimento pago pela Cisos — desconta do saldo devedor</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 28.000,00</div></div>
-    <div class="ec-row"><div class="ec-num">7</div><div class="ec-txt"><div class="et">Setembro 2026</div><div class="ed">Rec R$ 108.453,80 − Desp R$ 73.551,43 − Pgto R$ 15.000,00</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 19.902,37</div></div>
-    <div class="ec-row"><div class="ec-num">8</div><div class="ec-txt"><div class="et">Outubro 2026</div><div class="ed">Rec R$ 94.522,08 − Desp R$ 78.343,46</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 16.178,62</div></div>
-    <div class="ec-row"><div class="ec-num" style="background:rgba(26,92,42,.2);border-color:rgba(80,200,120,.3);color:#6fcf97;">–</div><div class="ec-txt"><div class="et">Out — Pgto ao Renan (Dentatech → Renan)</div><div class="ed">Pagamento via Dentatech para abater dívida da Cisos</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 25.000,00</div></div>
+    <div class="ec-row"><div class="ec-num">0</div><div class="ec-txt"><div class="et">Saldo inicial (fechamento Mar/Abr 2026)</div><div class="ed">Acumulado até o fechamento anterior</div></div><div class="ec-sign"></div><div class="ec-val neg">R$ 145.296,14</div></div>
+
+    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Abril 2026 — a pagar à Dentatech</div><div class="ed">Rec R$110.139,20 − Desp R$103.157,40 = R$6.981,80 de trabalhos a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 6.981,80</div></div>
+    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Maio 2026 — a pagar à Dentatech</div><div class="ed">Rec R$107.620,16 − Desp R$95.200,70 = R$12.419,46 de trabalhos a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 12.419,46</div></div>
+    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Junho 2026 — pagou mais que fez de serviço</div><div class="ed">Rec R$97.150,10 − Desp R$103.336,44 = −R$6.186,34 (abate dívida)</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 6.186,34</div></div>
+    <div class="ec-row"><div class="ec-num">4</div><div class="ec-txt"><div class="et">Julho 2026 — a pagar à Dentatech</div><div class="ed">Rec R$118.712,30 − Desp R$70.042,03 = R$48.670,27 de trabalhos a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 48.670,27</div></div>
+    <div class="ec-row"><div class="ec-num">5</div><div class="ec-txt"><div class="et">Agosto 2026 — a pagar à Dentatech</div><div class="ed">Rec R$110.189,06 − Desp R$95.901,78 (incl. fresadora R$28k) = R$14.287,28</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 14.287,28</div></div>
+    <div class="ec-row"><div class="ec-num">6</div><div class="ec-txt"><div class="et">Setembro 2026 — a pagar à Dentatech</div><div class="ed">Rec R$108.453,80 − Desp R$103.277,54 (incl. repasse Renan R$11.225) = R$5.176,26</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 5.176,26</div></div>
+    <div class="ec-row"><div class="ec-num">7</div><div class="ec-txt"><div class="et">Outubro 2026 — a pagar à Dentatech</div><div class="ed">Rec R$94.522,08 − Desp R$91.795,79 = R$2.726,29 de trabalhos a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 2.726,29</div></div>
+    <div class="ec-row"><div class="ec-num" style="background:rgba(255,180,0,.15);border-color:rgba(255,180,0,.4);color:rgba(255,200,80,.9);">E</div><div class="ec-txt"><div class="et">Especialização — total investido pela Cisos (Ago–Out)</div><div class="ed">Obras, móveis, material, mão de obra — Ago R$30.511,01 · Set R$28.671,38 · Out R$25.195,95</div></div><div class="ec-sign">–</div><div class="ec-val pos">R$ 84.378,34</div></div>
     <div class="ec-result">
-      <div><div class="rl">Saldo Devedor Acumulado — Cisos → Dentatech</div><div class="rs">190.957,60 + 19.902,37 + 16.178,62 – 25.000,00</div></div>
-      <div class="rv neg">R$ 202.038,59</div>
+      <div><div class="rl">Saldo Devedor — Cisos → Dentatech</div><div class="rs">145.296,14 + 6.981,80 + 12.419,46 − 6.186,34 + 48.670,27 + 14.287,28 + 5.176,26 + 2.726,29 − 84.378,34</div></div>
+      <div class="rv neg">R$ 144.992,82</div>
     </div>
   </div>
 
-  <!-- RENAN -->
+  <!-- RENAN EC -->
   <div class="ec-box">
     <div class="ec-header"><h3>Renan</h3><div class="badge-info">Crédito a receber</div></div>
-    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Saldo acumulado até Ago/2026</div><div class="ed">Crédito acumulado</div></div><div class="ec-sign"></div><div class="ec-val azul">-R$ 1.604,98</div></div>
-    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Setembro 2026 — Trabalhos</div><div class="ed">Fatura 989 — 5 serviços (Solange Valadao, Evanio, Tulio, Elenice)</div></div><div class="ec-sign">+</div><div class="ec-val pos">R$ 1.327,80</div></div>
-    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Setembro 2026 — Despesas</div><div class="ed">Vivo + Hotel treinamento</div></div><div class="ec-sign">–</div><div class="ec-val neg">R$ 858,77</div></div>
-    <div class="ec-row"><div class="ec-num">4</div><div class="ec-txt"><div class="et">Outubro 2026 — Trabalhos</div><div class="ed">Fatura 990 — 9 serviços (Sergio, Selma, Eduardo, Francis, Euzimar + cursos)</div></div><div class="ec-sign">+</div><div class="ec-val pos">R$ 2.083,58</div></div>
-    <div class="ec-row"><div class="ec-num">5</div><div class="ec-txt"><div class="et">Outubro 2026 — Despesas</div><div class="ed">Frete + Vivo + Material lab</div></div><div class="ec-sign">–</div><div class="ec-val neg">R$ 863,00</div></div>
-    <div class="ec-row"><div class="ec-num">6</div><div class="ec-txt"><div class="et">Outubro 2026 — Empréstimos</div><div class="ed">Carijos R$ 3.463,63 + São Paulo R$ 6.322,71</div></div><div class="ec-sign">–</div><div class="ec-val neg">R$ 9.786,34</div></div>
-    <div class="ec-row"><div class="ec-num">7</div><div class="ec-txt"><div class="et">Outubro 2026 — Pgto recebido da Dentatech</div><div class="ed">R$ 20.000 (BB) + R$ 5.000 (Asaas) — abatimento de dívida</div></div><div class="ec-sign">+</div><div class="ec-val pos">R$ 25.000,00</div></div>
-    <div class="ec-result-blue">
-      <div><div class="rl">Saldo Renan — Crédito a receber da Dentatech</div><div class="rs">-1.604,98 + 1.327,80 – 858,77 + 2.083,58 – 863,00 – 9.786,34 + 25.000,00</div></div>
-      <div class="rv azul">R$ 15.298,29</div>
+    <div class="ec-row"><div class="ec-num">0</div><div class="ec-txt"><div class="et">Saldo acumulado até Ago/2026</div><div class="ed">Negativo = crédito — Renan tem a receber da Dentatech</div></div><div class="ec-sign"></div><div class="ec-val azul">-R$ 1.604,98</div></div>
+    <div class="ec-row"><div class="ec-num">1</div><div class="ec-txt"><div class="et">Setembro — a pagar à Dentatech</div><div class="ed">Rec R$1.327,80 (trabalhos) − Desp R$858,77 = R$469,03 a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 469,03</div></div>
+    <div class="ec-row"><div class="ec-num">2</div><div class="ec-txt"><div class="et">Outubro — a pagar à Dentatech</div><div class="ed">Rec R$2.083,58 (trabalhos) − Desp R$863,00 = R$1.220,58 a repassar</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 1.220,58</div></div>
+    <div class="ec-row"><div class="ec-num" style="background:rgba(155,89,182,.2);border-color:rgba(155,89,182,.4);color:rgba(200,160,255,.9);">E</div><div class="ec-txt"><div class="et">Set — Repasse Especialização recebido (Cisos → Renan)</div><div class="ed">R$9.000 boleto (23/09) + R$2.225 pix cliente (29/09) — recebeu, soma à dívida</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 11.225,00</div></div>
+    <div class="ec-row"><div class="ec-num">3</div><div class="ec-txt"><div class="et">Out — Pgto recebido da Dentatech</div><div class="ed">R$20.000 (BB) + R$5.000 (Asaas) — recebeu, soma à dívida</div></div><div class="ec-sign">+</div><div class="ec-val neg">R$ 25.000,00</div></div>
+    <div class="ec-result">
+      <div><div class="rl">Saldo Renan — Deve à Dentatech</div><div class="rs">-1.604,98 + 469,03 + 11.225,00 + 1.220,58 + 25.000,00</div></div>
+      <div class="rv neg">R$ 36.309,63</div>
     </div>
-  </div>
-
-  <!-- TABELA RESUMO -->
-  <div class="table-wrap">
-    <div class="twh">Resumo consolidado — Encontro de Contas (Abr–Out 2026)</div>
-    <table class="dt" style="min-width:500px;">
-      <thead><tr><th>Mês / Evento</th><th>Cisos — Saldo mês</th><th>Cisos — Acumulado</th><th>Renan — Saldo mês</th><th>Renan — Acumulado</th></tr></thead>
-      <tbody>
-        <tr><td>Saldo inicial</td><td class="dim">—</td><td class="neg">R$ 145.296,14</td><td class="dim">—</td><td class="gld">R$ 0,00</td></tr>
-        <tr><td>Abril 2026</td><td class="pos">R$ 6.981,80</td><td class="neg">R$ 152.277,94</td><td class="neg">-R$ 48,00</td><td class="dim">R$ 0,00</td></tr>
-        <tr><td>Maio 2026</td><td class="pos">R$ 12.419,46</td><td class="neg">R$ 164.697,40</td><td class="pos">R$ 263,64</td><td class="pos">R$ 263,64</td></tr>
-        <tr><td>Junho 2026</td><td class="neg">-R$ 6.186,34</td><td class="neg">R$ 158.511,06</td><td class="neg">-R$ 1.137,92</td><td class="neg">-R$ 874,28</td></tr>
-        <tr><td>Julho 2026</td><td class="pos">R$ 48.670,27</td><td class="neg">R$ 207.181,33</td><td class="neg">-R$ 309,70</td><td class="neg">-R$ 1.183,98</td></tr>
-        <tr><td>Agosto — Trabalhos</td><td class="pos">R$ 42.287,28</td><td class="neg">R$ 249.468,61</td><td class="neg">-R$ 421,00</td><td class="neg">-R$ 1.604,98</td></tr>
-        <tr><td>Ago — Obra Especializ.</td><td class="neg">-R$ 30.511,01</td><td class="neg">R$ 218.957,60</td><td class="dim">—</td><td class="dim">—</td></tr>
-        <tr><td>Ago — Fresadora</td><td class="neg">-R$ 28.000,00</td><td class="neg">R$ 190.957,60</td><td class="dim">—</td><td class="dim">—</td></tr>
-        <tr><td>Set — Trabalhos Renan</td><td class="pos">R$ 19.902,37</td><td class="neg">R$ 210.859,97</td><td class="pos">R$ 469,03</td><td class="neg">-R$ 1.135,95</td></tr>
-        <tr><td>Out — Trabalhos Cisos</td><td class="pos">R$ 16.178,62</td><td class="neg">R$ 227.038,59</td><td class="dim">—</td><td class="dim">—</td></tr>
-        <tr><td>Out — Pgto ao Renan</td><td class="neg">-R$ 25.000,00</td><td class="neg">R$ 202.038,59</td><td class="pos">R$ 25.000,00</td><td class="dim">—</td></tr>
-        <tr><td>Out — Trab + Desp + Emprést. Renan</td><td class="dim">—</td><td class="dim">—</td><td class="pos">R$ 16.434,24</td><td class="pos">R$ 15.298,29</td></tr>
-        <tr class="tr-total"><td>SALDO FINAL</td><td></td><td class="neg">R$ 202.038,59</td><td></td><td class="pos azul">R$ 15.298,29 (crédito)</td></tr>
-      </tbody>
-    </table>
   </div>
 
   <!-- CARDS FINAIS -->
-  <div class="grid2">
+  <div class="grid3">
     <div class="sum-box-red">
       <div class="sum-label red">Cisos deve à Dentatech</div>
-      <div class="sum-val neg">R$ 202.038,59</div>
-      <div class="sum-sub">Saldo devedor acumulado — Abr a Out 2026</div>
+      <div class="sum-val neg">R$ 144.992,82</div>
+      <div class="sum-sub">Saldo devedor acumulado Abr–Out 2026</div>
     </div>
-    <div class="sum-box-blue">
-      <div class="sum-label blue">Renan tem crédito a receber</div>
-      <div class="sum-val azul">R$ 15.298,29</div>
-      <div class="sum-sub">Após trabalhos, empréstimos e pgto R$ 25.000 em Out/2026</div>
+    <div class="sum-box-red">
+      <div class="sum-label red">Renan deve à Dentatech</div>
+      <div class="sum-val neg">R$ 36.309,63</div>
+      <div class="sum-sub">Trabalhos + repasse espec R$11.225 + pgto R$25k Out/2026</div>
     </div>
-  </div>
-  <div class="sum-box-red" style="border-color:rgba(201,168,76,.4);background:linear-gradient(135deg,rgba(201,168,76,.08) 0%,rgba(13,27,62,.95) 100%);">
-    <div class="sum-label gold">Saldo líquido — Cisos após compensar crédito do Renan</div>
-    <div class="sum-val neg">R$ 186.740,30</div>
-    <div class="sum-sub">R$ 202.038,59 (Cisos deve) + R$ 15.298,29 (Renan a receber) = saldo real da Cisos com a Dentatech</div>
+    <div class="sum-box-gold">
+      <div class="sum-label gold">Saldo líquido — Cisos após compensar Renan</div>
+      <div class="sum-val warn">R$ 108.683,19</div>
+      <div class="sum-sub">R$144.992,82 (Cisos) − R$36.309,63 (Renan) = o que a Cisos ainda deve à Dentatech</div>
+    </div>
   </div>
 </section>
 
 </div>
-
 <footer class="page-footer">
   <span>Dentatech · Relatório Financeiro Abr–Out 2026</span>
   <span>Preparado por <span class="lume">Lume Finanças</span> · BPO Financeiro</span>
 </footer>
-
 <script>
 function showTab(name,btn){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
